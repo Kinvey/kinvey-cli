@@ -1,0 +1,29 @@
+{
+  "name"         : "kinvey-dlc-cli",
+  "version"      : "0.0.1-dev",
+  "description"  : "Utility for deploying Kinvey DLC microservices to Kinvey’s Node DLC PaaS.",
+  "keywords"     : [ "Kinvey" ],
+  "homepage"     : "http://www.kinvey.com",
+  "bugs"         : "https://github.com/Kinvey/dlc-cli/issues",
+  "license"      : "Apache-2.0",
+  "author"       : "Kinvey Inc",
+  "contributors" : [ "Mark van Seventer <mark@kinvey.com>" ],
+  "bin"          : "./bin/cli.js",
+  "repository"   : { "type": "git", "url": "Kinvey/dlc-cli" },
+  "scripts"      : {
+    "start"   : "./bin/cli.js",
+    "pretest" : "./node_modules/.bin/coffeelint --file ./.coffeelint bin/ cmd/ config/ lib/ test/",
+    "test"    : "./node_modules/.bin/mocha test/"
+  },
+  "dependencies" : {
+    "coffee-script" : "1.9.x",
+    "commander"     : "2.8.x"
+  },
+  "devDependencies": {
+    "coffeelint" : "1.10.x",
+    "mocha"      : "2.2.x"
+  },
+  "engines" : { "node" : ">=0.10.x" },
+  "os"      : [ "darwin", "linux", "win32" ],
+  "preferGlobal": true
+}

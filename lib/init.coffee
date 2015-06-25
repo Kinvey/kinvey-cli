@@ -23,7 +23,6 @@ config         = require 'config'
 updateNotifier = require 'update-notifier'
 
 # Local modules.
-file   = require './file.coffee'
 logger = require './logger.coffee'
 pkg    = require '../package.json'
 User   = require './user.coffee'
@@ -42,13 +41,13 @@ module.exports = (options) ->
     notifier.notify { defer: false } # Notify right away.
 
   # Initialize user.
-  if fs.existsSync file.session
-    logger.debug 'Reading session file %s', chalk.cyan file.session # Debug.
-    contents   = fs.readFileSync file.session
+  if fs.existsSync config.paths.session
+    logger.debug 'Reading session file %s', chalk.cyan config.paths.session # Debug.
+    contents   = fs.readFileSync config.paths.session
     User.token = try JSON.parse(contents).token # Extract token.
     if User.token? then logger.debug 'Restored session' # Debug.
 
   # Initialize project.
-  if fs.existsSync file.project
+  if fs.existsSync config.paths.project
     # TODO
-    contents = fs.readFileSync file.project
+    contents = fs.readFileSync config.paths.project

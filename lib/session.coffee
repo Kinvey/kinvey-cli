@@ -20,12 +20,12 @@ fs = require 'fs'
 # Package modules.
 async    = require 'async'
 chalk    = require 'chalk'
+config   = require 'config'
 inquirer = require 'inquirer'
 isEmail  = require 'isemail'
 logger   = require 'custom-logger'
 
 # Local modules.
-file = require './file.coffee'
 user = require './user.coffee'
 
 ###
@@ -67,9 +67,9 @@ ensureLogin = (email, password, cb) ->
       questions.push { message: 'Do you want to remember this user?', name: 'remember', type: 'confirm' }
     inquirer.prompt questions, (answers) ->
       if answers.remember # Save session to disk.
-        logger.debug 'Writing session file %s', chalk.cyan file.session # Debug.
+        logger.debug 'Writing session file %s', chalk.cyan config.paths.session # Debug.
         data = JSON.stringify { token: user.token }
-        fs.writeFileSync file.session, data
+        fs.writeFileSync config.paths.session, data
 
       # Continue.
       cb err

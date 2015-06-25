@@ -16,8 +16,17 @@
     "test"    : "./node_modules/.bin/mocha test/"
   },
   "dependencies" : {
-    "coffee-script" : "1.9.x",
-    "commander"     : "2.8.x"
+    "async"           : "1.2.x",
+    "chalk"           : "1.0.x",
+    "coffee-script"   : "1.9.x",
+    "commander"       : "2.8.x",
+    "config"          : "1.14.x",
+    "custom-logger"   : "0.3.x",
+    "inquirer"        : "0.8.x",
+    "isemail"         : "1.1.x",
+    "os-homedir"      : "1.0.x",
+    "request"         : "2.58.x",
+    "update-notifier" : "0.5.x"
   },
   "devDependencies": {
     "coffeelint" : "1.10.x",

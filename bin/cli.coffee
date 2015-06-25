@@ -18,15 +18,20 @@ limitations under the License.
 program = require 'commander'
 
 # Local modules.
-pkg = require '../package.json'
+init = require '../lib/init.coffee'
+pkg  = require '../package.json'
 
 # Create the program and set global options.
 program
   .version pkg.version
-  .option  '-e, --email <e-mail>', 'e-mail address of your Kinvey account'
-  .option  '-p, --password <password>', 'password of your Kinvey account'
+  .option  '-c, --suppress-version-check', 'do not check for package updates'
+  .option  '-e, --email <e-mail>',         'e-mail address of your Kinvey account'
+  .option  '-p, --password <password>',    'password of your Kinvey account'
+  .option  '-s, --silent',                 'silent mode: do not output anything'
+  .option  '-v, --verbose',                'output debug messages'
 
 # Register sub-commands.
+require '../cmd/config.coffee'
 require '../cmd/deploy.coffee'
 require '../cmd/list.coffee'
 require '../cmd/logs.coffee'

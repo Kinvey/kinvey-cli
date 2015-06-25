@@ -14,8 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-# Exports.
-module.exports = {
-  host  : 'https://manage.kinvey.com'
-  paths : { project: '.kinvey', session: '.kinvey-session' }
-}
+# Package modules.
+program  = require 'commander'
+
+# Local modules.
+init    = require '../lib/init.coffee'
+session = require '../lib/session.coffee'
+
+# Command runner.
+runCommand = (options) ->
+  # Initialize.
+  init options
+
+  # Authenticate.
+  session options, (err) -> console.log 'done with err: ', err
+
+# Register the command.
+module.exports = program
+  .command     'config'
+  .description 'set project options'
+  .action      runCommand

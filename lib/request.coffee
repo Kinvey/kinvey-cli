@@ -14,8 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-# Exports.
-module.exports = {
-  host  : 'https://manage.kinvey.com'
-  paths : { project: '.kinvey', session: '.kinvey-session' }
+# Package modules.
+config  = require 'config'
+request = require 'request'
+
+# Configure.
+options = {
+  baseUrl : config.host
+  timeout : config.timeout or 5000 # 5 seconds.
 }
+
+# Exports.
+module.exports = request.defaults options

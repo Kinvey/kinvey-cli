@@ -14,8 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+# Package modules.
+request = require './request.coffee'
+
+# Define the User class.
+class User
+  # Public properties.
+  token: null
+
+  # Returns whether the user is logged in.
+  isLoggedIn: () =>
+    this.token?
+
+  # Logs the user into Kinvey.
+  login: (email, password, cb) =>
+    request.post {
+      url  : '/session'
+      json : { email: email, password: password }
+    }, (err, response) =>
+      if 200 is response?.statusCode then this.token = response.body.token # Save.
+      cb err, response # Continue.
+
 # Exports.
-module.exports = {
-  host  : 'https://manage.kinvey.com'
-  paths : { project: '.kinvey', session: '.kinvey-session' }
-}
+module.exports = new User()

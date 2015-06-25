@@ -14,8 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+# Standard lib.
+path = require 'path'
+
+# Package modules.
+config    = require 'config'
+osHomedir = require 'os-homedir'
+
 # Exports.
 module.exports = {
-  host  : 'https://manage.kinvey.com'
-  paths : { project: '.kinvey', session: '.kinvey-session' }
+  project: path.join process.cwd(), config.paths.project # <projectDir>/<project>
+  session: path.join osHomedir(),   config.paths.session # ~/<session>
 }

@@ -14,8 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-# Exports.
-module.exports = {
-  host  : 'https://manage.kinvey.com'
-  paths : { project: '.kinvey', session: '.kinvey-session' }
+# Package modules.
+logger = require 'custom-logger'
+
+# Configure.
+logger.config {
+  format : '%event%: %message%'
+  level  : 1
+  messageFormatting: true
 }
+
+# Exports.
+module.exports = logger

@@ -25,7 +25,7 @@ program
   .version pkg.version
   .option  '-c, --suppress-version-check', 'do not check for package updates'
   .option  '-e, --email <e-mail>',         'e-mail address of your Kinvey account'
-  .option  '-h, --host <host>',            'set host of the Kinvey service'
+  .option  '--host <host>',                'set host of the Kinvey service'
   .option  '-p, --password <password>',    'password of your Kinvey account'
   .option  '-s, --silent',                 'silent mode: do not output anything'
   .option  '-v, --verbose',                'output debug messages'

@@ -21,6 +21,7 @@ request = require 'request'
 # Configure.
 options = {
   baseUrl : config.host
+  json    : true
   timeout : config.timeout or 5000 # 5 seconds.
 }
 

@@ -20,7 +20,7 @@ logger = require 'custom-logger'
 # Configure.
 logger.config {
   format : '%event%: %message%'
-  level  : 1
+  level  : 1 # "info" and up.
   messageFormatting: true
 }
 

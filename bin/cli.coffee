@@ -18,14 +18,14 @@ limitations under the License.
 program = require 'commander'
 
 # Local modules.
-init = require '../lib/init.coffee'
-pkg  = require '../package.json'
+pkg = require '../package.json'
 
 # Create the program and set global options.
 program
   .version pkg.version
   .option  '-c, --suppress-version-check', 'do not check for package updates'
   .option  '-e, --email <e-mail>',         'e-mail address of your Kinvey account'
+  .option  '-h, --host <host>',            'set host of the Kinvey service'
   .option  '-p, --password <password>',    'password of your Kinvey account'
   .option  '-s, --silent',                 'silent mode: do not output anything'
   .option  '-v, --verbose',                'output debug messages'
@@ -39,3 +39,7 @@ require '../cmd/restart.coffee'
 
 # Run the program.
 program.parse process.argv
+
+# Display help by default.
+unless process.argv.slice(2).length
+  program.outputHelp()

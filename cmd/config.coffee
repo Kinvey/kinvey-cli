@@ -15,22 +15,44 @@ limitations under the License.
 ###
 
 # Package modules.
-program  = require 'commander'
+async   = require 'async'
+chalk   = require 'chalk'
+config  = require 'config'
+program = require 'commander'
 
 # Local modules.
-init    = require '../lib/init.coffee'
-session = require '../lib/session.coffee'
+logger = require '../lib/logger.coffee'
+util   = require '../lib/util.coffee'
 
-# Command runner.
-runCommand = (options) ->
-  # Initialize.
-  init options
+###
+ # Entry point for the config command.
+###
+configure = (options, cb) ->
+  # Runtime modules.
+  project = require '../lib/project.coffee'
+  user    = require '../lib/user.coffee'
 
-  # Authenticate.
-  session options, (err) -> console.log 'done with err: ', err
+  # Fail if the project is already configured.
+  if project.app? then cb 'This project is already configured'
+
+  # Prompt the user for app, environment, and datalink selection.
+  async.series [
+    project.selectApp
+    project.selectDLC
+  ], (err) ->
+    if err then return cb err # Continue with error.
+
+    # Save app, environment, and datalink selection in project file.
+    logger.debug 'Writing project file %s', chalk.cyan config.paths.project # Debug.
+    fs.writeFileSync config.paths.project, JSON.stringify {
+      app : project.app.id
+      dlc : project.dlc.id
+      environment: project.environment.id
+    }
+    cb() # Continue.
 
 # Register the command.
 module.exports = program
   .command     'config'
   .description 'set project options'
-  .action      runCommand
+  .action      util.run configure

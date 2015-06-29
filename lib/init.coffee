@@ -15,7 +15,8 @@ limitations under the License.
 ###
 
 # Standard lib.
-fs = require 'fs'
+fs  = require 'fs'
+url = require 'url'
 
 # Package modules.
 chalk          = require 'chalk'
@@ -36,10 +37,6 @@ module.exports = (options, cb) ->
   # OPTIONS.
   # ========
 
-  # Adjust the host.
-  if options.parent.host? # TODO Make this work.
-    request.defaults { baseUrl: options.parent.host }
-
   # Adjust the logger level based on verbose and silent options.
   if options.parent.verbose
     logger.config { level: 0 }
@@ -50,6 +47,18 @@ module.exports = (options, cb) ->
   unless options.parent.suppressVersionCheck
     notifier = updateNotifier { pkg: pkg }
     notifier.notify { defer: false } # Notify right away.
+
+  # Adjust the host.
+  if options.parent.host?
+    urlObj = url.parse options.parent.host
+    urlObj = { # Make sure the host is correctly set, with protocol and path.
+      host     : urlObj.host     or urlObj.pathname
+      pathname : if urlObj.host? then urlObj.pathname else null
+      protocol : urlObj.protocol or 'https'
+    }
+    urlStr = url.format urlObj
+    logger.debug 'Setting host to %s', chalk.cyan urlStr # Debug.
+    request.defaults { baseUrl: urlStr }
 
   # PROJECT.
   # ========

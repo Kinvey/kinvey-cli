@@ -20,7 +20,7 @@ program = require 'commander'
 # Local modules.
 pkg = require '../package.json'
 
-# Create the program and set global options.
+# Create and export the program and set global options.
 program
   .version pkg.version
   .option  '-c, --suppress-version-check', 'do not check for package updates'

@@ -25,15 +25,15 @@ logger = require '../lib/logger.coffee'
 util   = require '../lib/util.coffee'
 
 ###
- # Entry point for the config command.
+ # Entry point for the config command (exported).
 ###
-configure = (options, cb) ->
+module.exports = configure = util.run (options, cb) ->
   # Runtime modules.
   project = require '../lib/project.coffee'
   user    = require '../lib/user.coffee'
 
   # Fail if the project is already configured.
-  if project.app? then cb 'This project is already configured'
+  if project.app? then return cb 'This project is already configured'
 
   # Prompt the user for app, environment, and datalink selection.
   async.series [
@@ -52,7 +52,7 @@ configure = (options, cb) ->
     cb() # Continue.
 
 # Register the command.
-module.exports = program
+program
   .command     'config'
   .description 'set project options'
-  .action      util.run configure
+  .action      configure

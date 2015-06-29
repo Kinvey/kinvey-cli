@@ -30,7 +30,8 @@
   },
   "devDependencies": {
     "coffeelint" : "1.10.x",
-    "mocha"      : "2.2.x"
+    "mocha"      : "2.2.x",
+    "sinon"      : "1.15.x"
   },
   "engines" : { "node" : ">=0.10.x" },
   "os"      : [ "darwin", "linux", "win32" ],

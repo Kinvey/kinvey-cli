@@ -20,5 +20,5 @@ program = require 'commander'
 # Register the command.
 module.exports = program
   .command     'deploy'
-  .description 'deploy the project to Kinvey’s Node DLC PaaS'
+  .description 'deploy the current project as a Kinvey-backed Datalink Connector'
   .action (options) -> console.log options

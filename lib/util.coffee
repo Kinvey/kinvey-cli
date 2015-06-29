@@ -25,7 +25,7 @@ logger = require './logger.coffee'
  # Return a function which runs init before the specified "fn" handler.
 ###
 exports.run = (fn) ->
-  (options) ->
+  (options, cb) ->
     async.series [
       (next) -> init options, next # Initialize.
       (next) -> fn   options, next # Execute the handler.
@@ -33,7 +33,8 @@ exports.run = (fn) ->
       # Print any errors.
       if err
         logger.error err
-        process.exit 1
+        unless cb? then process.exit 1
+      cb? err # Continue.
 
 ###
  # Formats the provided list for use with inquirer.

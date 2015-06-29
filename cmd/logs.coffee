@@ -20,5 +20,5 @@ program = require 'commander'
 # Register the command.
 module.exports = program
   .command     'logs'
-  .description 'display the logs of the DLC'
+  .description 'display the logs of the DataLink Connector'
   .action (options) -> console.log options

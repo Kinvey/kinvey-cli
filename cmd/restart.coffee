@@ -20,5 +20,5 @@ program = require 'commander'
 # Register the command.
 module.exports = program
   .command     'restart'
-  .description 'restart the containers that host the DLC'
+  .description 'restart the containers that host the Data Link Connector'
   .action (options) -> console.log options

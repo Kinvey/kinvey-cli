@@ -20,6 +20,6 @@ program = require 'commander'
 # Register the command.
 module.exports = program
   .command     'list'
-  .description 'lists the configured DLCs for the current environment'
+  .description 'list the configured Kinvey-backed Data Link Connectors for the current environment'
   .option      '--env <kid>', 'set the environment kid'
   .action (options) -> console.log options

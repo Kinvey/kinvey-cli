@@ -17,9 +17,22 @@ limitations under the License.
 # Package modules.
 program = require 'commander'
 
+# Entry point for the list command.
+module.exports = list = (options, cb) ->
+  # Set-up.
+  user.restore()
+  project.restore()
+  dlc.restore()
+
+  # List the configured DLCs.
+  dlc.list()
+
+  # Done.
+  cb()
+
 # Register the command.
 module.exports = program
   .command     'list'
   .description 'list the configured Kinvey-backed Data Link Connectors for the current environment'
   .option      '--env <kid>', 'set the environment kid'
-  .action (options) -> console.log options
+  .action      list

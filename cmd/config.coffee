@@ -24,6 +24,15 @@ program = require 'commander'
 logger = require '../lib/logger.coffee'
 util   = require '../lib/util.coffee'
 
+# Entry point for the config command.
+module.exports = configure = (options, cb) ->
+  # Set-up.
+  user.setup()
+  project.setup()
+  dlc.setup()
+
+  cb()
+
 ###
  # Entry point for the config command (exported).
 ###

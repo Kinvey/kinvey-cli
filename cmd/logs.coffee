@@ -17,8 +17,21 @@ limitations under the License.
 # Package modules.
 program = require 'commander'
 
+# Entry point for the logs command.
+module.exports = logs = (options, cb) ->
+  # Set-up.
+  user.restore()
+  project.restore()
+  dlc.restore()
+
+  # Output logs.
+  dlc.logs()
+
+  # Done.
+  cb()
+
 # Register the command.
 module.exports = program
   .command     'logs'
   .description 'display the logs of the DataLink Connector'
-  .action (options) -> console.log options
+  .action      logs

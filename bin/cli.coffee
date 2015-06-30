@@ -20,26 +20,28 @@ program = require 'commander'
 # Local modules.
 pkg = require '../package.json'
 
-# Create the program and set global options.
-program
-  .version pkg.version
-  .option  '-c, --suppress-version-check', 'do not check for package updates'
-  .option  '-e, --email <e-mail>',         'e-mail address of your Kinvey account'
-  .option  '--host <host>',                'set host of the Kinvey service'
-  .option  '-p, --password <password>',    'password of your Kinvey account'
-  .option  '-s, --silent',                 'silent mode: do not output anything'
-  .option  '-v, --verbose',                'output debug messages'
+# Exports.
+module.exports = (args) ->
+  # Create the program and set global options.
+  program
+    .version pkg.version
+    .option  '-e, --email <e-mail>',         'e-mail address of your Kinvey account'
+    .option  '--host <host>',                'set host of the Kinvey service'
+    .option  '-p, --password <password>',    'password of your Kinvey account'
+    .option  '-s, --silent',                 'silent mode: do not output anything'
+    .option  '-c, --suppress-version-check', 'do not check for package updates'
+    .option  '-v, --verbose',                'output debug messages'
 
-# Register sub-commands.
-require '../cmd/config.coffee'
-require '../cmd/deploy.coffee'
-require '../cmd/list.coffee'
-require '../cmd/logs.coffee'
-require '../cmd/restart.coffee'
+  # Register sub-commands.
+  require '../cmd/config.coffee'
+  require '../cmd/deploy.coffee'
+  require '../cmd/list.coffee'
+  require '../cmd/logs.coffee'
+  require '../cmd/restart.coffee'
 
-# Run the program.
-program.parse process.argv
+  # Run the program.
+  program.parse args
 
-# Display help by default.
-unless process.argv.slice(2).length
-  program.outputHelp()
+  # Display help by default.
+  unless args.slice(2).length
+    program.outputHelp()

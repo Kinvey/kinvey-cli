@@ -17,8 +17,25 @@ limitations under the License.
 # Package modules.
 program = require 'commander'
 
+# Local modules.
+dlc     = require '../lib/dlc.coffee'
+project = require '../lib/project.coffee'
+user    = require '../lib/user.coffee'
+
+# Entry point for the restart command.
+module.exports = restart = (options, cb) ->
+  # Set-up.
+  user.restore()
+  project.restore()
+
+  # Restart the DLC.
+  dlc.restart()
+
+  # Done.
+  cb()
+
 # Register the command.
 module.exports = program
   .command     'restart'
   .description 'restart the containers that host the Data Link Connector'
-  .action (options) -> console.log options
+  .action      restart

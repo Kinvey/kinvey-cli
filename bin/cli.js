@@ -19,4 +19,4 @@
 
 // Exports.
 require('coffee-script/register');
-require('./cli.coffee');
+require('./cli.coffee')(process.argv);

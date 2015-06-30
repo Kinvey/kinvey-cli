@@ -14,39 +14,33 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-# Package modules.
-sinon = require 'sinon'
-
 # Local modules.
-cmd    = require '../cmd/config.coffee'
-logger = require '../lib/logger.coffee'
+cli = require '../bin/cli.coffee'
+pkg = require '../package.json'
 
 # Test suite.
-describe 'config', ->
-  # Stub the logger.
-  [ 'debug', 'info', 'warn', 'error' ].forEach (level) ->
-    beforeEach "stub::#{level}", -> sinon.stub logger, level, () -> null
-    afterEach  "stub::#{level}", -> logger[level].restore()
-
-  # Options.
+describe pkg.name, ->
+  # Test options.
   describe '-e, --email <e-mail>', () ->
-    it 'should set the e-mail address of the Kinvey account.'
+    it 'should set the e-mail address of the Kinvey account.', () ->
+      cli [ 'node', pkg.name, 'config', '--email', 'bob@example.com' ]
 
   describe '--host <host>', () ->
-    it 'should set the host of the Kinvey service.'
+    it 'should set the host of the Kinvey service.', ->
+      cli [ 'node', pkg.name, 'config', '--host', 'example.com' ]
 
   describe '-p, --password <password>', () ->
-    it 'should set the password of the Kinvey account.'
+    it 'should set the password of the Kinvey account.', ->
+      cli [ 'node', pkg.name, 'config', '--password', '123' ]
 
   describe '-s, --silent', () ->
-    it 'should not output anything.'
+    it 'should not output anything.', ->
+      cli [ 'node', pkg.name, 'config', '--silent' ]
 
   describe '-c, --suppress-version-check', () ->
-    it 'should not check for package updates.'
+    it 'should not check for package updates.', ->
+      cli [ 'node', pkg.name, 'config', '--suppress-version-check' ]
 
   describe '-v, --verbose', () ->
-    it 'should output debug messages.'
-
-  # Tests.
-  it 'should establish a user session.'
-  it 'should establish a project file.'
+    it 'should output debug messages.', ->
+      cli [ 'node', pkg.name, 'config', '--verbose' ]

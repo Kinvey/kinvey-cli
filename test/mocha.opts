@@ -3,5 +3,6 @@
 --no-exit
 --recursive
 --reporter spec
---timeout  5000
+--require  ./test/lib/common.coffee
+--timeout  10000
 --ui       bdd

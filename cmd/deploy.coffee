@@ -17,8 +17,27 @@ limitations under the License.
 # Package modules.
 program = require 'commander'
 
+# Local modules.
+project = require '../lib/project.coffee'
+user    = require '../lib/user.coffee'
+
+# Entry point for the deploy command.
+module.exports = deploy = (options, cb) ->
+  # Set-up.
+  user.restore()
+  project.restore()
+  dlc.restore()
+
+  # Validate, pack, and upload the project package.
+  project.validate()
+  project.pack()
+  project.upload()
+
+  # Done.
+  cb()
+
 # Register the command.
-module.exports = program
+program
   .command     'deploy'
   .description 'deploy the current project as a Kinvey-backed Datalink Connector'
-  .action (options) -> console.log options
+  .action      deploy

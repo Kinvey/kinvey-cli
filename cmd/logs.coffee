@@ -17,18 +17,16 @@ limitations under the License.
 # Package modules.
 program = require 'commander'
 
+# Local modules.
+init   = require '../lib/init.coffee'
+logger = require '../lib/logger.coffee'
+
 # Entry point for the logs command.
-module.exports = logs = (options, cb) ->
-  # Set-up.
-  user.restore()
-  project.restore()
-  dlc.restore()
+module.exports = logs = (command, cb) ->
+  options = init command # Initialize the command.
 
-  # Output logs.
-  dlc.logs()
-
-  # Done.
-  cb()
+  logger.error 'The logs command is not implemented yet'
+  cb?()
 
 # Register the command.
 module.exports = program

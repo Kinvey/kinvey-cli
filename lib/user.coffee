@@ -15,68 +15,87 @@ limitations under the License.
 ###
 
 # Package modules.
-async    = require 'async'
-chalk    = require 'chalk'
-inquirer = require 'inquirer'
-isEmail  = require 'isemail'
+async  = require 'async'
+chalk  = require 'chalk'
+config = require 'config'
 
 # Local modules.
 logger  = require './logger.coffee'
+prompt  = require './prompt.coffee'
 request = require './request.coffee'
+util    = require './util.coffee'
 
-# Define the User class.
+# Define the user class.
 class User
-  # Public properties.
+
+  # Session token.
   token: null
+
+  # Constructor.
+  constructor: (path) ->
+    this.userPath = path
 
   # Returns whether the user is logged in.
   isLoggedIn: () =>
     this.token?
 
-  # Ensures the user eventually logs in.
+  # Ensures to login the user.
   login: (email, password, cb) =>
     async.doUntil (next) =>
       this._loginOnce email, password, next
-      email = password = null # Reset initial credentials.
+      email = password = null # Reset.
     , this.isLoggedIn, cb
 
-  # Execute the login request.
+  # Restores the session from file.
+  restore: (cb) =>
+    logger.debug 'Restoring session from file %s', chalk.cyan this.userPath
+    util.readJSON this.userPath, (err, data) =>
+      if data?.token # Save token.
+        logger.debug 'Restored session from file %s', chalk.cyan this.userPath
+        this.token = data.token
+        cb() # Continue.
+      else # No token, prompt for login.
+        logger.debug 'Failed to restore session from file %s', chalk.cyan this.userPath
+        async.series [
+          (next) => this.login null, null, next
+          this.save
+        ], cb
+
+  # Saves the session to file.
+  save: (cb) =>
+    logger.debug 'Saving session to file %s', chalk.cyan this.userPath
+    util.writeJSON this.userPath, { token: this.token }, cb
+
+  # Sets up the user.
+  setup: (options, cb) =>
+    if options.email? or options.password? # Custom session.
+      this.login options.email, options.password, cb
+    else # Attempt to restore session from file.
+      this.restore cb
+
+  # Executes a login request.
   _execLogin: (email, password, cb) ->
     request.post {
       url  : '/session',
       json : { email: email, password: password }
     }, cb
 
-  # Attempts to login the user with the provided credentials.
-  _loginOnce: (email, password, cb) =>
+  # Attempts to login with the provided email and password.
+  _loginOnce: (email, password, cb) ->
     async.waterfall [
-      (next) => this._prompt email, password, next
+      (next) -> prompt.getEmailPassword email, password, next
       this._execLogin
     ], (err, response) =>
-      # Save the token upon login.
-      if 200 is response?.statusCode
+      if err then cb err # Continue with request error.
+      else if 200 is response.statusCode
         logger.info 'Welcome back %s', chalk.cyan response.body.email
-        this.token = response.body.token # Extract token.
-        return cb null, response.body # Continue.
-
-      # Retry if the request completed with error-code.
-      if response?.body.code in [ 'InvalidCredentials', 'ValidationError' ]
-        logger.warn 'Invalid Credentials. Please try again.'
-        return cb null, response.body # Continue with retry.
-
-      # Continue with error.
-      cb err or response.body
-
-  # Prompt for missing user credentials.
-  _prompt: (email, password, cb) ->
-    # Prompt for e-mail and password only when not already set.
-    inquirer.prompt [
-      { message: 'E-mail',   name: 'email', validate: isEmail,   when: not email?    }
-      { message: 'Password', name: 'password', type: 'password', when: not password? }
-    ], (answers) ->
-      if answers.email?    then email    = answers.email
-      if answers.password? then password = answers.password
-      cb null, email, password # Continue.
+        this.token = response.body.token # Save token.
+        cb() # Continue.
+      else if response.body?.code in [ 'InvalidCredentials', 'ValidationError' ]
+        logger.warn 'Invalid credentials, please try again.'
+        cb() # Continue.
+      else
+        cb response # Continue with response error.
 
 # Exports.
-module.exports = new User()
+module.exports = new User config.paths.session

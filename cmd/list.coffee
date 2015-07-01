@@ -15,24 +15,36 @@ limitations under the License.
 ###
 
 # Package modules.
+async   = require 'async'
+chalk   = require 'chalk'
 program = require 'commander'
 
+# Local modules.
+init    = require '../lib/init.coffee'
+logger  = require '../lib/logger.coffee'
+project = require '../lib/project.coffee'
+user    = require '../lib/user.coffee'
+
 # Entry point for the list command.
-module.exports = list = (options, cb) ->
-  # Set-up.
-  user.restore()
-  project.restore()
-  dlc.restore()
+module.exports = list = (command, cb) ->
+  options = init command # Initialize the command.
 
-  # List the configured DLCs.
-  dlc.list()
+  # Set-up user and project.
+  async.series [
+    (next) -> user.setup options, next
+    project.restore
 
-  # Done.
-  cb()
+    (next) ->
+      logger.info 'Current datalink: %s', chalk.cyan project.datalink
+      next() # Continue.
+  ], (err) ->
+    if err? # Display errors.
+      logger.error err
+      unless cb? then process.exit -1 # Exit with error.
+    cb? err
 
 # Register the command.
 module.exports = program
   .command     'list'
   .description 'list the configured Kinvey-backed Data Link Connectors for the current environment'
-  .option      '--env <kid>', 'set the environment kid'
   .action      list

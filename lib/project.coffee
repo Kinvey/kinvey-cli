@@ -15,118 +15,120 @@ limitations under the License.
 ###
 
 # Package modules.
-async    = require 'async'
-chalk    = require 'chalk'
-inquirer = require 'inquirer'
+async  = require 'async'
+chalk  = require 'chalk'
+config = require 'config'
 
 # Local modules.
-logger  = require './logger.coffee'
-request = require './request.coffee'
-user    = require './user.coffee'
-util    = require './util.coffee'
+datalink = require './datalink.coffee'
+logger   = require './logger.coffee'
+prompt   = require './prompt.coffee'
+request  = require './request.coffee'
+user     = require './user.coffee'
+util     = require './util.coffee'
 
 # Define the project class.
 class Project
 
-  # Public properties.
-  app : null
-  dlc : null
-  environment: null
+  # App, datalink, and environment ids.
+  app         : null
+  datalink    : null
+  environment : null
 
-  # Returns all apps for the user.
-  getApps: (cb) ->
+  # Constructor.
+  constructor: (path) ->
+    this.projectPath = path
+
+  # Returns whether the environment is configured.
+  isConfigured: () =>
+    this.app? and this.datalink? and this.environment?
+
+  # Restores the environment from file.
+  restore: (cb) =>
+    logger.debug 'Restoring project from file %s', chalk.cyan this.projectPath
+    util.readJSON this.projectPath, (err, data) =>
+      if data?.app and data.datalink and data.environment # Save ids.
+        logger.debug 'Restored project from file %s', chalk.cyan this.projectPath
+        this.app         = data.app
+        this.datalink    = data.datalink
+        this.environment = data.environment
+        cb() # Continue.
+      else
+        logger.debug 'Failed to restore project from file %s', chalk.cyan this.projectPath
+        cb new Error 'ProjectNotConfigured' # Continue with error.
+
+  # Saves the project details to file.
+  save: (cb) =>
+    logger.debug 'Saving project to file %s', chalk.cyan this.projectPath
+    util.writeJSON this.projectPath, {
+      app         : this.app
+      datalink    : this.datalink
+      environment : this.environment
+    }, cb
+
+  # Selects app, datalink, and environment.
+  select: (cb) =>
+    async.series [
+      this._selectAppEnvironment
+      this._selectDatalink
+      this.save
+    ], cb
+
+  # Sets up the environment.
+  setup: (options, cb) =>
+    # Attempt to restore environment from file.
+    this.restore (err) =>
+      if !this.isConfigured() # Not configured, prompt for details.
+        this.select cb
+      else cb() # Continue.
+
+  # Executes a GET /apps request.
+  _execApps: (cb) =>
     request.get {
       url     : '/apps'
-      headers : { Authorization: "Kinvey #{user.token} " }
+      headers : { Authorization: "Kinvey #{user.token}" }
     }, (err, response) ->
-      if 200 is response?.statusCode then cb null, response.body # Continue.
-      else cb err or response.body # Continue with error.
+      if 200 is response?.statusCode then cb null, response.body
+      else cb err or response # Continue with error.
 
-  # Returns all DLCs for the specified app.
-  getDLCs: (cb) =>
+  # Executes a GET /apps/:app/datalinks request.
+  _execDatalinks: (cb) =>
     request.get {
       url     : "/apps/#{this.app}/data-links"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, (err, response) ->
-      # Filter response body to include only Kinvey DLCs.
-      if 200 is response?.statusCode
-        cb null, response.body.filter (dlc) -> 0 is dlc.host?.indexOf 'kinveyDLC://'
-      else # Continue with error.
-        cb err or response.body
+      if 200 is response?.statusCode then cb null, response.body
+      else cb err or response # Continue with error.
 
-  # Selects an app and environment.
-  selectApp: (cb) =>
+  # Returns eligible Kinvey datalinks.
+  _execKinveyDatalinks: (cb) =>
+    this._execDatalinks (err, body) ->
+      if body?.length # Filter.
+        body = body.filter (el) -> 0 is el.host?.indexOf 'kinveyDLC://'
+      cb err, body
+
+  # Attempts to select the app and environment.
+  _selectAppEnvironment: (cb) =>
     async.waterfall [
-      this.getApps
-      this._promptApp
+      this._execApps
+      (apps, next) ->
+        if 0 is apps.length then next new Error 'NoAppsFound'
+        else prompt.getAppEnvironment apps, next
     ], (err, app, environment) =>
-      # Save properties.
-      this.app         = app?.id
-      this.environment = environment?.id
+      if app?         then this.app = app.id
+      if environment? then this.environment = environment.id
       cb err # Continue.
 
-  selectDLC: (cb) =>
+  # Attempts to select the datalink
+  _selectDatalink: (cb) =>
     async.waterfall [
-      this.getDLCs
-      this._promptDLC
-    ], (err, dlc) =>
-      this.dlc = dlc?.id # Save.
+      this._execKinveyDatalinks
+      (datalinks, next) ->
+        if 0 is datalinks.length then next new Error 'NoDatalinksFound'
+        else prompt.getDatalink datalinks, next
+    ], (err, datalink) =>
+      if datalink? then this.datalink = datalink.id
       cb err # Continue.
-
-  # Prompt for missing app and/or environment.
-  _promptApp: (apps, cb) ->
-    # Error out if the user does not have any apps.
-    if 0 is apps.length
-      return cb 'You do not have any apps yet. Head over to the Kinvey console to create one.'
-
-    if 1 is apps.length
-      app = apps[0]
-      logger.info 'Autoselecting your only app: %s', chalk.cyan app.name
-
-    # Prompt for app and/or environment to use.
-    inquirer.prompt [{
-      message : 'Which app would you like to use?'
-      name    : 'app'
-      type    : 'list'
-      choices : util.formatList apps
-      when    : not app? # Only when app not already set.
-    }, {
-      message : 'Which environment would you like to use?'
-      name    : 'environment'
-      type    : 'list'
-      choices : (answers) -> util.formatList (app or answers.app).environments
-      when    : (answers) -> 1 < (app or answers.app).environments.length
-    }], (answers) ->
-      if answers.app?         then app         = answers.app
-      if answers.environment? then environment = answers.environment
-      else # Autoselect the only environment.
-        environment = app.environments[0]
-        logger.info 'Autoselecting your only environment: %s', chalk.cyan environment.name
-
-      # Continue.
-      cb null, app, environment
-
-  # Prompt for missing DLC.
-  _promptDLC: (dlcs, cb) ->
-    # Error out if the user does not have any apps.
-    if 0 is dlcs.length
-      return cb 'You do not have any eligible datalinks. Head over to the Kinvey console to create one.'
-
-    # Autoselect the only app.
-    if 1 is dlcs.length
-      dlc = dlcs[0]
-      logger.info 'Autoselecting your only eligible datalink: %s', chalk.cyan dlc.name
-
-    # Prompt for DLC to use.
-    inquirer.prompt [{
-      message : 'Which datalink would you like to use?'
-      name    : 'dlc'
-      type    : 'list'
-      choices : util.formatList dlc
-      when    : 1 < dlc.length
-    }], (answers) ->
-      if answers.dlc? then dlc = answers.dlc
-      cb null, dlc # Continue.
 
 # Exports.
-module.exports = new Project()
+module.exports = new Project config.paths.project

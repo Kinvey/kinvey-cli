@@ -15,24 +15,32 @@ limitations under the License.
 ###
 
 # Package modules.
+async   = require 'async'
 program = require 'commander'
 
 # Local modules.
-dlc     = require '../lib/dlc.coffee'
-project = require '../lib/project.coffee'
-user    = require '../lib/user.coffee'
+datalink = require '../lib/datalink.coffee'
+init     = require '../lib/init.coffee'
+logger   = require '../lib/logger.coffee'
+project  = require '../lib/project.coffee'
+user     = require '../lib/user.coffee'
 
 # Entry point for the restart command.
-module.exports = restart = (options, cb) ->
-  # Set-up.
-  user.restore()
-  project.restore()
+module.exports = restart = (command, cb) ->
+  options = init command # Initialize the command.
 
-  # Restart the DLC.
-  dlc.restart()
+  async.series [
+    # Set-up user and restore project.
+    (next) -> user.setup options, next
+    project.restore
 
-  # Done.
-  cb()
+    # Restart the DLC.
+    datalink.restart
+  ], (err) ->
+    if err? # Display errors.
+      logger.error err
+      unless cb? then process.exit -1 # Exit with error.
+    cb? err
 
 # Register the command.
 module.exports = program

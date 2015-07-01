@@ -24,6 +24,7 @@
     "custom-logger"   : "0.3.x",
     "inquirer"        : "0.8.x",
     "isemail"         : "1.1.x",
+    "lodash.merge"    : "3.3.x",
     "os-homedir"      : "1.0.x",
     "request"         : "2.58.x",
     "update-notifier" : "0.5.x"

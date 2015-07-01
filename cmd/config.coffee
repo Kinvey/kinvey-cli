@@ -16,49 +16,27 @@ limitations under the License.
 
 # Package modules.
 async   = require 'async'
-chalk   = require 'chalk'
-config  = require 'config'
 program = require 'commander'
 
 # Local modules.
-logger = require '../lib/logger.coffee'
-util   = require '../lib/util.coffee'
+init    = require '../lib/init.coffee'
+logger  = require '../lib/logger.coffee'
+project = require '../lib/project.coffee'
+user    = require '../lib/user.coffee'
 
 # Entry point for the config command.
-module.exports = configure = (options, cb) ->
-  # Set-up.
-  user.setup()
-  project.setup()
-  dlc.setup()
+module.exports = configure = (command, cb) ->
+  options = init command # Initialize the command.
 
-  cb()
-
-###
- # Entry point for the config command (exported).
-###
-module.exports = configure = util.run (options, cb) ->
-  # Runtime modules.
-  project = require '../lib/project.coffee'
-  user    = require '../lib/user.coffee'
-
-  # Fail if the project is already configured.
-  if project.app? then return cb 'This project is already configured'
-
-  # Prompt the user for app, environment, and datalink selection.
+  # Set-up user and project.
   async.series [
-    project.selectApp
-    project.selectDLC
+    (next) -> user.setup    options, next
+    (next) -> project.setup options, next
   ], (err) ->
-    if err then return cb err # Continue with error.
-
-    # Save app, environment, and datalink selection in project file.
-    logger.debug 'Writing project file %s', chalk.cyan config.paths.project # Debug.
-    fs.writeFileSync config.paths.project, JSON.stringify {
-      app : project.app.id
-      dlc : project.dlc.id
-      environment: project.environment.id
-    }
-    cb() # Continue.
+    if err? # Display errors.
+      logger.error err
+      unless cb? then process.exit -1 # Exit with error.
+    cb? err
 
 # Register the command.
 program

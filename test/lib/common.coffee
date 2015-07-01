@@ -18,8 +18,12 @@ chai      = require 'chai'
 sinon     = require 'sinon'
 sinonChai = require 'sinon-chai'
 
+# Local modules.
+logger = require '../../lib/logger.coffee'
+
 # Configure.
 chai.use sinonChai
+logger.config { level: 3 } # Show errors only.
 
 # Exports.
 global.expect = chai.expect

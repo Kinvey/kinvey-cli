@@ -43,7 +43,7 @@ class User
   login: (email, password, cb) =>
     async.doUntil (next) =>
       this._loginOnce email, password, next
-      email = password = null # Reset.
+      email = password = undefined # Reset.
     , this.isLoggedIn, cb
 
   # Restores the session from file.
@@ -57,7 +57,7 @@ class User
       else # No token, prompt for login.
         logger.debug 'Failed to restore session from file %s', chalk.cyan this.userPath
         async.series [
-          (next) => this.login null, null, next
+          (next) => this.login undefined, undefined, next
           this.save
         ], cb
 

@@ -83,7 +83,7 @@ class Project
       else cb() # Continue.
 
   # Executes a GET /apps request.
-  _execApps: (cb) =>
+  _execApps: (cb) ->
     request.get {
       url     : '/apps'
       headers : { Authorization: "Kinvey #{user.token}" }

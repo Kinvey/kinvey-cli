@@ -14,18 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+# Package modules.
+sinon = require 'sinon'
+
 # Local modules.
-cli = require '../bin/cli.coffee'
-pkg = require '../package.json'
+cli     = require '../bin/cli.coffee'
+pkg     = require '../package.json'
+request = require '../lib/request.coffee'
 
 # Test suite.
-describe pkg.name, ->
+describe.skip pkg.name, ->
   # Test options.
   describe '-e, --email <e-mail>', () ->
     it 'should set the e-mail address of the Kinvey account.', () ->
       cli [ 'node', pkg.name, 'config', '--email', 'bob@example.com' ]
 
   describe '--host <host>', () ->
+    before    'stub', -> sinon.stub request, 'defaults'
+    afterEach 'stub', -> request.defaults.reset()
+    after     'stub', -> request.defaults.restore()
+
     it 'should set the host of the Kinvey service.', ->
       cli [ 'node', pkg.name, 'config', '--host', 'example.com' ]
 

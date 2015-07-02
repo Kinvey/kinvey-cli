@@ -80,7 +80,7 @@ class Project
     this.restore (err) =>
       if !this.isConfigured() # Not configured, prompt for details.
         this.select cb
-      else cb() # Continue.
+      else cb err # Continue.
 
   # Executes a GET /apps request.
   _execApps: (cb) ->

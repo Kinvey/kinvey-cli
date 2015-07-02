@@ -34,10 +34,9 @@ module.exports = deploy = (command, cb) ->
     (next) -> user.setup options, next
     project.restore
 
-    # Validate, pack, and upload the project package.
+    # Validate and deploy the project.
     datalink.validate
-    datalink.pack
-    datalink.upload
+    datalink.deploy
   ], (err) ->
     if err? # Display errors.
       logger.error err

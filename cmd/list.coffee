@@ -44,7 +44,7 @@ module.exports = list = (command, cb) ->
     cb? err
 
 # Register the command.
-module.exports = program
+program
   .command     'list'
   .description 'list the configured Kinvey-backed Data Link Connectors for the current environment'
   .action      list

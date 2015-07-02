@@ -43,7 +43,7 @@ module.exports = restart = (command, cb) ->
     cb? err
 
 # Register the command.
-module.exports = program
+program
   .command     'restart'
   .description 'restart the containers that host the Data Link Connector'
   .action      restart

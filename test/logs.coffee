@@ -15,21 +15,23 @@ limitations under the License.
 ###
 
 # Package modules.
-program = require 'commander'
+sinon = require 'sinon'
 
 # Local modules.
-init   = require '../lib/init.coffee'
-logger = require '../lib/logger.coffee'
+command = require './fixtures/command.coffee'
+logger  = require '../lib/logger.coffee'
+logs    = require '../cmd/logs.coffee'
+pkg     = require '../package.json'
 
-# Entry point for the logs command.
-module.exports = logs = (command, cb) ->
-  options = init command # Initialize the command.
+# Test suite.
+describe "./#{pkg.name} logs", () ->
+  # Stub logger.error().
+  before    'logger', () -> sinon.stub logger, 'error'
+  afterEach 'logger', () -> logger.error.reset()
+  after     'logger', () -> logger.error.restore()
 
-  logger.error 'The logs command is not implemented yet'
-  cb?()
-
-# Register the command.
-program
-  .command     'logs'
-  .description 'display the logs of the DataLink Connector'
-  .action      logs
+  # Tests.
+  it 'should error.', (cb) ->
+    logs command, (err) ->
+      expect(logger.error).to.be.calledOnce
+      cb err

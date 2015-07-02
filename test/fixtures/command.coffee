@@ -14,22 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-# Package modules.
-program = require 'commander'
+# Configure.
+noop = () -> { }
 
-# Local modules.
-init   = require '../lib/init.coffee'
-logger = require '../lib/logger.coffee'
-
-# Entry point for the logs command.
-module.exports = logs = (command, cb) ->
-  options = init command # Initialize the command.
-
-  logger.error 'The logs command is not implemented yet'
-  cb?()
-
-# Register the command.
-program
-  .command     'logs'
-  .description 'display the logs of the DataLink Connector'
-  .action      logs
+# Exports.
+module.exports = {
+  opts   : noop
+  parent : { opts: noop }
+}

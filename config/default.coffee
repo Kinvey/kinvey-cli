@@ -24,7 +24,10 @@ osHomedir = require 'os-homedir'
 module.exports = {
   host: 'https://manage.kinvey.com'
 
-  maxUpload: 10 * 1024 * 1024 # 10 MB
+  maxUploadSize : 10 * 1024 * 1024 # 10 MB
+
+  timeout       :  5 * 1000 # 5s
+  uploadTimeout : 30 * 1000 # 30s
 
   paths: {
     project : path.join process.cwd(), '.kinvey'         # <projectDir>/<project>

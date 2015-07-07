@@ -34,7 +34,7 @@
     "chai"       : "3.0.x",
     "coffeelint" : "1.10.x",
     "mocha"      : "2.2.x",
-    "nock"       : "2.6.x",
+    "nock"       : "2.7.x",
     "sinon"      : "1.15.x",
     "sinon-chai" : "2.8.x"
   },

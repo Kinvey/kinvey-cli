@@ -24,62 +24,57 @@ config   = require 'config'
 
 # Local modules.
 logger  = require './logger.coffee'
-pkg     = require '../package.json'
 project = require './project.coffee'
 request = require './request.coffee'
 user    = require './user.coffee'
+util    = require './util.coffee'
 
 # Define the datalink class.
 class Datalink
 
-  constructor: (project) ->
-    this.project = project
-
   # Packages and uploads the project.
-  deploy: (cb) =>
-    logger.debug 'Creating archive' # Debug.
+  deploy: (dir, cb) =>
+    logger.debug 'Creating archive from %s', chalk.cyan dir # Debug.
 
     # Initialize the archive.
     archive = archiver.create 'zip'
 
     # Prepare the request.
     req = request.post {
-      url     : "/apps/#{project.app}/data-links/{project.datalink}/deploy"
+      url     : "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
       headers : { Authorization: "Kinvey #{user.token}" }
+      timeout : config.uploadTimeout or 30000 # 30s.
     }, (err, response) ->
-      logger.debug 'Upload complete.' # Debug.
-      cb err
+      if 202 is response?.statusCode then logger.debug 'Upload complete.' # Debug.
+      cb err # Continue.
 
     # Event listeners.
-    archive.on 'finish', (err) ->
+    archive.on 'data', (chunk) ->
       size = archive.pointer()
-
-      # Debug.
-      logger.debug 'Created archive, %s bytes written', chalk.cyan size
-
-      # Validate the archive and fail when invalid.
-      if size > config.maxUpload
-        logger.debug 'Max archive size exceeded (%s, limit %s)', chalk.cyan(size), chalk.cyan config.maxUpload
+      if size > config.maxUploadSize # Validate.
+        logger.debug 'Max archive size exceeded (%s, limit %s)', chalk.cyan(size), chalk.cyan config.maxUploadSize
         archive.emit 'error', new Error 'ProjectMaxFileSizeExceeded'
 
-    archive.on 'error', (err) ->
-      # Stop further processing and continue with error.
-      req.abort()
-      archive.unpipe req
-      archive.abort()
-      cb err
-      cb = null # Reset.
+    archive.on 'finish', (err) ->
+      logger.debug 'Created archive, %s bytes written', chalk.cyan archive.pointer() # Debug.
 
-    # Pipe the archive into the request.
+    archive.on 'error', (err) ->
+      # Stop processing.
+      req.end()
+      archive.removeAllListeners()
+      archive.abort()
+      cb err # Continue with error.
+
+    # Pipe the archve into the request.
     archive.pipe req
 
     # Pack.
     archive.bulk [{
-      cwd    : process.cwd()
+      cwd    : dir
       src    : '**'
       dest   : false
       expand : true
-      filter : this._skipArtifacts
+      filter : (filepath) => this._skipArtifacts dir, filepath
     }]
     archive.finalize()
 
@@ -88,33 +83,34 @@ class Datalink
     this._execRestart cb
 
   # Validates the project.
-  validate: (cb) =>
-    # TODO pick right pkg - not this module one, but the process.cwd() one.
-    unless pkg.dependencies?['backend-sdk']?
-      return cb new Error 'InvalidProject'
-    unless this.project.isConfigured()
-      return cb new Error 'ProjectNotConfigured'
-    cb() # Continue.
+  validate: (dir, cb) ->
+    packagePath = path.join dir, 'package.json' # Lookup package in provided dir.
+    util.readJSON packagePath, (err, json) ->
+      unless json?.dependencies?['backend-sdk']?
+        return cb new Error 'InvalidProject'
+      unless project.isConfigured()
+        return cb new Error 'ProjectNotConfigured'
+      cb err # Continue.
 
   # Executes a POST /apps/:app/datalink/:datalink/restart request.
   _execRestart: (cb) ->
     request.post {
-      url     : "/apps/#{this.project.app}/data-links/#{this.project.datalink}/restart"
+      url     : "/apps/#{project.app}/data-links/#{project.datalink}/restart"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, cb
 
   # Executes a POST /apps/:app/datalink/:datalink/deploy request.
   _execUpload: (file, cb) ->
     request.post {
-      url       : "/apps/#{this.project.app}/data-links/#{this.project.datalink}/deploy"
+      url       : "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
       headers   : { Authorization: "Kinvey #{user.token}" }
       multipart : [ { body: file } ]
     }, cb
 
   # Returns true if the provided path is an artifact.
-  _skipArtifacts: (filepath) ->
-    relative = path.relative process.cwd(), filepath
+  _skipArtifacts: (base, filepath) ->
+    relative = path.relative base, filepath
     0 isnt relative.indexOf 'node_modules/'
 
 # Exports.
-module.exports = new Datalink project
+module.exports = new Datalink()

@@ -20,12 +20,11 @@ chalk  = require 'chalk'
 config = require 'config'
 
 # Local modules.
-datalink = require './datalink.coffee'
-logger   = require './logger.coffee'
-prompt   = require './prompt.coffee'
-request  = require './request.coffee'
-user     = require './user.coffee'
-util     = require './util.coffee'
+logger  = require './logger.coffee'
+prompt  = require './prompt.coffee'
+request = require './request.coffee'
+user    = require './user.coffee'
+util    = require './util.coffee'
 
 # Define the project class.
 class Project

@@ -24,11 +24,15 @@ osHomedir = require 'os-homedir'
 module.exports = {
   host: 'https://manage.kinvey.com'
 
+  # Project archive settings.
+  ignore: [ 'node_modules/', 'test/', '.DS_Store', '.git' ]
   maxUploadSize : 10 * 1024 * 1024 # 10 MB
 
+  # Timeouts.
   timeout       :  5 * 1000 # 5s
   uploadTimeout : 30 * 1000 # 30s
 
+  # Paths.
   paths: {
     project : path.join process.cwd(), '.kinvey'         # <projectDir>/<project>
     session : path.join osHomedir(),   '.kinvey-session' # ~/<session>

@@ -49,17 +49,17 @@ describe "./#{pkg.name} list", () ->
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    list command, (err) ->
+    list.call command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    list command, (err) ->
+    list.call command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
   it 'should print the current datalink.', (cb) ->
-    list command, (err) ->
+    list.call command, (err) ->
       expect(logger.info).to.be.calledOnce
       expect(logger.info.firstCall.args[1]).to.contain project.datalink
       cb err

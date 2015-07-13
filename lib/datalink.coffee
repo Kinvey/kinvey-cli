@@ -36,43 +36,54 @@ class Datalink
   deploy: (dir, cb) =>
     logger.debug 'Creating archive from %s', chalk.cyan dir # Debug.
 
+    # Global error handler.
+    onError = (err) ->
+      archive.removeAllListeners 'finish'
+      archive.abort()
+      req.abort()
+      cb err # Continue with error.
+
     # Initialize the archive.
     archive = archiver.create 'zip'
 
+    # Prepare the upload stream.
+    attachment = {
+      value   : archive
+      options : { filename: 'archive.zip', contentType: 'application/zip' }
+    }
+
     # Prepare the request.
     req = request.post {
-      url     : "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
-      headers : { Authorization: "Kinvey #{user.token}" }
-      timeout : config.uploadTimeout or 30000 # 30s.
-    }, (err, response) ->
-      if 202 is response?.statusCode then logger.debug 'Upload complete.' # Debug.
-      cb err # Continue.
+      url      : "/apps/#{project.app}/data-links/#{project.datalink}/deploy?target=#{project.environment}"
+      headers  : { Authorization: "Kinvey #{user.token}", 'Transfer-Encoding': 'chunked' },
+      formData : { file: attachment }
+      timeout  : config.uploadTimeout or 30 * 1000 # 30s.
+    }, (_, response) ->
+      if 202 is response?.statusCode
+        logger.info 'Deploy initiated, received job %s.', chalk.cyan response.body.job # Debug.
+        cb() # Continue.
+      else if response?
+        cb response # Continue with request error.
 
     # Event listeners.
     archive.on 'data', (chunk) ->
       size = archive.pointer()
       if size > config.maxUploadSize # Validate.
-        logger.debug 'Max archive size exceeded (%s, limit %s)', chalk.cyan(size), chalk.cyan config.maxUploadSize
-        archive.emit 'error', new Error 'ProjectMaxFileSizeExceeded'
+        logger.info 'Max archive size exceeded (%s bytes, max %s bytes)', chalk.cyan(size), chalk.cyan config.maxUploadSize
+        req.emit 'error', new Error 'ProjectMaxFileSizeExceeded'
 
     archive.on 'finish', (err) ->
       logger.debug 'Created archive, %s bytes written', chalk.cyan archive.pointer() # Debug.
 
-    archive.on 'error', (err) ->
-      # Stop processing.
-      req.end()
-      archive.removeAllListeners()
-      archive.abort()
-      cb err # Continue with error.
-
-    # Pipe the archve into the request.
-    archive.pipe req
+    # Error listeners.
+    req.once 'error', onError # Also triggered on archive errors.
 
     # Pack.
     archive.bulk [{
       cwd    : dir
       src    : '**'
       dest   : false
+      dot    : true # Include ".*" (e.g. ".git").
       expand : true
       filter : (filepath) => this._skipArtifacts dir, filepath
     }]
@@ -80,7 +91,12 @@ class Datalink
 
   # Restarts the containers that host the DLC.
   restart: (cb) =>
-    this._execRestart cb
+    this._execRestart (err, response) ->
+      if 202 is response?.statusCode
+        logger.info 'Restart initiated, received job %s.', chalk.cyan response.body.job # Debug.
+        cb() # Continue.
+      else
+        cb err or response # Continue with error.
 
   # Validates the project.
   validate: (dir, cb) ->
@@ -95,22 +111,17 @@ class Datalink
   # Executes a POST /apps/:app/datalink/:datalink/restart request.
   _execRestart: (cb) ->
     request.post {
-      url     : "/apps/#{project.app}/data-links/#{project.datalink}/restart"
+      url     : "/apps/#{project.app}/data-links/#{project.datalink}/restart?target=#{project.environment}"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, cb
 
-  # Executes a POST /apps/:app/datalink/:datalink/deploy request.
-  _execUpload: (file, cb) ->
-    request.post {
-      url       : "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
-      headers   : { Authorization: "Kinvey #{user.token}" }
-      multipart : [ { body: file } ]
-    }, cb
-
-  # Returns true if the provided path is an artifact.
+  # Returns true if the provided path is an artifact (i.e. should be included).
   _skipArtifacts: (base, filepath) ->
     relative = path.relative base, filepath
-    0 isnt relative.indexOf 'node_modules/'
+    for pattern in config.ignore
+      if 0 is relative.indexOf pattern
+        return false
+    true
 
 # Exports.
 module.exports = new Datalink()

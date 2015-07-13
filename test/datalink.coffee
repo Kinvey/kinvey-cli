@@ -39,20 +39,25 @@ describe 'datalink', () ->
 
   # datalink.deploy().
   describe 'deploy', () ->
+    # Mock the API.
+    beforeEach 'api', () ->
+      this.subject = null
+      this.mock = api
+        .post "/apps/#{project.app}/data-links/#{project.datalink}/deploy?target=123"
+        .reply 202, (uri, requestBody) =>
+          this.subject = requestBody
+
+    afterEach 'api', () ->
+      this.mock.done()
+      delete this.mock
+      delete this.subject
+
     # Tests.
     it 'should package the project.', (cb) ->
-      # Mock the API so we can inspect the body.
-      subject = null # Init.
-      mock = api
-        .post "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
-        .reply 202, (uri, requestBody) ->
-          subject = requestBody
-
       # Deploy and test.
-      datalink.deploy fixtures.valid, (err) ->
-        expect(subject).to.exist
-        expect(subject).to.have.length.above 1
-        mock.done()
+      datalink.deploy fixtures.valid, (err) =>
+        expect(this.subject).to.exist
+        expect(this.subject).to.have.length.above 1
         cb err
 
     it 'should fail when the project is too big.', (cb) ->
@@ -61,26 +66,15 @@ describe 'datalink', () ->
         expect(err.message).to.equal 'ProjectMaxFileSizeExceeded'
         cb()
 
-    describe 'when the package is valid', () ->
-      # Mock the API.
-      beforeEach 'api', () ->
-        this.mock = api
-          .post "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
-          .reply 202
-      afterEach 'api', () ->
-        this.mock.done()
-        delete this.mock
-
-      # Tests.
-      it 'should upload.', (cb) ->
-        datalink.deploy fixtures.valid, cb
+    it 'should upload.', (cb) ->
+      datalink.deploy fixtures.valid, cb
 
     # datalink.restart().
   describe 'restart', () ->
     # Mock the API.
     beforeEach 'api', () ->
-      this.mock = api.post "/apps/#{project.app}/data-links/#{project.datalink}/restart"
-        .reply 202
+      this.mock = api.post "/apps/#{project.app}/data-links/#{project.datalink}/restart?target=123"
+        .reply 202, { job: 123 }
     afterEach 'api', () ->
       this.mock.done()
       delete this.mock
@@ -93,11 +87,11 @@ describe 'datalink', () ->
   describe 'validate', () ->
     # Helper which stubs a valid package.json.
     createPackage = () ->
-      before 'stub', -> sinon.stub(util, 'readJSON').callsArgWith 1, null, {
+      before 'stub', () -> sinon.stub(util, 'readJSON').callsArgWith 1, null, {
         dependencies: { 'backend-sdk': '*' }
       }
-      afterEach 'stub', -> util.readJSON.reset()
-      after     'stub', -> util.readJSON.restore()
+      afterEach 'stub', () -> util.readJSON.reset()
+      after     'stub', () -> util.readJSON.restore()
 
     # Test suite.
     describe 'when the project includes the backend-sdk dependency', () ->

@@ -32,6 +32,6 @@ describe "./#{pkg.name} logs", () ->
 
   # Tests.
   it 'should error.', (cb) ->
-    logs command, (err) ->
+    logs.call command, (err) ->
       expect(logger.error).to.be.calledOnce
       cb err

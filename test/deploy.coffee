@@ -38,32 +38,32 @@ describe "./#{pkg.name} deploy", () ->
   after     'project', () -> project.restore.restore()
 
   # Stub datalink.validate().
-  before    'validate', () -> sinon.stub(datalink, 'validate').callsArg 0
+  before    'validate', () -> sinon.stub(datalink, 'validate').callsArg 1
   afterEach 'validate', () -> datalink.validate.reset()
   after     'validate', () -> datalink.validate.restore()
 
   # Stub datalink.deploy().
-  before    'deploy', () -> sinon.stub(datalink, 'deploy').callsArg 0
+  before    'deploy', () -> sinon.stub(datalink, 'deploy').callsArg 1
   afterEach 'deploy', () -> datalink.deploy.reset()
   after     'deploy', () -> datalink.deploy.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    deploy command, (err) ->
+    deploy.call command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    deploy command, (err) ->
+    deploy.call command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
   it 'should validate the datalink.', (cb) ->
-    deploy command, (err) ->
+    deploy.call command, (err) ->
       expect(datalink.validate).to.be.calledOnce
       cb err
 
   it 'should deploy the datalink.', (cb) ->
-    deploy command, (err) ->
+    deploy.call command, (err) ->
       expect(datalink.deploy).to.be.calledOnce
       cb err

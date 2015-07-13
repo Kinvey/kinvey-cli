@@ -26,8 +26,8 @@ project  = require '../lib/project.coffee'
 user     = require '../lib/user.coffee'
 
 # Entry point for the restart command.
-module.exports = restart = (command, cb) ->
-  options = init command # Initialize the command.
+module.exports = restart = (argv..., cb) ->
+  options = init this # Initialize the command.
 
   async.series [
     # Set-up user and restore project.

@@ -26,8 +26,8 @@ project  = require '../lib/project.coffee'
 user     = require '../lib/user.coffee'
 
 # Entry point for the deploy command.
-module.exports = deploy = (command, cb) ->
-  options = init command # Initialize the command.
+module.exports = deploy = (argv..., cb) ->
+  options = init this # Initialize the command.
 
   async.series [
     # Set-up user and restore project.
@@ -35,8 +35,8 @@ module.exports = deploy = (command, cb) ->
     project.restore
 
     # Validate and deploy the project.
-    datalink.validate
-    datalink.deploy
+    (next) -> datalink.validate process.cwd(), next
+    (next) -> datalink.deploy   process.cwd(), next
   ], (err) ->
     if err? # Display errors.
       logger.error err

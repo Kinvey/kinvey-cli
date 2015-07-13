@@ -26,8 +26,8 @@ project = require '../lib/project.coffee'
 user    = require '../lib/user.coffee'
 
 # Entry point for the list command.
-module.exports = list = (command, cb) ->
-  options = init command # Initialize the command.
+module.exports = list = (argv..., cb) ->
+  options = init this # Initialize the command.
 
   # Set-up user and project.
   async.series [

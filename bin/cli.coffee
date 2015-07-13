@@ -39,6 +39,11 @@ module.exports = (args) ->
   require '../cmd/logs.coffee'
   require '../cmd/restart.coffee'
 
+  # Default action.
+  program
+    .command '*'
+    .action () -> program.outputHelp()
+
   # Run the program.
   program.parse args
 

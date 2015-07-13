@@ -38,11 +38,11 @@ describe "./#{pkg.name} config", () ->
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    config command, (err) ->
+    config.call command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should setup the project.', (cb) ->
-    config command, (err) ->
+    config.call command, (err) ->
       expect(project.setup).to.be.calledOnce
       cb err

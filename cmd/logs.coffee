@@ -22,8 +22,8 @@ init   = require '../lib/init.coffee'
 logger = require '../lib/logger.coffee'
 
 # Entry point for the logs command.
-module.exports = logs = (command, cb) ->
-  options = init command # Initialize the command.
+module.exports = logs = (argv..., cb) ->
+  options = init this # Initialize the command.
 
   logger.error 'The logs command is not implemented yet'
   cb?()

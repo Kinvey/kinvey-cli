@@ -44,16 +44,16 @@ describe "./#{pkg.name} restart", () ->
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    restart command, (err) ->
+    restart.call command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    restart command, (err) ->
+    restart.call command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
   it 'should reset the datalink.', (cb) ->
-    restart command, (err) ->
+    restart.call command, (err) ->
       expect(datalink.restart).to.be.calledOnce
       cb err

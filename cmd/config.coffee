@@ -25,8 +25,8 @@ project = require '../lib/project.coffee'
 user    = require '../lib/user.coffee'
 
 # Entry point for the config command.
-module.exports = configure = (command, cb) ->
-  options = init command # Initialize the command.
+module.exports = configure = (argv..., cb) ->
+  options = init this # Initialize the command.
 
   # Set-up user and project.
   async.series [

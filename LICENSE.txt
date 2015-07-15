@@ -202,7 +202,7 @@ Summary:
 * commander-2.8       [MIT] - CLI argument parser.
 * config-1.14         [MIT] - Project configuration.
 * custom-logger-0.3   [MIT] - CLI logger.
-* inquirer-0.8        [MIT] - CLI prompts.
+* inquirer-0.9        [MIT] - CLI prompts.
 * isemail-1.1         [BSD-3-Clause] - E-mail validator.
 * lodash.merge-3.3    [MIT] - Object merger.
 * mocha-2.2           [MIT] - Testing library.
@@ -225,7 +225,7 @@ SECTION 1: BSD-STYLE, MIT-STYLE, OR SIMILAR STYLE LICENSES
    >>> commander-2.8
    >>> config-1.14
    >>> custom-logger-0.3
-   >>> inquirer-0.8
+   >>> inquirer-0.9
    >>> isemail-1.1
    >>> lodash.merge-3.3
    >>> mocha-2.2
@@ -457,7 +457,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
->>> inquirer-0.8 (https://github.com/SBoudrias/Inquirer.js/blob/master/LICENSE-MIT)
+>>> inquirer-0.9 (https://github.com/SBoudrias/Inquirer.js/blob/master/LICENSE-MIT)
 
 Copyright (c) 2012 Simon Boudrias
 

@@ -88,7 +88,7 @@ class Project
       headers : { Authorization: "Kinvey #{user.token}" }
     }, (err, response) ->
       if 200 is response?.statusCode then cb null, response.body
-      else cb err or response # Continue with error.
+      else cb err or response.body # Continue with error.
 
   # Executes a GET /apps/:app/datalinks request.
   _execDatalinks: (cb) =>
@@ -97,7 +97,7 @@ class Project
       headers : { Authorization: "Kinvey #{user.token}" }
     }, (err, response) ->
       if 200 is response?.statusCode then cb null, response.body
-      else cb err or response # Continue with error.
+      else cb err or response.body # Continue with error.
 
   # Returns eligible Kinvey datalinks.
   _execKinveyDatalinks: (cb) =>

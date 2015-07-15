@@ -38,6 +38,7 @@ module.exports = (args) ->
   require '../cmd/list.coffee'
   require '../cmd/logs.coffee'
   require '../cmd/restart.coffee'
+  require '../cmd/status.coffee'
 
   # Default action.
   program

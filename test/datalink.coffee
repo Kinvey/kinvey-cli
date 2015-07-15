@@ -83,6 +83,21 @@ describe 'datalink', () ->
     it 'should restart.', (cb) ->
       datalink.restart cb
 
+  describe 'status', () ->
+    # Mock the API.
+    beforeEach 'api', () ->
+      this.mock = api.get "/apps/#{project.app}/data-links/#{project.datalink}/deploy?target=123&job=123"
+        .reply 200, { status: 'COMPLETE' }
+    afterEach 'api', () ->
+      this.mock.done()
+      delete this.mock
+
+    # Tests.
+    it 'should return the job status.', (cb) ->
+      datalink.status '123', (err, status) ->
+        expect(status).to.equal 'COMPLETE'
+        cb err
+
     # datalink.validate().
   describe 'validate', () ->
     # Helper which stubs a valid package.json.

@@ -23,7 +23,7 @@
     "commander"       : "2.8.x",
     "config"          : "1.14.x",
     "custom-logger"   : "0.3.x",
-    "inquirer"        : "0.8.x",
+    "inquirer"        : "0.9.x",
     "isemail"         : "1.1.x",
     "lodash.merge"    : "3.3.x",
     "os-homedir"      : "1.0.x",

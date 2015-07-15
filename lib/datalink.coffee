@@ -60,7 +60,7 @@ class Datalink
       timeout  : config.uploadTimeout or 30 * 1000 # 30s.
     }, (_, response) ->
       if 202 is response?.statusCode
-        logger.info 'Deploy initiated, received job %s.', chalk.cyan response.body.job # Debug.
+        logger.info 'Deploy initiated, received job %s', chalk.cyan response.body.job # Debug.
         cb() # Continue.
       else if response?
         cb response # Continue with request error.
@@ -93,10 +93,19 @@ class Datalink
   restart: (cb) =>
     this._execRestart (err, response) ->
       if 202 is response?.statusCode
-        logger.info 'Restart initiated, received job %s.', chalk.cyan response.body.job # Debug.
+        logger.info 'Restart initiated, received job %s', chalk.cyan response.body.job
         cb() # Continue.
       else
-        cb err or response # Continue with error.
+        cb err or response.body # Continue with error.
+
+  # Returns the deploy job status.
+  status: (job, cb) =>
+    this._execStatus job, (err, response) ->
+      if 200 is response?.statusCode
+        logger.info 'Job status: %s', chalk.cyan response.body.status
+        cb null, response.body.status # Continue.
+      else
+        cb err or response.body # Continue with error.
 
   # Validates the project.
   validate: (dir, cb) ->
@@ -112,6 +121,13 @@ class Datalink
   _execRestart: (cb) ->
     request.post {
       url     : "/apps/#{project.app}/data-links/#{project.datalink}/restart?target=#{project.environment}"
+      headers : { Authorization: "Kinvey #{user.token}" }
+    }, cb
+
+  # Executes a GET /apps/:app/datalink/:datalink/<type> request.
+  _execStatus: (job, cb) ->
+    request.get {
+      url     : "/apps/#{project.app}/data-links/#{project.datalink}/deploy?target=#{project.environment}&job=#{job}"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, cb
 

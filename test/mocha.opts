@@ -1,0 +1,8 @@
+--check-leaks
+--compilers coffee:coffee-script/register
+--no-exit
+--recursive
+--reporter spec
+--require  ./test/lib/common.coffee
+--timeout  10000
+--ui       bdd

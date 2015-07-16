@@ -1,0 +1,75 @@
+{
+  "arrow_spacing": {
+    "level": "error"
+  },
+  "camel_case_classes": {
+    "level": "error"
+  },
+  "coffeescript_error": {
+    "level": "error"
+  },
+  "duplicate_key": {
+    "level": "error"
+  },
+  "indentation": {
+    "value": 2,
+    "level": "warn"
+  },
+  "line_endings": {
+    "level": "error",
+    "value": "unix"
+  },
+  "missing_fat_arrows": {
+    "level": "warn"
+  },
+  "max_line_length": {
+    "value": 120,
+    "level": "ignore",
+    "limitComments": true
+  },
+  "no_backticks": {
+    "level": "warn"
+  },
+  "no_debugger": {
+    "level": "warn"
+  },
+  "no_empty_functions": {
+    "level": "warn"
+  },
+  "no_implicit_braces": {
+    "level": "error",
+    "strict": false
+  },
+  "no_interpolation_in_single_quotes": {
+    "level": "error"
+  },
+  "no_stand_alone_at": {
+    "level": "error"
+  },
+  "no_tabs": {
+    "level": "error"
+  },
+  "no_throwing_strings": {
+    "level": "error"
+  },
+  "no_trailing_semicolons": {
+    "level": "error"
+  },
+  "no_trailing_whitespace": {
+    "level": "error",
+    "allowed_in_comments": false,
+    "allowed_in_empty_lines": true
+  },
+  "no_unnecessary_double_quotes": {
+    "level": "warn"
+  },
+  "no_unnecessary_fat_arrows": {
+    "level": "error"
+  },
+  "space_operators": {
+    "level": "warn"
+  },
+  "spacing_after_comma": {
+    "level": "error"
+  }
+}

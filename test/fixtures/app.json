@@ -1,0 +1,8 @@
+{
+  "id"   : "123",
+  "name" : "TestApp",
+  "environments": [{
+    "id"   : "kid123",
+    "name" : "TestEnvironment"
+  }]
+}

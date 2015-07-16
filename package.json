@@ -1,0 +1,44 @@
+{
+  "name"         : "kinvey-dlc-cli",
+  "version"      : "0.0.1-dev",
+  "description"  : "Utility for deploying Kinvey DLC microservices to Kinvey’s Node DLC PaaS.",
+  "keywords"     : [ "Kinvey" ],
+  "homepage"     : "http://www.kinvey.com",
+  "bugs"         : "https://github.com/Kinvey/dlc-cli/issues",
+  "license"      : "Apache-2.0",
+  "author"       : "Kinvey Inc",
+  "contributors" : [ "Mark van Seventer <mark@kinvey.com>" ],
+  "bin"          : "./bin/cli.js",
+  "repository"   : { "type": "git", "url": "Kinvey/dlc-cli" },
+  "scripts"      : {
+    "start"   : "./bin/cli.js",
+    "pretest" : "./node_modules/.bin/coffeelint --file ./.coffeelint bin/ cmd/ config/ lib/ test/",
+    "test"    : "./node_modules/.bin/mocha test/"
+  },
+  "dependencies" : {
+    "archiver"        : "0.14.x",
+    "async"           : "1.3.x",
+    "chalk"           : "1.1.x",
+    "coffee-script"   : "1.9.x",
+    "commander"       : "2.8.x",
+    "config"          : "1.14.x",
+    "custom-logger"   : "0.3.x",
+    "inquirer"        : "0.9.x",
+    "isemail"         : "1.1.x",
+    "lodash.merge"    : "3.3.x",
+    "os-homedir"      : "1.0.x",
+    "request"         : "2.58.x",
+    "update-notifier" : "0.5.x"
+  },
+  "devDependencies": {
+    "chai"       : "3.0.x",
+    "coffeelint" : "1.10.x",
+    "mocha"      : "2.2.x",
+    "nock"       : "2.7.x",
+    "sinon"      : "1.15.x",
+    "sinon-chai" : "2.8.x"
+  },
+  "engines" : { "node" : ">=0.10.x" },
+  "os"      : [ "darwin", "linux", "win32" ],
+  "preferGlobal": true
+}

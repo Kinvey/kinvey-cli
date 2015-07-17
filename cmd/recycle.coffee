@@ -25,8 +25,8 @@ logger   = require '../lib/logger.coffee'
 project  = require '../lib/project.coffee'
 user     = require '../lib/user.coffee'
 
-# Entry point for the restart command.
-module.exports = restart = (argv..., cb) ->
+# Entry point for the recycle command.
+module.exports = recycle = (argv..., cb) ->
   options = init this # Initialize the command.
 
   async.series [
@@ -34,8 +34,8 @@ module.exports = restart = (argv..., cb) ->
     (next) -> user.setup options, next
     project.restore
 
-    # Restart the DLC.
-    datalink.restart
+    # Recycle the DLC.
+    datalink.recycle
   ], (err) ->
     if err? # Display errors.
       logger.error err
@@ -44,6 +44,6 @@ module.exports = restart = (argv..., cb) ->
 
 # Register the command.
 program
-  .command     'restart'
-  .description 'restart the containers that host the Data Link Connector'
-  .action      restart
+  .command     'recycle'
+  .description 'recycle the Data Link Connector'
+  .action      recycle

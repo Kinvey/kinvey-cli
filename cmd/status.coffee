@@ -45,5 +45,5 @@ module.exports = status = (job, command, cb) ->
 # Register the command.
 program
   .command     'status <job>'
-  .description 'return the job status of a deploy or restart command'
+  .description 'return the job status of a deploy command'
   .action      status

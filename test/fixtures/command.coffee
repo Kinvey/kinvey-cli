@@ -18,7 +18,6 @@ limitations under the License.
 noop = () -> { }
 
 # Exports.
-module.exports = {
+module.exports =
   opts   : noop
   parent : { opts: noop }
-}

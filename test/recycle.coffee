@@ -22,11 +22,11 @@ command  = require './fixtures/command.coffee'
 datalink = require '../lib/datalink.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
-restart  = require '../cmd/restart.coffee'
+recycle  = require '../cmd/recycle.coffee'
 user     = require '../lib/user.coffee'
 
 # Test suite.
-describe "./#{pkg.name} restart", () ->
+describe "./#{pkg.name} recycle", () ->
   # Stub user.setup().
   before    'user', () -> sinon.stub(user, 'setup').callsArg 1
   afterEach 'user', () -> user.setup.reset()
@@ -37,23 +37,23 @@ describe "./#{pkg.name} restart", () ->
   afterEach 'project', () -> project.restore.reset()
   after     'project', () -> project.restore.restore()
 
-  # Stub datalink.restart().
-  before    'datalink', () -> sinon.stub(datalink, 'restart').callsArg 0
-  afterEach 'datalink', () -> datalink.restart.reset()
-  after     'datalink', () -> datalink.restart.restore()
+  # Stub datalink.recycle().
+  before    'datalink', () -> sinon.stub(datalink, 'recycle').callsArg 0
+  afterEach 'datalink', () -> datalink.recycle.reset()
+  after     'datalink', () -> datalink.recycle.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    restart.call command, (err) ->
+    recycle.call command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    restart.call command, (err) ->
+    recycle.call command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
   it 'should reset the datalink.', (cb) ->
-    restart.call command, (err) ->
-      expect(datalink.restart).to.be.calledOnce
+    recycle.call command, (err) ->
+      expect(datalink.recycle).to.be.calledOnce
       cb err

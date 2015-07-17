@@ -24,11 +24,10 @@ prompt  = require '../lib/prompt.coffee'
 util    = require '../lib/util.coffee'
 
 # Fixtures.
-fixtures = {
+fixtures =
   app       : require './fixtures/app.json'
   datalink  : require './fixtures/datalink.json'
   kinveyDlc : require './fixtures/kinvey-dlc.json'
-}
 
 # Test suite.
 describe 'project', () ->

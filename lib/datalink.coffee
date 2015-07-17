@@ -37,20 +37,15 @@ class Datalink
     logger.debug 'Creating archive from %s', chalk.cyan dir # Debug.
 
     # Global error handler.
-    onError = (err) ->
-      archive.removeAllListeners 'finish'
-      archive.abort()
-      req.abort()
-      cb err # Continue with error.
+    onError =
 
     # Initialize the archive.
-    archive = archiver.create 'zip'
+    archive = archiver.create 'tar'
 
     # Prepare the upload stream.
-    attachment = {
+    attachment =
       value   : archive
-      options : { filename: 'archive.zip', contentType: 'application/zip' }
-    }
+      options : { filename: 'archive.tar', contentType: 'application/tar' }
 
     # Prepare the request.
     req = request.post {
@@ -58,7 +53,8 @@ class Datalink
       headers  : { Authorization: "Kinvey #{user.token}", 'Transfer-Encoding': 'chunked' },
       formData : { file: attachment }
       timeout  : config.uploadTimeout or 30 * 1000 # 30s.
-    }, (_, response) ->
+    }, (err, response) ->
+      # NOTE: error is handled by `req` event listener defined below.
       if 202 is response?.statusCode
         logger.info 'Deploy initiated, received job %s', chalk.cyan response.body.job # Debug.
         cb() # Continue.
@@ -76,7 +72,13 @@ class Datalink
       logger.debug 'Created archive, %s bytes written', chalk.cyan archive.pointer() # Debug.
 
     # Error listeners.
-    req.once 'error', onError # Also triggered on archive errors.
+    req.once 'error', (err) ->
+       # NOTE: This handler is also triggered on archive-related errors.
+      logger.debug 'Aborting the request because of error: %s', chalk.cyan err.message or err # Debug.
+      archive.removeAllListeners 'finish'
+      archive.abort()
+      req.abort()
+      cb err # Continue with error.
 
     # Pack.
     archive.bulk [{
@@ -89,11 +91,11 @@ class Datalink
     }]
     archive.finalize()
 
-  # Restarts the containers that host the DLC.
-  restart: (cb) =>
-    this._execRestart (err, response) ->
+  # Recycles the containers that host the DLC.
+  recycle: (cb) =>
+    this._execRecycle (err, response) ->
       if 202 is response?.statusCode
-        logger.info 'Restart initiated, received job %s', chalk.cyan response.body.job
+        logger.info 'Recycle initiated, received job %s', chalk.cyan response.body.job
         cb() # Continue.
       else
         cb err or response.body # Continue with error.
@@ -117,10 +119,10 @@ class Datalink
         return cb new Error 'ProjectNotConfigured'
       cb err # Continue.
 
-  # Executes a POST /apps/:app/datalink/:datalink/restart request.
-  _execRestart: (cb) ->
+  # Executes a POST /apps/:app/datalink/:datalink/recycle request.
+  _execRecycle: (cb) ->
     request.post {
-      url     : "/apps/#{project.app}/data-links/#{project.datalink}/restart?target=#{project.environment}"
+      url     : "/apps/#{project.app}/data-links/#{project.datalink}/recycle?target=#{project.environment}"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, cb
 

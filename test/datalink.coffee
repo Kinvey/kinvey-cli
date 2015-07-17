@@ -24,10 +24,9 @@ project  = require '../lib/project.coffee'
 util     = require '../lib/util.coffee'
 
 # Configure.
-fixtures = {
+fixtures =
   invalid : path.join __dirname, 'fixtures/deploy' # Big directory.
   valid   : path.join __dirname, 'lib' # Just a small directory.
-}
 
 # Test suite.
 describe 'datalink', () ->
@@ -69,19 +68,19 @@ describe 'datalink', () ->
     it 'should upload.', (cb) ->
       datalink.deploy fixtures.valid, cb
 
-    # datalink.restart().
-  describe 'restart', () ->
+    # datalink.recycle().
+  describe 'recycle', () ->
     # Mock the API.
     beforeEach 'api', () ->
-      this.mock = api.post "/apps/#{project.app}/data-links/#{project.datalink}/restart?target=123"
+      this.mock = api.post "/apps/#{project.app}/data-links/#{project.datalink}/recycle?target=123"
         .reply 202, { job: 123 }
     afterEach 'api', () ->
       this.mock.done()
       delete this.mock
 
     # Tests.
-    it 'should restart.', (cb) ->
-      datalink.restart cb
+    it 'should recycle.', (cb) ->
+      datalink.recycle cb
 
   describe 'status', () ->
     # Mock the API.

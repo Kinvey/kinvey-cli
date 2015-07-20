@@ -31,7 +31,7 @@
     "update-notifier" : "0.5.x"
   },
   "devDependencies": {
-    "chai"       : "3.0.x",
+    "chai"       : "3.2.x",
     "coffeelint" : "1.10.x",
     "mocha"      : "2.2.x",
     "nock"       : "2.7.x",

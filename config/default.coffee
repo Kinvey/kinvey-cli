@@ -25,7 +25,7 @@ module.exports =
   host: 'https://manage.kinvey.com'
 
   # Project archive settings.
-  ignore: [ 'node_modules/', '.git/', '.svn/' ]
+  artifacts     : [ '.git/', '.svn/', 'node_modules/' ]
   maxUploadSize : 10 * 1024 * 1024 # 10 MB
 
   # Timeouts.

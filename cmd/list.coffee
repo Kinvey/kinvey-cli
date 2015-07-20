@@ -34,9 +34,8 @@ module.exports = list = (argv..., cb) ->
     (next) -> user.setup options, next
     project.restore
 
-    (next) ->
-      logger.info 'Current datalink: %s', chalk.cyan project.datalink
-      next() # Continue.
+    # List all Kinvey datalinks.
+    project.list
   ], (err) ->
     if err? # Display errors.
       logger.error err
@@ -46,5 +45,5 @@ module.exports = list = (argv..., cb) ->
 # Register the command.
 program
   .command     'list'
-  .description 'list the configured Kinvey-backed Data Link Connectors for the current environment'
+  .description 'list the configured Kinvey-backed Data Link Connectors for the current app'
   .action      list

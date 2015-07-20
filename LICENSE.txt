@@ -195,7 +195,7 @@ Summary:
 
 * archiver-0.14       [MIT] - Directory archiver.
 * async-1.3           [MIT] - Asynchronous control flow.
-* chai-3.0            [MIT] - Assertion library.
+* chai-3.2            [MIT] - Assertion library.
 * chalk-1.1           [MIT] - Logging formatter.
 * coffee-script-1.9   [MIT] - Project language.
 * coffeelint-1.10     [MIT] - Linting CoffeeScript.
@@ -218,7 +218,7 @@ SECTION 1: BSD-STYLE, MIT-STYLE, OR SIMILAR STYLE LICENSES
 
    >>> archiver-0.14
    >>> async-1.3
-   >>> chai-3.0
+   >>> chai-3.2
    >>> chalk-1.1
    >>> coffee-script-1.9
    >>> coffeelint-1.10
@@ -294,7 +294,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
->>> chai-3.0
+>>> chai-3.2
 
 (The MIT License)
 

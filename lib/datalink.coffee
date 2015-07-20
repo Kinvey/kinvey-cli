@@ -49,7 +49,7 @@ class Datalink
 
     # Prepare the request.
     req = request.post {
-      url      : "/apps/#{project.app}/data-links/#{project.datalink}/deploy?target=#{project.environment}"
+      url      : "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
       headers  : { Authorization: "Kinvey #{user.token}", 'Transfer-Encoding': 'chunked' },
       formData : { file: attachment }
       timeout  : config.uploadTimeout or 30 * 1000 # 30s.
@@ -83,11 +83,11 @@ class Datalink
     # Pack.
     archive.bulk [{
       cwd    : dir
-      src    : '**'
+      src    : '**/*'
       dest   : false
       dot    : true # Include ".*" (e.g. ".git").
       expand : true
-      filter : (filepath) => this._skipArtifacts dir, filepath
+      filter : (filepath) => not this._isArtifact dir, filepath
     }]
     archive.finalize()
 
@@ -122,24 +122,24 @@ class Datalink
   # Executes a POST /apps/:app/datalink/:datalink/recycle request.
   _execRecycle: (cb) ->
     request.post {
-      url     : "/apps/#{project.app}/data-links/#{project.datalink}/recycle?target=#{project.environment}"
+      url     : "/apps/#{project.app}/data-links/#{project.datalink}/recycle"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, cb
 
   # Executes a GET /apps/:app/datalink/:datalink/<type> request.
   _execStatus: (job, cb) ->
     request.get {
-      url     : "/apps/#{project.app}/data-links/#{project.datalink}/deploy?target=#{project.environment}&job=#{job}"
+      url     : "/apps/#{project.app}/data-links/#{project.datalink}/deploy?job=#{job}"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, cb
 
-  # Returns true if the provided path is an artifact (i.e. should be included).
-  _skipArtifacts: (base, filepath) ->
+  # Returns true if the provided path is an artifact.
+  _isArtifact: (base, filepath) ->
     relative = path.relative base, filepath
-    for pattern in config.ignore
+    for pattern in config.artifacts
       if 0 is relative.indexOf pattern
-        return false
-    true
+        return true
+    false
 
 # Exports.
 module.exports = new Datalink()

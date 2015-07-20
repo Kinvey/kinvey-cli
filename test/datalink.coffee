@@ -32,9 +32,9 @@ fixtures =
 describe 'datalink', () ->
   # Configure.
   beforeEach 'configure', () ->
-    project.app = project.environment = project.datalink = '123'
+    project.app = project.datalink = '123'
   afterEach 'configure', () ->
-    project.app = project.environment = project.datalink = null # Reset.
+    project.app = project.datalink = null # Reset.
 
   # datalink.deploy().
   describe 'deploy', () ->
@@ -42,7 +42,7 @@ describe 'datalink', () ->
     beforeEach 'api', () ->
       this.subject = null
       this.mock = api
-        .post "/apps/#{project.app}/data-links/#{project.datalink}/deploy?target=123"
+        .post "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
         .reply 202, (uri, requestBody) =>
           this.subject = requestBody
 
@@ -68,11 +68,11 @@ describe 'datalink', () ->
     it 'should upload.', (cb) ->
       datalink.deploy fixtures.valid, cb
 
-    # datalink.recycle().
+  # datalink.recycle().
   describe 'recycle', () ->
     # Mock the API.
     beforeEach 'api', () ->
-      this.mock = api.post "/apps/#{project.app}/data-links/#{project.datalink}/recycle?target=123"
+      this.mock = api.post "/apps/#{project.app}/data-links/#{project.datalink}/recycle"
         .reply 202, { job: 123 }
     afterEach 'api', () ->
       this.mock.done()
@@ -85,7 +85,7 @@ describe 'datalink', () ->
   describe 'status', () ->
     # Mock the API.
     beforeEach 'api', () ->
-      this.mock = api.get "/apps/#{project.app}/data-links/#{project.datalink}/deploy?target=123&job=123"
+      this.mock = api.get "/apps/#{project.app}/data-links/#{project.datalink}/deploy?job=123"
         .reply 200, { status: 'COMPLETE' }
     afterEach 'api', () ->
       this.mock.done()
@@ -135,7 +135,7 @@ describe 'datalink', () ->
 
       # Configure.
       beforeEach 'configure', () ->
-        project.app = project.environment = project.datalink = null # Reset.
+        project.app = project.datalink = null # Reset.
 
       # Tests.
       it 'should fail.', (cb) ->

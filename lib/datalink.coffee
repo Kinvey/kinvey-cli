@@ -137,7 +137,7 @@ class Datalink
   _isArtifact: (base, filepath) ->
     relative = path.relative base, filepath
     for pattern in config.artifacts
-      if 0 is relative.indexOf pattern
+      if 0 is relative.indexOf(pattern) or "#{relative}/" is pattern # Exclude both files and dirs.
         return true
     false
 

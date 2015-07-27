@@ -20,6 +20,7 @@ chalk  = require 'chalk'
 config = require 'config'
 
 # Local modules.
+KinveyError = require './error.coffee'
 logger  = require './logger.coffee'
 prompt  = require './prompt.coffee'
 request = require './request.coffee'
@@ -65,7 +66,7 @@ class Project
         cb() # Continue.
       else
         logger.debug 'Failed to restore project from file %s', chalk.cyan this.projectPath
-        cb new Error 'ProjectNotConfigured' # Continue with error.
+        cb new KinveyError 'ProjectNotConfigured' # Continue with error.
 
   # Saves the project details to file.
   save: (cb) =>
@@ -123,7 +124,7 @@ class Project
     async.waterfall [
       this._execApps
       (apps, next) ->
-        if 0 is apps.length then next new Error 'NoAppsFound'
+        if 0 is apps.length then next new KinveyError 'NoAppsFound'
         else prompt.getApp apps, next
     ], (err, app) =>
       if app? then this.app = app.id
@@ -134,7 +135,7 @@ class Project
     async.waterfall [
       this._execKinveyDatalinks
       (datalinks, next) ->
-        if 0 is datalinks.length then next new Error 'NoDatalinksFound'
+        if 0 is datalinks.length then next new KinveyError 'NoDatalinksFound'
         else prompt.getDatalink datalinks, next
     ], (err, datalink) =>
       if datalink? then this.datalink = datalink.id

@@ -23,6 +23,7 @@ chalk    = require 'chalk'
 config   = require 'config'
 
 # Local modules.
+KinveyError = require './error.coffee'
 logger  = require './logger.coffee'
 project = require './project.coffee'
 request = require './request.coffee'
@@ -66,7 +67,7 @@ class Datalink
       size = archive.pointer()
       if size > config.maxUploadSize # Validate.
         logger.info 'Max archive size exceeded (%s bytes, max %s bytes)', chalk.cyan(size), chalk.cyan config.maxUploadSize
-        req.emit 'error', new Error 'ProjectMaxFileSizeExceeded'
+        req.emit 'error', new KinveyError 'ProjectMaxFileSizeExceeded'
 
     archive.on 'finish', (err) ->
       logger.debug 'Created archive, %s bytes written', chalk.cyan archive.pointer() # Debug.
@@ -114,9 +115,9 @@ class Datalink
     packagePath = path.join dir, 'package.json' # Lookup package in provided dir.
     util.readJSON packagePath, (err, json) ->
       unless json?.dependencies?['backend-sdk']?
-        return cb new Error 'InvalidProject'
+        return cb new KinveyError 'InvalidProject'
       unless project.isConfigured()
-        return cb new Error 'ProjectNotConfigured'
+        return cb new KinveyError 'ProjectNotConfigured'
       cb err # Continue.
 
   # Executes a POST /apps/:app/datalink/:datalink/recycle request.

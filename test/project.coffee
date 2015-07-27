@@ -116,7 +116,7 @@ describe 'project', () ->
       it 'should fail.', (cb) ->
         project.restore (err) ->
           expect(err).to.exist
-          expect(err.message).to.equal 'ProjectNotConfigured'
+          expect(err.name).to.equal 'ProjectNotConfigured'
           cb()
 
   # project.save()
@@ -203,7 +203,7 @@ describe 'project', () ->
       it 'should fail.', (cb) ->
         project.select (err) ->
           expect(err).to.exist
-          expect(err.message).to.equal 'NoAppsFound'
+          expect(err.name).to.equal 'NoAppsFound'
           cb()
 
     describe 'given no eligible datalinks', () ->
@@ -230,7 +230,7 @@ describe 'project', () ->
       it 'should fail.', (cb) ->
         project.select (err) ->
           expect(err).to.exist
-          expect(err.message).to.equal 'NoDatalinksFound'
+          expect(err.name).to.equal 'NoDatalinksFound'
           cb()
 
   # project.setup()

@@ -14,11 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+# Standard lib.
+path = require 'path'
+
 # Package modules.
 program = require 'commander'
 
 # Local modules.
 pkg = require '../package.json'
+
+# Configure.
+process.env.NODE_CONFIG_DIR = path.join __dirname, '../config'
 
 # Exports.
 module.exports = (args) ->

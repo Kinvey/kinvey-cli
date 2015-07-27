@@ -16,7 +16,6 @@ limitations under the License.
 
 # Package modules.
 async   = require 'async'
-chalk   = require 'chalk'
 program = require 'commander'
 
 # Local modules.
@@ -38,7 +37,7 @@ module.exports = list = (argv..., cb) ->
     project.list
   ], (err) ->
     if err? # Display errors.
-      logger.error err
+      logger.error "%s", err
       unless cb? then process.exit -1 # Exit with error.
     cb? err
 

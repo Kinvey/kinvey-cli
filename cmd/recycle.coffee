@@ -38,7 +38,7 @@ module.exports = recycle = (argv..., cb) ->
     datalink.recycle
   ], (err) ->
     if err? # Display errors.
-      logger.error err
+      logger.error "%s", err
       unless cb? then process.exit -1 # Exit with error.
     cb? err
 

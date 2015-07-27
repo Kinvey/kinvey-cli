@@ -62,7 +62,7 @@ describe 'datalink', () ->
     it 'should fail when the project is too big.', (cb) ->
       datalink.deploy fixtures.invalid, (err) ->
         expect(err).to.exist
-        expect(err.message).to.equal 'ProjectMaxFileSizeExceeded'
+        expect(err.name).to.equal 'ProjectMaxFileSizeExceeded'
         cb()
 
     it 'should upload.', (cb) ->
@@ -120,7 +120,7 @@ describe 'datalink', () ->
       it 'should fail.', (cb) ->
         datalink.validate '*', (err) ->
           expect(err).to.exist
-          expect(err.message).to.equal 'InvalidProject'
+          expect(err.name).to.equal 'InvalidProject'
           cb()
 
     describe 'when the project is configured', () ->
@@ -141,5 +141,5 @@ describe 'datalink', () ->
       it 'should fail.', (cb) ->
         datalink.validate '*', (err) ->
           expect(err).to.exist
-          expect(err.message).to.equal 'ProjectNotConfigured'
+          expect(err.name).to.equal 'ProjectNotConfigured'
           cb()

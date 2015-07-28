@@ -44,6 +44,7 @@ describe 'datalink', () ->
       this.mock = api
         .post "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
         .reply 202, (uri, requestBody) =>
+          console.log requestBody
           this.subject = requestBody
 
     afterEach 'api', () ->
@@ -54,19 +55,19 @@ describe 'datalink', () ->
     # Tests.
     it 'should package the project.', (cb) ->
       # Deploy and test.
-      datalink.deploy fixtures.valid, (err) =>
+      datalink.deploy fixtures.valid, '0.1.0', (err) =>
         expect(this.subject).to.exist
         expect(this.subject).to.have.length.above 1
         cb err
 
     it 'should fail when the project is too big.', (cb) ->
-      datalink.deploy fixtures.invalid, (err) ->
+      datalink.deploy fixtures.invalid, '0.1.0', (err) ->
         expect(err).to.exist
         expect(err.name).to.equal 'ProjectMaxFileSizeExceeded'
         cb()
 
     it 'should upload.', (cb) ->
-      datalink.deploy fixtures.valid, cb
+      datalink.deploy fixtures.valid, '0.1.0', cb
 
   # datalink.recycle().
   describe 'recycle', () ->
@@ -100,8 +101,10 @@ describe 'datalink', () ->
     # datalink.validate().
   describe 'validate', () ->
     # Helper which stubs a valid package.json.
+    pkgVersion = '1.2.3'
     createPackage = () ->
       before 'stub', () -> sinon.stub(util, 'readJSON').callsArgWith 1, null, {
+        version: pkgVersion
         dependencies: { 'backend-sdk': '*' }
       }
       afterEach 'stub', () -> util.readJSON.reset()
@@ -113,7 +116,9 @@ describe 'datalink', () ->
 
       # Tests.
       it 'should succeed.', (cb) ->
-        datalink.validate '*', cb
+        datalink.validate '*', (err, version) ->
+          expect(version).to.equal pkgVersion
+          cb err
 
     describe 'when the project does not include the backend-sdk dependency', () ->
       # Tests.
@@ -128,7 +133,9 @@ describe 'datalink', () ->
 
       # Tests.
       it 'should succeed.', (cb) ->
-        datalink.validate '*', cb
+        datalink.validate '*', (err, version) ->
+          expect(version).to.equal pkgVersion
+          cb err
 
     describe 'when the project was not configured', () ->
       createPackage()

@@ -34,7 +34,7 @@ util    = require './util.coffee'
 class Datalink
 
   # Packages and uploads the project.
-  deploy: (dir, cb) =>
+  deploy: (dir, version, cb) =>
     logger.debug 'Creating archive from %s', chalk.cyan dir # Debug.
 
     # Initialize the archive.
@@ -49,7 +49,7 @@ class Datalink
     req = request.post {
       url      : "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
       headers  : { Authorization: "Kinvey #{user.token}", 'Transfer-Encoding': 'chunked' },
-      formData : { file: attachment }
+      formData : { version: version, file: attachment }
       timeout  : config.uploadTimeout or 30 * 1000 # 30s.
     }, (err, response) ->
       # NOTE: error is handled by `req` event listener defined below.
@@ -117,7 +117,7 @@ class Datalink
         return cb new KinveyError 'InvalidProject'
       unless project.isConfigured()
         return cb new KinveyError 'ProjectNotConfigured'
-      cb err # Continue.
+      cb err, json.version # Continue with version.
 
   # Executes a POST /apps/:app/datalink/:datalink/recycle request.
   _execRecycle: (cb) ->

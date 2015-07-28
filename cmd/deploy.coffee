@@ -29,14 +29,14 @@ user     = require '../lib/user.coffee'
 module.exports = deploy = (argv..., cb) ->
   options = init this # Initialize the command.
 
-  async.series [
+  async.waterfall [
     # Set-up user and restore project.
     (next) -> user.setup options, next
     project.restore
 
     # Validate and deploy the project.
     (next) -> datalink.validate process.cwd(), next
-    (next) -> datalink.deploy   process.cwd(), next
+    (version, next) -> datalink.deploy process.cwd(), version, next
   ], (err) ->
     if err? # Display errors.
       logger.error "%s", err

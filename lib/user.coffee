@@ -20,6 +20,7 @@ chalk  = require 'chalk'
 config = require 'config'
 
 # Local modules.
+KinveyError = require './error.coffee'
 logger  = require './logger.coffee'
 prompt  = require './prompt.coffee'
 request = require './request.coffee'
@@ -86,7 +87,7 @@ class User
       (next) -> prompt.getEmailPassword email, password, next
       this._execLogin
     ], (err, response) =>
-      if err then cb err # Continue with request error.
+      if err? then cb err # Continue with request error.
       else if 200 is response.statusCode
         logger.info 'Welcome back %s', chalk.cyan response.body.email
         this.token = response.body.token # Save token.
@@ -94,8 +95,8 @@ class User
       else if response.body?.code in [ 'InvalidCredentials', 'ValidationError' ]
         logger.warn 'Invalid credentials, please try again.'
         cb() # Continue.
-      else
-        cb response # Continue with response error.
+      else # Continue with error.
+        cb new KinveyError response.body.code, response.body.description
 
 # Exports.
 module.exports = new User config.paths.session

@@ -37,9 +37,6 @@ class Datalink
   deploy: (dir, cb) =>
     logger.debug 'Creating archive from %s', chalk.cyan dir # Debug.
 
-    # Global error handler.
-    onError =
-
     # Initialize the archive.
     archive = archiver.create 'tar'
 
@@ -59,8 +56,8 @@ class Datalink
       if 202 is response?.statusCode
         logger.info 'Deploy initiated, received job %s', chalk.cyan response.body.job # Debug.
         cb() # Continue.
-      else if response?
-        cb response # Continue with request error.
+      else if response? # Continue with request error.
+        cb new KinveyError response.body.code, response.body.description
 
     # Event listeners.
     archive.on 'data', (chunk) ->
@@ -95,20 +92,22 @@ class Datalink
   # Recycles the containers that host the DLC.
   recycle: (cb) =>
     this._execRecycle (err, response) ->
-      if 202 is response?.statusCode
+      if cb? then cb err # Continue with error.
+      else if 202 is response?.statusCode
         logger.info 'Recycle initiated, received job %s', chalk.cyan response.body.job
         cb() # Continue.
-      else
-        cb err or response.body # Continue with error.
+      else # Continue with error.
+        cb new KinveyError response.body.code, response.body.description
 
   # Returns the deploy job status.
   status: (job, cb) =>
     this._execStatus job, (err, response) ->
-      if 200 is response?.statusCode
+      if err? then cb err # Continue with error.
+      else if 200 is response?.statusCode
         logger.info 'Job status: %s', chalk.cyan response.body.status
         cb null, response.body.status # Continue.
-      else
-        cb err or response.body # Continue with error.
+      else # Continue with error.
+        cb new KinveyError response.body.code, response.body.description
 
   # Validates the project.
   validate: (dir, cb) ->

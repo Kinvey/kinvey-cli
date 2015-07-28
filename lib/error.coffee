@@ -35,9 +35,9 @@ errors =
     message: 'You have no eligible datalinks yet.'
 
 # Extend the error class.
-KinveyError = (name) ->
+KinveyError = (name, message) ->
   this.name    = name
-  this.message = errors[name]?.message
+  this.message = message or errors[name]?.message
   this.stack   = (new Error).stack
 KinveyError.prototype = Object.create Error.prototype
 KinveyError.prototype.constructor = KinveyError

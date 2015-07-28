@@ -107,8 +107,10 @@ class Project
       url     : "/apps/#{this.app}/data-links"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, (err, response) ->
-      if 200 is response?.statusCode then cb null, response.body
-      else cb err or response.body # Continue with error.
+      if err? then cb err # Continue with error.
+      else if 200 is response?.statusCode then cb null, response.body
+      else # Continue with error.
+        cb new KinveyError response.body.code, response.body.description
 
   # Returns eligible Kinvey datalinks.
   _execKinveyDatalinks: (cb) =>

@@ -23,6 +23,11 @@ isEmail  = require 'isemail'
 logger = require './logger.coffee'
 util   = require './util.coffee'
 
+# Configure.
+validateEmail = (email) ->
+  if isEmail email then true
+  else 'Please enter a valid e-mail address.'
+
 # Prompts the user for the app to use.
 exports.getApp = (apps, cb) ->
   logger.debug 'Prompting for application'
@@ -51,8 +56,8 @@ exports.getDatalink = (datalinks, cb) ->
 exports.getEmailPassword = (email, password, cb) ->
   logger.debug 'Prompting for email and/or password'
   inquirer.prompt [
-    { message: 'E-mail',   name: 'email', validate: isEmail,   when: not email?    }
-    { message: 'Password', name: 'password', type: 'password', when: not password? }
+    { message: 'E-mail',   name: 'email', validate: validateEmail, when: not email?    }
+    { message: 'Password', name: 'password', type: 'password',     when: not password? }
   ], (answers) ->
     if answers.email?    then email    = answers.email
     if answers.password? then password = answers.password

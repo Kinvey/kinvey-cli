@@ -92,7 +92,7 @@ class Datalink
   # Recycles the containers that host the DLC.
   recycle: (cb) =>
     this._execRecycle (err, response) ->
-      if cb? then cb err # Continue with error.
+      if err? then cb err # Continue with error.
       else if 202 is response?.statusCode
         logger.info 'Recycle initiated, received job %s', chalk.cyan response.body.job
         cb() # Continue.
@@ -104,7 +104,7 @@ class Datalink
     this._execStatus job, (err, response) ->
       if err? then cb err # Continue with error.
       else if 200 is response?.statusCode
-        logger.info 'Job status: %s', chalk.cyan response.body.status
+        logger.info 'Job status: %s %s', chalk.cyan(response.body.status), response.body.message or ''
         cb null, response.body.status # Continue.
       else # Continue with error.
         cb new KinveyError response.body.code, response.body.description

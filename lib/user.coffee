@@ -60,7 +60,7 @@ class User
         async.series [
           (next) => this.login undefined, undefined, next
           this.save
-        ], cb
+        ], (err) -> cb err # Continue.
 
   # Saves the session to file.
   save: (cb) =>

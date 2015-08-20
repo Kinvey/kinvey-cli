@@ -44,7 +44,6 @@ describe 'datalink', () ->
       this.mock = api
         .post "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
         .reply 202, (uri, requestBody) =>
-          console.log requestBody
           this.subject = requestBody
 
     afterEach 'api', () ->

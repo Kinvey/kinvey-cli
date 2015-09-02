@@ -31,5 +31,5 @@ module.exports = logs = (argv..., cb) ->
 # Register the command.
 program
   .command     'logs'
-  .description 'display the logs of the DataLink Connector'
+  .description 'display the logs of the Data Link Connector'
   .action      logs

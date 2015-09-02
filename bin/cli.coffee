@@ -34,7 +34,7 @@ module.exports = (args) ->
     .option  '-e, --email <e-mail>',         'e-mail address of your Kinvey account'
     .option  '--host <host>',                'set host of the Kinvey service'
     .option  '-p, --password <password>',    'password of your Kinvey account'
-    .option  '-s, --silent',                 'silent mode: do not output anything'
+    .option  '-s, --silent',                 'do not output anything'
     .option  '-c, --suppress-version-check', 'do not check for package updates'
     .option  '-v, --verbose',                'output debug messages'
 
@@ -49,6 +49,7 @@ module.exports = (args) ->
   # Default action.
   program
     .command '*'
+    .description 'display usage information'
     .action () -> program.outputHelp()
 
   # Run the program.

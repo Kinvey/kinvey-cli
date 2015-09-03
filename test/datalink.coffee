@@ -104,6 +104,7 @@ describe 'datalink', () ->
     createPackage = () ->
       before 'stub', () -> sinon.stub(util, 'readJSON').callsArgWith 1, null, {
         dependencies: { 'kinvey-backend-sdk': '*' }
+        version: pkgVersion
       }
       afterEach 'stub', () -> util.readJSON.reset()
       after     'stub', () -> util.readJSON.restore()

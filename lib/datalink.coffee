@@ -114,7 +114,7 @@ class Datalink
     packagePath = path.join dir, 'package.json' # Lookup package in provided dir.
     util.readJSON packagePath, (err, json) ->
       unless json?.dependencies?['kinvey-backend-sdk']?
-        return cb new Error 'InvalidProject'
+        return cb new KinveyError 'InvalidProject'
       unless project.isConfigured()
         return cb new KinveyError 'ProjectNotConfigured'
       cb err, json.version # Continue with version.

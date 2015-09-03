@@ -38,12 +38,12 @@ module.exports = status = (job, command, cb) ->
     (next) -> datalink.status job, next
   ], (err) ->
     if err? # Display errors.
-      logger.error err
+      logger.error "%s", err
       unless cb? then process.exit -1 # Exit with error.
     cb? err
 
 # Register the command.
 program
   .command     'status <job>'
-  .description 'return the job status of a deploy or restart command'
+  .description 'return the job status of a deploy command'
   .action      status

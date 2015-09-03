@@ -19,11 +19,10 @@ config  = require 'config'
 request = require 'request'
 
 # Configure.
-options = {
+options =
   baseUrl : config.host
   json    : true
   timeout : config.timeout or 5000 # 5 seconds.
-}
 
 # Patch "request.defaults" so the current instance becomes modifyable.
 result = request.defaults options

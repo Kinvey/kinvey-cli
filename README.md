@@ -1,12 +1,36 @@
 # Kinvey DLC CLI
 > Utility for deploying Kinvey DLC microservices to Kinvey’s Node DLC PaaS.
 
-## Changelog
+## Installation
+`npm install -g Kinvey/dlc-cli`
 
+## Usage
+In your project directory, run `kinvey-dlc-cli config` to set-up your project. The CLI will prompt for Kinvey credentials, app, and Data Link.
+
+### Commands
+* `config` - set project options.
+* `deploy` - deploy the current project as a Kinvey-backed Data Link Connector. You can check the status of a deploy using the `status` command.
+* `help` - display usage information.
+* `list` - list the configured Kinvey-backed Data Link Connectors for the current app.
+* `logs` - display the logs of the Data Link Connector (currently N/A).
+* `recycle` - recycle the Data Link Connector.
+* `status <job>` - return the job status of a `deploy` command.
+
+### Options
+* `-e, --email <e-mail>` - e-mail address of your Kinvey account.
+* `--host <host>` - set host of the Kinvey service.
+* `-p, --password <password>` - password of your Kinvey account.
+* `-s, --silent` - do not output anything.
+* `-c, --suppress-version-check` - do not check for package updates.
+* `-v, --verbose` - output debug messages.
+
+## Troubleshooting
+Run any command with the `--verbose` flag to see what is going on when executing a command. If problems persist, please contact [Kinvey](http://support.kinvey.com). In any case, make sure you have configured your project using the `config` command before attempting to execute any other commands.
+
+## Changelog
 See the [Changelog](./CHANGELOG.md) for a list of changes.
 
 ## License
-
     Copyright (c) 2015, Kinvey, Inc. All rights reserved.
 
     This software is licensed to you under the Kinvey terms of service located at

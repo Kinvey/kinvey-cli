@@ -23,23 +23,22 @@ isEmail  = require 'isemail'
 logger = require './logger.coffee'
 util   = require './util.coffee'
 
-# Prompts the user for the app and environment to use.
-exports.getAppEnvironment = (apps, cb) ->
-  logger.debug 'Prompting for app and environment'
+# Configure.
+validateEmail = (email) ->
+  if isEmail email then true
+  else 'Please enter a valid e-mail address.'
+
+# Prompts the user for the app to use.
+exports.getApp = (apps, cb) ->
+  logger.debug 'Prompting for application'
   inquirer.prompt [{
     message : 'Which app would you like to use?'
     name    : 'app'
     type    : 'list'
     choices : util.formatList apps
     when    : 0 < apps.length
-  }, {
-    message : 'Which environment would you like to use?'
-    name    : 'environment'
-    type    : 'list'
-    choices : (answers) -> util.formatList answers.app.environments
-    when    : (answers) -> 0 < answers.app?.environments.length
   }], (answers) ->
-    cb null, answers.app, answers.environment # Continue.
+    cb null, answers.app # Continue.
 
 # Prompts the user for the datalink to use.
 exports.getDatalink = (datalinks, cb) ->
@@ -57,8 +56,8 @@ exports.getDatalink = (datalinks, cb) ->
 exports.getEmailPassword = (email, password, cb) ->
   logger.debug 'Prompting for email and/or password'
   inquirer.prompt [
-    { message: 'E-mail',   name: 'email', validate: isEmail,   when: not email?    }
-    { message: 'Password', name: 'password', type: 'password', when: not password? }
+    { message: 'E-mail',   name: 'email', validate: validateEmail, when: not email?    }
+    { message: 'Password', name: 'password', type: 'password',     when: not password? }
   ], (answers) ->
     if answers.email?    then email    = answers.email
     if answers.password? then password = answers.password

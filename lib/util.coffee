@@ -28,11 +28,10 @@ logger = require './logger.coffee'
 # Formats the host argument to be a valid URL.
 exports.formatHost = (host) ->
   urlObj = url.parse host
-  urlObj = { # Make sure the host is correctly set, with protocol and path.
+  urlObj = # Make sure the host is correctly set, with protocol and path.
     host     : urlObj.host     or urlObj.pathname
     pathname : if urlObj.host? then urlObj.pathname else null
     protocol : urlObj.protocol or 'https' # Default to HTTPS.
-  }
   url.format urlObj # Return the urlStr.
 
 # Formats the provided list for use with inquirer.

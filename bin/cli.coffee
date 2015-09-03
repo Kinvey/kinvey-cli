@@ -14,11 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+# Standard lib.
+path = require 'path'
+
 # Package modules.
 program = require 'commander'
 
 # Local modules.
 pkg = require '../package.json'
+
+# Configure.
+process.env.NODE_CONFIG_DIR = path.join __dirname, '../config'
 
 # Exports.
 module.exports = (args) ->
@@ -28,7 +34,7 @@ module.exports = (args) ->
     .option  '-e, --email <e-mail>',         'e-mail address of your Kinvey account'
     .option  '--host <host>',                'set host of the Kinvey service'
     .option  '-p, --password <password>',    'password of your Kinvey account'
-    .option  '-s, --silent',                 'silent mode: do not output anything'
+    .option  '-s, --silent',                 'do not output anything'
     .option  '-c, --suppress-version-check', 'do not check for package updates'
     .option  '-v, --verbose',                'output debug messages'
 
@@ -37,12 +43,13 @@ module.exports = (args) ->
   require '../cmd/deploy.coffee'
   require '../cmd/list.coffee'
   require '../cmd/logs.coffee'
-  require '../cmd/restart.coffee'
+  require '../cmd/recycle.coffee'
   require '../cmd/status.coffee'
 
   # Default action.
   program
     .command '*'
+    .description 'display usage information'
     .action () -> program.outputHelp()
 
   # Run the program.

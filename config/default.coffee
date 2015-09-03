@@ -21,11 +21,11 @@ path = require 'path'
 osHomedir = require 'os-homedir'
 
 # Exports.
-module.exports = {
+module.exports =
   host: 'https://manage.kinvey.com'
 
   # Project archive settings.
-  ignore: [ 'node_modules/', 'test/', '.DS_Store', '.git' ]
+  artifacts     : [ '.git/', '.svn/', 'node_modules/' ]
   maxUploadSize : 10 * 1024 * 1024 # 10 MB
 
   # Timeouts.
@@ -33,8 +33,6 @@ module.exports = {
   uploadTimeout : 30 * 1000 # 30s
 
   # Paths.
-  paths: {
+  paths:
     project : path.join process.cwd(), '.kinvey'         # <projectDir>/<project>
     session : path.join osHomedir(),   '.kinvey-session' # ~/<session>
-  }
-}

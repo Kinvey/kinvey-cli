@@ -103,13 +103,13 @@ describe 'datalink', () ->
     # Helper which stubs a valid package.json.
     createPackage = () ->
       before 'stub', () -> sinon.stub(util, 'readJSON').callsArgWith 1, null, {
-        dependencies: { 'backend-sdk': '*' }
+        dependencies: { 'kinvey-backend-sdk': '*' }
       }
       afterEach 'stub', () -> util.readJSON.reset()
       after     'stub', () -> util.readJSON.restore()
 
     # Test suite.
-    describe 'when the project includes the backend-sdk dependency', () ->
+    describe 'when the project includes the kinvey-backend-sdk dependency', () ->
       createPackage()
 
       # Tests.

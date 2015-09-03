@@ -111,7 +111,7 @@ class Datalink
   validate: (dir, cb) ->
     packagePath = path.join dir, 'package.json' # Lookup package in provided dir.
     util.readJSON packagePath, (err, json) ->
-      unless json?.dependencies?['backend-sdk']?
+      unless json?.dependencies?['kinvey-backend-sdk']?
         return cb new Error 'InvalidProject'
       unless project.isConfigured()
         return cb new Error 'ProjectNotConfigured'

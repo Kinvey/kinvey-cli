@@ -1,5 +1,9 @@
 {
-  "id"   : "123",
+  "_id"  : "123",
   "name" : "TestDatalink",
-  "host" : "https://example.com"
+  "backingServers": [{
+    "_id"    : "456",
+    "host"   : "https://example.com",
+    "secret" : "789"
+  }]
 }

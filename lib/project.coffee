@@ -95,7 +95,7 @@ class Project
   # Executes a GET /apps request.
   _execApps: (cb) ->
     request.get {
-      url     : '/apps'
+      url     : '/v2/apps'
       headers : { Authorization: "Kinvey #{user.token}" }
     }, (err, response) ->
       if 200 is response?.statusCode then cb null, response.body
@@ -104,7 +104,7 @@ class Project
   # Executes a GET /apps/:app/datalinks request.
   _execDatalinks: (cb) =>
     request.get {
-      url     : "/apps/#{this.app}/data-links"
+      url     : "/v2/apps/#{this.app}/data-links"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, (err, response) ->
       if err? then cb err # Continue with error.
@@ -116,7 +116,10 @@ class Project
   _execKinveyDatalinks: (cb) =>
     this._execDatalinks (err, body) ->
       if body?.length # Filter and sort by name.
-        body = body.filter (el) -> 0 is el.host?.indexOf 'kinveyDLC://'
+        body = body.filter (el) ->
+          arr = el.backingServers.filter (server) ->
+            0 is server.host?.indexOf 'kinveyDLC://'
+          0 < arr.length
         body.sort (x, y) -> # Sort.
           if x.name.toLowerCase() < y.name.toLowerCase() then -1 else 1
       cb err, body

@@ -42,7 +42,7 @@ describe 'datalink', () ->
     beforeEach 'api', () ->
       this.subject = null
       this.mock = api
-        .post "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
+        .post "/v2/apps/#{project.app}/data-links/#{project.datalink}/deploy"
         .reply 202, (uri, requestBody) =>
           this.subject = requestBody
 
@@ -72,7 +72,7 @@ describe 'datalink', () ->
   describe 'recycle', () ->
     # Mock the API.
     beforeEach 'api', () ->
-      this.mock = api.post "/apps/#{project.app}/data-links/#{project.datalink}/recycle"
+      this.mock = api.post "/v2/apps/#{project.app}/data-links/#{project.datalink}/recycle"
         .reply 202, { job: 123 }
     afterEach 'api', () ->
       this.mock.done()
@@ -85,7 +85,7 @@ describe 'datalink', () ->
   describe 'status', () ->
     # Mock the API.
     beforeEach 'api', () ->
-      this.mock = api.get "/apps/#{project.app}/data-links/#{project.datalink}/deploy?job=123"
+      this.mock = api.get "/v2/apps/#{project.app}/data-links/#{project.datalink}/deploy?job=123"
         .reply 200, { status: 'COMPLETE' }
     afterEach 'api', () ->
       this.mock.done()

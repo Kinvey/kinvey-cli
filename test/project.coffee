@@ -61,7 +61,7 @@ describe 'project', () ->
 
     # Mock the API.
     beforeEach 'api', () ->
-      this.mock = api.get('/apps/123/data-links')
+      this.mock = api.get('/v2/apps/123/data-links')
         .reply 200, [ ]
     afterEach 'api', () ->
       this.mock.done()
@@ -170,8 +170,8 @@ describe 'project', () ->
       # Mock the API.
       beforeEach 'api', () ->
         this.mocks = [
-          api.get('/apps').reply 200, [ fixtures.app ]
-          api.get('/apps/123/data-links').reply 200, [ fixtures.kinveyDlc ]
+          api.get('/v2/apps').reply 200, [ fixtures.app ]
+          api.get('/v2/apps/123/data-links').reply 200, [ fixtures.kinveyDlc ]
         ]
       afterEach 'api', () ->
         mock.done() for mock in this.mocks
@@ -194,7 +194,7 @@ describe 'project', () ->
     describe 'given the user has no apps or eligible datalinks', () ->
       # Mock the API.
       beforeEach 'api', () ->
-        this.mock = api.get('/apps').reply 200, [ ]
+        this.mock = api.get('/v2/apps').reply 200, [ ]
       afterEach 'api', () ->
         this.mock.done()
         delete this.mock
@@ -217,9 +217,9 @@ describe 'project', () ->
       # Mock the API.
       beforeEach 'api', () ->
         this.mocks = [
-          api.get('/apps') # Return one app.
+          api.get('/v2/apps') # Return one app.
             .reply 200, [ fixtures.app ]
-          api.get('/apps/123/data-links') # Return ineligible datalink.
+          api.get('/v2/apps/123/data-links') # Return ineligible datalink.
             .reply 200, [ fixtures.datalink ]
         ]
       afterEach 'api', () ->

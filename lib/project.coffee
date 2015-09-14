@@ -95,7 +95,7 @@ class Project
   # Executes a GET /apps request.
   _execApps: (cb) ->
     request.get {
-      url     : '/v2/apps'
+      url     : '/apps'
       headers : { Authorization: "Kinvey #{user.token}" }
     }, (err, response) ->
       if 200 is response?.statusCode then cb null, response.body
@@ -104,7 +104,7 @@ class Project
   # Executes a GET /apps/:app/datalinks request.
   _execDatalinks: (cb) =>
     request.get {
-      url     : "/v2/apps/#{this.app}/data-links"
+      url     : "/apps/#{this.app}/data-links"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, (err, response) ->
       if err? then cb err # Continue with error.

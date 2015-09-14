@@ -103,6 +103,8 @@ class Project
 
   # Executes a GET /apps/:app/datalinks request.
   _execDatalinks: (cb) =>
+    uri = ""
+
     request.get {
       url     : "/apps/#{this.app}/data-links"
       headers : { Authorization: "Kinvey #{user.token}" }
@@ -116,11 +118,14 @@ class Project
   _execKinveyDatalinks: (cb) =>
     this._execDatalinks (err, body) ->
       if body?.length # Filter and sort by name.
-        console.log body
-        body = body.filter (el) ->
-          arr = el.backingServers.filter (server) ->
-            0 is server.host?.indexOf 'kinveyDLC://'
-          0 < arr.length
+        if (not @app.schemaVersion?) or (@app.schemaVersion? and @app.schemaVersion is 1)
+          body = body.filter (dlc) ->
+            0 is dlc?.type?.indexOf 'internal'
+        else
+          body = body.filter (el) ->
+            arr = el.backingServers.filter (server) ->
+              0 is server.host?.indexOf 'kinveyDLC://'
+            0 < arr.length
         body.sort (x, y) -> # Sort.
           if x.name.toLowerCase() < y.name.toLowerCase() then -1 else 1
       cb err, body

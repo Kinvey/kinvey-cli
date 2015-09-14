@@ -115,10 +115,10 @@ class Project
         cb new KinveyError response.body.code, response.body.description
 
   # Returns eligible Kinvey datalinks.
-  _execKinveyDatalinks: (cb) =>
+  _execKinveyDatalinks: (cb) ->
     this._execDatalinks (err, body) ->
       if body?.length # Filter and sort by name.
-        if (not @app.schemaVersion?) or (@app.schemaVersion? and @app.schemaVersion is 1)
+        if (not this.app.schemaVersion?) or (this.app.schemaVersion? and this.app.schemaVersion is 1)
           body = body.filter (dlc) ->
             0 is dlc?.type?.indexOf 'internal'
         else

@@ -77,7 +77,7 @@ class User
   # Executes a login request.
   _execLogin: (email, password, cb) ->
     request.post {
-      url  : '/v2/session',
+      url  : '/session',
       json : { email: email, password: password }
     }, cb
 

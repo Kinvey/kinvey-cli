@@ -116,6 +116,7 @@ class Project
   _execKinveyDatalinks: (cb) =>
     this._execDatalinks (err, body) ->
       if body?.length # Filter and sort by name.
+        console.log body
         body = body.filter (el) ->
           arr = el.backingServers.filter (server) ->
             0 is server.host?.indexOf 'kinveyDLC://'

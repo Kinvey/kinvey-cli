@@ -101,9 +101,23 @@ class Project
       if 200 is response?.statusCode then cb null, response.body
       else cb err or response.body # Continue with error.
 
+  _getSchemaVersion: (cb) ->
+    request.get {
+      url     : "/apps/#{@app}/"
+      headers : { Authorization: "Kinvey #{user.token}" }
+    }, (err, response) ->
+      unless response?.statusCode is 200
+        return cb err or response.body
+
+      schemaVersion = response.body?.schemaVersion
+
+      unless schemaVersion?
+        schemaVersion = 1
+
+      cb null, schemaVersion
+
   # Executes a GET /apps/:app/datalinks request.
   _execDatalinks: (cb) =>
-    uri = ""
 
     request.get {
       url     : "/apps/#{this.app}/data-links"
@@ -115,20 +129,25 @@ class Project
         cb new KinveyError response.body.code, response.body.description
 
   # Returns eligible Kinvey datalinks.
-  _execKinveyDatalinks: (cb) ->
-    this._execDatalinks (err, body) ->
+  _execKinveyDatalinks: (cb) =>
+    this._execDatalinks (err, body) =>
       if body?.length # Filter and sort by name.
-        if (not this.app.schemaVersion?) or (this.app.schemaVersion? and this.app.schemaVersion is 1)
-          body = body.filter (dlc) ->
-            0 is dlc?.type?.indexOf 'internal'
-        else
-          body = body.filter (el) ->
+
+        this._getSchemaVersion (err, schemaVersion) ->
+          return cb err if err?
+
+          if schemaVersion is 1 or not schemaVersion
+            body = body.filter (dlc) ->
+              0 is dlc?.type?.indexOf 'internal'
+          else if schemaVersion is 2
+            body = body.filter (el) ->
             arr = el.backingServers.filter (server) ->
               0 is server.host?.indexOf 'kinveyDLC://'
             0 < arr.length
-        body.sort (x, y) -> # Sort.
-          if x.name.toLowerCase() < y.name.toLowerCase() then -1 else 1
-      cb err, body
+
+          body.sort (x, y) -> # Sort.
+            if x.name.toLowerCase() < y.name.toLowerCase() then -1 else 1
+          cb null, body
 
   # Attempts to select the app.
   _selectApp: (cb) =>

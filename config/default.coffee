@@ -24,6 +24,9 @@ osHomedir = require 'os-homedir'
 module.exports =
   host: 'https://manage.kinvey.com'
 
+  # Default schema for apps.
+  defaultSchemaVersion: 1
+
   # Project archive settings.
   artifacts     : [ '.git/', '.svn/', 'node_modules/' ]
   maxUploadSize : 10 * 1024 * 1024 # 10 MB

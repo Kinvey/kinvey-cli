@@ -36,8 +36,9 @@ describe 'project', () ->
   describe 'isConfigured', () ->
     beforeEach 'configure', () ->
       project.app = project.datalink = '123'
+      project.schemaVersion = 1
     afterEach 'configure', () ->
-      project.app = project.datalink = null # Reset.
+      project.app = project.datalink = project.schemaVersion = null # Reset.
 
     # Tests.
     it 'should return true if the app and datalink were configured.', () ->
@@ -51,59 +52,91 @@ describe 'project', () ->
       project.datalink = null
       expect(project.isConfigured()).to.be.false
 
+    it 'should return false if the schema was not configured.', () ->
+      project.schemaVersion = null
+      expect(project.isConfigured()).to.be.false
+
   # project.list().
   describe 'list', () ->
     # Configure.
-    beforeEach 'configure', () ->
-      project.app = project.datalink = '123'
-    afterEach 'configure', () ->
-      project.app = project.datalink = null # Reset.
-
-    # Mock the API.
-    beforeEach 'api', () ->
-      this.mock = api.get('/v2/apps/123/data-links')
-        .reply 200, [ ]
-    afterEach 'api', () ->
-      this.mock.done()
-      delete this.mock
+    beforeEach 'configure', () -> project.app = project.datalink = '123'
+    afterEach  'configure', () -> project.app = project.datalink = null # Reset.
 
     # Stub.
     before    'stub', -> sinon.stub logger, 'info'
     afterEach 'stub', -> logger.info.reset()
     after     'stub', -> logger.info.restore()
 
-    # Tests.
-    it 'should list all Kinvey datalinks.', (cb) ->
-      project.list (err) ->
-        expect(logger.info).to.be.called
-        expect(logger.info).to.be.calledWith 'The datalink used in this project is marked with *'
-        cb err
+    describe 'for v1 apps', ->
+      # Configure.
+      beforeEach 'configure', () -> project.schemaVersion = 1
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
+
+      # Mock the API.
+      beforeEach 'api', () ->
+        this.mock = api.get('/v1/apps/123/data-links')
+          .reply 200, [ ]
+      afterEach 'api', () ->
+        this.mock.done()
+        delete this.mock
+
+      # Tests.
+      it 'should list all Kinvey datalinks.', (cb) ->
+        project.list (err) ->
+          expect(logger.info).to.be.called
+          expect(logger.info).to.be.calledWith 'The datalink used in this project is marked with *'
+          cb err
+
+    describe 'for v2 apps', ->
+      # Configure.
+      beforeEach 'configure', () -> project.schemaVersion = 2
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
+
+      # Mock the API.
+      beforeEach 'api', () ->
+        this.mock = api.get('/v2/apps/123/data-links')
+          .reply 200, [ ]
+      afterEach 'api', () ->
+        this.mock.done()
+        delete this.mock
+
+      # Tests.
+      it 'should list all Kinvey datalinks.', (cb) ->
+        project.list (err) ->
+          expect(logger.info).to.be.called
+          expect(logger.info).to.be.calledWith 'The datalink used in this project is marked with *'
+          cb err
 
   # project.restore()
   describe 'restore', () ->
     describe 'when the project file exists', () ->
-      # Set a token.
-      before 'configure', () -> this.app = this.datalink = 123
+      # Set app, datalink, and schema.
+      before 'configure', () ->
+        this.app = this.datalink = 123
+        this.schemaVersion = 2
       after  'configure', () ->
         delete this.app
         delete this.datalink
+        delete this.schemaVersion
 
       # Stub util.readJSON().
       before 'stub', () ->
         sinon.stub(util, 'readJSON').callsArgWith 1, null, {
-          app      : this.app
-          datalink : this.datalink
+          app           : this.app
+          datalink      : this.datalink
+          schemaVersion : this.schemaVersion
         }
       afterEach 'stub', () -> util.readJSON.reset()
       after     'stub', () -> util.readJSON.restore()
 
       # Tests.
-      it 'should set the project app and datalink.', (cb) ->
+      it 'should set the project app, datalink, and schema.', (cb) ->
         project.restore (err) =>
           expect(util.readJSON).to.be.calledOnce
           expect(util.readJSON).to.be.calledWith config.paths.project
           expect(project.app).to.equal this.app
           expect(project.datalink).to.equal this.datalink
+          expect(project.schemaVersion).to.equal this.schemaVersion
           cb err
 
     describe 'when the project file does not exists', () ->
@@ -121,11 +154,12 @@ describe 'project', () ->
 
   # project.save()
   describe 'save', () ->
-    # Set app and datalink.
+    # Set app, datalink, and schema.
     before 'configure', () ->
       project.app = project.datalink = '123'
+      project.schemaVersion = 1
     after 'configure', () ->
-      project.app = project.datalink = null # Reset.
+      project.app = project.datalink = project.schemaVersion = null # Reset.
 
     # Stub util.writeJSON().
     before    'stub', () -> sinon.stub(util, 'writeJSON').callsArg 2
@@ -137,15 +171,16 @@ describe 'project', () ->
       project.save (err) ->
         expect(util.writeJSON).to.be.calledOnce
         expect(util.writeJSON).to.be.calledWith config.paths.project, {
-          app      : project.app
-          datalink : project.datalink
+          app           : project.app
+          datalink      : project.datalink
+          schemaVersion : project.schemaVersion
         }
         cb err
 
   # project.select()
   describe 'select', () ->
     afterEach 'configure', () ->
-      project.app = project.datalink = null # Reset.
+      project.app = project.datalink = project.schemaVersion = null # Reset.
 
     describe 'given the user has an app and eligible datalink', () ->
       # Stub project.save().
@@ -170,8 +205,8 @@ describe 'project', () ->
       # Mock the API.
       beforeEach 'api', () ->
         this.mocks = [
-          api.get('/v2/apps').reply 200, [ fixtures.app ]
-          api.get('/v2/apps/123/data-links').reply 200, [ fixtures.kinveyDlc ]
+          api.get('/apps').reply 200, [ fixtures.app ]
+          api.get('/v1/apps/123/data-links').reply 200, [ fixtures.kinveyDlc ]
         ]
       afterEach 'api', () ->
         mock.done() for mock in this.mocks
@@ -194,7 +229,7 @@ describe 'project', () ->
     describe 'given the user has no apps or eligible datalinks', () ->
       # Mock the API.
       beforeEach 'api', () ->
-        this.mock = api.get('/v2/apps').reply 200, [ ]
+        this.mock = api.get('/apps').reply 200, [ ]
       afterEach 'api', () ->
         this.mock.done()
         delete this.mock
@@ -217,9 +252,9 @@ describe 'project', () ->
       # Mock the API.
       beforeEach 'api', () ->
         this.mocks = [
-          api.get('/v2/apps') # Return one app.
+          api.get('/apps') # Return one app.
             .reply 200, [ fixtures.app ]
-          api.get('/v2/apps/123/data-links') # Return ineligible datalink.
+          api.get('/v1/apps/123/data-links') # Return ineligible datalink.
             .reply 200, [ fixtures.datalink ]
         ]
       afterEach 'api', () ->

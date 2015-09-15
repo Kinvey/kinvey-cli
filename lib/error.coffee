@@ -24,7 +24,7 @@ pkg    = require '../package.json'
 # Enumerate errors.
 errors =
   InvalidProject:
-    message: 'This project is not valid. Please implement the backend-sdk node module.'
+    message: 'This project is not valid. Please implement the kinvey-backend-sdk node module.'
   ProjectNotConfigured:
     message: "This project is not configured. Use `#{pkg.name} config` to get started."
   ProjectMaxFileSizeExceeded:

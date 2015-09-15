@@ -31,81 +31,186 @@ fixtures =
 # Test suite.
 describe 'datalink', () ->
   # Configure.
-  beforeEach 'configure', () ->
-    project.app = project.datalink = '123'
-  afterEach 'configure', () ->
-    project.app = project.datalink = null # Reset.
+  beforeEach 'configure', () -> project.app = project.datalink = '123'
+  afterEach  'configure', () -> project.app = project.datalink = null # Reset.
 
   # datalink.deploy().
   describe 'deploy', () ->
-    # Mock the API.
-    beforeEach 'api', () ->
-      this.subject = null
-      this.mock = api
-        .post "/v2/apps/#{project.app}/data-links/#{project.datalink}/deploy"
-        .reply 202, (uri, requestBody) =>
-          this.subject = requestBody
+    # Test v1 apps.
+    describe 'for v1 apps', ->
+      # Configure.
+      beforeEach 'configure', () -> project.schemaVersion = 1
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
 
-    afterEach 'api', () ->
-      this.mock.done()
-      delete this.mock
-      delete this.subject
+      # Mock the API.
+      beforeEach 'api', () ->
+        this.subject = null
+        this.mock = api
+          .post "/v1/apps/#{project.app}/data-links/#{project.datalink}/deploy"
+          .reply 202, (uri, requestBody) =>
+            this.subject = requestBody
 
-    # Tests.
-    it 'should package the project.', (cb) ->
-      # Deploy and test.
-      datalink.deploy fixtures.valid, '0.1.0', (err) =>
-        expect(this.subject).to.exist
-        expect(this.subject).to.have.length.above 1
-        cb err
+      afterEach 'api', () ->
+        this.mock.done()
+        delete this.mock
+        delete this.subject
 
-    it 'should fail when the project is too big.', (cb) ->
-      datalink.deploy fixtures.invalid, '0.1.0', (err) ->
-        expect(err).to.exist
-        expect(err.name).to.equal 'ProjectMaxFileSizeExceeded'
-        cb()
+      # Tests.
+      it 'should package the project.', (cb) ->
+        # Deploy and test.
+        datalink.deploy fixtures.valid, '0.1.0', (err) =>
+          expect(this.subject).to.exist
+          expect(this.subject).to.have.length.above 1
+          cb err
 
-    it 'should upload.', (cb) ->
-      datalink.deploy fixtures.valid, '0.1.0', cb
+      it 'should fail when the project is too big.', (cb) ->
+        datalink.deploy fixtures.invalid, '0.1.0', (err) ->
+          expect(err).to.exist
+          expect(err.name).to.equal 'ProjectMaxFileSizeExceeded'
+          cb()
+
+      it 'should upload.', (cb) ->
+        datalink.deploy fixtures.valid, '0.1.0', cb
+
+    # Test v2 apps.
+    describe 'for v2 apps', ->
+      # Configure.
+      beforeEach 'configure', () -> project.schemaVersion = 2
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
+
+      # Mock the API.
+      beforeEach 'api', () ->
+        this.subject = null
+        this.mock = api
+          .post "/v2/apps/#{project.app}/data-links/#{project.datalink}/deploy"
+          .reply 202, (uri, requestBody) =>
+            this.subject = requestBody
+
+      afterEach 'api', () ->
+        this.mock.done()
+        delete this.mock
+        delete this.subject
+
+      # Tests.
+      it 'should package the project.', (cb) ->
+        # Deploy and test.
+        datalink.deploy fixtures.valid, '0.1.0', (err) =>
+          expect(this.subject).to.exist
+          expect(this.subject).to.have.length.above 1
+          cb err
+
+      it 'should fail when the project is too big.', (cb) ->
+        datalink.deploy fixtures.invalid, '0.1.0', (err) ->
+          expect(err).to.exist
+          expect(err.name).to.equal 'ProjectMaxFileSizeExceeded'
+          cb()
+
+      it 'should upload.', (cb) ->
+        datalink.deploy fixtures.valid, '0.1.0', cb
 
   # datalink.recycle().
   describe 'recycle', () ->
-    # Mock the API.
-    beforeEach 'api', () ->
-      this.mock = api.post "/v2/apps/#{project.app}/data-links/#{project.datalink}/recycle"
-        .reply 202, { job: 123 }
-    afterEach 'api', () ->
-      this.mock.done()
-      delete this.mock
+    # Configure.
+    beforeEach 'configure', () -> project.app = project.datalink = '123'
+    afterEach  'configure', () -> project.app = project.datalink = null # Reset.
 
-    # Tests.
-    it 'should recycle.', (cb) ->
-      datalink.recycle cb
+    # Test v1 apps.
+    describe 'for v1 apps', ->
+      # Configure.
+      beforeEach 'configure', () -> project.schemaVersion = 1
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
+
+      # Mock the API.
+      beforeEach 'api', () ->
+        this.mock = api.post "/v1/apps/#{project.app}/data-links/#{project.datalink}/recycle"
+          .reply 202, { job: 123 }
+      afterEach 'api', () ->
+        this.mock.done()
+        delete this.mock
+
+      # Tests.
+      it 'should recycle.', (cb) ->
+        datalink.recycle cb
+
+    # Test v2 apps.
+    describe 'for v2 apps', ->
+      beforeEach 'configure', () -> project.schemaVersion = 2
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
+
+      # Mock the API.
+      beforeEach 'api', () ->
+        this.mock = api.post "/v2/apps/#{project.app}/data-links/#{project.datalink}/recycle"
+          .reply 202, { job: 123 }
+      afterEach 'api', () ->
+        this.mock.done()
+        delete this.mock
+
+      # Tests.
+      it 'should recycle.', (cb) ->
+        datalink.recycle cb
 
   describe 'status', () ->
-    # Mock the API.
-    beforeEach 'api', () ->
-      this.mock = api.get "/v2/apps/#{project.app}/data-links/#{project.datalink}/deploy?job=123"
-        .reply 200, { status: 'COMPLETE' }
-    afterEach 'api', () ->
-      this.mock.done()
-      delete this.mock
+    # Configure.
+    beforeEach 'configure', () -> project.app = project.datalink = '123'
+    afterEach  'configure', () -> project.app = project.datalink = null # Reset.
 
-    # Tests.
-    it 'should return the job status.', (cb) ->
-      datalink.status '123', (err, status) ->
-        expect(status).to.equal 'COMPLETE'
-        cb err
+    # Test v1 apps.
+    describe 'for v1 apps', ->
+      # Configure.
+      beforeEach 'configure', () -> project.schemaVersion = 1
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
+
+      # Mock the API.
+      beforeEach 'api', () ->
+        this.mock = api.get "/v1/apps/#{project.app}/data-links/#{project.datalink}/deploy?job=123"
+          .reply 200, { status: 'COMPLETE' }
+      afterEach 'api', () ->
+        this.mock.done()
+        delete this.mock
+
+      # Tests.
+      it 'should return the job status.', (cb) ->
+        datalink.status '123', (err, status) ->
+          expect(status).to.equal 'COMPLETE'
+          cb err
+
+    # Test v2 apps.
+    describe 'for v2 apps', ->
+      # Configure.
+      beforeEach 'configure', () -> project.schemaVersion = 2
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
+
+      # Mock the API.
+      beforeEach 'api', () ->
+        this.mock = api.get "/v2/apps/#{project.app}/data-links/#{project.datalink}/deploy?job=123"
+          .reply 200, { status: 'COMPLETE' }
+      afterEach 'api', () ->
+        this.mock.done()
+        delete this.mock
+
+      # Tests.
+      it 'should return the job status.', (cb) ->
+        datalink.status '123', (err, status) ->
+          expect(status).to.equal 'COMPLETE'
+          cb err
 
     # datalink.validate().
   describe 'validate', () ->
+    # Configure.
+    beforeEach 'configure', () ->
+      project.app = project.datalink = '123'
+      project.schemaVersion = 1
+    afterEach 'configure', () ->
+    project.app = project.datalink = project.schemaVersion = null # Reset.
+
     # Helper which stubs a valid package.json.
     pkgVersion = '1.2.3'
     createPackage = () ->
-      before 'stub', () -> sinon.stub(util, 'readJSON').callsArgWith 1, null, {
-        dependencies: { 'kinvey-backend-sdk': '*' }
-        version: pkgVersion
-      }
+      before 'stub', () ->
+        sinon.stub(util, 'readJSON').callsArgWith 1, null, {
+          dependencies: { 'kinvey-backend-sdk': '*' }
+          version: pkgVersion
+        }
       afterEach 'stub', () -> util.readJSON.reset()
       after     'stub', () -> util.readJSON.restore()
 
@@ -141,7 +246,7 @@ describe 'datalink', () ->
 
       # Configure.
       beforeEach 'configure', () ->
-        project.app = project.datalink = null # Reset.
+        project.app = project.datalink = project.schemaVersion = null # Reset.
 
       # Tests.
       it 'should fail.', (cb) ->

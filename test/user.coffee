@@ -53,7 +53,7 @@ describe 'user', () ->
     describe 'given valid credentials', () ->
       # Mock the API.
       beforeEach 'api', () ->
-        this.mock = api.post('/v2/session').reply 200, { email: this.email, token: this.token }
+        this.mock = api.post('/session').reply 200, { email: this.email, token: this.token }
       afterEach 'api', () ->
         this.mock.done()
         delete this.mock
@@ -69,8 +69,8 @@ describe 'user', () ->
       # Mock the API.
       beforeEach 'api', () ->
         this.mock = api
-          .post('/v2/session').reply 401, { code: 'InvalidCredentials', description: '' } # First call.
-          .post('/v2/session').reply 200, { email: this.email, token: this.token } # Second call.
+          .post('/session').reply 401, { code: 'InvalidCredentials', description: '' } # First call.
+          .post('/session').reply 200, { email: this.email, token: this.token } # Second call.
       afterEach 'api', () ->
         this.mock.done()
         delete this.mock
@@ -92,7 +92,7 @@ describe 'user', () ->
     describe 'given incomplete credentials', () ->
       # Mock the API.
       beforeEach 'api', () ->
-        this.mock = api.post('/v2/session').reply 200, { email: this.email, token: this.token }
+        this.mock = api.post('/session').reply 200, { email: this.email, token: this.token }
       afterEach 'api', () ->
         this.mock.done()
         delete this.mock

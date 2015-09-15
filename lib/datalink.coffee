@@ -47,7 +47,7 @@ class Datalink
 
     # Prepare the request.
     req = request.post {
-      url      : "/apps/#{project.app}/data-links/#{project.datalink}/deploy"
+      url      : "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/deploy"
       headers  : { Authorization: "Kinvey #{user.token}", 'Transfer-Encoding': 'chunked' },
       formData : { version: version, file: attachment }
       timeout  : config.uploadTimeout or 30 * 1000 # 30s.
@@ -122,14 +122,14 @@ class Datalink
   # Executes a POST /apps/:app/datalink/:datalink/recycle request.
   _execRecycle: (cb) ->
     request.post {
-      url     : "/apps/#{project.app}/data-links/#{project.datalink}/recycle"
+      url     : "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/recycle"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, cb
 
   # Executes a GET /apps/:app/datalink/:datalink/<type> request.
   _execStatus: (job, cb) ->
     request.get {
-      url     : "/apps/#{project.app}/data-links/#{project.datalink}/deploy?job=#{job}"
+      url     : "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/deploy?job=#{job}"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, cb
 

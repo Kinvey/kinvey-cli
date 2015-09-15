@@ -29,8 +29,11 @@ user     = require '../lib/user.coffee'
 # Test suite.
 describe "./#{pkg.name} status", () ->
   # Configure.
-  before 'configure', () -> project.app = project.datalink = '123'
-  after  'configure', () -> project.app = project.datalink = null # Reset.
+  before 'configure', () ->
+    project.app = project.datalink = '123'
+    project.schemaVersion = 1
+  after  'configure', () ->
+  project.app = project.datalink = project.schemaVersion = null # Reset.
 
   # Stub user.setup().
   before    'user', () -> sinon.stub(user, 'setup').callsArg 1

@@ -30,9 +30,10 @@ util    = require './util.coffee'
 # Define the project class.
 class Project
 
-  # App, and datalink ids.
-  app      : null
-  datalink : null
+  # App, datalink, and schema.
+  app           : null
+  datalink      : null
+  schemaVersion : null
 
   # Constructor.
   constructor: (path) ->
@@ -40,7 +41,7 @@ class Project
 
   # Returns whether the project is configured.
   isConfigured: () =>
-    this.app? and this.datalink?
+    this.app? and this.datalink? and this.schemaVersion?
 
   # Lists all Kinvey datalinks.
   list: (cb) =>
@@ -61,9 +62,10 @@ class Project
     util.readJSON this.projectPath, (err, data) =>
       if data?.app and data.datalink # Save ids.
         logger.debug 'Restored project from file %s', chalk.cyan this.projectPath
-        this.app      = data.app
-        this.datalink = data.datalink
-        cb() # Continue.
+        this.app           = data.app
+        this.datalink      = data.datalink
+        this.schemaVersion = data.schemaVersion
+        cb()
       else
         logger.debug 'Failed to restore project from file %s', chalk.cyan this.projectPath
         cb new KinveyError 'ProjectNotConfigured' # Continue with error.
@@ -72,8 +74,9 @@ class Project
   save: (cb) =>
     logger.debug 'Saving project to file %s', chalk.cyan this.projectPath
     util.writeJSON this.projectPath, {
-      app      : this.app
-      datalink : this.datalink
+      app           : this.app
+      datalink      : this.datalink
+      schemaVersion : this.schemaVersion
     }, cb
 
   # Selects and save app, and datalink.
@@ -98,29 +101,15 @@ class Project
       url     : '/apps'
       headers : { Authorization: "Kinvey #{user.token}" }
     }, (err, response) ->
-      if 200 is response?.statusCode then cb null, response.body
-      else cb err or response.body # Continue with error.
-
-  _getSchemaVersion: (cb) ->
-    request.get {
-      url     : "/apps/#{@app}/"
-      headers : { Authorization: "Kinvey #{user.token}" }
-    }, (err, response) ->
-      unless response?.statusCode is 200
-        return cb err or response.body
-
-      schemaVersion = response.body?.schemaVersion
-
-      unless schemaVersion?
-        schemaVersion = 1
-
-      cb null, schemaVersion
+      if err? then cb err # Continue with error.
+      else if 200 is response?.statusCode then cb null, response.body
+      else # Continue with error.
+        cb new KinveyError response.body.code, response.body.description
 
   # Executes a GET /apps/:app/datalinks request.
   _execDatalinks: (cb) =>
-
     request.get {
-      url     : "/apps/#{this.app}/data-links"
+      url     : "/v#{this.schemaVersion}/apps/#{this.app}/data-links"
       headers : { Authorization: "Kinvey #{user.token}" }
     }, (err, response) ->
       if err? then cb err # Continue with error.
@@ -130,24 +119,12 @@ class Project
 
   # Returns eligible Kinvey datalinks.
   _execKinveyDatalinks: (cb) =>
-    this._execDatalinks (err, body) =>
+    this._execDatalinks (err, body) ->
       if body?.length # Filter and sort by name.
-
-        this._getSchemaVersion (err, schemaVersion) ->
-          return cb err if err?
-
-          if schemaVersion is 1 or not schemaVersion
-            body = body.filter (dlc) ->
-              0 is dlc?.type?.indexOf 'internal'
-          else if schemaVersion is 2
-            body = body.filter (el) ->
-            arr = el.backingServers.filter (server) ->
-              0 is server.host?.indexOf 'kinveyDLC://'
-            0 < arr.length
-
-          body.sort (x, y) -> # Sort.
-            if x.name.toLowerCase() < y.name.toLowerCase() then -1 else 1
-          cb null, body
+        body = body.filter (el) -> 'internal' is el.type
+        body.sort (x, y) -> # Sort.
+          if x.name.toLowerCase() < y.name.toLowerCase() then -1 else 1
+      cb err, body
 
   # Attempts to select the app.
   _selectApp: (cb) =>
@@ -157,7 +134,9 @@ class Project
         if 0 is apps.length then next new KinveyError 'NoAppsFound'
         else prompt.getApp apps, next
     ], (err, app) =>
-      if app? then this.app = app.id
+      if app? # Save.
+        this.app           = app.id
+        this.schemaVersion = app.schemaVersion or config.defaultSchemaVersion
       cb err # Continue.
 
   # Attempts to select the datalink

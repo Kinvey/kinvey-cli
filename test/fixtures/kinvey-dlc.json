@@ -1,9 +1,10 @@
 {
   "_id"  : "123",
+  "type" : "internal",
   "name" : "TestKinveyDatalink",
   "backingServers": [{
     "_id"    : "456",
-    "host"   : "kinveyDLC://example",
+    "host"   : "https://example.com",
     "secret" : "789"
   }]
 }

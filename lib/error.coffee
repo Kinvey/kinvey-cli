@@ -29,6 +29,8 @@ errors =
     message: "This project is not configured. Use `#{pkg.name} config` to get started."
   ProjectMaxFileSizeExceeded:
     message: "This project is too big to be deployed. The max project size is #{config.maxUploadSize} bytes."
+  RequestError:
+    message: 'There was an error processing your request.'
   NoAppsFound:
     message: 'You have no apps yet. Head over to the console to create one.'
   NoDatalinksFound:

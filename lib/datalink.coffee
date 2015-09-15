@@ -57,7 +57,8 @@ class Datalink
         logger.info 'Deploy initiated, received job %s', chalk.cyan response.body.job # Debug.
         cb() # Continue.
       else if response? # Continue with request error.
-        cb new KinveyError response.body.code, response.body.description
+        if response.body?.code? then cb new KinveyError response.body.code, response.body.description
+        else cb new KinveyError 'RequestError', response.statusCode
 
     # Event listeners.
     archive.on 'data', (chunk) ->
@@ -97,7 +98,8 @@ class Datalink
         logger.info 'Recycle initiated, received job %s', chalk.cyan response.body.job
         cb() # Continue.
       else # Continue with error.
-        cb new KinveyError response.body.code, response.body.description
+        if response.body?.code? then cb new KinveyError response.body.code, response.body.description
+        else cb new KinveyError 'RequestError', response.statusCode
 
   # Returns the deploy job status.
   status: (job, cb) =>
@@ -107,7 +109,8 @@ class Datalink
         logger.info 'Job status: %s %s', chalk.cyan(response.body.status), response.body.message or ''
         cb null, response.body.status # Continue.
       else # Continue with error.
-        cb new KinveyError response.body.code, response.body.description
+        if response.body?.code? then cb new KinveyError response.body.code, response.body.description
+        else cb new KinveyError 'RequestError', response.statusCode
 
   # Validates the project.
   validate: (dir, cb) ->

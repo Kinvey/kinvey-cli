@@ -104,7 +104,8 @@ class Project
       if err? then cb err # Continue with error.
       else if 200 is response?.statusCode then cb null, response.body
       else # Continue with error.
-        cb new KinveyError response.body.code, response.body.description
+        if response.body?.code? then cb new KinveyError response.body.code, response.body.description
+        else cb new KinveyError 'RequestError', response.statusCode
 
   # Executes a GET /apps/:app/datalinks request.
   _execDatalinks: (cb) =>
@@ -115,7 +116,8 @@ class Project
       if err? then cb err # Continue with error.
       else if 200 is response?.statusCode then cb null, response.body
       else # Continue with error.
-        cb new KinveyError response.body.code, response.body.description
+        if response.body?.code? then cb new KinveyError response.body.code, response.body.description
+        else cb new KinveyError 'RequestError', response.statusCode
 
   # Returns eligible Kinvey datalinks.
   _execKinveyDatalinks: (cb) =>

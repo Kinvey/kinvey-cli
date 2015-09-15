@@ -95,8 +95,10 @@ class User
       else if response.body?.code in [ 'InvalidCredentials', 'ValidationError' ]
         logger.warn 'Invalid credentials, please try again.'
         cb() # Continue.
-      else # Continue with error.
+      else if response.body?.code? # Continue with error.
         cb new KinveyError response.body.code, response.body.description
+      else
+        cb new KinveyError 'RequestError', response.statusCode
 
 # Exports.
 module.exports = new User config.paths.session

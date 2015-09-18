@@ -37,5 +37,5 @@ module.exports =
 
   # Paths.
   paths:
-    project : path.join process.cwd(), '.kinvey'         # <projectDir>/<project>
-    session : path.join osHomedir(),   '.kinvey-session' # ~/<session>
+    project : path.join process.cwd(), '.kinvey'             # <projectDir>/<project>
+    session : path.join osHomedir(),   '.kinvey-dlc-session' # ~/<session>

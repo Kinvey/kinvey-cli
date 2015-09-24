@@ -75,7 +75,6 @@ class Datalink
       archive.abort()
       req.abort()
       cb err # Continue with error.
-      cb = null # Reset.
 
     # Pack.
     archive.bulk [{

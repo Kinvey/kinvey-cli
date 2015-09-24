@@ -26,7 +26,6 @@ config   = require 'config'
 KinveyError = require './error.coffee'
 logger  = require './logger.coffee'
 project = require './project.coffee'
-request = require './request.coffee'
 user    = require './user.coffee'
 util    = require './util.coffee'
 
@@ -46,19 +45,17 @@ class Datalink
       options : { filename: 'archive.tar', contentType: 'application/tar' }
 
     # Prepare the request.
-    req = request.post {
+    req = util.makeRequest {
+      method   : 'POST'
       url      : "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/deploy"
-      headers  : { Authorization: "Kinvey #{user.token}", 'Transfer-Encoding': 'chunked' },
+      headers  : { 'Transfer-Encoding': 'chunked' },
       formData : { version: version, file: attachment }
       timeout  : config.uploadTimeout or 30 * 1000 # 30s.
     }, (err, response) ->
-      # NOTE: error is handled by `req` event listener defined below.
-      if 202 is response?.statusCode
+      if err? then req.emit 'error', err # Trigger request error.
+      else # OK.
         logger.info 'Deploy initiated, received job %s', chalk.cyan response.body.job # Debug.
         cb() # Continue.
-      else if response? # Continue with request error.
-        if response.body?.code? then cb new KinveyError response.body.code, response.body.description
-        else cb new KinveyError 'RequestError', response.statusCode
 
     # Event listeners.
     archive.on 'data', (chunk) ->
@@ -78,6 +75,7 @@ class Datalink
       archive.abort()
       req.abort()
       cb err # Continue with error.
+      cb = null # Reset.
 
     # Pack.
     archive.bulk [{
@@ -94,23 +92,17 @@ class Datalink
   recycle: (cb) =>
     this._execRecycle (err, response) ->
       if err? then cb err # Continue with error.
-      else if 202 is response?.statusCode
+      else # OK.
         logger.info 'Recycle initiated, received job %s', chalk.cyan response.body.job
         cb() # Continue.
-      else # Continue with error.
-        if response.body?.code? then cb new KinveyError response.body.code, response.body.description
-        else cb new KinveyError 'RequestError', response.statusCode
 
   # Returns the deploy job status.
   status: (job, cb) =>
     this._execStatus job, (err, response) ->
       if err? then cb err # Continue with error.
-      else if 200 is response?.statusCode
+      else # OK.
         logger.info 'Job status: %s %s', chalk.cyan(response.body.status), response.body.message or ''
         cb null, response.body.status # Continue.
-      else # Continue with error.
-        if response.body?.code? then cb new KinveyError response.body.code, response.body.description
-        else cb new KinveyError 'RequestError', response.statusCode
 
   # Validates the project.
   validate: (dir, cb) ->
@@ -124,16 +116,15 @@ class Datalink
 
   # Executes a POST /apps/:app/datalink/:datalink/recycle request.
   _execRecycle: (cb) ->
-    request.post {
-      url     : "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/recycle"
-      headers : { Authorization: "Kinvey #{user.token}" }
+    util.makeRequest {
+      method : 'POST',
+      url    : "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/recycle"
     }, cb
 
   # Executes a GET /apps/:app/datalink/:datalink/<type> request.
   _execStatus: (job, cb) ->
-    request.get {
-      url     : "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/deploy?job=#{job}"
-      headers : { Authorization: "Kinvey #{user.token}" }
+    util.makeRequest {
+      url: "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/deploy?job=#{job}"
     }, cb
 
   # Returns true if the provided path is an artifact.

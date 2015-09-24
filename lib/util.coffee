@@ -19,11 +19,14 @@ fs  = require 'fs'
 url = require 'url'
 
 # Package modules.
-async = require 'async'
-chalk = require 'chalk'
+async   = require 'async'
+chalk   = require 'chalk'
 
 # Local modules.
-logger = require './logger.coffee'
+KinveyError = require './error.coffee'
+logger  = require './logger.coffee'
+request = require './request.coffee'
+user    = require './user.coffee'
 
 # Formats the host argument to be a valid URL.
 exports.formatHost = (host) ->
@@ -40,6 +43,37 @@ exports.formatList = (list, name = 'name') ->
   result.sort (x, y) ->
     if x[name].toLowerCase() < y[name].toLowerCase() then -1 else 1
   result
+
+# Executes a request.
+exports.makeRequest = makeRequest = (options, cb) ->
+  # Add authentication to options.
+  options.method ?= 'GET' # Default to GET.
+  if user.isLoggedIn()
+    options.headers ?= { }
+    options.headers?.Authorization = "Kinvey #{user.token}"
+
+  # Perform the request.
+  logger.debug 'Request:  %s %s', options.method, options.url
+  request.Request options, (err, response) ->
+    if err? then return cb err # Continue with error.
+
+    logger.debug 'Response: %s %s %s', options.method, options.url, chalk.green response.statusCode
+    if 2 is parseInt response.statusCode / 100, 10 # OK.
+      return cb null, response
+    if 'InvalidCredentials' is response.body?.code
+      logger.warn 'Invalid credentials, please authenticate.'
+
+      # Attempt to authenticate, unless explicitly disallowed.
+      unless false is options.refresh
+        return user.refresh (err) ->
+          if err? then cb err # Continue with error.
+          else makeRequest options, cb # Retry the original request.
+
+    # Handle response errors.
+    if response.body?.code? # Formatted response error.
+      cb new KinveyError response.body.code, response.body.description
+    else # Raw response error.
+      cb new KinveyError 'RequestError', response.statusCode
 
 # Reads contents from the specified file.
 exports.readFile = readFile = (file, cb) ->

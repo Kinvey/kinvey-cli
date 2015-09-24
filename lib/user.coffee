@@ -21,10 +21,9 @@ config = require 'config'
 
 # Local modules.
 KinveyError = require './error.coffee'
-logger  = require './logger.coffee'
-prompt  = require './prompt.coffee'
-request = require './request.coffee'
-util    = require './util.coffee'
+logger = require './logger.coffee'
+prompt = require './prompt.coffee'
+util   = require './util.coffee'
 
 # Define the user class.
 class User
@@ -47,6 +46,14 @@ class User
       email = password = undefined # Reset.
     , this.isLoggedIn, cb
 
+  # Refreshes the user token.
+  refresh: (cb) =>
+    this.token = null # Reset.
+    async.series [
+      (next) => this.login undefined, undefined, next
+      this.save
+    ], (err) -> cb err # Continue.
+
   # Restores the session from file.
   restore: (cb) =>
     logger.debug 'Restoring session from file %s', chalk.cyan this.userPath
@@ -57,10 +64,7 @@ class User
         cb() # Continue.
       else # No token, prompt for login.
         logger.debug 'Failed to restore session from file %s', chalk.cyan this.userPath
-        async.series [
-          (next) => this.login undefined, undefined, next
-          this.save
-        ], (err) -> cb err # Continue.
+        this.refresh cb
 
   # Saves the session to file.
   save: (cb) =>
@@ -76,9 +80,11 @@ class User
 
   # Executes a login request.
   _execLogin: (email, password, cb) ->
-    request.post {
-      url  : '/session',
-      json : { email: email, password: password }
+    util.makeRequest {
+      method  : 'POST'
+      url     : '/session',
+      json    : { email: email, password: password }
+      refresh : false
     }, cb
 
   # Attempts to login with the provided email and password.
@@ -87,18 +93,13 @@ class User
       (next) -> prompt.getEmailPassword email, password, next
       this._execLogin
     ], (err, response) =>
-      if err? then cb err # Continue with request error.
-      else if 200 is response.statusCode
+      # Mute invalid login errors, as the `login()` method will just retry.
+      if err?.name in [ 'InvalidCredentials', 'ValidationError' ] then cb() # Mute.
+      else if err? then cb err # Continue with error.
+      else # OK.
         logger.info 'Welcome back %s', chalk.cyan response.body.email
         this.token = response.body.token # Save token.
         cb() # Continue.
-      else if response.body?.code in [ 'InvalidCredentials', 'ValidationError' ]
-        logger.warn 'Invalid credentials, please try again.'
-        cb() # Continue.
-      else if response.body?.code? # Continue with error.
-        cb new KinveyError response.body.code, response.body.description
-      else
-        cb new KinveyError 'RequestError', response.statusCode
 
 # Exports.
 module.exports = new User config.paths.session

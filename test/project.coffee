@@ -22,6 +22,7 @@ api     = require './lib/api.coffee'
 logger  = require '../lib/logger.coffee'
 project = require '../lib/project.coffee'
 prompt  = require '../lib/prompt.coffee'
+user    = require '../lib/user.coffee'
 util    = require '../lib/util.coffee'
 
 # Fixtures.
@@ -181,6 +182,30 @@ describe 'project', () ->
   describe 'select', () ->
     afterEach 'configure', () ->
       project.app = project.datalink = project.schemaVersion = null # Reset.
+
+    describe 'given invalid credentials', () ->
+      # Stub user.refresh().
+      before    'refresh', () -> sinon.stub(user, 'refresh').callsArg 0
+      afterEach 'refresh', () -> user.refresh.reset()
+      after     'refresh', () -> user.refresh.restore()
+
+      # Mock the API.
+      beforeEach 'api', () ->
+        this.mocks = [
+          api.get('/apps').reply 401, { code: 'InvalidCredentials' }
+          api.get('/apps').reply 200, [ ]
+        ]
+      afterEach 'api', () ->
+        mock.done() for mock in this.mocks
+        delete this.mocks
+
+      it 'should retry.', (cb) ->
+        project.select (err) ->
+          expect(user.refresh).to.be.calledOnce
+
+          # The user should be authenticated, but without having any apps.
+          expect(err).to.have.property 'name', 'NoAppsFound'
+          cb()
 
     describe 'given the user has an app and eligible datalink', () ->
       # Stub project.save().

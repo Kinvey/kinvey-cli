@@ -110,6 +110,35 @@ describe 'user', () ->
           expect(prompt.getEmailPassword).to.be.calledWith undefined, this.password
           cb err
 
+  # user.refresh()
+  describe 'refresh', ->
+    # Set a token.
+    before 'token', () -> this.token = '123'
+    after  'token', () -> delete this.token
+
+    # Stub user.login().
+    before    'login', () -> sinon.stub(user, 'login').callsArg 2
+    afterEach 'login', () -> user.login.reset()
+    after     'login', () -> user.login.restore()
+
+    # Stub user.save().
+    before    'save', () -> sinon.stub(user, 'save').callsArg 0
+    afterEach 'save', () -> user.save.reset()
+    after     'save', () -> user.save.restore()
+
+    # Tests.
+    it 'should login.', (cb) ->
+      user.refresh (err) ->
+        expect(user.login).to.be.calledOnce
+        expect(user.login).to.be.calledWith undefined, undefined
+        expect(user.token).to.be.null
+        cb err
+
+    it 'should save.', (cb) ->
+      user.refresh (err) ->
+        expect(user.save).to.be.calledOnce
+        cb err
+
   # user.restore()
   describe 'restore', () ->
     beforeEach 'token', () -> user.token = null # Reset.

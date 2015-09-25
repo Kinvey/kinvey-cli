@@ -21,11 +21,10 @@ config = require 'config'
 
 # Local modules.
 KinveyError = require './error.coffee'
-logger  = require './logger.coffee'
-prompt  = require './prompt.coffee'
-request = require './request.coffee'
-user    = require './user.coffee'
-util    = require './util.coffee'
+logger = require './logger.coffee'
+prompt = require './prompt.coffee'
+user   = require './user.coffee'
+util   = require './util.coffee'
 
 # Define the project class.
 class Project
@@ -97,36 +96,25 @@ class Project
 
   # Executes a GET /apps request.
   _execApps: (cb) ->
-    request.get {
-      url     : '/apps'
-      headers : { Authorization: "Kinvey #{user.token}" }
-    }, (err, response) ->
-      if err? then cb err # Continue with error.
-      else if 200 is response?.statusCode then cb null, response.body
-      else # Continue with error.
-        if response.body?.code? then cb new KinveyError response.body.code, response.body.description
-        else cb new KinveyError 'RequestError', response.statusCode
+    util.makeRequest { url: '/apps' }, (err, response) ->
+      cb err, response?.body
 
   # Executes a GET /apps/:app/datalinks request.
   _execDatalinks: (cb) =>
-    request.get {
-      url     : "/v#{this.schemaVersion}/apps/#{this.app}/data-links"
-      headers : { Authorization: "Kinvey #{user.token}" }
+    util.makeRequest {
+      url: "/v#{this.schemaVersion}/apps/#{this.app}/data-links"
     }, (err, response) ->
-      if err? then cb err # Continue with error.
-      else if 200 is response?.statusCode then cb null, response.body
-      else # Continue with error.
-        if response.body?.code? then cb new KinveyError response.body.code, response.body.description
-        else cb new KinveyError 'RequestError', response.statusCode
+      cb err, response?.body
 
   # Returns eligible Kinvey datalinks.
   _execKinveyDatalinks: (cb) =>
     this._execDatalinks (err, body) ->
-      if body?.length # Filter and sort by name.
+      if err? then cb err # Continue with error.
+      else # Filter and sort by name.
         body = body.filter (el) -> 'internal' is el.type
         body.sort (x, y) -> # Sort.
           if x.name.toLowerCase() < y.name.toLowerCase() then -1 else 1
-      cb err, body
+        cb null, body
 
   # Attempts to select the app.
   _selectApp: (cb) =>

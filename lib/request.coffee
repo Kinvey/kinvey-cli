@@ -24,14 +24,5 @@ options =
   json    : true
   timeout : config.timeout or 5000 # 5 seconds.
 
-# Patch "request.defaults" so the current instance becomes modifyable.
-result = request.defaults options
-result.defaults = do (result) ->
-  defaults = result.defaults # Original "request.defaults".
-  (options) ->
-    for method, fn of defaults.call result, options
-      result[method] = fn
-    result
-
 # Exports.
-module.exports = result
+module.exports = { Request: request.defaults options }

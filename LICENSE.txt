@@ -202,14 +202,14 @@ Summary:
 * commander-2.8       [MIT] - CLI argument parser.
 * config-1.16         [MIT] - Project configuration.
 * custom-logger-0.3   [MIT] - CLI logger.
-* inquirer-0.9        [MIT] - CLI prompts.
+* inquirer-0.10       [MIT] - CLI prompts.
 * isemail-1.2         [BSD-3-Clause] - E-mail validator.
 * lodash.merge-3.3    [MIT] - Object merger.
 * mocha-2.3           [MIT] - Testing library.
-* nock-2.10           [MIT] - Mocking Node's http.
+* nock-2.12           [MIT] - Mocking Node's http.
 * os-homedir-1.0      [MIT] - Cross-platform home directory.
-* request-2.62        [Apache-2.0] - HTTP request library.
-* sinon-1.16          [BSD-3-Clause] - Spy, stub, and mock library.
+* request-2.63        [Apache-2.0] - HTTP request library.
+* sinon-1.17          [BSD-3-Clause] - Spy, stub, and mock library.
 * sinon-chai-2.8      [BSD-2-Clause] - Assertion library for Sinon.JS.
 * update-notifier-0.5 [BSD-2-Clause] - Package update notifier.
 
@@ -225,20 +225,20 @@ SECTION 1: BSD-STYLE, MIT-STYLE, OR SIMILAR STYLE LICENSES
    >>> commander-2.8
    >>> config-1.16
    >>> custom-logger-0.3
-   >>> inquirer-0.9
+   >>> inquirer-0.10
    >>> isemail-1.2
    >>> lodash.merge-3.3
    >>> mocha-2.3
-   >>> nock-2.10
+   >>> nock-2.12
    >>> os-homedir-1.0
-   >>> sinon-1.16
+   >>> sinon-1.17
    >>> sinon-chai-2.8
    >>> update-notifier-0.5
 
 
 SECTION 2: Apache License, V2.0
 
-   >>> request-2.62
+   >>> request-2.63
 
 
 --------------- SECTION 1:  BSD-STYLE, MIT-STYLE, OR SIMILAR STYLE LICENSES ----------
@@ -457,7 +457,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
->>> inquirer-0.9 (https://github.com/SBoudrias/Inquirer.js/blob/master/LICENSE-MIT)
+>>> inquirer-0.10 (https://github.com/SBoudrias/Inquirer.js/blob/master/LICENSE-MIT)
 
 Copyright (c) 2012 Simon Boudrias
 
@@ -550,7 +550,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
->>> nock-2.10
+>>> nock-2.12
 
 (The MIT License)
 
@@ -588,7 +588,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
->>> sinon-1.16 (https://github.com/cjohansen/Sinon.JS/blob/master/LICENSE)
+>>> sinon-1.17 (https://github.com/cjohansen/Sinon.JS/blob/master/LICENSE)
 
 (The BSD License)
 
@@ -656,7 +656,7 @@ BSD license and copyright Google
 
 Apache License, V2.0 is applicable to the following component(s).
 
->>> request-2.62 (https://github.com/request/request/blob/master/LICENSE)
+>>> request-2.63 (https://github.com/request/request/blob/master/LICENSE)
 
 Apache License
 

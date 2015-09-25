@@ -36,7 +36,7 @@ module.exports = (command) ->
   if options.host? # Format and adjust host.
     host = util.formatHost options.host
     logger.debug 'Setting host of the Kinvey service to %s', chalk.cyan host
-    request.defaults { baseUrl: host }
+    request.Request = request.Request.defaults { baseUrl: host } # Save.
 
   # Check for updates.
   unless options.suppressVersionCheck

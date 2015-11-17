@@ -51,7 +51,7 @@ class Project
         datalinks.forEach (datalink) =>
           # Highlight the active datalink.
           bullet = if datalink.id is this.datalink then chalk.green '* ' else ''
-          logger.info '%s%s (%s)', bullet, chalk.cyan(datalink.name), datalink.host
+          logger.info '%s%s', bullet, chalk.cyan(datalink.name)
         logger.info 'The datalink used in this project is marked with *'
         cb() # Continue.
 

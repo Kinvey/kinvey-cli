@@ -50,8 +50,8 @@ class Datalink
       url      : "/v#{project.schemaVersion}/jobs"
       headers  : { 'Transfer-Encoding': 'chunked' }
       formData : {
-        type   : 'deploy'
-        params : JSON.stringify { app: project.app, dlc: project.datalink, version: version }
+        type   : 'deployDataLink'
+        params : JSON.stringify { appId: project.app, dataLinkId: project.datalink, version: version }
         file   : attachment
       },
       timeout  : config.uploadTimeout or 30 * 1000 # 30s.
@@ -123,8 +123,8 @@ class Datalink
       method : 'POST'
       url    : "/v#{project.schemaVersion}/jobs"
       body   : {
-        type   : 'recycle'
-        params : { app: project.app, dlc: project.datalink }
+        type   : 'recycleDataLink'
+        params : { appId: project.app, dataLinkId: project.datalink }
       }
     }, cb
 

@@ -39,7 +39,7 @@ module.exports = deploy = (argv..., cb) ->
     (version, next) -> datalink.deploy process.cwd(), version, next
   ], (err) ->
     if err? # Display errors.
-      logger.error "%s", err
+      logger.error '%s', err
       unless cb? then process.exit -1 # Exit with error.
     cb? err
 

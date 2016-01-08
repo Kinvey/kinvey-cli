@@ -47,9 +47,13 @@ class Datalink
     # Prepare the request.
     req = util.makeRequest {
       method   : 'POST'
-      url      : "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/deploy"
-      headers  : { 'Transfer-Encoding': 'chunked' },
-      formData : { version: version, file: attachment }
+      url      : "/v#{project.schemaVersion}/jobs"
+      headers  : { 'Transfer-Encoding': 'chunked' }
+      formData : {
+        type   : 'deployDataLink'
+        params : JSON.stringify { appId: project.app, dataLinkId: project.datalink, version: version }
+        file   : attachment
+      },
       timeout  : config.uploadTimeout or 30 * 1000 # 30s.
     }, (err, response) ->
       if err? then req.emit 'error', err # Trigger request error.
@@ -116,15 +120,17 @@ class Datalink
   # Executes a POST /apps/:app/datalink/:datalink/recycle request.
   _execRecycle: (cb) ->
     util.makeRequest {
-      method : 'POST',
-      url    : "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/recycle"
+      method : 'POST'
+      url    : "/v#{project.schemaVersion}/jobs"
+      body   : {
+        type   : 'recycleDataLink'
+        params : { appId: project.app, dataLinkId: project.datalink }
+      }
     }, cb
 
   # Executes a GET /apps/:app/datalink/:datalink/<type> request.
   _execStatus: (job, cb) ->
-    util.makeRequest {
-      url: "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/deploy?job=#{job}"
-    }, cb
+    util.makeRequest { url: "/v#{project.schemaVersion}/jobs/#{job}" }, cb
 
   # Returns true if the provided path is an artifact.
   _isArtifact: (base, filepath) ->

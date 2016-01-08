@@ -37,7 +37,7 @@ module.exports = list = (argv..., cb) ->
     project.list
   ], (err) ->
     if err? # Display errors.
-      logger.error "%s", err
+      logger.error '%s', err
       unless cb? then process.exit -1 # Exit with error.
     cb? err
 

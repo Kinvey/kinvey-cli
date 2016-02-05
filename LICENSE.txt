@@ -191,61 +191,62 @@ limitations under the License.
    END OF TERMS AND CONDITIONS
 
 
+
 Summary:
 
-* archiver-0.15       [MIT] - Directory archiver.
-* async-1.4           [MIT] - Asynchronous control flow.
-* chai-3.3            [MIT] - Assertion library.
-* chalk-1.1           [MIT] - Logging formatter.
-* coffee-script-1.10  [MIT] - Project language.
-* coffeelint-1.12     [MIT] - Linting CoffeeScript.
-* commander-2.8       [MIT] - CLI argument parser.
-* config-1.16         [MIT] - Project configuration.
-* custom-logger-0.3   [MIT] - CLI logger.
-* inquirer-0.10       [MIT] - CLI prompts.
-* isemail-1.2         [BSD-3-Clause] - E-mail validator.
-* lodash.merge-3.3    [MIT] - Object merger.
-* mocha-2.3           [MIT] - Testing library.
-* nock-2.12           [MIT] - Mocking Node's http.
-* os-homedir-1.0      [MIT] - Cross-platform home directory.
-* request-2.63        [Apache-2.0] - HTTP request library.
-* sinon-1.17          [BSD-3-Clause] - Spy, stub, and mock library.
-* sinon-chai-2.8      [BSD-2-Clause] - Assertion library for Sinon.JS.
-* update-notifier-0.5 [BSD-2-Clause] - Package update notifier.
+* archiver-0.15.1       [MIT] - Directory archiver.
+* async-1.4.2           [MIT] - Asynchronous control flow.
+* chai-3.3.0            [MIT] - Assertion library.
+* chalk-1.1.1           [MIT] - Logging formatter.
+* coffee-script-1.10.0  [MIT] - Project language.
+* coffeelint-1.12.1     [MIT] - Linting CoffeeScript.
+* commander-2.8.1       [MIT] - CLI argument parser.
+* config-1.16.0         [MIT] - Project configuration.
+* custom-logger-0.3.1   [MIT] - CLI logger.
+* inquirer-0.10.0       [MIT] - CLI prompts.
+* isemail-1.2.0         [BSD-2-Clause] - E-mail validator.
+* lodash.merge-3.3.2    [MIT] - Object merger.
+* mocha-2.3.3           [MIT] - Testing library.
+* nock-2.12.0           [MIT] - Mocking Node's http.
+* os-homedir-1.0.1      [MIT] - Cross-platform home directory.
+* request-2.63.0        [Apache-2.0] - HTTP request library.
+* sinon-1.17.0          [BSD-3-Clause] - Spy, stub, and mock library.
+* sinon-chai-2.8.0      [BSD-2-Clause] - Assertion library for Sinon.JS.
+* update-notifier-0.5.0 [BSD-2-Clause] - Package update notifier.
 
 
 SECTION 1: BSD-STYLE, MIT-STYLE, OR SIMILAR STYLE LICENSES
 
-   >>> archiver-0.15
-   >>> async-1.4
-   >>> chai-3.3
-   >>> chalk-1.1
-   >>> coffee-script-1.10
-   >>> coffeelint-1.12
-   >>> commander-2.8
-   >>> config-1.16
-   >>> custom-logger-0.3
-   >>> inquirer-0.10
-   >>> isemail-1.2
-   >>> lodash.merge-3.3
-   >>> mocha-2.3
-   >>> nock-2.12
-   >>> os-homedir-1.0
-   >>> sinon-1.17
-   >>> sinon-chai-2.8
-   >>> update-notifier-0.5
-
+   >>> archiver-0.15.1
+   >>> async-1.4.2
+   >>> chai-3.3.0
+   >>> chalk-1.1.1
+   >>> coffee-script-1.10.0
+   >>> coffeelint-1.12.1
+   >>> commander-2.8.1
+   >>> config-1.16.0
+   >>> custom-logger-0.3.1
+   >>> inquirer-0.10.0
+   >>> isemail-1.2.0
+   >>> lodash.merge-3.3.2
+   >>> mocha-2.3.3
+   >>> nock-2.12.0
+   >>> os-homedir-1.0.1
+   >>> sinon-1.17.0
+   >>> sinon-chai-2.8.0
+   >>> update-notifier-0.5.0
 
 SECTION 2: Apache License, V2.0
 
-   >>> request-2.63
+   >>> request-2.63.0
 
 
---------------- SECTION 1:  BSD-STYLE, MIT-STYLE, OR SIMILAR STYLE LICENSES ----------
 
-BSD-STYLE, MIT-STYLE, OR SIMILAR STYLE is applicable to the following component(s).
+--------------- SECTION 1: BSD-STYLE, MIT-STYLE, OR SIMILAR STYLE LICENSES ----------
 
->>> archiver-0.15 (https://github.com/archiverjs/node-archiver/blob/master/LICENSE)
+BSD-STYLE, MIT-STYLE, OR SIMILAR STYLE LICENSES is applicable to the following component(s).
+
+>>> archiver-0.15.1 (https://github.com/archiverjs/node-archiver/blob/master/LICENSE)
 
 Copyright (c) 2012-2014 Chris Talkington, contributors.
 
@@ -270,8 +271,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
-
->>> async-1.4 (https://github.com/caolan/async/blob/master/LICENSE)
+>>> async-1.4.2 (https://github.com/caolan/async/blob/master/LICENSE)
 
 Copyright (c) 2010-2014 Caolan McMahon
 
@@ -294,20 +294,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
->>> chai-3.3 (https://github.com/chaijs/chai/blob/master/README.md#license)
+>>> chai-3.3.0 (https://github.com/chaijs/chai/blob/master/README.md)
 
 (The MIT License)
 
-Copyright (c) 2011-2015 Jake Luer jake@alogicalparadox.com
+Copyright (c) 2011-2015 Jake Luer <jake@alogicalparadox.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
 
->>> chalk-1.1 (https://github.com/sindresorhus/chalk/blob/master/license)
+>>> chalk-1.1.1 (https://github.com/chalk/chalk/blob/master/license)
 
 The MIT License (MIT)
 
@@ -332,7 +344,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
->>> coffee-script-1.10 (https://github.com/jashkenas/coffeescript/blob/master/LICENSE)
+>>> coffee-script-1.10.0 (https://github.com/jashkenas/coffeescript/blob/master/LICENSE)
 
 Copyright (c) 2009-2015 Jeremy Ashkenas
 
@@ -358,7 +370,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 
->>> coffeelint-1.12 (https://github.com/clutchski/coffeelint/blob/master/LICENSE)
+>>> coffeelint-1.12.1 (https://github.com/clutchski/coffeelint/blob/master/LICENSE)
 
 CoffeeLint
 Copyright (c) 2011 Matthew Perpick
@@ -382,7 +394,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
->>> commander-2.8 (https://github.com/tj/commander.js/blob/master/LICENSE)
+>>> commander-2.8.1 (https://github.com/tj/commander.js/blob/master/LICENSE)
 
 (The MIT License)
 
@@ -408,7 +420,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
->>> config-1.16 (https://github.com/lorenwest/node-config/blob/master/LICENSE)
+>>> config-1.16.0 (https://github.com/lorenwest/node-config/blob/master/LICENSE)
 
 // Copyright 2010-2015, Loren West and other contributors
 
@@ -431,7 +443,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // IN THE SOFTWARE.
 
 
->>> custom-logger-0.3 (https://github.com/felixmc/custom-logger/blob/master/LICENSE)
+>>> custom-logger-0.3.1 (https://github.com/felixmc/custom-logger/blob/master/LICENSE)
 
 (The MIT License)
 
@@ -457,36 +469,18 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
->>> inquirer-0.10 (https://github.com/SBoudrias/Inquirer.js/blob/master/LICENSE-MIT)
+>>> inquirer-0.10.0 (https://github.com/sboudrias/Inquirer.js/blob/master/README.md)
 
-Copyright (c) 2012 Simon Boudrias
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
+Copyright (c) 2012 Simon Boudrias (twitter: @vaxilart)
+Licensed under the MIT license.
 
 
->>> isemail-1.2 (https://github.com/hapijs/isemail/blob/master/LICENSE)
+>>> isemail-1.2.0 (https://github.com/hapijs/isemail/blob/master/LICENSE)
 
 Copyright © 2008-2011, Dominic Sayers
-Copyright © 2013, GlobeSherpa
+Copyright © 2013-2014, GlobeSherpa
+Copyright © 2014-2015, Eli Skeggs
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -498,7 +492,7 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
->>> lodash.merge-3.3 (https://github.com/lodash/lodash/blob/master/LICENSE)
+>>> lodash.merge-3.3.2 (https://github.com/lodash/lodash/blob/master/LICENSE)
 
 Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
 Based on Underscore.js, copyright 2009-2015 Jeremy Ashkenas,
@@ -524,7 +518,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
->>> mocha-2.3 (https://github.com/mochajs/mocha/blob/master/LICENSE)
+>>> mocha-2.3.3 (https://github.com/mochajs/mocha/blob/master/LICENSE)
 
 (The MIT License)
 
@@ -550,7 +544,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
->>> nock-2.12
+>>> nock-2.12.0 (https://github.com/pgte/nock/blob/master/README.md)
 
 (The MIT License)
 
@@ -563,7 +557,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
->>> os-homedir-1.0 (https://github.com/sindresorhus/os-homedir/blob/master/license)
+>>> os-homedir-1.0.1 (https://github.com/sindresorhus/os-homedir/blob/master/license)
 
 The MIT License (MIT)
 
@@ -588,7 +582,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
->>> sinon-1.17 (https://github.com/cjohansen/Sinon.JS/blob/master/LICENSE)
+>>> sinon-1.17.0 (https://github.com/cjohansen/Sinon.JS/blob/master/LICENSE)
 
 (The BSD License)
 
@@ -619,7 +613,33 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
->>> sinon-chai-2.8 (https://github.com/domenic/sinon-chai/blob/master/LICENSE.txt)
+>>> sinon-chai-2.8.0 (https://github.com/domenic/sinon-chai/blob/master/LICENSE.txt)
+
+Dual licensed under WTFPL and BSD:
+
+---
+
+Copyright © 2012–2015 Domenic Denicola <d@domenic.me>
+
+This work is free. You can redistribute it and/or modify it under the
+terms of the Do What The Fuck You Want To Public License, Version 2,
+as published by Sam Hocevar. See below for more details.
+
+        DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+                    Version 2, December 2004
+
+ Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+
+ Everyone is permitted to copy and distribute verbatim or modified
+ copies of this license document, and changing it is allowed as long
+ as the name is changed.
+
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+  0. You just DO WHAT THE FUCK YOU WANT TO.
+
+---
 
 Copyright © 2012–2015, Domenic Denicola <d@domenic.me>
 All rights reserved.
@@ -646,9 +666,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
->>> update-notifier-0.5 (https://github.com/yeoman/update-notifier/blob/master/readme.md)
+>>> update-notifier-0.5.0 (https://github.com/yeoman/update-notifier/blob/master/readme.md)
 
-BSD license and copyright Google
+[BSD license](http://opensource.org/licenses/bsd-license.php) and copyright Google
 
 
 
@@ -656,7 +676,7 @@ BSD license and copyright Google
 
 Apache License, V2.0 is applicable to the following component(s).
 
->>> request-2.63 (https://github.com/request/request/blob/master/LICENSE)
+>>> request-2.63.0 (https://github.com/request/request/blob/master/LICENSE)
 
 Apache License
 
@@ -713,3 +733,4 @@ If the Work includes a "NOTICE" text file as part of its distribution, then any 
 9. Accepting Warranty or Additional Liability. While redistributing the Work or Derivative Works thereof, You may choose to offer, and charge a fee for, acceptance of support, warranty, indemnity, or other liability obligations and/or rights consistent with this License. However, in accepting such obligations, You may act only on Your own behalf and on Your sole responsibility, not on behalf of any other Contributor, and only if You agree to indemnify, defend, and hold each Contributor harmless for any liability incurred by, or claims asserted against, such Contributor by reason of your accepting any such warranty or additional liability.
 
 END OF TERMS AND CONDITIONS
+

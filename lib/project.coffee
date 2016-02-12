@@ -55,6 +55,26 @@ class Project
         logger.info 'The datalink used in this project is marked with *'
         cb() # Continue.
 
+  # Lists all hosts containing internal DLC log files
+  listLogHosts: (cb) =>
+    this._execDatalinkLogHosts (err, datalinkHosts) ->
+      if err? then cb err # Continue with error.
+      else # Log info.
+        logger.info 'You have %s Kinvey datalink log hosts:', chalk.cyan datalinkHosts.length
+        datalinkHosts.forEach (datalinkHost) ->
+          logger.info '%s', chalk.cyan(datalinkHost)
+        cb() # Continue.
+
+  # Lists all Kinvey logs.
+  logs: (host, cb) =>
+    this._execDatalinkLogs host, (err, logs) ->
+      if err? then cb err # Continue with error.
+      else # Log info.
+        logger.info "You have %s Kinvey datalink logs for host #{host}:", chalk.cyan logs.length
+        logs.forEach (log) ->
+          logger.info '%s - %s', log.timestamp, chalk.cyan(log.message.trim())
+        cb() # Continue.
+
   # Restores the project from file.
   restore: (cb) =>
     logger.debug 'Restoring project from file %s', chalk.cyan this.projectPath
@@ -99,12 +119,24 @@ class Project
     util.makeRequest { url: '/apps' }, (err, response) ->
       cb err, response?.body
 
-  # Executes a GET /apps/:app/datalinks request.
-  _execDatalinks: (cb) =>
+  # Executes a GET /apps/:app/datalinks/:datalink/logs/hosts request.
+  _execDatalinkLogHosts: (cb) =>
     util.makeRequest {
-      url: "/v#{this.schemaVersion}/apps/#{this.app}/data-links"
+      url: "/v#{this.schemaVersion}/apps/#{this.app}/data-links/#{this.datalink}/logs/hosts"
     }, (err, response) ->
-      cb err, response?.body
+      cb err, response?.body?.result
+
+  # Executes a GET /apps/:app/datalinks/:datalink/logs request.
+  _execDatalinkLogs: (host, cb) =>
+    url = ''
+    if host?
+      url = "/v#{this.schemaVersion}/apps/#{this.app}/data-links/#{this.datalink}/logs?cid=#{host}"
+    else
+      url = "/v#{this.schemaVersion}/apps/#{this.app}/data-links/#{this.datalink}/logs"
+    util.makeRequest {
+      url: url
+    }, (err, response) ->
+      cb err, response?.body?.logs
 
   # Returns eligible Kinvey datalinks.
   _execKinveyDatalinks: (cb) =>
@@ -115,6 +147,13 @@ class Project
         body.sort (x, y) -> # Sort.
           if x.name.toLowerCase() < y.name.toLowerCase() then -1 else 1
         cb null, body
+
+  # Executes a GET /apps/:app/datalinks request.
+  _execDatalinks: (cb) ->
+    util.makeRequest {
+      url: "/v#{this.schemaVersion}/apps/#{this.app}/data-links"
+    }, (err, response) ->
+      cb err, response?.body
 
   # Attempts to select the app.
   _selectApp: (cb) =>

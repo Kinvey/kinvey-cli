@@ -109,7 +109,7 @@ class Datalink
 
   # Lists all hosts containing internal DLC log files
   listLogHosts: (cb) =>
-    this._execDatalinkLogHosts (err, datalinkLogs) =>
+    this._execDatalinkLogHosts (err, datalinkLogs) ->
       if err? then cb err # Continue with error.
       else # Log info.
         #console.log "datalinkHosts: #{JSON.stringify datalinkHosts}"

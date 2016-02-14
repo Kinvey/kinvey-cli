@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.4
+* BACK-1209: Add `hosts` command and implement `logs` command
+
 ## 0.0.3 (2016-01-08)
 * BACK-905: Refactor routes.
 

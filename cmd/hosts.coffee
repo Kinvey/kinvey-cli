@@ -35,7 +35,7 @@ module.exports = hosts = (argv..., cb) ->
     project.restore
 
     # Get internal DLC logs
-    project.listLogHosts
+    datalink.listLogHosts
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err

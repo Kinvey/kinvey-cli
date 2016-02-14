@@ -1,44 +1,58 @@
 {
-  "name"         : "kinvey-dlc-cli",
-  "version"      : "0.0.3",
-  "description"  : "Utility for deploying Kinvey DLC microservices to Kinvey’s Node DLC PaaS.",
-  "keywords"     : [ "Kinvey" ],
-  "homepage"     : "http://www.kinvey.com",
-  "bugs"         : "https://github.com/Kinvey/dlc-cli/issues",
-  "license"      : "Apache-2.0",
-  "author"       : "Kinvey, Inc.",
-  "contributors" : [ "Mark van Seventer <mark@kinvey.com>" ],
-  "bin"          : "./bin/cli.js",
-  "repository"   : { "type": "git", "url": "Kinvey/dlc-cli" },
-  "scripts"      : {
-    "start"   : "./bin/cli.js",
-    "pretest" : "./node_modules/.bin/coffeelint --file ./.coffeelint bin/ cmd/ config/ lib/ test/",
-    "test"    : "./node_modules/.bin/mocha test/"
+  "name": "kinvey-dlc-cli",
+  "version": "0.0.3",
+  "description": "Utility for deploying Kinvey DLC microservices to Kinvey’s Node DLC PaaS.",
+  "keywords": [
+    "Kinvey"
+  ],
+  "homepage": "http://www.kinvey.com",
+  "bugs": "https://github.com/Kinvey/dlc-cli/issues",
+  "license": "Apache-2.0",
+  "author": "Kinvey, Inc.",
+  "contributors": [
+    "Mark van Seventer <mark@kinvey.com>"
+  ],
+  "bin": "./bin/cli.js",
+  "repository": {
+    "type": "git",
+    "url": "Kinvey/dlc-cli"
   },
-  "dependencies" : {
-    "archiver"        : "0.15.1",
-    "async"           : "1.4.2",
-    "chalk"           : "1.1.1",
-    "coffee-script"   : "1.10.0",
-    "commander"       : "2.8.1",
-    "config"          : "1.16.0",
-    "custom-logger"   : "0.3.1",
-    "inquirer"        : "0.10.0",
-    "isemail"         : "1.2.0",
-    "lodash.merge"    : "3.3.2",
-    "os-homedir"      : "1.0.1",
-    "request"         : "2.63.0",
-    "update-notifier" : "0.5.0"
+  "scripts": {
+    "start": "./bin/cli.js",
+    "pretest": "./node_modules/.bin/coffeelint --file ./.coffeelint bin/ cmd/ config/ lib/ test/",
+    "test": "./node_modules/.bin/mocha test/"
+  },
+  "dependencies": {
+    "archiver": "0.15.1",
+    "async": "1.4.2",
+    "chalk": "1.1.1",
+    "coffee-script": "1.10.0",
+    "commander": "2.8.1",
+    "config": "1.16.0",
+    "custom-logger": "0.3.1",
+    "inquirer": "0.10.0",
+    "isemail": "1.2.0",
+    "lodash.merge": "3.3.2",
+    "moment": "2.11.2",
+    "os-homedir": "1.0.1",
+    "request": "2.63.0",
+    "update-notifier": "0.5.0"
   },
   "devDependencies": {
-    "chai"       : "3.3.0",
-    "coffeelint" : "1.12.1",
-    "mocha"      : "2.3.3",
-    "nock"       : "2.12.0",
-    "sinon"      : "1.17.0",
-    "sinon-chai" : "2.8.0"
+    "chai": "3.3.0",
+    "coffeelint": "1.12.1",
+    "mocha": "2.3.3",
+    "nock": "2.12.0",
+    "sinon": "1.17.0",
+    "sinon-chai": "2.8.0"
   },
-  "engines" : { "node" : ">=0.10.x" },
-  "os"      : [ "darwin", "linux", "win32" ],
+  "engines": {
+    "node": ">=0.10.x"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
   "preferGlobal": true
 }

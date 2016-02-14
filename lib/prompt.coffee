@@ -18,6 +18,7 @@ limitations under the License.
 chalk    = require 'chalk'
 inquirer = require 'inquirer'
 isEmail  = require 'isemail'
+moment   = require 'moment'
 
 # Local modules.
 logger = require './logger.coffee'
@@ -27,6 +28,15 @@ util   = require './util.coffee'
 validateEmail = (email) ->
   if isEmail email then true
   else 'Please enter a valid e-mail address.'
+
+# Timestamp validation for prompts
+validateTimestamp = (ts) ->
+  if not ts
+    return true # Null input represents from the beginning
+
+  # Input detected. Ensure it's a valid timestamp or error
+  if moment(ts, moment.ISO_8601, true).isValid() then true
+  else 'Please enter a valid ISO-8601 timestamp'
 
 # Prompts the user for the app to use.
 exports.getApp = (apps, cb) ->
@@ -52,6 +62,18 @@ exports.getDatalink = (datalinks, cb) ->
   }], (answers) ->
     cb null, answers.datalink # Continue.
 
+# Prompts the user for the datalink to use.
+exports.getDatalinkHost = (datalinkHosts, cb) ->
+  logger.debug 'Prompting for datalink host'
+  inquirer.prompt [{
+    message : 'Get logs for which data link host?'
+    name    : 'datalinkHost'
+    type    : 'list'
+    choices : util.formatHostList datalinkHosts
+    when    : 0 < datalinkHosts.length
+  }], (answers) ->
+    cb null, answers.datalinkHost # Continue.
+
 # Prompts the user for email and/or password.
 exports.getEmailPassword = (email, password, cb) ->
   logger.debug 'Prompting for email and/or password'
@@ -62,3 +84,23 @@ exports.getEmailPassword = (email, password, cb) ->
     if answers.email?    then email    = answers.email
     if answers.password? then password = answers.password
     cb null, email, password # Continue.
+
+# Prompts the user for log start time.
+exports.getLogStartTimestamp = (startTs, cb) ->
+  logger.debug 'Prompting for log start timestamp'
+  prompt = inquirer.prompt [
+    { message: 'From ISO-8601 date: (leave blank for the beginning)',   name: 'startTimestamp', validate: validateTimestamp, when: not startTs?    }
+  ], (answers) ->
+    if answers.startTimestamp? then startTs = answers.startTimestamp
+    else
+      prompt.message = 'From ISO-8601 date:'
+    cb null, startTs # Continue.
+
+# Prompts the user for log end time.
+exports.getLogEndTimestamp = (endTs, cb) ->
+  logger.debug 'Prompting for log end timestamp'
+  inquirer.prompt [
+    { message: 'To ISO-8601 date: (leave blank for the most recent)',   name: 'endTimestamp', validate: validateTimestamp, when: not endTs?    }
+  ], (answers) ->
+    if answers.endTimestamp? then endTs = answers.endTimestamp
+    cb null, endTs # Continue.

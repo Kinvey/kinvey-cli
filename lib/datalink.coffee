@@ -18,6 +18,7 @@ limitations under the License.
 path = require 'path'
 
 # Package modules.
+async    = require 'async'
 archiver = require 'archiver'
 chalk    = require 'chalk'
 config   = require 'config'
@@ -26,11 +27,17 @@ config   = require 'config'
 KinveyError = require './error.coffee'
 logger  = require './logger.coffee'
 project = require './project.coffee'
+prompt = require './prompt.coffee'
 user    = require './user.coffee'
 util    = require './util.coffee'
 
 # Define the datalink class.
 class Datalink
+
+  # Selected data link host for log messages (null value retrieves logs for all hosts)
+  host: null
+  logStartTimestamp: null
+  logEndTimestamp: null
 
   # Packages and uploads the project.
   deploy: (dir, version, cb) =>
@@ -64,6 +71,7 @@ class Datalink
     # Event listeners.
     archive.on 'data', (chunk) ->
       size = archive.pointer()
+      console.log 'ARCHIVE SIZE: ' + size
       if size > config.maxUploadSize # Validate.
         logger.info 'Max archive size exceeded (%s bytes, max %s bytes)', chalk.cyan(size), chalk.cyan config.maxUploadSize
         req.emit 'error', new KinveyError 'ProjectMaxFileSizeExceeded'
@@ -91,6 +99,39 @@ class Datalink
     }]
     archive.finalize()
 
+  # Gets Kinvey-backed DLC host for extracting log messages
+  getAndSetLogRequestParams: (cb) =>
+    async.series [
+      this._selectDatalinkHost
+      this._selectAndSetLogStartTimestamp
+      this._selectAndSetLogEndTimestamp
+    ], cb
+
+  # Lists all hosts containing internal DLC log files
+  listLogHosts: (cb) =>
+    this._execDatalinkLogHosts (err, datalinkLogs) =>
+      if err? then cb err # Continue with error.
+      else # Log info.
+        #console.log "datalinkHosts: #{JSON.stringify datalinkHosts}"
+        logger.info "There are %s log hosts for Kinvey DLC #{project.datalink}: ", chalk.cyan datalinkLogs.length
+        datalinkLogs.forEach (datalinkLog) ->
+          logger.info '%s', chalk.cyan(datalinkLog)
+        cb() # Continue.
+
+  # Lists all Kinvey logs.
+  logs: (cb) =>
+    this._execDatalinkLogs (err, logs) =>
+      if err? then cb err # Continue with error.
+      else # Log info.
+        logs.forEach (log) ->
+          console.log '%s %s - %s', chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
+        if !!this.host
+            logger.info "Query returned %s logs for DLC %s host %s:", chalk.cyan(logs.length), chalk.cyan(project.datalink),
+              chalk.green(this.host)
+        else
+          logger.info "Query returned %s logs for Kinvey DLC %s:", chalk.cyan(logs.length), chalk.cyan(project.datalink)
+        cb() # Continue.
+
   # Recycles the containers that host the DLC.
   recycle: (cb) =>
     this._execRecycle (err, response) ->
@@ -117,6 +158,44 @@ class Datalink
         return cb new KinveyError 'ProjectNotConfigured'
       cb err, json.version # Continue with version.
 
+# Executes a GET /apps/:app/datalinks/:datalink/logs/hosts request.
+  _execDatalinkLogHosts: (cb) ->
+    util.makeRequest {
+      url: "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/logs/hosts"
+    }, (err, response) ->
+      cb err, response?.body?.results
+
+# Executes a GET /apps/:app/datalinks/:datalink/logs request.
+  _execDatalinkLogs: (cb) =>
+    paramAdded = false
+    url = "/v#{project.schemaVersion}/apps/#{project.app}/data-links/#{project.datalink}/logs"
+
+    logger.debug "Log start timestamp: #{this.logStartTimestamp}"
+    logger.debug "Logs end timestamp: #{this.logEndTimestamp}"
+
+    # Request URL creation (versus user input params)
+    if !!this.host
+      url += "?cid=#{this.host}"
+      paramAdded = true
+    if !!this.logStartTimestamp
+      if paramAdded
+        url += "&from=#{this.logStartTimestamp}"
+      else
+        url += "?from=#{this.logStartTimestamp}"
+        paramAdded = true
+    if !!this.logEndTimestamp
+      if paramAdded
+        url += "&to=#{this.logEndTimestamp}"
+      else
+        url += "?to=#{this.logEndTimestamp}"
+
+    logger.debug "Logs URI: #{url}"
+
+    util.makeRequest {
+      url: url
+    }, (err, response) ->
+      cb err, response?.body?.logs
+
   # Executes a POST /apps/:app/datalink/:datalink/recycle request.
   _execRecycle: (cb) ->
     util.makeRequest {
@@ -139,6 +218,29 @@ class Datalink
       if 0 is relative.indexOf(pattern) or "#{relative}/" is pattern # Exclude both files and dirs.
         return true
     false
+
+  # Attempts to select a datalink host (or all hosts).
+  _selectDatalinkHost: (cb) =>
+    async.waterfall [
+      this._execDatalinkLogHosts
+      (datalinkHosts, next) ->
+        if 0 is datalinkHosts.length then next new KinveyError 'NoDatalinkHostsFound'
+        else prompt.getDatalinkHost datalinkHosts, next
+    ], (err, datalinkHost) =>
+      if datalinkHost? then this.host = datalinkHost
+      cb err # Continue.
+
+  # Attempts to select a log start time
+  _selectAndSetLogStartTimestamp: (cb) =>
+    prompt.getLogStartTimestamp null, (err, startTimestamp) =>
+      if startTimestamp? then this.logStartTimestamp = startTimestamp
+      cb err # Continue.
+
+  # Attempts to select a log end time
+  _selectAndSetLogEndTimestamp: (cb) =>
+    prompt.getLogEndTimestamp null, (err, endTimestamp) =>
+      if endTimestamp? then this.logEndTimestamp = endTimestamp
+      cb err # Continue.
 
 # Exports.
 module.exports = new Datalink()

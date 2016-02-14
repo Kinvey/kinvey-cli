@@ -26,16 +26,17 @@ project = require '../lib/project.coffee'
 user    = require '../lib/user.coffee'
 
 # Entry point for the logs command.
-module.exports = logs = (hostId, command, cb) ->
-  options = init command # Initialize the command.
+module.exports = logs = (argv..., cb) ->
+  options = init this # Initialize the command.
 
   async.series [
     # Set-up user and restore project.
     (next) -> user.setup options, next
     project.restore
 
-    # Retrieve the job status.
-    (next) -> project.logs hostId, next
+    # Validate and deploy the project.
+    (next) -> datalink.getAndSetLogRequestParams next
+    (next) -> datalink.logs next
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err
@@ -44,6 +45,6 @@ module.exports = logs = (hostId, command, cb) ->
 
 # Register the command.
 program
-  .command     'logs <host_id>'
-  .description 'display the logs of the Data Link Connector'
-  .action      logs
+  .command      'logs'
+  .description  'retrieve and display Data Link Connector logs'
+  .action       logs

@@ -35,6 +35,8 @@ errors =
     message: 'You have no apps yet. Head over to the console to create one.'
   NoDatalinksFound:
     message: 'You have no eligible datalinks yet.'
+  NoDatalinkHostsFound:
+    message: 'There are no logs for this Data Link Connector'
 
 # Extend the error class.
 KinveyError = (name, message) ->

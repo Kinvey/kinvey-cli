@@ -62,18 +62,6 @@ exports.getDatalink = (datalinks, cb) ->
   }], (answers) ->
     cb null, answers.datalink # Continue.
 
-# Prompts the user for the datalink to use.
-exports.getDatalinkHost = (datalinkHosts, cb) ->
-  logger.debug 'Prompting for datalink host'
-  inquirer.prompt [{
-    message : 'Get logs for which data link host?'
-    name    : 'datalinkHost'
-    type    : 'list'
-    choices : util.formatHostList datalinkHosts
-    when    : 0 < datalinkHosts.length
-  }], (answers) ->
-    cb null, answers.datalinkHost # Continue.
-
 # Prompts the user for email and/or password.
 exports.getEmailPassword = (email, password, cb) ->
   logger.debug 'Prompting for email and/or password'

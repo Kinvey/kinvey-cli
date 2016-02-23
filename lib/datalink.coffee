@@ -111,7 +111,7 @@ class Datalink
       if err? then cb err # Continue with error.
       else # Log info.
         logs.forEach (log) ->
-          console.log '%s %s - %s', chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
+          console.log '%s %s - %s', chalk.green(log.containerId), log.timestamp, chalk.cyan(log.message.trim())
         logger.info 'Query returned %s logs for Kinvey DLC %s:', chalk.cyan(logs.length), chalk.cyan(project.datalink)
         cb() # Continue.
 
@@ -164,7 +164,7 @@ class Datalink
     util.makeRequest {
       url: url
     }, (err, response) ->
-      cb err, response?.body?.logs
+      cb err, response?.body
 
   # Executes a POST /apps/:app/datalink/:datalink/recycle request.
   _execRecycle: (cb) ->

@@ -156,10 +156,10 @@ class Datalink
     logger.debug "Logs end timestamp: #{this.logEndTimestamp}"
 
     # Request URL creation (versus user input params)
-    if !!this.logStartTimestamp
+    if this.logStartTimestamp
       url += "?from=#{this.logStartTimestamp}"
       paramAdded = true
-    if !!this.logEndTimestamp
+    if this.logEndTimestamp
       if paramAdded
         url += "&to=#{this.logEndTimestamp}"
       else

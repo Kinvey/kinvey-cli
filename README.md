@@ -11,7 +11,6 @@ In your project directory, run `kinvey-dlc-cli config` to set-up your project. T
 * `config` - set project options.
 * `deploy` - deploy the current project as a Kinvey-backed Data Link Connector. You can check the status of a deploy using the `status` command.
 * `help` - display usage information.
-* `hosts` - display list of hosts that this DLC has executed on
 * `list` - list the configured Kinvey-backed Data Link Connectors for the current app.
 * `logs` - query logs for this Kinvey-backed Data Link Connector.
 ** Logs are displayed in the following format: '<runtime id> <timestamp> - <message>'

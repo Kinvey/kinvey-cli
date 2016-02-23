@@ -112,7 +112,8 @@ class Datalink
       else # Log info.
         logs.forEach (log) ->
           console.log '%s %s - %s', chalk.green(log.containerId), log.timestamp, chalk.cyan(log.message.trim())
-        logger.info 'Query returned %s logs for Kinvey DLC %s:', chalk.cyan(logs.length), chalk.cyan(project.datalink)
+        logger.info 'Query returned %s logs for Kinvey DLC %s (%s):', chalk.cyan(logs.length), chalk.cyan(project.datalink),
+          chalk.gray(project.datalinkName)
         cb() # Continue.
 
   # Recycles the containers that host the DLC.

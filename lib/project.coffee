@@ -32,6 +32,7 @@ class Project
   # App, datalink, and schema.
   app           : null
   datalink      : null
+  datalinkName  : null
   schemaVersion : null
 
   # Constructor.
@@ -63,6 +64,7 @@ class Project
         logger.debug 'Restored project from file %s', chalk.cyan this.projectPath
         this.app           = data.app
         this.datalink      = data.datalink
+        this.datalinkName  = data.datalinkName
         this.schemaVersion = data.schemaVersion
         cb()
       else
@@ -75,6 +77,7 @@ class Project
     util.writeJSON this.projectPath, {
       app           : this.app
       datalink      : this.datalink
+      datalinkName  : this.datalinkName
       schemaVersion : this.schemaVersion
     }, cb
 
@@ -137,7 +140,9 @@ class Project
         if 0 is datalinks.length then next new KinveyError 'NoDatalinksFound'
         else prompt.getDatalink datalinks, next
     ], (err, datalink) =>
-      if datalink? then this.datalink = datalink.id
+      if datalink?
+        this.datalink = datalink.id
+        this.datalinkName = datalink.name
       cb err # Continue.
 
 # Exports.

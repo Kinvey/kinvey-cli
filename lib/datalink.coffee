@@ -75,7 +75,7 @@ class Datalink
     # Event listeners.
     archive.on 'data', (chunk) ->
       size = archive.pointer()
-      console.log 'ARCHIVE SIZE: ' + size
+      #console.log 'ARCHIVE SIZE: ' + size
       if size > config.maxUploadSize # Validate.
         logger.info 'Max archive size exceeded (%s bytes, max %s bytes)', chalk.cyan(size), chalk.cyan config.maxUploadSize
         req.emit 'error', new KinveyError 'ProjectMaxFileSizeExceeded'

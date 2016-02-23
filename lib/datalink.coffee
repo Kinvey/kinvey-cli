@@ -59,13 +59,18 @@ class Datalink
         type   : 'deployDataLink'
         params : JSON.stringify { appId: project.app, dataLinkId: project.datalink, version: version }
         file   : attachment
-      },
+      }
       timeout  : config.uploadTimeout or 30 * 1000 # 30s.
     }, (err, response) ->
       if err? then req.emit 'error', err # Trigger request error.
       else # OK.
         logger.info 'Deploy initiated, received job %s', chalk.cyan response.body.job # Debug.
         cb() # Continue.
+
+    # The archive is pipe-d into the request using chucken encoding, so unset Content-Length.
+    # NOTE This is required as the `formData` module inserts the incorrect length.
+    req.on 'pipe', ->
+      req.removeHeader 'Content-Length'
 
     # Event listeners.
     archive.on 'data', (chunk) ->

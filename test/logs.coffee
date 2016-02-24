@@ -18,20 +18,52 @@ limitations under the License.
 sinon = require 'sinon'
 
 # Local modules.
-command = require './fixtures/command.coffee'
-logger  = require '../lib/logger.coffee'
-logs    = require '../cmd/logs.coffee'
-pkg     = require '../package.json'
+command  = require './fixtures/command.coffee'
+datalink = require '../lib/datalink.coffee'
+logs   = require '../cmd/logs.coffee'
+pkg      = require '../package.json'
+project  = require '../lib/project.coffee'
+user     = require '../lib/user.coffee'
 
 # Test suite.
 describe "./#{pkg.name} logs", () ->
-  # Stub logger.error().
-  before    'logger', () -> sinon.stub logger, 'error'
-  afterEach 'logger', () -> logger.error.reset()
-  after     'logger', () -> logger.error.restore()
+# Stub user.setup().
+  before    'user', () -> sinon.stub(user, 'setup').callsArg 1
+  afterEach 'user', () -> user.setup.reset()
+  after     'user', () -> user.setup.restore()
+
+  # Stub project.restore().
+  before    'project', () -> sinon.stub(project, 'restore').callsArg 0
+  afterEach 'project', () -> project.restore.reset()
+  after     'project', () -> project.restore.restore()
+
+  # Stub datalink.listLogHosts().
+  before    'getAndSetLogRequestParams', () -> sinon.stub(datalink, 'getAndSetLogRequestParams').callsArg 0
+  afterEach 'getAndSetLogRequestParams', () -> datalink.getAndSetLogRequestParams.reset()
+  after     'getAndSetLogRequestParams', () -> datalink.getAndSetLogRequestParams.restore()
+
+  # Stub datalink.logs().
+  before    'logs', () -> sinon.stub(datalink, 'logs').callsArg 0
+  afterEach 'logs', () -> datalink.logs.reset()
+  after     'logs', () -> datalink.logs.restore()
 
   # Tests.
-  it 'should error.', (cb) ->
+  it 'should setup the user.', (cb) ->
     logs.call command, (err) ->
-      expect(logger.error).to.be.calledOnce
+      expect(user.setup).to.be.calledOnce
+      cb err
+
+  it 'should restore the project.', (cb) ->
+    logs.call command, (err) ->
+      expect(project.restore).to.be.calledOnce
+      cb err
+
+  it 'should gather log query input params.', (cb) ->
+    logs.call command, (err) ->
+      expect(datalink.getAndSetLogRequestParams).to.be.calledOnce
+      cb err
+
+  it 'should retrieve log entries based on query', (cb) ->
+    logs.call command, (err) ->
+      expect(datalink.logs).to.be.calledOnce
       cb err

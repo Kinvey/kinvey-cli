@@ -44,6 +44,12 @@ exports.formatList = (list, name = 'name') ->
     if x[name].toLowerCase() < y[name].toLowerCase() then -1 else 1
   result
 
+# Formats the provided list for use with inquirer.
+exports.formatHostList = (list) ->
+  result = list.map (el) -> { name: el, value: el }
+  result.unshift { name: 'all hosts', value: null } # Add 'all hosts' option to beginning of selection
+  result
+
 # Executes a request.
 exports.makeRequest = makeRequest = (options, cb) ->
   # Add authentication to options.
@@ -51,6 +57,9 @@ exports.makeRequest = makeRequest = (options, cb) ->
   if user.isLoggedIn()
     options.headers ?= { }
     options.headers?.Authorization = "Kinvey #{user.token}"
+
+
+#  console.log require('util').inspect options, { showHidden: true, depth: 5 }
 
   # Perform the request.
   logger.debug 'Request:  %s %s', options.method, options.url

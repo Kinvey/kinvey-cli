@@ -18,6 +18,7 @@ limitations under the License.
 path = require 'path'
 
 # Package modules.
+async    = require 'async'
 archiver = require 'archiver'
 chalk    = require 'chalk'
 config   = require 'config'
@@ -26,11 +27,16 @@ config   = require 'config'
 KinveyError = require './error.coffee'
 logger  = require './logger.coffee'
 project = require './project.coffee'
+prompt = require './prompt.coffee'
 user    = require './user.coffee'
 util    = require './util.coffee'
 
 # Define the datalink class.
 class Datalink
+
+  # `logs` command query values fetched via prompt
+  logStartTimestamp: null
+  logEndTimestamp: null
 
   # Packages and uploads the project.
   deploy: (dir, version, cb) =>
@@ -53,7 +59,7 @@ class Datalink
         type   : 'deployDataLink'
         params : JSON.stringify { appId: project.app, dataLinkId: project.datalink, version: version }
         file   : attachment
-      },
+      }
       timeout  : config.uploadTimeout or 30 * 1000 # 30s.
     }, (err, response) ->
       if err? then req.emit 'error', err # Trigger request error.
@@ -61,9 +67,15 @@ class Datalink
         logger.info 'Deploy initiated, received job %s', chalk.cyan response.body.job # Debug.
         cb() # Continue.
 
+    # The archive is pipe-d into the request using chucken encoding, so unset Content-Length.
+    # NOTE This is required as the `formData` module inserts the incorrect length.
+    req.on 'pipe', ->
+      req.removeHeader 'Content-Length'
+
     # Event listeners.
     archive.on 'data', (chunk) ->
       size = archive.pointer()
+      #console.log 'ARCHIVE SIZE: ' + size
       if size > config.maxUploadSize # Validate.
         logger.info 'Max archive size exceeded (%s bytes, max %s bytes)', chalk.cyan(size), chalk.cyan config.maxUploadSize
         req.emit 'error', new KinveyError 'ProjectMaxFileSizeExceeded'
@@ -91,6 +103,24 @@ class Datalink
     }]
     archive.finalize()
 
+  # Gets query params
+  getAndSetLogRequestParams: (cb) =>
+    async.series [
+      this._selectAndSetLogStartTimestamp
+      this._selectAndSetLogEndTimestamp
+    ], cb
+
+  # Lists all Kinvey logs.
+  logs: (cb) =>
+    this._execDatalinkLogs (err, logs) ->
+      if err? then cb err # Continue with error.
+      else # Log info.
+        logs.forEach (log) ->
+          console.log '%s %s - %s', chalk.green(log.containerId), log.timestamp, chalk.cyan(log.message.trim())
+        logger.info 'Query returned %s logs for Kinvey DLC %s (%s):', chalk.cyan(logs.length), chalk.cyan(project.datalink),
+          chalk.gray(project.datalinkName)
+        cb() # Continue.
+
   # Recycles the containers that host the DLC.
   recycle: (cb) =>
     this._execRecycle (err, response) ->
@@ -117,6 +147,31 @@ class Datalink
         return cb new KinveyError 'ProjectNotConfigured'
       cb err, json.version # Continue with version.
 
+# Executes a GET /apps/:app/datalinks/:datalink/logs request.
+  _execDatalinkLogs: (cb) =>
+    paramAdded = false
+    url = "/v#{project.schemaVersion}/data-links/#{project.datalink}/logs"
+
+    logger.debug "Log start timestamp: #{this.logStartTimestamp}"
+    logger.debug "Logs end timestamp: #{this.logEndTimestamp}"
+
+    # Request URL creation (versus user input params)
+    if this.logStartTimestamp
+      url += "?from=#{this.logStartTimestamp}"
+      paramAdded = true
+    if this.logEndTimestamp
+      if paramAdded
+        url += "&to=#{this.logEndTimestamp}"
+      else
+        url += "?to=#{this.logEndTimestamp}"
+
+    logger.debug "Logs URI: #{url}"
+
+    util.makeRequest {
+      url: url
+    }, (err, response) ->
+      cb err, response?.body
+
   # Executes a POST /apps/:app/datalink/:datalink/recycle request.
   _execRecycle: (cb) ->
     util.makeRequest {
@@ -139,6 +194,18 @@ class Datalink
       if 0 is relative.indexOf(pattern) or "#{relative}/" is pattern # Exclude both files and dirs.
         return true
     false
+
+  # Attempts to select a log start time
+  _selectAndSetLogStartTimestamp: (cb) =>
+    prompt.getLogStartTimestamp null, (err, startTimestamp) =>
+      if startTimestamp? then this.logStartTimestamp = startTimestamp
+      cb err # Continue.
+
+  # Attempts to select a log end time
+  _selectAndSetLogEndTimestamp: (cb) =>
+    prompt.getLogEndTimestamp null, (err, endTimestamp) =>
+      if endTimestamp? then this.logEndTimestamp = endTimestamp
+      cb err # Continue.
 
 # Exports.
 module.exports = new Datalink()

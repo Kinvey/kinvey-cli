@@ -16,20 +16,35 @@ limitations under the License.
 
 # Package modules.
 program = require 'commander'
+async = require 'async'
 
 # Local modules.
+datalink = require '../lib/datalink.coffee'
 init   = require '../lib/init.coffee'
 logger = require '../lib/logger.coffee'
+project = require '../lib/project.coffee'
+user    = require '../lib/user.coffee'
 
 # Entry point for the logs command.
 module.exports = logs = (argv..., cb) ->
   options = init this # Initialize the command.
 
-  logger.error 'The logs command is not implemented yet'
-  cb?()
+  async.series [
+    # Set-up user and restore project.
+    (next) -> user.setup options, next
+    project.restore
+
+    # Validate and deploy the project.
+    (next) -> datalink.getAndSetLogRequestParams next
+    (next) -> datalink.logs next
+  ], (err) ->
+    if err? # Display errors.
+      logger.error '%s', err
+      unless cb? then process.exit -1 # Exit with error.
+    cb? err
 
 # Register the command.
 program
-  .command     'logs'
-  .description 'display the logs of the Data Link Connector'
-  .action      logs
+  .command      'logs'
+  .description  'retrieve and display Data Link Connector logs'
+  .action       logs

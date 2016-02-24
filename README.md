@@ -13,7 +13,8 @@ In your project directory, run `kinvey-dlc-cli config` to set-up your project. T
 * `help` - display usage information.
 * `list` - list the configured Kinvey-backed Data Link Connectors for the current app.
 * `logs` - query logs for this Kinvey-backed Data Link Connector.
-** Logs are displayed in the following format: '<runtime id> <timestamp> - <message>'
+  * Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`
+  * E.g. `ac7df839104d 2016-02-23T20:00:29.334Z - hello world`
 * `recycle` - recycle the Data Link Connector.
 * `status <job>` - return the job status of a `deploy` command.
 

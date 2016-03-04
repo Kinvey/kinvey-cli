@@ -135,6 +135,7 @@ class Datalink
       if err? then cb err # Continue with error.
       else # OK.
         logger.info 'Job status: %s %s', chalk.cyan(response.body.status), response.body.message or ''
+        if response.body.error? then logger.info 'Error:', chalk.cyan response.body.error
         cb null, response.body.status # Continue.
 
   # Validates the project.

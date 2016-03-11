@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.5 (2016-03-11)
+* BACK-1307: Display progress and error messages when retrieving deploy status.
+
 ## 0.0.4 (2016-02-25)
 * BACK-1209: Implement `logs` command
 

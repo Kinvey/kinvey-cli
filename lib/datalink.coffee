@@ -134,7 +134,11 @@ class Datalink
     this._execStatus job, (err, response) ->
       if err? then cb err # Continue with error.
       else # OK.
-        logger.info 'Job status: %s - %s', chalk.cyan(response.body.status), response.body.progress or ''
+        suffix =
+          if 'COMPLETE' isnt response.body.status && response.body.progress?
+          then " - #{response.body.progress}"
+          else ''
+        logger.info 'Job status: %s%s', chalk.cyan(response.body.status), suffix
         cb null, response.body.status # Continue.
 
   # Validates the project.

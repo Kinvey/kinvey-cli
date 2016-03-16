@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.6
+* BACK-1358: Do not display progress message for completed jobs.
+
 ## 0.0.5 (2016-03-11)
 * BACK-1307: Display progress and error messages when retrieving deploy status.
 

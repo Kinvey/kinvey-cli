@@ -174,6 +174,7 @@ describe 'project', () ->
         expect(util.writeJSON).to.be.calledWith config.paths.project, {
           app           : project.app
           datalink      : project.datalink
+          datalinkName  : undefined
           schemaVersion : project.schemaVersion
         }
         cb err

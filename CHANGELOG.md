@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.0.6
+## 0.0.6 (2016-03-17)
 * BACK-1358: Do not display progress message for completed jobs.
 
 ## 0.0.5 (2016-03-11)

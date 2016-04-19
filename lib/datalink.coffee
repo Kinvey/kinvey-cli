@@ -60,6 +60,7 @@ class Datalink
         params : JSON.stringify { appId: project.app, dataLinkId: project.datalink, version: version }
         file   : attachment
       }
+      refresh  : false # Do not attempt to authenticate, just assume token is valid.
       timeout  : config.uploadTimeout or 30 * 1000 # 30s.
     }, (err, response) ->
       if err? then req.emit 'error', err # Trigger request error.
@@ -75,7 +76,6 @@ class Datalink
     # Event listeners.
     archive.on 'data', (chunk) ->
       size = archive.pointer()
-      #console.log 'ARCHIVE SIZE: ' + size
       if size > config.maxUploadSize # Validate.
         logger.info 'Max archive size exceeded (%s bytes, max %s bytes)', chalk.cyan(size), chalk.cyan config.maxUploadSize
         req.emit 'error', new KinveyError 'ProjectMaxFileSizeExceeded'
@@ -84,13 +84,21 @@ class Datalink
       logger.debug 'Created archive, %s bytes written', chalk.cyan archive.pointer() # Debug.
 
     # Error listeners.
-    req.once 'error', (err) ->
+    req.once 'error', (err) =>
        # NOTE: This handler is also triggered on archive-related errors.
       logger.debug 'Aborting the request because of error: %s', chalk.cyan err.message or err # Debug.
       archive.removeAllListeners 'finish'
       archive.abort()
       req.abort()
-      cb err # Continue with error.
+
+      # If authentication failed, re-authenticate and try deploying again.
+      if 'InvalidCredentials' is err.name
+        async.series [
+          user.refresh # Re-authenticate.
+          (next) => this.deploy dir, version, next # Try deploying again.
+        ], cb
+      else # Continue with error.
+        cb err
 
     # Pack.
     archive.bulk [{

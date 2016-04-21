@@ -58,9 +58,6 @@ exports.makeRequest = makeRequest = (options, cb) ->
     options.headers ?= { }
     options.headers?.Authorization = "Kinvey #{user.token}"
 
-
-#  console.log require('util').inspect options, { showHidden: true, depth: 5 }
-
   # Perform the request.
   logger.debug 'Request:  %s %s', options.method, options.url
   request.Request options, (err, response) ->

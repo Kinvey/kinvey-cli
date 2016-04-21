@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.0.7
+## 0.0.7 (2016-04-21)
 * BACK-1325: Handle authentication errors when deploying.
 
 ## 0.0.6 (2016-03-17)

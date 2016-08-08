@@ -1,6 +1,6 @@
 {
   "name": "kinvey-dlc-cli",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Utility for deploying Kinvey DLC microservices to Kinvey’s Node DLC PaaS.",
   "keywords": [
     "Kinvey"

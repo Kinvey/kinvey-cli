@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.8 (2016-08-08)
+* BACK-1577: Support node 6.x
+
 ## 0.0.7 (2016-04-21)
 * BACK-1325: Handle authentication errors when deploying.
 

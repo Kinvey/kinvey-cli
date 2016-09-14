@@ -9,14 +9,14 @@ In your project directory, run `kinvey-dlc-cli config` to set-up your project. T
 
 ### Commands
 * `config` - set project options.
-* `deploy` - deploy the current project as a Kinvey-backed Data Link Connector. You can check the status of a deploy using the `status` command.
+* `deploy` - deploy the current project as a Kinvey-backed Data Link Connector. You can check the status of a deploy using the `job` command (more info below).
+* `status` - display the health of the configured KMR service
 * `help` - display usage information.
 * `list` - list the configured Kinvey-backed Data Link Connectors for the current app.
 * `logs` - query logs for this Kinvey-backed Data Link Connector.
   * Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`
   * E.g. `ac7df839104d 2016-02-23T20:00:29.334Z - hello world`
-* `recycle` - recycle the Data Link Connector.
-* `status <job>` - return the job status of a `deploy` command.
+* `job <id>` - return the status of a `deploy` command.
 
 ### Options
 * `-e, --email <e-mail>` - e-mail address of your Kinvey account.

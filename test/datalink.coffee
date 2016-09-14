@@ -170,7 +170,7 @@ describe 'datalink', () ->
 
       # Tests.
       it 'should return the job status.', (cb) ->
-        datalink.status '123', (err, status) ->
+        datalink.jobStatus '123', (err, status) ->
           expect(status).to.equal 'COMPLETE'
           cb err
 
@@ -190,7 +190,7 @@ describe 'datalink', () ->
 
       # Tests.
       it 'should return the job status.', (cb) ->
-        datalink.status '123', (err, status) ->
+        datalink.jobStatus '123', (err, status) ->
           expect(status).to.equal 'COMPLETE'
           cb err
 

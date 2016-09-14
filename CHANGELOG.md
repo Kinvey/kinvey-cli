@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.9 (2016-08-08)
+* BACK-1327: Add support for refactored KBW/KMR 'status' command. Repurpose existing 'status' command into 'job' cmd
+
 ## 0.0.8 (2016-08-08)
 * BACK-1577: Support node 6.x
 

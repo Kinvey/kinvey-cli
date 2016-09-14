@@ -23,11 +23,11 @@ datalink = require '../lib/datalink.coffee'
 logger   = require '../lib/logger.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
-status   = require '../cmd/status.coffee'
+job      = require '../cmd/job.coffee'
 user     = require '../lib/user.coffee'
 
 # Test suite.
-describe "./#{pkg.name} status", () ->
+describe "./#{pkg.name} job", () ->
   # Configure.
   before 'configure', () ->
     project.app = project.datalink = '123'
@@ -46,22 +46,24 @@ describe "./#{pkg.name} status", () ->
   after     'project', () -> project.restore.restore()
 
   # Stub datalink.jobStatus().
-  before    'datalink', () -> sinon.stub(datalink, 'serviceStatus').callsArg 0
-  afterEach 'datalink', () -> datalink.serviceStatus.reset()
-  after     'datalink', () -> datalink.serviceStatus.restore()
+  before    'datalink', () -> sinon.stub(datalink, 'jobStatus').callsArg 1
+  afterEach 'datalink', () -> datalink.jobStatus.reset()
+  after     'datalink', () -> datalink.jobStatus.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    status command, (err) ->
+    job '123', command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    status command, (err) ->
+    job '123', command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
-  it 'should print the current KMR service status.', (cb) ->
-    status command, (err) ->
-      expect(datalink.serviceStatus).to.be.calledOnce
+  it 'should print the current job status.', (cb) ->
+    jobId = '123'
+    job jobId, command, (err) ->
+      expect(datalink.jobStatus).to.be.calledOnce
+      expect(datalink.jobStatus).to.be.calledWith jobId
       cb err

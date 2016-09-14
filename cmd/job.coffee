@@ -26,7 +26,7 @@ project  = require '../lib/project.coffee'
 user     = require '../lib/user.coffee'
 
 # Entry point for the status command.
-module.exports = status = (command, cb) ->
+module.exports = status = (job, command, cb) ->
   options = init command # Initialize the command.
 
   async.series [
@@ -35,7 +35,7 @@ module.exports = status = (command, cb) ->
     project.restore
 
     # Retrieve the job status.
-    (next) -> datalink.serviceStatus next
+    (next) -> datalink.jobStatus job, next
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err
@@ -44,6 +44,6 @@ module.exports = status = (command, cb) ->
 
 # Register the command.
 program
-  .command     'status'
-  .description 'return the status of a KMR service deployment'
+  .command     'job <id>'
+  .description 'return the job status of a deploy command'
   .action      status

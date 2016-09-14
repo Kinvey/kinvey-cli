@@ -25,11 +25,17 @@ config   = require 'config'
 
 # Local modules.
 KinveyError = require './error.coffee'
-logger  = require './logger.coffee'
-project = require './project.coffee'
-prompt = require './prompt.coffee'
-user    = require './user.coffee'
-util    = require './util.coffee'
+logger      = require './logger.coffee'
+project     = require './project.coffee'
+prompt      = require './prompt.coffee'
+user        = require './user.coffee'
+util        = require './util.coffee'
+
+STATUS_CONSTANTS =
+  ONLINE   : 'ONLINE'
+  NEW      : 'NEW'
+  UPDATING : 'UPDATING'
+  ERROR    : 'ERROR'
 
 # Define the datalink class.
 class Datalink
@@ -138,8 +144,8 @@ class Datalink
         cb() # Continue.
 
   # Returns the deploy job status.
-  status: (job, cb) =>
-    this._execStatus job, (err, response) ->
+  jobStatus: (job, cb) =>
+    this._execJobStatus job, (err, response) ->
       if err? then cb err # Continue with error.
       else # OK.
         suffix =
@@ -147,6 +153,19 @@ class Datalink
           then " - #{response.body.progress}"
           else ''
         logger.info 'Job status: %s%s', chalk.cyan(response.body.status), suffix
+        cb null, response.body.status # Continue.
+
+  # Returns the KMR service status.
+  serviceStatus: (cb) =>
+    this._execServiceStatus (err, response) ->
+      if err? then cb err # Continue with error.
+      else # OK.
+        status = response.body.status
+        if status is STATUS_CONSTANTS.ONLINE then status = chalk.green STATUS_CONSTANTS.ONLINE
+        if status is STATUS_CONSTANTS.UPDATING then status = chalk.yellow STATUS_CONSTANTS.UPDATING
+        if status is STATUS_CONSTANTS.NEW then status = chalk.cyan STATUS_CONSTANTS.NEW
+        if status is STATUS_CONSTANTS.ERROR then status = chalk.red STATUS_CONSTANTS.ERROR
+        logger.info 'Service status: %s', status
         cb null, response.body.status # Continue.
 
   # Validates the project.
@@ -196,8 +215,12 @@ class Datalink
     }, cb
 
   # Executes a GET /apps/:app/datalink/:datalink/<type> request.
-  _execStatus: (job, cb) ->
+  _execJobStatus: (job, cb) ->
     util.makeRequest { url: "/v#{project.schemaVersion}/jobs/#{job}" }, cb
+
+  # Executes a GET /apps/:app/datalink/:datalink/<type> request.
+  _execServiceStatus: (cb) ->
+    util.makeRequest { url: "/v#{project.schemaVersion}/data-links/#{project.datalink}/status" }, cb
 
   # Returns true if the provided path is an artifact.
   _isArtifact: (base, filepath) ->

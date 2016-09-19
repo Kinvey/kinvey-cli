@@ -32,6 +32,7 @@ describe "./#{pkg.name} job", () ->
   before 'configure', () ->
     project.app = project.datalink = '123'
     project.schemaVersion = 1
+    project.lastJobId = 'abcdef'
   after  'configure', () ->
   project.app = project.datalink = project.schemaVersion = null # Reset.
 
@@ -66,4 +67,10 @@ describe "./#{pkg.name} job", () ->
     job jobId, command, (err) ->
       expect(datalink.jobStatus).to.be.calledOnce
       expect(datalink.jobStatus).to.be.calledWith jobId
+      cb err
+
+  it 'should print the current job status when called without an id.', (cb) ->
+    job null, command, (err) ->
+      expect(datalink.jobStatus).to.be.calledOnce
+      expect(datalink.jobStatus).to.be.calledWith null
       cb err

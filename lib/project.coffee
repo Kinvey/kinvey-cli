@@ -34,6 +34,7 @@ class Project
   datalink      : null
   datalinkName  : null
   schemaVersion : null
+  lastJobId     : null
 
   # Constructor.
   constructor: (path) ->
@@ -66,6 +67,7 @@ class Project
         this.datalink      = data.datalink
         this.datalinkName  = data.datalinkName
         this.schemaVersion = data.schemaVersion
+        this.lastJobId     = data.lastJobId
         cb()
       else
         logger.debug 'Failed to restore project from file %s', chalk.cyan this.projectPath
@@ -79,6 +81,7 @@ class Project
       datalink      : this.datalink
       datalinkName  : this.datalinkName
       schemaVersion : this.schemaVersion
+      lastJobId     : this.lastJobId
     }, cb
 
   # Selects and save app, and datalink.

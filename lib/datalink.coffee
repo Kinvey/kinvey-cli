@@ -71,10 +71,9 @@ class Datalink
     }, (err, response) ->
       if err? then req.emit 'error', err # Trigger request error.
       else # OK.
-        jobResultId = response.body.job
-        project.lastJobId = jobResultId
+        project.lastJobId = response.body.job
         project.save()
-        logger.info 'Deploy initiated, received job %s', chalk.cyan jobResultId # Debug.
+        logger.info 'Deploy initiated, received job %s', chalk.cyan response.body.job # Debug.
         cb() # Continue.
 
     # The archive is pipe-d into the request using chucken encoding, so unset Content-Length.
@@ -149,9 +148,8 @@ class Datalink
   # Returns the deploy job status.
   jobStatus: (job, cb) =>
     if not job?
-      lastJob = project.lastJobId
-      if not lastJob? then return cb new Error 'No previous job stored. Please provide a job ID.'
-      job = lastJob
+      job = project.lastJobId
+      if not job? then return cb new Error 'No previous job stored. Please provide a job ID.'
     this._execJobStatus job, (err, response) ->
       if err? then cb err # Continue with error.
       else # OK.

@@ -206,7 +206,7 @@ describe 'datalink', () ->
           this.mock = api.get '/v2/jobs/abcdef'
           .reply 200, { status: 'COMPLETE' }
         afterEach 'api', () ->
-          if this.mock? then this.mock.done()
+          this.mock.done()
           delete this.mock
 
         it 'should return the job status for a cached job ID.', (cb) ->
@@ -214,13 +214,13 @@ describe 'datalink', () ->
             expect(status).to.equal 'COMPLETE'
             cb err
 
-        it 'should return the job status for a cached job ID.', (cb) ->
-          project.lastJobId = null
-          delete this.mock
-          datalink.jobStatus null, (err) ->
-            expect(err).to.exist
-            expect(err.message).to.equal 'No previous job stored. Please provide a job ID.'
-            cb()
+      it 'should fail with a null param and no cached job ID', (cb) ->
+        project.lastJobId = null
+        delete this.mock
+        datalink.jobStatus null, (err) ->
+          expect(err).to.exist
+          expect(err.message).to.equal 'No previous job stored. Please provide a job ID.'
+          cb()
 
   describe 'status', () ->
     # Configure.
@@ -228,7 +228,7 @@ describe 'datalink', () ->
     afterEach  'configure', () -> project.app = project.datalink = null # Reset.
 
     # Test v2 apps.
-    describe.only 'for v2 apps', ->
+    describe 'for v2 apps', ->
       # Configure.
       beforeEach 'configure', () -> project.schemaVersion = 2
       afterEach  'configure', () -> project.schemaVersion = null # Reset.

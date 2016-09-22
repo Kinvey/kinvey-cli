@@ -34,7 +34,7 @@ module.exports = recycle = (argv..., cb) ->
     (next) -> user.setup options, next
     project.restore
 
-    # Recycle the DLC.
+    # Recycle the service.
     service.recycle
   ], (err) ->
     if err? # Display errors.

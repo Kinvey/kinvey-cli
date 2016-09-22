@@ -133,7 +133,7 @@ class Service
       else # Log info.
         logs.forEach (log) ->
           console.log '%s %s - %s', chalk.green(log.containerId), log.timestamp, chalk.cyan(log.message.trim())
-        logger.info 'Query returned %s logs for Kinvey DLC %s (%s):', chalk.cyan(logs.length), chalk.cyan(project.service),
+        logger.info 'Query returned %s logs for KMR Service %s (%s):', chalk.cyan(logs.length), chalk.cyan(project.service),
           chalk.gray(project.serviceName)
         cb() # Continue.
 

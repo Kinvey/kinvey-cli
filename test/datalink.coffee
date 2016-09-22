@@ -206,8 +206,9 @@ describe 'datalink', () ->
           this.mock = api.get '/v2/jobs/abcdef'
           .reply 200, { status: 'COMPLETE' }
         afterEach 'api', () ->
-          this.mock.done()
-          delete this.mock
+          if this.mock?
+            this.mock.done()
+            delete this.mock
 
         it 'should return the job status for a cached job ID.', (cb) ->
           datalink.jobStatus null, (err, status) ->
@@ -221,6 +222,22 @@ describe 'datalink', () ->
           expect(err).to.exist
           expect(err.message).to.equal 'No previous job stored. Please provide a job ID.'
           cb()
+
+      it 'should cache the updated job ID', (cb) ->
+        delete this.mock
+        this.mock = api.get '/v2/jobs/testjob'
+        .reply 200, { status: 'COMPLETE' }
+        deployMock = api
+        .post '/v2/jobs'
+        .reply 202, { job: 'testjob' }
+
+        datalink.deploy fixtures.valid, '0.1.0', (err) ->
+          expect(err).to.be.undefined
+          datalink.jobStatus null, (err, status) ->
+            expect(status).to.equal 'COMPLETE'
+            deployMock.done()
+            deployMock = null
+            cb err
 
   describe 'status', () ->
     # Configure.

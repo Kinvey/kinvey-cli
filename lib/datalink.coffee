@@ -71,6 +71,8 @@ class Datalink
     }, (err, response) ->
       if err? then req.emit 'error', err # Trigger request error.
       else # OK.
+        project.lastJobId = response.body.job
+        project.save()
         logger.info 'Deploy initiated, received job %s', chalk.cyan response.body.job # Debug.
         cb() # Continue.
 
@@ -145,6 +147,9 @@ class Datalink
 
   # Returns the deploy job status.
   jobStatus: (job, cb) =>
+    if not job?
+      job = project.lastJobId
+      if not job? then return cb new Error 'No previous job stored. Please provide a job ID.'
     this._execJobStatus job, (err, response) ->
       if err? then cb err # Continue with error.
       else # OK.

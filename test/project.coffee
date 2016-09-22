@@ -175,6 +175,7 @@ describe 'project', () ->
           app           : project.app
           datalink      : project.datalink
           datalinkName  : undefined
+          lastJobId     : undefined
           schemaVersion : project.schemaVersion
         }
         cb err

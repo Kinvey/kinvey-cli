@@ -31,8 +31,13 @@ fixtures =
 # Test suite.
 describe 'datalink', () ->
   # Configure.
-  beforeEach 'configure', () -> project.app = project.datalink = '123'
-  afterEach  'configure', () -> project.app = project.datalink = null # Reset.
+  beforeEach 'configure', () ->
+    project.app       = project.datalink = '123'
+    project.lastJobId = 'abcdef'
+
+  afterEach  'configure', () ->
+    project.app       = project.datalink = null # Reset.
+    project.lastJobId = null
 
   # datalink.deploy().
   describe 'deploy', () ->
@@ -149,7 +154,7 @@ describe 'datalink', () ->
       it 'should recycle.', (cb) ->
         datalink.recycle cb
 
-  describe 'status', () ->
+  describe 'job', () ->
     # Configure.
     beforeEach 'configure', () -> project.app = project.datalink = '123'
     afterEach  'configure', () -> project.app = project.datalink = null # Reset.
@@ -180,21 +185,86 @@ describe 'datalink', () ->
       beforeEach 'configure', () -> project.schemaVersion = 2
       afterEach  'configure', () -> project.schemaVersion = null # Reset.
 
+      describe 'with a non-null job id value', () ->
+        # Mock the API.
+        beforeEach 'api', () ->
+          this.mock = api.get '/v2/jobs/123'
+          .reply 200, { status: 'COMPLETE' }
+        afterEach 'api', () ->
+          this.mock.done()
+          delete this.mock
+
+        # Tests.
+        it 'should return the job status.', (cb) ->
+          datalink.jobStatus '123', (err, status) ->
+            expect(status).to.equal 'COMPLETE'
+            cb err
+
+      describe 'with a null job id value', () ->
+        # Mock the API.
+        beforeEach 'api', () ->
+          this.mock = api.get '/v2/jobs/abcdef'
+          .reply 200, { status: 'COMPLETE' }
+        afterEach 'api', () ->
+          if this.mock?
+            this.mock.done()
+            delete this.mock
+
+        it 'should return the job status for a cached job ID.', (cb) ->
+          datalink.jobStatus null, (err, status) ->
+            expect(status).to.equal 'COMPLETE'
+            cb err
+
+      it 'should fail with a null param and no cached job ID', (cb) ->
+        project.lastJobId = null
+        delete this.mock
+        datalink.jobStatus null, (err) ->
+          expect(err).to.exist
+          expect(err.message).to.equal 'No previous job stored. Please provide a job ID.'
+          cb()
+
+      it 'should cache the updated job ID', (cb) ->
+        delete this.mock
+        this.mock = api.get '/v2/jobs/testjob'
+        .reply 200, { status: 'COMPLETE' }
+        deployMock = api
+        .post '/v2/jobs'
+        .reply 202, { job: 'testjob' }
+
+        datalink.deploy fixtures.valid, '0.1.0', (err) ->
+          expect(err).to.be.undefined
+          datalink.jobStatus null, (err, status) ->
+            expect(status).to.equal 'COMPLETE'
+            deployMock.done()
+            deployMock = null
+            cb err
+
+  describe 'status', () ->
+    # Configure.
+    beforeEach 'configure', () -> project.app = project.datalink = '123'
+    afterEach  'configure', () -> project.app = project.datalink = null # Reset.
+
+    # Test v2 apps.
+    describe 'for v2 apps', ->
+      # Configure.
+      beforeEach 'configure', () -> project.schemaVersion = 2
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
+
       # Mock the API.
       beforeEach 'api', () ->
-        this.mock = api.get '/v2/jobs/123'
-          .reply 200, { status: 'COMPLETE' }
+        this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.datalink}/status"
+        .reply 200, { status: 'ONLINE' }
       afterEach 'api', () ->
         this.mock.done()
         delete this.mock
 
       # Tests.
-      it 'should return the job status.', (cb) ->
-        datalink.jobStatus '123', (err, status) ->
-          expect(status).to.equal 'COMPLETE'
+      it 'should return the service status.', (cb) ->
+        datalink.serviceStatus (err, status) ->
+          expect(status).to.equal 'ONLINE'
           cb err
 
-    # datalink.validate().
+  # datalink.validate().
   describe 'validate', () ->
     # Configure.
     beforeEach 'configure', () ->

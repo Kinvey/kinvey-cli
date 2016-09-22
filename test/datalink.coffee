@@ -19,7 +19,7 @@ path = require 'path'
 
 # Local modules.
 api      = require './lib/api.coffee'
-datalink = require '../lib/datalink.coffee'
+service = require '../lib/service.coffee'
 project  = require '../lib/project.coffee'
 util     = require '../lib/util.coffee'
 
@@ -29,17 +29,17 @@ fixtures =
   valid   : path.join __dirname, 'lib' # Just a small directory.
 
 # Test suite.
-describe 'datalink', () ->
+describe 'service', () ->
   # Configure.
   beforeEach 'configure', () ->
-    project.app       = project.datalink = '123'
+    project.app       = project.service = '123'
     project.lastJobId = 'abcdef'
 
   afterEach  'configure', () ->
-    project.app       = project.datalink = null # Reset.
+    project.app       = project.service = null # Reset.
     project.lastJobId = null
 
-  # datalink.deploy().
+  # service.deploy().
   describe 'deploy', () ->
     # Test v1 apps.
     describe 'for v1 apps', ->
@@ -63,19 +63,19 @@ describe 'datalink', () ->
       # Tests.
       it 'should package the project.', (cb) ->
         # Deploy and test.
-        datalink.deploy fixtures.valid, '0.1.0', (err) =>
+        service.deploy fixtures.valid, '0.1.0', (err) =>
           expect(this.subject).to.exist
           expect(this.subject).to.have.length.above 1
           cb err
 
       it 'should fail when the project is too big.', (cb) ->
-        datalink.deploy fixtures.invalid, '0.1.0', (err) ->
+        service.deploy fixtures.invalid, '0.1.0', (err) ->
           expect(err).to.exist
           expect(err.name).to.equal 'ProjectMaxFileSizeExceeded'
           cb()
 
       it 'should upload.', (cb) ->
-        datalink.deploy fixtures.valid, '0.1.0', cb
+        service.deploy fixtures.valid, '0.1.0', cb
 
     # Test v2 apps.
     describe 'for v2 apps', ->
@@ -99,25 +99,25 @@ describe 'datalink', () ->
       # Tests.
       it 'should package the project.', (cb) ->
         # Deploy and test.
-        datalink.deploy fixtures.valid, '0.1.0', (err) =>
+        service.deploy fixtures.valid, '0.1.0', (err) =>
           expect(this.subject).to.exist
           expect(this.subject).to.have.length.above 1
           cb err
 
       it 'should fail when the project is too big.', (cb) ->
-        datalink.deploy fixtures.invalid, '0.1.0', (err) ->
+        service.deploy fixtures.invalid, '0.1.0', (err) ->
           expect(err).to.exist
           expect(err.name).to.equal 'ProjectMaxFileSizeExceeded'
           cb()
 
       it 'should upload.', (cb) ->
-        datalink.deploy fixtures.valid, '0.1.0', cb
+        service.deploy fixtures.valid, '0.1.0', cb
 
-  # datalink.recycle().
+  # service.recycle().
   describe 'recycle', () ->
     # Configure.
-    beforeEach 'configure', () -> project.app = project.datalink = '123'
-    afterEach  'configure', () -> project.app = project.datalink = null # Reset.
+    beforeEach 'configure', () -> project.app = project.service = '123'
+    afterEach  'configure', () -> project.app = project.service = null # Reset.
 
     # Test v1 apps.
     describe 'for v1 apps', ->
@@ -135,7 +135,7 @@ describe 'datalink', () ->
 
       # Tests.
       it 'should recycle.', (cb) ->
-        datalink.recycle cb
+        service.recycle cb
 
     # Test v2 apps.
     describe 'for v2 apps', ->
@@ -152,12 +152,12 @@ describe 'datalink', () ->
 
       # Tests.
       it 'should recycle.', (cb) ->
-        datalink.recycle cb
+        service.recycle cb
 
   describe 'job', () ->
     # Configure.
-    beforeEach 'configure', () -> project.app = project.datalink = '123'
-    afterEach  'configure', () -> project.app = project.datalink = null # Reset.
+    beforeEach 'configure', () -> project.app = project.service = '123'
+    afterEach  'configure', () -> project.app = project.service = null # Reset.
 
     # Test v1 apps.
     describe 'for v1 apps', ->
@@ -175,7 +175,7 @@ describe 'datalink', () ->
 
       # Tests.
       it 'should return the job status.', (cb) ->
-        datalink.jobStatus '123', (err, status) ->
+        service.jobStatus '123', (err, status) ->
           expect(status).to.equal 'COMPLETE'
           cb err
 
@@ -196,7 +196,7 @@ describe 'datalink', () ->
 
         # Tests.
         it 'should return the job status.', (cb) ->
-          datalink.jobStatus '123', (err, status) ->
+          service.jobStatus '123', (err, status) ->
             expect(status).to.equal 'COMPLETE'
             cb err
 
@@ -210,22 +210,22 @@ describe 'datalink', () ->
           delete this.mock
 
         it 'should return the job status for a cached job ID.', (cb) ->
-          datalink.jobStatus null, (err, status) ->
+          service.jobStatus null, (err, status) ->
             expect(status).to.equal 'COMPLETE'
             cb err
 
       it 'should fail with a null param and no cached job ID', (cb) ->
         project.lastJobId = null
         delete this.mock
-        datalink.jobStatus null, (err) ->
+        service.jobStatus null, (err) ->
           expect(err).to.exist
           expect(err.message).to.equal 'No previous job stored. Please provide a job ID.'
           cb()
 
   describe 'status', () ->
     # Configure.
-    beforeEach 'configure', () -> project.app = project.datalink = '123'
-    afterEach  'configure', () -> project.app = project.datalink = null # Reset.
+    beforeEach 'configure', () -> project.app = project.service = '123'
+    afterEach  'configure', () -> project.app = project.service = null # Reset.
 
     # Test v2 apps.
     describe 'for v2 apps', ->
@@ -235,7 +235,7 @@ describe 'datalink', () ->
 
       # Mock the API.
       beforeEach 'api', () ->
-        this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.datalink}/status"
+        this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.service}/status"
         .reply 200, { status: 'ONLINE' }
       afterEach 'api', () ->
         this.mock.done()
@@ -243,18 +243,18 @@ describe 'datalink', () ->
 
       # Tests.
       it 'should return the service status.', (cb) ->
-        datalink.serviceStatus (err, status) ->
+        service.serviceStatus (err, status) ->
           expect(status).to.equal 'ONLINE'
           cb err
 
-  # datalink.validate().
+  # service.validate().
   describe 'validate', () ->
     # Configure.
     beforeEach 'configure', () ->
-      project.app = project.datalink = '123'
+      project.app = project.service = '123'
       project.schemaVersion = 1
     afterEach 'configure', () ->
-    project.app = project.datalink = project.schemaVersion = null # Reset.
+    project.app = project.service = project.schemaVersion = null # Reset.
 
     # Helper which stubs a valid package.json.
     pkgVersion = '1.2.3'
@@ -273,14 +273,14 @@ describe 'datalink', () ->
 
       # Tests.
       it 'should succeed.', (cb) ->
-        datalink.validate '*', (err, version) ->
+        service.validate '*', (err, version) ->
           expect(version).to.equal pkgVersion
           cb err
 
     describe 'when the project does not include the backend-sdk dependency', () ->
       # Tests.
       it 'should fail.', (cb) ->
-        datalink.validate '*', (err) ->
+        service.validate '*', (err) ->
           expect(err).to.exist
           expect(err.name).to.equal 'InvalidProject'
           cb()
@@ -290,7 +290,7 @@ describe 'datalink', () ->
 
       # Tests.
       it 'should succeed.', (cb) ->
-        datalink.validate '*', (err, version) ->
+        service.validate '*', (err, version) ->
           expect(version).to.equal pkgVersion
           cb err
 
@@ -299,11 +299,11 @@ describe 'datalink', () ->
 
       # Configure.
       beforeEach 'configure', () ->
-        project.app = project.datalink = project.schemaVersion = null # Reset.
+        project.app = project.service = project.schemaVersion = null # Reset.
 
       # Tests.
       it 'should fail.', (cb) ->
-        datalink.validate '*', (err) ->
+        service.validate '*', (err) ->
           expect(err).to.exist
           expect(err.name).to.equal 'ProjectNotConfigured'
           cb()

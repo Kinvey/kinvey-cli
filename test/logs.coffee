@@ -19,8 +19,8 @@ sinon = require 'sinon'
 
 # Local modules.
 command  = require './fixtures/command.coffee'
-datalink = require '../lib/datalink.coffee'
-logs   = require '../cmd/logs.coffee'
+service = require '../lib/service.coffee'
+logs     = require '../cmd/logs.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
 user     = require '../lib/user.coffee'
@@ -37,15 +37,15 @@ describe "./#{pkg.name} logs", () ->
   afterEach 'project', () -> project.restore.reset()
   after     'project', () -> project.restore.restore()
 
-  # Stub datalink.listLogHosts().
-  before    'getAndSetLogRequestParams', () -> sinon.stub(datalink, 'getAndSetLogRequestParams').callsArg 0
-  afterEach 'getAndSetLogRequestParams', () -> datalink.getAndSetLogRequestParams.reset()
-  after     'getAndSetLogRequestParams', () -> datalink.getAndSetLogRequestParams.restore()
+  # Stub service.listLogHosts().
+  before    'getAndSetLogRequestParams', () -> sinon.stub(service, 'getAndSetLogRequestParams').callsArg 0
+  afterEach 'getAndSetLogRequestParams', () -> service.getAndSetLogRequestParams.reset()
+  after     'getAndSetLogRequestParams', () -> service.getAndSetLogRequestParams.restore()
 
-  # Stub datalink.logs().
-  before    'logs', () -> sinon.stub(datalink, 'logs').callsArg 0
-  afterEach 'logs', () -> datalink.logs.reset()
-  after     'logs', () -> datalink.logs.restore()
+  # Stub service.logs().
+  before    'logs', () -> sinon.stub(service, 'logs').callsArg 0
+  afterEach 'logs', () -> service.logs.reset()
+  after     'logs', () -> service.logs.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
@@ -60,10 +60,10 @@ describe "./#{pkg.name} logs", () ->
 
   it 'should gather log query input params.', (cb) ->
     logs.call command, (err) ->
-      expect(datalink.getAndSetLogRequestParams).to.be.calledOnce
+      expect(service.getAndSetLogRequestParams).to.be.calledOnce
       cb err
 
   it 'should retrieve log entries based on query', (cb) ->
     logs.call command, (err) ->
-      expect(datalink.logs).to.be.calledOnce
+      expect(service.logs).to.be.calledOnce
       cb err

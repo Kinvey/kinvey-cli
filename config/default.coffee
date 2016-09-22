@@ -25,7 +25,7 @@ module.exports =
   host: 'https://manage.kinvey.com'
 
   # Default schema for apps.
-  defaultSchemaVersion: 1
+  defaultSchemaVersion: 2
 
   # Project archive settings.
   artifacts     : [ '.git/', '.svn/', 'node_modules/' ]

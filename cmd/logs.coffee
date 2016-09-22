@@ -19,7 +19,7 @@ program = require 'commander'
 async = require 'async'
 
 # Local modules.
-datalink = require '../lib/datalink.coffee'
+service = require '../lib/service.coffee'
 init   = require '../lib/init.coffee'
 logger = require '../lib/logger.coffee'
 project = require '../lib/project.coffee'
@@ -35,8 +35,8 @@ module.exports = logs = (argv..., cb) ->
     project.restore
 
     # Validate and deploy the project.
-    (next) -> datalink.getAndSetLogRequestParams next
-    (next) -> datalink.logs next
+    (next) -> service.getAndSetLogRequestParams next
+    (next) -> service.logs next
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err

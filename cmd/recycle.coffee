@@ -19,7 +19,7 @@ async   = require 'async'
 program = require 'commander'
 
 # Local modules.
-datalink = require '../lib/datalink.coffee'
+service = require '../lib/service.coffee'
 init     = require '../lib/init.coffee'
 logger   = require '../lib/logger.coffee'
 project  = require '../lib/project.coffee'
@@ -35,7 +35,7 @@ module.exports = recycle = (argv..., cb) ->
     project.restore
 
     # Recycle the DLC.
-    datalink.recycle
+    service.recycle
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err
@@ -45,5 +45,5 @@ module.exports = recycle = (argv..., cb) ->
 # Register the command.
 program
   .command     'recycle'
-  .description 'recycle the Data Link Connector'
+  .description 'recycle the Service'
   .action      recycle

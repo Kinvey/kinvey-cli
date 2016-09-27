@@ -264,6 +264,40 @@ describe 'datalink', () ->
           expect(status).to.equal 'ONLINE'
           cb err
 
+  describe 'logs', () ->
+    # Configure.
+    beforeEach 'configure', () -> project.app = project.datalink = '123'
+    afterEach  'configure', () -> project.app = project.datalink = null # Reset.
+
+    # Test v2 apps.
+    describe 'for v2 apps', ->
+      # Configure.
+      beforeEach 'configure', () -> project.schemaVersion = 2
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
+
+      # Mock the API.
+      beforeEach 'api', () ->
+        this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.datalink}/logs"
+        .reply 200, [
+          {
+            threshold: 'info'
+            message: 'testEntry'
+            timestamp: new Date().toISOString()
+            containerId: '1234567891234'
+          }
+        ]
+      afterEach 'api', () ->
+        this.mock.done()
+        delete this.mock
+
+      # Tests.
+      it 'should return the datalink logs.', (cb) ->
+        datalink.logs (err, logs) ->
+          expect(logs[0].threshold).to.equal 'info'
+          expect(logs[0].message).to.equal 'testEntry'
+          expect(logs[0].containerId).to.equal '1234567891234'
+          cb err
+
   # datalink.validate().
   describe 'validate', () ->
     # Configure.

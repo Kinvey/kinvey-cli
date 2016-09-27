@@ -132,10 +132,13 @@ class Datalink
       if err? then cb err # Continue with error.
       else # Log info.
         logs.forEach (log) ->
-          console.log '%s %s - %s', chalk.green(log.containerId), log.timestamp, chalk.cyan(log.message.trim())
-        logger.info 'Query returned %s logs for Kinvey DLC %s (%s):', chalk.cyan(logs.length), chalk.cyan(project.datalink),
+          if log.threshold?
+            console.log '[%s] %s %s - %s', log.threshold, chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
+          else
+            console.log '%s %s - %s', chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
+        console.log 'Query returned %s logs for Kinvey DLC %s (%s)', chalk.cyan(logs.length), chalk.cyan(project.datalink),
           chalk.gray(project.datalinkName)
-        cb() # Continue.
+        cb null, logs # Continue.
 
   # Recycles the containers that host the DLC.
   recycle: (cb) =>
@@ -200,8 +203,6 @@ class Datalink
         url += "&to=#{this.logEndTimestamp}"
       else
         url += "?to=#{this.logEndTimestamp}"
-
-    logger.debug "Logs URI: #{url}"
 
     util.makeRequest {
       url: url

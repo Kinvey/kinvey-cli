@@ -29,10 +29,10 @@ util   = require './util.coffee'
 # Define the project class.
 class Project
 
-  # App, datalink, and schema.
+  # App, service, and schema.
   app           : null
-  datalink      : null
-  datalinkName  : null
+  service      : null
+  serviceName  : null
   schemaVersion : null
   lastJobId     : null
 
@@ -42,30 +42,30 @@ class Project
 
   # Returns whether the project is configured.
   isConfigured: () =>
-    this.app? and this.datalink? and this.schemaVersion?
+    this.app? and this.service? and this.schemaVersion?
 
   # Lists all Kinvey datalinks.
   list: (cb) =>
-    this._execKinveyDatalinks (err, datalinks) =>
+    this._execKinveyServices (err, services) =>
       if err? then cb err # Continue with error.
       else # Log info.
-        logger.info 'You have %s Kinvey datalink connectors:', chalk.cyan datalinks.length
-        datalinks.forEach (datalink) =>
-          # Highlight the active datalink.
-          bullet = if datalink.id is this.datalink then chalk.green '* ' else ''
-          logger.info '%s%s', bullet, chalk.cyan(datalink.name)
-        logger.info 'The datalink used in this project is marked with *'
+        logger.info 'You have %s Kinvey service connectors:', chalk.cyan services.length
+        services.forEach (service) =>
+          # Highlight the active service.
+          bullet = if service.id is this.service then chalk.green '* ' else ''
+          logger.info '%s%s', bullet, chalk.cyan(service.name)
+        logger.info 'The service used in this project is marked with *'
         cb() # Continue.
 
   # Restores the project from file.
   restore: (cb) =>
     logger.debug 'Restoring project from file %s', chalk.cyan this.projectPath
     util.readJSON this.projectPath, (err, data) =>
-      if data?.app and data.datalink # Save ids.
+      if data?.app and data.service # Save ids.
         logger.debug 'Restored project from file %s', chalk.cyan this.projectPath
         this.app           = data.app
-        this.datalink      = data.datalink
-        this.datalinkName  = data.datalinkName
+        this.service      = data.service
+        this.serviceName  = data.serviceName
         this.schemaVersion = data.schemaVersion
         this.lastJobId     = data.lastJobId
         cb()
@@ -78,17 +78,17 @@ class Project
     logger.debug 'Saving project to file %s', chalk.cyan this.projectPath
     util.writeJSON this.projectPath, {
       app           : this.app
-      datalink      : this.datalink
-      datalinkName  : this.datalinkName
+      service       : this.service
+      serviceName   : this.serviceName
       schemaVersion : this.schemaVersion
       lastJobId     : this.lastJobId
     }, cb
 
-  # Selects and save app, and datalink.
+  # Selects and save app, and service.
   select: (cb) =>
     async.series [
       this._selectApp
-      this._selectDatalink
+      this._selectService
       this.save
     ], cb
 
@@ -106,8 +106,8 @@ class Project
       cb err, response?.body
 
   # Returns eligible Kinvey datalinks.
-  _execKinveyDatalinks: (cb) =>
-    this._execDatalinks (err, body) ->
+  _execKinveyServices: (cb) =>
+    this._execServices (err, body) ->
       if err? then cb err # Continue with error.
       else # Filter and sort by name.
         body = body.filter (el) -> 'internal' is el.type
@@ -116,7 +116,7 @@ class Project
         cb null, body
 
   # Executes a GET /apps/:app/datalinks request.
-  _execDatalinks: (cb) ->
+  _execServices: (cb) ->
     util.makeRequest {
       url: "/v#{this.schemaVersion}/apps/#{this.app}/data-links"
     }, (err, response) ->
@@ -135,17 +135,17 @@ class Project
         this.schemaVersion = app.schemaVersion or config.defaultSchemaVersion
       cb err # Continue.
 
-  # Attempts to select the datalink
-  _selectDatalink: (cb) =>
+  # Attempts to select the service
+  _selectService: (cb) =>
     async.waterfall [
-      this._execKinveyDatalinks
-      (datalinks, next) ->
-        if 0 is datalinks.length then next new KinveyError 'NoDatalinksFound'
-        else prompt.getDatalink datalinks, next
-    ], (err, datalink) =>
-      if datalink?
-        this.datalink = datalink.id
-        this.datalinkName = datalink.name
+      this._execKinveyServices
+      (services, next) ->
+        if 0 is services.length then next new KinveyError 'NoDatalinksFound'
+        else prompt.getService services, next
+    ], (err, service) =>
+      if service?
+        this.service = service.id
+        this.serviceName = service.name
       cb err # Continue.
 
 # Exports.

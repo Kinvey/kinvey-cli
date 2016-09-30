@@ -37,8 +37,8 @@ STATUS_CONSTANTS =
   UPDATING : 'UPDATING'
   ERROR    : 'ERROR'
 
-# Define the datalink class.
-class Datalink
+# Kinvey Service
+class Service
 
   # `logs` command query values fetched via prompt
   logStartTimestamp: null
@@ -63,7 +63,7 @@ class Datalink
       headers  : { 'Transfer-Encoding': 'chunked' }
       formData : {
         type   : 'deployDataLink'
-        params : JSON.stringify { appId: project.app, dataLinkId: project.datalink, version: version }
+        params : JSON.stringify { appId: project.app, dataLinkId: project.service, version: version }
         file   : attachment
       }
       refresh  : false # Do not attempt to authenticate, just assume token is valid.
@@ -136,8 +136,8 @@ class Datalink
             console.log '[%s] %s %s - %s', log.threshold, chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
           else
             console.log '%s %s - %s', chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
-        console.log 'Query returned %s logs for Kinvey DLC %s (%s)', chalk.cyan(logs.length), chalk.cyan(project.datalink),
-          chalk.gray(project.datalinkName)
+        console.log 'Query returned %s logs for Kinvey DLC %s (%s)', chalk.cyan(logs.length), chalk.cyan(project.service),
+          chalk.gray(project.serviceName)
         cb null, logs # Continue.
 
   # Recycles the containers that host the DLC.
@@ -186,10 +186,10 @@ class Datalink
         return cb new KinveyError 'ProjectNotConfigured'
       cb err, json.version # Continue with version.
 
-# Executes a GET /apps/:app/datalinks/:datalink/logs request.
+  # Executes a GET /apps/:app/datalinks/:datalink/logs request.
   _execDatalinkLogs: (cb) =>
     paramAdded = false
-    url = "/v#{project.schemaVersion}/data-links/#{project.datalink}/logs"
+    url = "/v#{project.schemaVersion}/data-links/#{project.service}/logs"
 
     logger.debug "Log start timestamp: #{this.logStartTimestamp}"
     logger.debug "Logs end timestamp: #{this.logEndTimestamp}"
@@ -216,7 +216,7 @@ class Datalink
       url    : "/v#{project.schemaVersion}/jobs"
       body   : {
         type   : 'recycleDataLink'
-        params : { appId: project.app, dataLinkId: project.datalink }
+        params : { appId: project.app, dataLinkId: project.service }
       }
     }, cb
 
@@ -226,7 +226,7 @@ class Datalink
 
   # Executes a GET /apps/:app/datalink/:datalink/<type> request.
   _execServiceStatus: (cb) ->
-    util.makeRequest { url: "/v#{project.schemaVersion}/data-links/#{project.datalink}/status" }, cb
+    util.makeRequest { url: "/v#{project.schemaVersion}/data-links/#{project.service}/status" }, cb
 
   # Returns true if the provided path is an artifact.
   _isArtifact: (base, filepath) ->
@@ -249,4 +249,4 @@ class Datalink
       cb err # Continue.
 
 # Exports.
-module.exports = new Datalink()
+module.exports = new Service()

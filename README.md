@@ -1,11 +1,11 @@
-# Kinvey DLC CLI
-> Utility for deploying Kinvey DLC microservices to Kinvey’s Node DLC PaaS.
+# Kinvey Kinvey CLI
+> Utility for managing KMR services
 
 ## Installation
-`npm install -g kinvey-dlc-cli`
+`npm install -g kinvey-cli`
 
 ## Usage
-In your project directory, run `kinvey-dlc-cli config` to set-up your project. The CLI will prompt for Kinvey credentials, app, and Data Link.
+In your project directory, run `kinvey-cli config` to set-up your project. The CLI will prompt for Kinvey credentials, app, and Data Link.
 
 ### Commands
 * `config` - set project options.

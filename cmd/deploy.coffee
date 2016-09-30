@@ -19,7 +19,7 @@ async   = require 'async'
 program = require 'commander'
 
 # Local modules.
-datalink = require '../lib/datalink.coffee'
+datalink = require '../lib/service.coffee'
 init     = require '../lib/init.coffee'
 logger   = require '../lib/logger.coffee'
 project  = require '../lib/project.coffee'

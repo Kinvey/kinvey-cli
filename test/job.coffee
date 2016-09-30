@@ -19,7 +19,7 @@ sinon = require 'sinon'
 
 # Local modules.
 command  = require './fixtures/command.coffee'
-datalink = require '../lib/datalink.coffee'
+service = require '../lib/service.coffee'
 logger   = require '../lib/logger.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
@@ -30,11 +30,11 @@ user     = require '../lib/user.coffee'
 describe "./#{pkg.name} job", () ->
   # Configure.
   before 'configure', () ->
-    project.app = project.datalink = '123'
+    project.app = project.service = '123'
     project.schemaVersion = 1
     project.lastJobId = 'abcdef'
   after  'configure', () ->
-  project.app = project.datalink = project.schemaVersion = null # Reset.
+  project.app = project.service = project.schemaVersion = null # Reset.
 
   # Stub user.setup().
   before    'user', () -> sinon.stub(user, 'setup').callsArg 1
@@ -46,10 +46,10 @@ describe "./#{pkg.name} job", () ->
   afterEach 'project', () -> project.restore.reset()
   after     'project', () -> project.restore.restore()
 
-  # Stub datalink.jobStatus().
-  before    'datalink', () -> sinon.stub(datalink, 'jobStatus').callsArg 1
-  afterEach 'datalink', () -> datalink.jobStatus.reset()
-  after     'datalink', () -> datalink.jobStatus.restore()
+  # Stub service.jobStatus().
+  before    'service', () -> sinon.stub(service, 'jobStatus').callsArg 1
+  afterEach 'service', () -> service.jobStatus.reset()
+  after     'service', () -> service.jobStatus.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
@@ -65,12 +65,12 @@ describe "./#{pkg.name} job", () ->
   it 'should print the current job status.', (cb) ->
     jobId = '123'
     job jobId, command, (err) ->
-      expect(datalink.jobStatus).to.be.calledOnce
-      expect(datalink.jobStatus).to.be.calledWith jobId
+      expect(service.jobStatus).to.be.calledOnce
+      expect(service.jobStatus).to.be.calledWith jobId
       cb err
 
   it 'should print the current job status when called without an id.', (cb) ->
     job null, command, (err) ->
-      expect(datalink.jobStatus).to.be.calledOnce
-      expect(datalink.jobStatus).to.be.calledWith null
+      expect(service.jobStatus).to.be.calledOnce
+      expect(service.jobStatus).to.be.calledWith null
       cb err

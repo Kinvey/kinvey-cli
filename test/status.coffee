@@ -19,7 +19,7 @@ sinon = require 'sinon'
 
 # Local modules.
 command  = require './fixtures/command.coffee'
-datalink = require '../lib/datalink.coffee'
+service = require '../lib/service.coffee'
 logger   = require '../lib/logger.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
@@ -30,10 +30,10 @@ user     = require '../lib/user.coffee'
 describe "./#{pkg.name} status", () ->
   # Configure.
   before 'configure', () ->
-    project.app = project.datalink = '123'
+    project.app = project.service = '123'
     project.schemaVersion = 1
   after  'configure', () ->
-  project.app = project.datalink = project.schemaVersion = null # Reset.
+  project.app = project.service = project.schemaVersion = null # Reset.
 
   # Stub user.setup().
   before    'user', () -> sinon.stub(user, 'setup').callsArg 1
@@ -45,10 +45,10 @@ describe "./#{pkg.name} status", () ->
   afterEach 'project', () -> project.restore.reset()
   after     'project', () -> project.restore.restore()
 
-  # Stub datalink.jobStatus().
-  before    'datalink', () -> sinon.stub(datalink, 'serviceStatus').callsArg 0
-  afterEach 'datalink', () -> datalink.serviceStatus.reset()
-  after     'datalink', () -> datalink.serviceStatus.restore()
+  # Stub service.jobStatus().
+  before    'service', () -> sinon.stub(service, 'serviceStatus').callsArg 0
+  afterEach 'service', () -> service.serviceStatus.reset()
+  after     'service', () -> service.serviceStatus.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
@@ -63,5 +63,5 @@ describe "./#{pkg.name} status", () ->
 
   it 'should print the current KMR service status.', (cb) ->
     status command, (err) ->
-      expect(datalink.serviceStatus).to.be.calledOnce
+      expect(service.serviceStatus).to.be.calledOnce
       cb err

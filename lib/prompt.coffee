@@ -50,17 +50,17 @@ exports.getApp = (apps, cb) ->
   }], (answers) ->
     cb null, answers.app # Continue.
 
-# Prompts the user for the datalink to use.
-exports.getDatalink = (datalinks, cb) ->
-  logger.debug 'Prompting for datalink'
+# Prompts the user for the service to use.
+exports.getService = (services, cb) ->
+  logger.debug 'Prompting for service'
   inquirer.prompt [{
-    message : 'Which datalink would you like to use?'
-    name    : 'datalink'
+    message : 'Which service would you like to use?'
+    name    : 'service'
     type    : 'list'
-    choices : util.formatList datalinks
-    when    : 0 < datalinks.length
+    choices : util.formatList services
+    when    : 0 < services.length
   }], (answers) ->
-    cb null, answers.datalink # Continue.
+    cb null, answers.service # Continue.
 
 # Prompts the user for email and/or password.
 exports.getEmailPassword = (email, password, cb) ->

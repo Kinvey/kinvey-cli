@@ -19,7 +19,7 @@ async   = require 'async'
 program = require 'commander'
 
 # Local modules.
-datalink = require '../lib/datalink.coffee'
+service = require '../lib/service.coffee'
 init     = require '../lib/init.coffee'
 logger   = require '../lib/logger.coffee'
 project  = require '../lib/project.coffee'
@@ -35,7 +35,7 @@ module.exports = status = (job, command, cb) ->
     project.restore
 
     # Retrieve the job status.
-    (next) -> datalink.jobStatus job, next
+    (next) -> service.jobStatus job, next
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err

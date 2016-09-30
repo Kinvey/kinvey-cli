@@ -231,9 +231,9 @@ describe 'service', () ->
         .post '/v2/jobs'
         .reply 202, { job: 'testjob' }
 
-        datalink.deploy fixtures.valid, '0.1.0', (err) ->
+        service.deploy fixtures.valid, '0.1.0', (err) ->
           expect(err).to.be.undefined
-          datalink.jobStatus null, (err, status) ->
+          service.jobStatus null, (err, status) ->
             expect(status).to.equal 'COMPLETE'
             deployMock.done()
             deployMock = null
@@ -262,6 +262,40 @@ describe 'service', () ->
       it 'should return the service status.', (cb) ->
         service.serviceStatus (err, status) ->
           expect(status).to.equal 'ONLINE'
+          cb err
+
+  describe 'logs', () ->
+    # Configure.
+    beforeEach 'configure', () -> project.app = project.service = '123'
+    afterEach  'configure', () -> project.app = project.service = null # Reset.
+
+    # Test v2 apps.
+    describe 'for v2 apps', ->
+      # Configure.
+      beforeEach 'configure', () -> project.schemaVersion = 2
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
+
+      # Mock the API.
+      beforeEach 'api', () ->
+        this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.service}/logs"
+        .reply 200, [
+          {
+            threshold: 'info'
+            message: 'testEntry'
+            timestamp: new Date().toISOString()
+            containerId: '1234567891234'
+          }
+        ]
+      afterEach 'api', () ->
+        this.mock.done()
+        delete this.mock
+
+      # Tests.
+      it 'should return the service logs.', (cb) ->
+        service.logs (err, logs) ->
+          expect(logs[0].threshold).to.equal 'info'
+          expect(logs[0].message).to.equal 'testEntry'
+          expect(logs[0].containerId).to.equal '1234567891234'
           cb err
 
   # service.validate().

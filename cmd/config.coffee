@@ -30,8 +30,8 @@ module.exports = configure = (argv..., cb) ->
 
   # Set-up user and project.
   async.series [
-    (next) -> user.setup    options, next
-    (next) -> project.setup options, next
+    (next) -> user.setup     options, next
+    (next) -> project.config options, next
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err

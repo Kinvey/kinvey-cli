@@ -100,6 +100,10 @@ class Project
         this.select cb
       else cb err # Continue.
 
+  # Configures the project.
+  config: (options, cb) =>
+    this.select cb
+
   # Executes a GET /apps request.
   _execApps: (cb) ->
     util.makeRequest { url: '/apps' }, (err, response) ->

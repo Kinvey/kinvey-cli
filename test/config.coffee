@@ -31,10 +31,10 @@ describe "./#{pkg.name} config", () ->
   afterEach 'user', () -> user.setup.reset()
   after     'user', () -> user.setup.restore()
 
-  # Stub project.setup().
-  before    'project', () -> sinon.stub(project, 'setup').callsArg 1
-  afterEach 'project', () -> project.setup.reset()
-  after     'project', () -> project.setup.restore()
+  # Stub project.config().
+  before    'project', () -> sinon.stub(project, 'config').callsArg 1
+  afterEach 'project', () -> project.config.reset()
+  after     'project', () -> project.config.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
@@ -42,7 +42,7 @@ describe "./#{pkg.name} config", () ->
       expect(user.setup).to.be.calledOnce
       cb err
 
-  it 'should setup the project.', (cb) ->
+  it 'should config the project.', (cb) ->
     config.call command, (err) ->
-      expect(project.setup).to.be.calledOnce
+      expect(project.config).to.be.calledOnce
       cb err

@@ -27,7 +27,7 @@ user     = require '../lib/user.coffee'
 
 # Test suite.
 describe "./#{pkg.name} logs", () ->
-# Stub user.setup().
+  # Stub user.setup().
   before    'user', () -> sinon.stub(user, 'setup').callsArg 1
   afterEach 'user', () -> user.setup.reset()
   after     'user', () -> user.setup.restore()

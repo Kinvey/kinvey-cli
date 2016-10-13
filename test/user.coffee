@@ -29,10 +29,12 @@ describe 'user', () ->
   describe 'isLoggedIn', () ->
     # Tests.
     it 'should return true if the token was set.', () ->
-      user.token = 123
+      user.host = 'abc'
+      user.tokens =  { 'abc': 123 }
       expect(user.isLoggedIn()).to.be.true
     it 'should return false if the token was not set.', () ->
-      user.token = null
+      user.tokens = null
+      user.host = null
       expect(user.isLoggedIn()).to.be.false
 
   # user.login()
@@ -62,7 +64,7 @@ describe 'user', () ->
       it 'should login.', (cb) ->
         user.login this.email, this.password, (err) =>
           expect(user.isLoggedIn()).to.be.true
-          expect(user.token).to.equal this.token
+          expect(user.getToken()).to.equal this.token
           cb err
 
     describe 'given invalid credentials', () ->
@@ -110,6 +112,20 @@ describe 'user', () ->
           expect(prompt.getEmailPassword).to.be.calledWith undefined, this.password
           cb err
 
+  # user.logout()
+  describe 'logout', () ->
+    # Stub util.writeJSON().
+    before    'stub', () -> sinon.stub(util, 'writeJSON').callsArg 2
+    afterEach 'stub', () -> util.writeJSON.reset()
+    after     'stub', () -> util.writeJSON.restore()
+
+    # Tests.
+    it 'should clear token data from session file.', (cb) ->
+      user.logout (err) ->
+        expect(util.writeJSON).to.be.calledOnce
+        expect(util.writeJSON).to.be.calledWith config.paths.session, ''
+        cb err
+
   # user.refresh()
   describe 'refresh', ->
     # Set a token.
@@ -141,25 +157,34 @@ describe 'user', () ->
 
   # user.restore()
   describe 'restore', () ->
-    beforeEach 'token', () -> user.token = null # Reset.
+    beforeEach 'token', () ->
+      user.token = null # Reset.
+      user.host = null
 
     describe 'when the session file exists', () ->
       # Set a token.
       before 'token', () -> this.token = '123'
       after  'token', () -> delete this.token
 
+      # Set a host.
+      before 'host', () -> this.host = 'abc'
+      after  'host', () -> delete this.host
+
       # Stub util.readJSON().
       before 'stub', () ->
-        sinon.stub(util, 'readJSON').callsArgWith 1, null, { token: this.token }
+        tokens = {}
+        tokens[this.host] = this.token
+        sinon.stub(util, 'readJSON').callsArgWith 1, null, { tokens: tokens }
       afterEach 'stub', () -> util.readJSON.reset()
       after     'stub', () -> util.readJSON.restore()
 
       # Tests.
       it 'should set the user token.', (cb) ->
+        user.host = this.host
         user.restore (err) =>
           expect(util.readJSON).to.be.calledOnce
           expect(util.readJSON).to.be.calledWith config.paths.session
-          expect(user.token).to.equal this.token
+          expect(user.getToken()).to.equal this.token
           cb err
 
     describe 'when the session file does not exist', () ->
@@ -195,8 +220,12 @@ describe 'user', () ->
     # Tests.
     it 'should write the token to file.', (cb) ->
       user.save (err) ->
+        tokens =
+          host: util.formatHost(config.host)
+          tokens:
+            abc: '123'
         expect(util.writeJSON).to.be.calledOnce
-        expect(util.writeJSON).to.be.calledWith config.paths.session, { token: user.token }
+        expect(util.writeJSON).to.be.calledWith config.paths.session, tokens
         cb err
 
   # user.setup()

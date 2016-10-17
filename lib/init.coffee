@@ -15,15 +15,12 @@ limitations under the License.
 ###
 
 # Package modules.
-chalk          = require 'chalk'
 lodashMerge    = require 'lodash.merge'
 updateNotifier = require 'update-notifier'
 
 # Local modules.
 logger  = require './logger.coffee'
 pkg     = require '../package.json'
-request = require './request.coffee'
-util    = require './util.coffee'
 
 # Exports.
 module.exports = (command) ->
@@ -33,10 +30,6 @@ module.exports = (command) ->
   # Shared options.
   if options.silent  then logger.config { level: 3 }
   if options.verbose then logger.config { level: 0 }
-  if options.host? # Format and adjust host.
-    host = util.formatHost options.host
-    logger.debug 'Setting host of the Kinvey service to %s', chalk.cyan host
-    request.Request = request.Request.defaults { baseUrl: host } # Save.
 
   # Check for updates.
   unless options.suppressVersionCheck

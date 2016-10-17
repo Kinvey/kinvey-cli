@@ -20,16 +20,18 @@ chalk  = require 'chalk'
 config = require 'config'
 
 # Local modules.
-KinveyError = require './error.coffee'
-logger = require './logger.coffee'
-prompt = require './prompt.coffee'
-util   = require './util.coffee'
+logger  = require './logger.coffee'
+prompt  = require './prompt.coffee'
+request = require './request.coffee'
+util    = require './util.coffee'
 
 # Define the user class.
 class User
 
   # Session token.
   token: null
+  tokens: {}
+  host: null
 
   # Constructor.
   constructor: (path) ->
@@ -37,7 +39,12 @@ class User
 
   # Returns whether the user is logged in.
   isLoggedIn: () =>
+    if this.host? then return this.tokens?[this.host]?
     this.token?
+
+  getToken: () =>
+    if this.host? then return this.tokens?[this.host]
+    this.token
 
   # Ensures to login the user.
   login: (email, password, cb) =>
@@ -45,6 +52,11 @@ class User
       this._loginOnce email, password, next
       email = password = undefined # Reset.
     , this.isLoggedIn, cb
+
+  # Soft logout (doesn't clear session data server-side)
+  logout: (cb) =>
+    logger.debug 'Clearing session data from file %s', chalk.cyan this.userPath
+    util.writeJSON this.userPath, '', cb
 
   # Refreshes the user token.
   refresh: (cb) =>
@@ -58,9 +70,20 @@ class User
   restore: (cb) =>
     logger.debug 'Restoring session from file %s', chalk.cyan this.userPath
     util.readJSON this.userPath, (err, data) =>
-      if data?.token # Save token.
+      if data?.host?
+        # If `this.host?` at this stage then user has manually updated the host value via the `config` command.
+        # Use the new value and neglect the old.
+        unless this.host? then this.host = data.host
+      else
+        # If `this.host?` at this stage then user has manually updated the host value via the `config` command.
+        # Use the new value and neglect the default.
+        unless this.host? then this.host = config.host
+
+      request.Request = request.Request.defaults { baseUrl: this.host } # Save.
+      if data?.tokens? then this.tokens = data.tokens
+
+      if this.tokens?[this.host]? # Save token.
         logger.debug 'Restored session from file %s', chalk.cyan this.userPath
-        this.token = data.token
         cb() # Continue.
       else # No token, prompt for login.
         logger.debug 'Failed to restore session from file %s', chalk.cyan this.userPath
@@ -69,11 +92,19 @@ class User
   # Saves the session to file.
   save: (cb) =>
     logger.debug 'Saving session to file %s', chalk.cyan this.userPath
-    util.writeJSON this.userPath, { token: this.token }, cb
+    util.writeJSON this.userPath, {
+      tokens    : this.tokens
+      host      : this.host
+    }, cb
 
   # Sets up the user.
   setup: (options, cb) =>
-    if options.email? or options.password? # Custom session.
+    if options.email? or options.password? or options.host? # Custom session.
+      if options.host?
+        this.host = util.formatHost(options.host)
+      else
+        this.host = config.host
+      request.Request = request.Request.defaults { baseUrl: this.host } # Save.cb
       this.login options.email, options.password, cb
     else # Attempt to restore session from file.
       this.restore cb
@@ -98,7 +129,10 @@ class User
       else if err? then cb err # Continue with error.
       else # OK.
         logger.info 'Welcome back %s', chalk.cyan response.body.email
-        this.token = response.body.token # Save token.
+        if this.host? # Persistent session
+          this.tokens[this.host] = response.body.token # Save token.
+        else # One-time session
+          this.token = response.body.token
         cb() # Continue.
 
 # Exports.

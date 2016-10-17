@@ -19,13 +19,14 @@ sinon = require 'sinon'
 
 # Local modules.
 command = require './fixtures/command.coffee'
-config  = require '../cmd/config.coffee'
 pkg     = require '../package.json'
 project = require '../lib/project.coffee'
 user    = require '../lib/user.coffee'
 
 # Test suite.
 describe "./#{pkg.name} config", () ->
+  beforeEach () -> this.config  = require '../cmd/config.coffee'
+
   # Stub user.setup().
   before    'user', () -> sinon.stub(user, 'setup').callsArg 1
   afterEach 'user', () -> user.setup.reset()
@@ -38,11 +39,19 @@ describe "./#{pkg.name} config", () ->
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    config.call command, (err) ->
+    this.config null, command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
-  it 'should config the project.', (cb) ->
-    config.call command, (err) ->
+  it 'configure the project with the default host.', (cb) ->
+    this.config null, command, (err) ->
       expect(project.config).to.be.calledOnce
+      expect(user.host).to.be.null
+      cb err
+
+  it 'configure the project with a custom host.', (cb) ->
+    host = '123'
+    this.config host, command, (err) ->
+      expect(project.config).to.be.calledOnce
+      expect(user.host).to.equal 'https://' + host
       cb err

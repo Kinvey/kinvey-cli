@@ -43,17 +43,6 @@ describe "./#{pkg.name}", () ->
   after     'stub', () -> logger.config.restore()
 
   # Test global options.
-  describe '--host <host>', () ->
-    # Stub request.Request.defaults().
-    before    'stub', () -> sinon.spy request.Request, 'defaults'
-    afterEach 'stub', () -> request.Request.defaults.reset()
-    after     'stub', () -> request.Request.defaults.restore()
-
-    it 'should set the host of the Kinvey service.', () ->
-      cli [ 'node', pkg.name, 'test', '--host', 'example.com' ]
-      expect(request.Request.defaults).to.be.calledOnce
-      expect(request.Request.defaults).to.be.calledWith { baseUrl: 'https://example.com' }
-
   describe '-s, --silent', () ->
     it 'should not output anything.', () ->
       cli [ 'node', pkg.name, 'test', '--silent' ]

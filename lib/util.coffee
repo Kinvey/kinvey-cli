@@ -56,7 +56,7 @@ exports.makeRequest = makeRequest = (options, cb) ->
   options.method ?= 'GET' # Default to GET.
   if user.isLoggedIn()
     options.headers ?= { }
-    options.headers?.Authorization = "Kinvey #{user.token}"
+    options.headers?.Authorization = "Kinvey #{user.getToken()}"
 
   # Perform the request.
   logger.debug 'Request:  %s %s', options.method, options.url

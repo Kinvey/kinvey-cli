@@ -42,6 +42,7 @@ module.exports = (args) ->
   require '../cmd/config.coffee'
   require '../cmd/deploy.coffee'
   require '../cmd/list.coffee'
+  require '../cmd/logout.coffee'
   require '../cmd/logs.coffee'
   require '../cmd/recycle.coffee'
   require '../cmd/status.coffee'

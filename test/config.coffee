@@ -19,30 +19,39 @@ sinon = require 'sinon'
 
 # Local modules.
 command = require './fixtures/command.coffee'
-config  = require '../cmd/config.coffee'
 pkg     = require '../package.json'
 project = require '../lib/project.coffee'
 user    = require '../lib/user.coffee'
 
 # Test suite.
 describe "./#{pkg.name} config", () ->
+  beforeEach () -> this.config  = require '../cmd/config.coffee'
+
   # Stub user.setup().
   before    'user', () -> sinon.stub(user, 'setup').callsArg 1
   afterEach 'user', () -> user.setup.reset()
   after     'user', () -> user.setup.restore()
 
-  # Stub project.setup().
-  before    'project', () -> sinon.stub(project, 'setup').callsArg 1
-  afterEach 'project', () -> project.setup.reset()
-  after     'project', () -> project.setup.restore()
+  # Stub project.config().
+  before    'project', () -> sinon.stub(project, 'config').callsArg 1
+  afterEach 'project', () -> project.config.reset()
+  after     'project', () -> project.config.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    config.call command, (err) ->
+    this.config null, command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
-  it 'should setup the project.', (cb) ->
-    config.call command, (err) ->
-      expect(project.setup).to.be.calledOnce
+  it 'configure the project with the default host.', (cb) ->
+    this.config null, command, (err) ->
+      expect(project.config).to.be.calledOnce
+      expect(user.host).to.be.null
+      cb err
+
+  it 'configure the project with a custom host.', (cb) ->
+    host = '123'
+    this.config host, command, (err) ->
+      expect(project.config).to.be.calledOnce
+      expect(user.host).to.equal 'https://' + host
       cb err

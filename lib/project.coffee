@@ -31,14 +31,18 @@ class Project
 
   # App, service, and schema.
   app           : null
-  service      : null
-  serviceName  : null
+  service       : null
+  serviceName   : null
   schemaVersion : null
   lastJobId     : null
 
   # Constructor.
   constructor: (path) ->
     this.projectPath = path
+
+  # Configures the project.
+  config: (options, cb) =>
+    this.select cb
 
   # Returns whether the project is configured.
   isConfigured: () =>
@@ -56,6 +60,11 @@ class Project
           logger.info '%s%s', bullet, chalk.cyan(service.name)
         logger.info 'The service used in this project is marked with *'
         cb() # Continue.
+
+  logout: (cb) =>
+    logger.debug 'Clearing project configuration from file %s', chalk.cyan this.projectPath
+    logger.info "Logout complete. Run 'kinvey config' to get started."
+    util.writeJSON this.projectPath, '', cb
 
   # Restores the project from file.
   restore: (cb) =>

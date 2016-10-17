@@ -22,7 +22,7 @@ osHomedir = require 'os-homedir'
 
 # Exports.
 module.exports =
-  host: 'https://manage.kinvey.com'
+  host: 'https://manage.kinvey.com/'
 
   # Default schema for apps.
   defaultSchemaVersion: 2

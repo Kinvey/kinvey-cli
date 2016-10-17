@@ -88,6 +88,29 @@ describe 'project', () ->
           expect(logger.info).to.be.calledWith 'The service used in this project is marked with *'
           cb err
 
+  # project.logout().
+  describe 'logout', () ->
+    # Configure.
+    beforeEach 'configure', () -> project.app = project.service = '123'
+    afterEach  'configure', () -> project.app = project.service = null # Reset.
+
+    # Stub.
+    before    'stub', -> sinon.stub logger, 'info'
+    afterEach 'stub', -> logger.info.reset()
+    after     'stub', -> logger.info.restore()
+
+    describe 'for v2 apps', ->
+      # Configure.
+      beforeEach 'configure', () -> project.schemaVersion = 2
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
+
+      # Tests.
+      it 'should log out the user', (cb) ->
+        project.logout (err) ->
+          expect(logger.info).to.be.called
+          expect(logger.info).to.be.calledWith "Logout complete. Run 'kinvey config' to get started."
+          cb err
+
   # project.restore()
   describe 'restore', () ->
     describe 'when the project file exists', () ->
@@ -222,7 +245,6 @@ describe 'project', () ->
       # Tests.
       it 'should select the app and service to use.', (cb) ->
         project.select (err) ->
-          console.log require('util').inspect err
           expect(prompt.getApp).to.be.calledOnce
           expect(prompt.getApp).to.be.calledWith [ fixtures.app ]
           expect(prompt.getService).to.be.calledOnce

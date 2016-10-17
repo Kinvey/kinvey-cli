@@ -16,7 +16,6 @@ limitations under the License.
 
 # Package modules.
 async   = require 'async'
-chalk   = require 'chalk'
 program = require 'commander'
 
 # Local modules.
@@ -24,22 +23,16 @@ init    = require '../lib/init.coffee'
 logger  = require '../lib/logger.coffee'
 project = require '../lib/project.coffee'
 user    = require '../lib/user.coffee'
-util    = require '../lib/util.coffee'
 
 # Entry point for the config command.
-module.exports = configure = (host, command, cb) ->
-  options = init command # Initialize the command.
+module.exports = logout = (argv..., cb) ->
+  options = init this # Initialize the command.
 
-  # If host is specified here then set it as the base URL and save it for future requests
-  if host? # Format and adjust host.
-    baasHost = util.formatHost host
-    logger.debug 'Setting host of the Kinvey service to %s', chalk.cyan baasHost
-    user.host = baasHost
-
-  # Set-up user and project.
+  # Clear sessions and project settings
   async.series [
-    (next) -> user.setup     options, next
-    (next) -> project.config options, next
+    # Log out user.
+    (next) -> user.logout    next
+    (next) -> project.logout next
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err
@@ -48,6 +41,6 @@ module.exports = configure = (host, command, cb) ->
 
 # Register the command.
 program
-  .command     'config [host]'
-  .description 'set project options, including optional Kinvey host (if using a dedicated instance)'
-  .action      configure
+.command     'logout'
+.description 'resets host, removes sessions, and clears project settings'
+.action      logout

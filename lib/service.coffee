@@ -180,7 +180,7 @@ class Service
   validate: (dir, cb) ->
     packagePath = path.join dir, 'package.json' # Lookup package in provided dir.
     util.readJSON packagePath, (err, json) ->
-      unless json?.dependencies?['kinvey-backend-sdk']?
+      unless json?.dependencies?['kinvey-flex-sdk']?
         return cb new KinveyError 'InvalidProject'
       unless project.isConfigured()
         return cb new KinveyError 'ProjectNotConfigured'

@@ -15,6 +15,7 @@ In your project directory, run `kinvey-cli config` to set-up your project. The C
 * `list` - list the configured Internal Flex Services for the current app.
 * `logs [from] [to]` - query logs for this Internal Flex Service
   * 'from' and 'to' arguments represent optional ISO-8601 timestamp strings
+    * **Note:** Logs calls are limited to 10,000 entries
   * Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`
   * E.g. `ac7df839104d 2016-02-23T20:00:29.334Z - hello world`
 * `logout` - clears Kinvey session data and project settings

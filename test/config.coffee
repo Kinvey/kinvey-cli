@@ -46,12 +46,42 @@ describe "./#{pkg.name} config", () ->
   it 'configure the project with the default host.', (cb) ->
     this.config null, command, (err) ->
       expect(project.config).to.be.calledOnce
-      expect(user.host).to.be.null
+      expect(user.host).to.equal 'https://manage.kinvey.com/'
       cb err
+
+  describe 'with a custom HTTP host', () ->
+    it 'should configure the project.', (cb) ->
+      host = 'http://host:123/'
+      this.config host, command, (err) ->
+        expect(project.config).to.be.calledOnce
+        expect(user.host).to.equal host
+        cb err
+
+    it 'should add a trailing backslash if one is not supplied.', (cb) ->
+      host = 'http://host:123'
+      this.config host, command, (err) ->
+        expect(project.config).to.be.calledOnce
+        expect(user.host).to.equal host + '/'
+        cb err
+
+  describe 'with a custom HTTP host', () ->
+    it 'should configure the project with a custom HTTPS host.', (cb) ->
+      host = 'https://host:123/'
+      this.config host, command, (err) ->
+        expect(project.config).to.be.calledOnce
+        expect(user.host).to.equal host
+        cb err
+
+    it 'should add a trailing backslash if one is not supplied.', (cb) ->
+      host = 'https://host:123'
+      this.config host, command, (err) ->
+        expect(project.config).to.be.calledOnce
+        expect(user.host).to.equal host + '/'
+        cb err
 
   it 'configure the project with a custom host.', (cb) ->
     host = '123'
     this.config host, command, (err) ->
       expect(project.config).to.be.calledOnce
-      expect(user.host).to.equal 'https://' + host
+      expect(user.host).to.equal 'https://' + host + '-manage.kinvey.com/'
       cb err

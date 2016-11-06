@@ -73,8 +73,8 @@ class Project
       if data?.app and data.service # Save ids.
         logger.debug 'Restored project from file %s', chalk.cyan this.projectPath
         this.app           = data.app
-        this.service      = data.service
-        this.serviceName  = data.serviceName
+        this.service       = data.service
+        this.serviceName   = data.serviceName
         this.schemaVersion = data.schemaVersion
         this.lastJobId     = data.lastJobId
         cb()

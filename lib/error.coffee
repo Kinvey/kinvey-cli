@@ -23,6 +23,10 @@ pkg    = require '../package.json'
 
 # Enumerate errors.
 errors =
+  ConnectionError:
+    message: 'The connection to the remote host was unsuccessful. Please try again or contact Kinvey support if the problem persists.'
+  InvalidConfigUrl:
+    message: 'The configuration URL is invalid. Please use a valid Kinvey instance name or URL.'
   InvalidProject:
     message: 'This project is not valid. Please implement the kinvey-flex-sdk node module.'
   ProjectNotConfigured:

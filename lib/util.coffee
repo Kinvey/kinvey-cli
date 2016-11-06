@@ -16,11 +16,11 @@ limitations under the License.
 
 # Standard lib.
 fs  = require 'fs'
-url = require 'url'
 
 # Package modules.
-async   = require 'async'
-chalk   = require 'chalk'
+async    = require 'async'
+chalk    = require 'chalk'
+validUrl = require 'valid-url'
 
 # Local modules.
 KinveyError = require './error.coffee'
@@ -30,12 +30,20 @@ user    = require './user.coffee'
 
 # Formats the host argument to be a valid URL.
 exports.formatHost = (host) ->
-  urlObj = url.parse host
-  urlObj = # Make sure the host is correctly set, with protocol and path.
-    host     : urlObj.host     or urlObj.pathname
-    pathname : if urlObj.host? then urlObj.pathname else null
-    protocol : urlObj.protocol or 'https' # Default to HTTPS.
-  url.format urlObj # Return the urlStr.
+  # Check if input host is valid HTTP URI and use it if so
+  validHost = validUrl.isHttpUri host
+  if validHost
+    if validHost.slice(-1) isnt '/' then validHost = validHost + '/'
+    return validHost
+
+  # Check if input host is valid HTTPS URI and use it if so
+  validHost = validUrl.isHttpsUri host
+  if validHost
+    if validHost.slice(-1) isnt '/' then validHost = validHost + '/'
+    return validHost
+
+  # Input host is neither HTTP or HTTPS. Build host.
+  return 'https://' + host + '-manage.kinvey.com/' # Return the urlStr.
 
 # Formats the provided list for use with inquirer.
 exports.formatList = (list, name = 'name') ->
@@ -61,7 +69,16 @@ exports.makeRequest = makeRequest = (options, cb) ->
   # Perform the request.
   logger.debug 'Request:  %s %s', options.method, options.url
   request.Request options, (err, response) ->
-    if err? then return cb err # Continue with error.
+    connErrors = [ 'ECONNRESET', 'ECONNREFUSED', 'ETIMEDOUT', 'PROTOCOL_CONNECTION_LOST' ]
+    if err?
+      if err.message.indexOf('ENOTFOUND') isnt -1
+        return cb new KinveyError 'InvalidConfigUrl'
+
+      for msg in connErrors
+        if err.message.indexOf(msg) isnt -1
+          return cb new KinveyError 'ConnectionError'
+
+      return cb err # Continue with error.
 
     logger.debug 'Response: %s %s %s', options.method, options.url, chalk.green response.statusCode
     if 2 is parseInt response.statusCode / 100, 10 # OK.

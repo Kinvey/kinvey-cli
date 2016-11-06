@@ -70,14 +70,11 @@ class User
   restore: (cb) =>
     logger.debug 'Restoring session from file %s', chalk.cyan this.userPath
     util.readJSON this.userPath, (err, data) =>
+      # If we're reading in config from file
       if data?.host?
         # If `this.host?` at this stage then user has manually updated the host value via the `config` command.
         # Use the new value and neglect the old.
         unless this.host? then this.host = data.host
-      else
-        # If `this.host?` at this stage then user has manually updated the host value via the `config` command.
-        # Use the new value and neglect the default.
-        unless this.host? then this.host = config.host
 
       request.Request = request.Request.defaults { baseUrl: this.host } # Save.
       if data?.tokens? then this.tokens = data.tokens

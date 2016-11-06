@@ -37,7 +37,7 @@ exports.formatHost = (host) ->
     return validHost
 
   # Check if input host is valid HTTPS URI and use it if so
-  validHost = validHost = validUrl.isHttpsUri host
+  validHost = validUrl.isHttpsUri host
   if validHost
     if validHost.slice(-1) isnt '/' then validHost = validHost + '/'
     return validHost

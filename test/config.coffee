@@ -64,7 +64,7 @@ describe "./#{pkg.name} config", () ->
         expect(user.host).to.equal host + '/'
         cb err
 
-  describe 'with a custom HTTP host', () ->
+  describe 'with a custom HTTPS host', () ->
     it 'should configure the project with a custom HTTPS host.', (cb) ->
       host = 'https://host:123/'
       this.config host, command, (err) ->

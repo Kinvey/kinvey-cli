@@ -9,11 +9,12 @@ In your project directory, run `kinvey-cli config` to set-up your project. The C
 
 ### Commands
 * `config [host]` - set project options (including optional host if using a dedicated Kinvey instance)
-* `deploy` - deploy the current project as a Kinvey-backed Data Link Connector. You can check the status of a deploy using the `job` command (more info below).
-* `status` - display the health status of a Kinvey service
+* `deploy` - deploy the current project as an Internal Flex Service. You can check the status of a deploy using the `job` command (more info below).
+* `status` - display the health status of an Internal Flex Service
 * `help` - display usage information.
 * `list` - list the configured Kinvey-backed Data Link Connectors for the current app.
-* `logs` - query logs for this Kinvey-backed Data Link Connector.
+* `logs [from] [to]` - query logs for this Internal Flex Service
+  * 'from' and 'to' arguments represent optional ISO-8601 timestamp strings
   * Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`
   * E.g. `ac7df839104d 2016-02-23T20:00:29.334Z - hello world`
 * `logout` - clears Kinvey session data and project settings

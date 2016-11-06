@@ -292,7 +292,7 @@ describe 'service', () ->
 
       # Tests.
       it 'should return the service logs.', (cb) ->
-        service.logs (err, logs) ->
+        service.logs null, null, (err, logs) ->
           expect(logs[0].threshold).to.equal 'info'
           expect(logs[0].message).to.equal 'testEntry'
           expect(logs[0].containerId).to.equal '1234567891234'
@@ -312,14 +312,14 @@ describe 'service', () ->
     createPackage = () ->
       before 'stub', () ->
         sinon.stub(util, 'readJSON').callsArgWith 1, null, {
-          dependencies: { 'kinvey-backend-sdk': '*' }
+          dependencies: { 'kinvey-flex-sdk': '*' }
           version: pkgVersion
         }
       afterEach 'stub', () -> util.readJSON.reset()
       after     'stub', () -> util.readJSON.restore()
 
     # Test suite.
-    describe 'when the project includes the kinvey-backend-sdk dependency', () ->
+    describe 'when the project includes the kinvey-flex-sdk dependency', () ->
       createPackage()
 
       # Tests.
@@ -328,7 +328,7 @@ describe 'service', () ->
           expect(version).to.equal pkgVersion
           cb err
 
-    describe 'when the project does not include the backend-sdk dependency', () ->
+    describe 'when the project does not include the flex-sdk dependency', () ->
       # Tests.
       it 'should fail.', (cb) ->
         service.validate '*', (err) ->

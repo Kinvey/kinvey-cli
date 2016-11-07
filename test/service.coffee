@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
+# Third party.
+uuid = require 'uuid'
+
 # Standard lib.
 path = require 'path'
 
@@ -266,7 +269,12 @@ describe 'service', () ->
 
   describe 'logs', () ->
     # Configure.
-    beforeEach 'configure', () -> project.app = project.service = '123'
+    beforeEach 'configure', () ->
+      project.app = project.service = '123'
+      this.message     = uuid.v4()
+      this.containerId = uuid.v4()
+      this.from        = uuid.v4()
+      this.to          = uuid.v4()
     afterEach  'configure', () -> project.app = project.service = null # Reset.
 
     # Test v2 apps.
@@ -275,28 +283,101 @@ describe 'service', () ->
       beforeEach 'configure', () -> project.schemaVersion = 2
       afterEach  'configure', () -> project.schemaVersion = null # Reset.
 
-      # Mock the API.
-      beforeEach 'api', () ->
-        this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.service}/logs"
-        .reply 200, [
-          {
-            threshold: 'info'
-            message: 'testEntry'
-            timestamp: new Date().toISOString()
-            containerId: '1234567891234'
-          }
-        ]
-      afterEach 'api', () ->
-        this.mock.done()
-        delete this.mock
+      describe 'without any request filtering', () ->
+        # Mock the API.
+        beforeEach 'api', () ->
+          this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.service}/logs"
+          .reply 200, [
+            {
+              threshold: 'info'
+              message: this.message
+              timestamp: new Date().toISOString()
+              containerId: this.containerId
+            }
+          ]
+        afterEach 'api', () ->
+          this.mock.done()
+          delete this.mock
 
-      # Tests.
-      it 'should return the service logs.', (cb) ->
-        service.logs (err, logs) ->
-          expect(logs[0].threshold).to.equal 'info'
-          expect(logs[0].message).to.equal 'testEntry'
-          expect(logs[0].containerId).to.equal '1234567891234'
-          cb err
+        # Tests.
+        it 'should return the service logs.', (cb) ->
+          service.logs null, null, (err, logs) =>
+            expect(logs[0].threshold).to.equal 'info'
+            expect(logs[0].message).to.equal this.message
+            expect(logs[0].containerId).to.equal this.containerId
+            cb err
+
+      describe 'with a logs \'to\' filter', () ->
+        # Mock the API.
+        beforeEach 'api', () ->
+          this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.service}/logs?from=#{this.from}"
+          .reply 200, [
+            {
+              threshold: 'info'
+              message: this.message
+              timestamp: new Date().toISOString()
+              containerId: this.containerId
+            }
+          ]
+        afterEach 'api', () ->
+          this.mock.done()
+          delete this.mock
+
+        # Tests.
+        it 'should return the service logs.', (cb) ->
+          service.logs this.from, null, (err, logs) =>
+            expect(logs[0].threshold).to.equal 'info'
+            expect(logs[0].message).to.equal this.message
+            expect(logs[0].containerId).to.equal this.containerId
+            cb err
+
+      describe 'with a logs \'to\' filter', () ->
+        # Mock the API.
+        beforeEach 'api', () ->
+          this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.service}/logs?to=#{this.to}"
+          .reply 200, [
+            {
+              threshold: 'info'
+              message: this.message
+              timestamp: new Date().toISOString()
+              containerId: this.containerId
+            }
+          ]
+        afterEach 'api', () ->
+          this.mock.done()
+          delete this.mock
+
+        # Tests.
+        it 'should return the service logs.', (cb) ->
+          service.logs null, this.to, (err, logs) =>
+            expect(logs[0].threshold).to.equal 'info'
+            expect(logs[0].message).to.equal this.message
+            expect(logs[0].containerId).to.equal this.containerId
+            cb err
+
+      describe 'with a logs \'from\' and \'to\' filter', () ->
+        # Mock the API.
+        beforeEach 'api', () ->
+          this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.service}/logs?from=#{this.from}&to=#{this.to}"
+          .reply 200, [
+            {
+              threshold: 'info'
+              message: this.message
+              timestamp: new Date().toISOString()
+              containerId: this.containerId
+            }
+          ]
+        afterEach 'api', () ->
+          this.mock.done()
+          delete this.mock
+
+        # Tests.
+        it 'should return the service logs.', (cb) ->
+          service.logs this.from, this.to, (err, logs) =>
+            expect(logs[0].threshold).to.equal 'info'
+            expect(logs[0].message).to.equal this.message
+            expect(logs[0].containerId).to.equal this.containerId
+            cb err
 
   # service.validate().
   describe 'validate', () ->
@@ -312,14 +393,14 @@ describe 'service', () ->
     createPackage = () ->
       before 'stub', () ->
         sinon.stub(util, 'readJSON').callsArgWith 1, null, {
-          dependencies: { 'kinvey-backend-sdk': '*' }
+          dependencies: { 'kinvey-flex-sdk': '*' }
           version: pkgVersion
         }
       afterEach 'stub', () -> util.readJSON.reset()
       after     'stub', () -> util.readJSON.restore()
 
     # Test suite.
-    describe 'when the project includes the kinvey-backend-sdk dependency', () ->
+    describe 'when the project includes the kinvey-flex-sdk dependency', () ->
       createPackage()
 
       # Tests.
@@ -328,7 +409,7 @@ describe 'service', () ->
           expect(version).to.equal pkgVersion
           cb err
 
-    describe 'when the project does not include the backend-sdk dependency', () ->
+    describe 'when the project does not include the flex-sdk dependency', () ->
       # Tests.
       it 'should fail.', (cb) ->
         service.validate '*', (err) ->

@@ -37,7 +37,9 @@
     "moment": "2.11.2",
     "os-homedir": "1.0.1",
     "request": "2.63.0",
-    "update-notifier": "0.5.0"
+    "update-notifier": "0.5.0",
+    "uuid": "2.0.3",
+    "valid-url": "1.0.9"
   },
   "devDependencies": {
     "chai": "3.3.0",

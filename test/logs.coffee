@@ -19,7 +19,7 @@ sinon = require 'sinon'
 
 # Local modules.
 command  = require './fixtures/command.coffee'
-service = require '../lib/service.coffee'
+service  = require '../lib/service.coffee'
 logs     = require '../cmd/logs.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
@@ -37,33 +37,35 @@ describe "./#{pkg.name} logs", () ->
   afterEach 'project', () -> project.restore.reset()
   after     'project', () -> project.restore.restore()
 
-  # Stub service.listLogHosts().
-  before    'getAndSetLogRequestParams', () -> sinon.stub(service, 'getAndSetLogRequestParams').callsArg 0
-  afterEach 'getAndSetLogRequestParams', () -> service.getAndSetLogRequestParams.reset()
-  after     'getAndSetLogRequestParams', () -> service.getAndSetLogRequestParams.restore()
-
   # Stub service.logs().
-  before    'logs', () -> sinon.stub(service, 'logs').callsArg 0
+  before    'logs', () -> sinon.stub(service, 'logs').callsArg 2
   afterEach 'logs', () -> service.logs.reset()
   after     'logs', () -> service.logs.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    logs.call command, (err) ->
+    logs null, null, command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    logs.call command, (err) ->
+    logs null, null, command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
-  it 'should gather log query input params.', (cb) ->
-    logs.call command, (err) ->
-      expect(service.getAndSetLogRequestParams).to.be.calledOnce
-      cb err
-
   it 'should retrieve log entries based on query', (cb) ->
-    logs.call command, (err) ->
+    logs null, null, command, (err) ->
       expect(service.logs).to.be.calledOnce
       cb err
+
+  it 'should fail with an invalid \'from\' timestamp', (done) ->
+    logs 'abc', null, command, (err) ->
+      expect(err).to.exist
+      expect(err.message).to.equal "Logs \'from\' timestamp invalid (ISO-8601 required)"
+      done()
+
+  it 'should fail with an invalid \'to\' timestamp', (done) ->
+    logs null, 'abc', command, (err) ->
+      expect(err).to.exist
+      expect(err.message).to.equal "Logs \'to\' timestamp invalid (ISO-8601 required)"
+      done()

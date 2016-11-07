@@ -221,7 +221,7 @@ describe 'user', () ->
     it 'should write the token to file.', (cb) ->
       user.save (err) ->
         tokens =
-          host: util.formatHost(config.host)
+          host: null
           tokens:
             abc: '123'
         expect(util.writeJSON).to.be.calledOnce

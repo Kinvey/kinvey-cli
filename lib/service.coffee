@@ -40,10 +40,6 @@ STATUS_CONSTANTS =
 # Kinvey Service
 class Service
 
-  # `logs` command query values fetched via prompt
-  logStartTimestamp: null
-  logEndTimestamp: null
-
   # Packages and uploads the project.
   deploy: (dir, version, cb) =>
     logger.debug 'Creating archive from %s', chalk.cyan dir # Debug.
@@ -119,16 +115,9 @@ class Service
     }]
     archive.finalize()
 
-  # Gets query params
-  getAndSetLogRequestParams: (cb) =>
-    async.series [
-      this._selectAndSetLogStartTimestamp
-      this._selectAndSetLogEndTimestamp
-    ], cb
-
   # Lists all Kinvey logs.
-  logs: (cb) =>
-    this._execDatalinkLogs (err, logs) ->
+  logs: (from, to, cb) =>
+    this._execDatalinkLogs from, to, (err, logs) ->
       if err? then cb err # Continue with error.
       else # Log info.
         logs.forEach (log) ->
@@ -187,22 +176,22 @@ class Service
       cb err, json.version # Continue with version.
 
   # Executes a GET /apps/:app/datalinks/:datalink/logs request.
-  _execDatalinkLogs: (cb) =>
+  _execDatalinkLogs: (from, to, cb) ->
     paramAdded = false
     url = "/v#{project.schemaVersion}/data-links/#{project.service}/logs"
 
-    logger.debug "Log start timestamp: #{this.logStartTimestamp}"
-    logger.debug "Logs end timestamp: #{this.logEndTimestamp}"
+    logger.debug "Log start timestamp: #{from}"
+    logger.debug "Logs end timestamp: #{to}"
 
     # Request URL creation (versus user input params)
-    if this.logStartTimestamp
-      url += "?from=#{this.logStartTimestamp}"
+    if from?
+      url += "?from=#{from}"
       paramAdded = true
-    if this.logEndTimestamp
+    if to?
       if paramAdded
-        url += "&to=#{this.logEndTimestamp}"
+        url += "&to=#{to}"
       else
-        url += "?to=#{this.logEndTimestamp}"
+        url += "?to=#{to}"
 
     util.makeRequest {
       url: url
@@ -235,18 +224,6 @@ class Service
       if 0 is relative.indexOf(pattern) or "#{relative}/" is pattern # Exclude both files and dirs.
         return true
     false
-
-  # Attempts to select a log start time
-  _selectAndSetLogStartTimestamp: (cb) =>
-    prompt.getLogStartTimestamp null, (err, startTimestamp) =>
-      if startTimestamp? then this.logStartTimestamp = startTimestamp
-      cb err # Continue.
-
-  # Attempts to select a log end time
-  _selectAndSetLogEndTimestamp: (cb) =>
-    prompt.getLogEndTimestamp null, (err, endTimestamp) =>
-      if endTimestamp? then this.logEndTimestamp = endTimestamp
-      cb err # Continue.
 
 # Exports.
 module.exports = new Service()

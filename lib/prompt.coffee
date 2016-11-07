@@ -18,7 +18,6 @@ limitations under the License.
 chalk    = require 'chalk'
 inquirer = require 'inquirer'
 isEmail  = require 'isemail'
-moment   = require 'moment'
 
 # Local modules.
 logger = require './logger.coffee'
@@ -28,15 +27,6 @@ util   = require './util.coffee'
 validateEmail = (email) ->
   if isEmail email then true
   else 'Please enter a valid e-mail address.'
-
-# Timestamp validation for prompts
-validateTimestamp = (ts) ->
-  if not ts
-    return true # Null input represents from the beginning
-
-  # Input detected. Ensure it's a valid timestamp or error
-  if moment(ts, moment.ISO_8601, true).isValid() then true
-  else 'Please enter a valid ISO-8601 timestamp'
 
 # Prompts the user for the app to use.
 exports.getApp = (apps, cb) ->

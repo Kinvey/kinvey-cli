@@ -15,8 +15,9 @@ limitations under the License.
 ###
 
 # Package modules.
-program = require 'commander'
 async = require 'async'
+moment   = require 'moment'
+program = require 'commander'
 
 # Local modules.
 service = require '../lib/service.coffee'
@@ -25,18 +26,29 @@ logger = require '../lib/logger.coffee'
 project = require '../lib/project.coffee'
 user    = require '../lib/user.coffee'
 
+# Timestamp validation
+validateTimestamp = (ts) ->
+  if not ts?
+    return true # Null input represents from the beginning
+
+  # Input detected. Ensure it's a valid timestamp or error
+  if moment(ts, moment.ISO_8601, true).isValid() then return true
+  false
+
 # Entry point for the logs command.
-module.exports = logs = (argv..., cb) ->
-  options = init this # Initialize the command.
+module.exports = logs = (from, to, command, cb) ->
+  options = init command # Initialize the command.
+
+  if not validateTimestamp from then return cb new Error 'Logs \'from\' timestamp invalid (ISO-8601 required)'
+  if not validateTimestamp to then return cb new Error 'Logs \'to\' timestamp invalid (ISO-8601 required)'
 
   async.series [
     # Set-up user and restore project.
     (next) -> user.setup options, next
     project.restore
 
-    # Validate and deploy the project.
-    (next) -> service.getAndSetLogRequestParams next
-    (next) -> service.logs next
+    # Get logs from server
+    (next) -> service.logs from, to, next
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err
@@ -45,6 +57,6 @@ module.exports = logs = (argv..., cb) ->
 
 # Register the command.
 program
-  .command      'logs'
-  .description  'retrieve and display Data Link Connector logs'
+  .command      'logs [from] [to]'
+  .description  'retrieve and display Internal Flex Service logs'
   .action       logs

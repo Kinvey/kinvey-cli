@@ -60,7 +60,8 @@ class User
 
   # Refreshes the user token.
   refresh: (cb) =>
-    this.token = null # Reset.
+    if this.tokens? and this.host? then this.tokens[this.host] = null # Reset.
+    this.token = null
     async.series [
       (next) => this.login undefined, undefined, next
       this.save

@@ -184,10 +184,10 @@ class Service
     logger.debug "Logs end timestamp: #{to}"
 
     # Request URL creation (versus user input params)
-    if from
+    if from?
       url += "?from=#{from}"
       paramAdded = true
-    if to
+    if to?
       if paramAdded
         url += "&to=#{to}"
       else

@@ -28,7 +28,7 @@ user    = require '../lib/user.coffee'
 
 # Timestamp validation
 validateTimestamp = (ts) ->
-  if not ts
+  if not ts?
     return true # Null input represents from the beginning
 
   # Input detected. Ensure it's a valid timestamp or error

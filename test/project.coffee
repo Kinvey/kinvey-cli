@@ -107,8 +107,7 @@ describe 'project', () ->
       # Tests.
       it 'should log out the user', (cb) ->
         project.logout (err) ->
-          expect(logger.info).to.be.called
-          expect(logger.info).to.be.calledWith "Logout complete. Run 'kinvey config' to get started."
+          expect(logger.info).to.be.calledOnce
           cb err
 
   # project.restore()

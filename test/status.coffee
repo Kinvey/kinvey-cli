@@ -52,16 +52,16 @@ describe "./#{pkg.name} status", () ->
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    status command, (err) ->
+    status.call command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    status command, (err) ->
+    status.call command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
   it 'should print the current KMR service status.', (cb) ->
-    status command, (err) ->
+    status.call command, (err) ->
       expect(service.serviceStatus).to.be.calledOnce
       cb err

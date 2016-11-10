@@ -45,6 +45,7 @@ module.exports = configure = (host, command, cb) ->
     (next) -> initUrl        host, next
     (next) -> user.setup     options, next
     (next) -> project.config options, next
+    (next) -> user.save      next
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err
@@ -53,6 +54,6 @@ module.exports = configure = (host, command, cb) ->
 
 # Register the command.
 program
-  .command     'config [host]'
-  .description 'set project options, including optional Kinvey host (if using a dedicated instance)'
+  .command     'config [instance]'
+  .description "set project options (including optional Kinvey instance, i.e. 'acme-us1)"
   .action      configure

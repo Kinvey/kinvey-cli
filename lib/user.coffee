@@ -99,8 +99,11 @@ class User
   setup: (options, cb) =>
     if options.email? or options.password? or options.host? # Custom session.
       if options.host?
-        this.host = util.formatHost(options.host)
+        host = util.formatHost(options.host)
+        logger.debug "Setting host: #{host}"
+        this.host = host
       else
+        logger.debug "Setting host: #{config.host}"
         this.host = config.host
       request.Request = request.Request.defaults { baseUrl: this.host } # Save.cb
       this.login options.email, options.password, cb

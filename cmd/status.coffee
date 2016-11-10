@@ -26,8 +26,8 @@ project  = require '../lib/project.coffee'
 user     = require '../lib/user.coffee'
 
 # Entry point for the status command.
-module.exports = status = (command, cb) ->
-  options = init command # Initialize the command.
+module.exports = status = (argv..., cb) ->
+  options = init this # Initialize the command.
 
   async.series [
     # Set-up user and restore project.
@@ -45,5 +45,5 @@ module.exports = status = (command, cb) ->
 # Register the command.
 program
   .command     'status'
-  .description 'return the status of a KMR service deployment'
+  .description 'return the health of a Flex Service cluster'
   .action      status

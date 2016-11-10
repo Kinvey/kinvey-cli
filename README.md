@@ -1,14 +1,14 @@
-# Kinvey Kinvey CLI
-> Utility for managing KMR services
+# Kinvey CLI
+> Utility for deploying and managing FlexServices on Kinvey's FlexService Runtime
 
 ## Installation
 `npm install -g kinvey-cli`
 
 ## Usage
-In your project directory, run `kinvey-cli config` to set-up your project. The CLI will prompt for Kinvey credentials, app, and Internal Flex Service.
+In your project directory, run `kinvey config` to set-up your project. The CLI will prompt for Kinvey credentials, app, and Internal Flex Service.
 
 ### Commands
-* `config [host]` - set project options (including optional host if using a dedicated Kinvey instance)
+* `config [instance]` - set project options (including optional dedicated Kinvey instance name)
 * `deploy` - deploy the current project as an Internal Flex Service. You can check the status of a deploy using the `job` command (more info below).
 * `status` - display the health status of an Internal Flex Service
 * `help` - display usage information.
@@ -29,7 +29,7 @@ In your project directory, run `kinvey-cli config` to set-up your project. The C
 * `-c, --suppress-version-check` - do not check for package updates.
 * `-v, --verbose` - output debug messages.
 
-The Kinvey CLI supports one-time session creation using the `-e` and `-p` (and optionally `--host`) flags. Set these parameters explicitly in your calls if you are unable to init with `kinvey-cli config`.
+The Kinvey CLI supports one-time session creation using the `-e` and `-p` (and optionally `--host`) flags. Set these parameters explicitly in your calls if you are unable to init with `kinvey config`.
 
 ## Troubleshooting
 Run any command with the `-v` (`--verbose`) flag to see what is going on when executing a command. If problems persist, please contact [Kinvey](http://support.kinvey.com). In any case, make sure you have configured your project using the `config` command before attempting to execute any other commands.

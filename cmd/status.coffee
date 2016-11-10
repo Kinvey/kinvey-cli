@@ -19,15 +19,15 @@ async   = require 'async'
 program = require 'commander'
 
 # Local modules.
-datalink = require '../lib/datalink.coffee'
+service = require '../lib/service.coffee'
 init     = require '../lib/init.coffee'
 logger   = require '../lib/logger.coffee'
 project  = require '../lib/project.coffee'
 user     = require '../lib/user.coffee'
 
 # Entry point for the status command.
-module.exports = status = (job, command, cb) ->
-  options = init command # Initialize the command.
+module.exports = status = (argv..., cb) ->
+  options = init this # Initialize the command.
 
   async.series [
     # Set-up user and restore project.
@@ -35,7 +35,7 @@ module.exports = status = (job, command, cb) ->
     project.restore
 
     # Retrieve the job status.
-    (next) -> datalink.status job, next
+    (next) -> service.serviceStatus next
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err
@@ -44,6 +44,6 @@ module.exports = status = (job, command, cb) ->
 
 # Register the command.
 program
-  .command     'status <job>'
-  .description 'return the job status of a deploy command'
+  .command     'status'
+  .description 'return the health of a Flex Service cluster'
   .action      status

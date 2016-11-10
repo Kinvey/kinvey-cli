@@ -1,21 +1,24 @@
 {
-  "name": "kinvey-dlc-cli",
+  "name": "kinvey-cli",
   "version": "0.0.8",
-  "description": "Utility for deploying Kinvey DLC microservices to Kinvey’s Node DLC PaaS.",
+  "description": "Utility for working with Kinvey APIs and managing KMR services",
   "keywords": [
     "Kinvey"
   ],
   "homepage": "http://www.kinvey.com",
-  "bugs": "https://github.com/Kinvey/dlc-cli/issues",
+  "bugs": "https://github.com/Kinvey/kinvey-cli/issues",
   "license": "Apache-2.0",
   "author": "Kinvey, Inc.",
   "contributors": [
-    "Mark van Seventer <mark@kinvey.com>"
+    "Mark van Seventer <mark@kinvey.com>",
+    "Sam Levin <sam@kinvey.com>"
   ],
-  "bin": "./bin/cli.js",
+  "bin": {
+    "kinvey": "./bin/cli.js"
+  },
   "repository": {
     "type": "git",
-    "url": "Kinvey/dlc-cli"
+    "url": "Kinvey/kinvey-cli"
   },
   "scripts": {
     "start": "./bin/cli.js",
@@ -36,7 +39,9 @@
     "moment": "2.11.2",
     "os-homedir": "1.0.1",
     "request": "2.63.0",
-    "update-notifier": "0.5.0"
+    "update-notifier": "0.5.0",
+    "uuid": "2.0.3",
+    "valid-url": "1.0.9"
   },
   "devDependencies": {
     "chai": "3.3.0",
@@ -47,7 +52,7 @@
     "sinon-chai": "2.8.0"
   },
   "engines": {
-    "node": ">=6.3.x"
+    "node": ">=6.x.x"
   },
   "os": [
     "darwin",

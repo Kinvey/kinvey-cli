@@ -16,22 +16,36 @@ limitations under the License.
 
 # Package modules.
 async   = require 'async'
+chalk   = require 'chalk'
+config  = require 'config'
 program = require 'commander'
 
 # Local modules.
-init    = require '../lib/init.coffee'
-logger  = require '../lib/logger.coffee'
-project = require '../lib/project.coffee'
-user    = require '../lib/user.coffee'
+init        = require '../lib/init.coffee'
+logger      = require '../lib/logger.coffee'
+project     = require '../lib/project.coffee'
+user        = require '../lib/user.coffee'
+util        = require '../lib/util.coffee'
+
+initUrl = (host, cb) ->
+  if host? # Format and adjust host.
+    result = util.formatHost host
+    logger.info 'Using host: ' + chalk.cyan result
+    user.host = result
+  else
+    user.host = config.host
+  cb()
 
 # Entry point for the config command.
-module.exports = configure = (argv..., cb) ->
-  options = init this # Initialize the command.
+module.exports = configure = (host, command, cb) ->
+  options = init command # Initialize the command.
 
   # Set-up user and project.
   async.series [
-    (next) -> user.setup    options, next
-    (next) -> project.setup options, next
+    (next) -> initUrl        host, next
+    (next) -> user.setup     options, next
+    (next) -> project.config options, next
+    (next) -> user.save      next
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err
@@ -40,6 +54,6 @@ module.exports = configure = (argv..., cb) ->
 
 # Register the command.
 program
-  .command     'config'
-  .description 'set project options'
+  .command     'config [instance]'
+  .description "set project options (including optional Kinvey instance, i.e. 'acme-us1)"
   .action      configure

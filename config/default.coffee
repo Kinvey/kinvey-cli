@@ -22,13 +22,13 @@ osHomedir = require 'os-homedir'
 
 # Exports.
 module.exports =
-  host: 'https://manage.kinvey.com'
+  host: 'https://manage.kinvey.com/'
 
   # Default schema for apps.
-  defaultSchemaVersion: 1
+  defaultSchemaVersion: 2
 
   # Project archive settings.
-  artifacts     : [ '.git/', '.svn/', 'node_modules/' ]
+  artifacts     : [ '.git/', '.svn/', 'node_modules/', 'output.log' ]
   maxUploadSize : 10 * 1024 * 1024 # 10 MB
 
   # Timeouts.
@@ -38,4 +38,4 @@ module.exports =
   # Paths.
   paths:
     project : path.join process.cwd(), '.kinvey'             # <projectDir>/<project>
-    session : path.join osHomedir(),   '.kinvey-dlc-session' # ~/<session>
+    session : path.join osHomedir(),   '.kinvey-session' # ~/<session>

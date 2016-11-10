@@ -1,22 +1,25 @@
-# Kinvey DLC CLI
-> Utility for deploying Kinvey DLC microservices to Kinvey’s Node DLC PaaS.
+# Kinvey CLI
+> Utility for deploying and managing FlexServices on Kinvey's FlexService Runtime
 
 ## Installation
-`npm install -g kinvey-dlc-cli`
+`npm install -g kinvey-cli`
 
 ## Usage
-In your project directory, run `kinvey-dlc-cli config` to set-up your project. The CLI will prompt for Kinvey credentials, app, and Data Link.
+In your project directory, run `kinvey config` to set-up your project. The CLI will prompt for Kinvey credentials, app, and Internal Flex Service.
 
 ### Commands
-* `config` - set project options.
-* `deploy` - deploy the current project as a Kinvey-backed Data Link Connector. You can check the status of a deploy using the `status` command.
+* `config [instance]` - set project options (including optional dedicated Kinvey instance name)
+* `deploy` - deploy the current project as an Internal Flex Service. You can check the status of a deploy using the `job` command (more info below).
+* `status` - display the health status of an Internal Flex Service
 * `help` - display usage information.
-* `list` - list the configured Kinvey-backed Data Link Connectors for the current app.
-* `logs` - query logs for this Kinvey-backed Data Link Connector.
+* `list` - list the configured Internal Flex Services for the current app.
+* `logs [from] [to]` - query logs for this Internal Flex Service
+  * 'from' and 'to' arguments represent optional ISO-8601 timestamp strings
+    * **Note:** Logs calls are limited to 10,000 entries
   * Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`
   * E.g. `ac7df839104d 2016-02-23T20:00:29.334Z - hello world`
-* `recycle` - recycle the Data Link Connector.
-* `status <job>` - return the job status of a `deploy` command.
+* `logout` - clears Kinvey session data and project settings
+* `job <id>` - return the status of a `deploy` command.
 
 ### Options
 * `-e, --email <e-mail>` - e-mail address of your Kinvey account.
@@ -26,8 +29,10 @@ In your project directory, run `kinvey-dlc-cli config` to set-up your project. T
 * `-c, --suppress-version-check` - do not check for package updates.
 * `-v, --verbose` - output debug messages.
 
+The Kinvey CLI supports one-time session creation using the `-e` and `-p` (and optionally `--host`) flags. Set these parameters explicitly in your calls if you are unable to init with `kinvey config`.
+
 ## Troubleshooting
-Run any command with the `--verbose` flag to see what is going on when executing a command. If problems persist, please contact [Kinvey](http://support.kinvey.com). In any case, make sure you have configured your project using the `config` command before attempting to execute any other commands.
+Run any command with the `-v` (`--verbose`) flag to see what is going on when executing a command. If problems persist, please contact [Kinvey](http://support.kinvey.com). In any case, make sure you have configured your project using the `config` command before attempting to execute any other commands.
 
 ## Changelog
 See the [Changelog](./CHANGELOG.md) for a list of changes.

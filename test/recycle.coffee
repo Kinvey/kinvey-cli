@@ -19,7 +19,7 @@ sinon = require 'sinon'
 
 # Local modules.
 command  = require './fixtures/command.coffee'
-datalink = require '../lib/datalink.coffee'
+service = require '../lib/service.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
 recycle  = require '../cmd/recycle.coffee'
@@ -37,10 +37,10 @@ describe "./#{pkg.name} recycle", () ->
   afterEach 'project', () -> project.restore.reset()
   after     'project', () -> project.restore.restore()
 
-  # Stub datalink.recycle().
-  before    'datalink', () -> sinon.stub(datalink, 'recycle').callsArg 0
-  afterEach 'datalink', () -> datalink.recycle.reset()
-  after     'datalink', () -> datalink.recycle.restore()
+  # Stub service.recycle().
+  before    'service', () -> sinon.stub(service, 'recycle').callsArg 0
+  afterEach 'service', () -> service.recycle.reset()
+  after     'service', () -> service.recycle.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
@@ -53,7 +53,7 @@ describe "./#{pkg.name} recycle", () ->
       expect(project.restore).to.be.calledOnce
       cb err
 
-  it 'should reset the datalink.', (cb) ->
+  it 'should reset the service.', (cb) ->
     recycle.call command, (err) ->
-      expect(datalink.recycle).to.be.calledOnce
+      expect(service.recycle).to.be.calledOnce
       cb err

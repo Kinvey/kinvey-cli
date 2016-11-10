@@ -15,40 +15,27 @@ limitations under the License.
 ###
 
 # Package modules.
-async = require 'async'
-moment   = require 'moment'
+async   = require 'async'
 program = require 'commander'
 
 # Local modules.
 service = require '../lib/service.coffee'
-init   = require '../lib/init.coffee'
-logger = require '../lib/logger.coffee'
-project = require '../lib/project.coffee'
-user    = require '../lib/user.coffee'
+init     = require '../lib/init.coffee'
+logger   = require '../lib/logger.coffee'
+project  = require '../lib/project.coffee'
+user     = require '../lib/user.coffee'
 
-# Timestamp validation
-validateTimestamp = (ts) ->
-  if not ts?
-    return true # Null input represents from the beginning
-
-  # Input detected. Ensure it's a valid timestamp or error
-  if moment(ts, moment.ISO_8601, true).isValid() then return true
-  false
-
-# Entry point for the logs command.
-module.exports = logs = (from, to, command, cb) ->
+# Entry point for the status command.
+module.exports = status = (job, command, cb) ->
   options = init command # Initialize the command.
-
-  if not validateTimestamp from then return cb new Error 'Logs \'from\' timestamp invalid (ISO-8601 required)'
-  if not validateTimestamp to then return cb new Error 'Logs \'to\' timestamp invalid (ISO-8601 required)'
 
   async.series [
     # Set-up user and restore project.
     (next) -> user.setup options, next
     project.restore
 
-    # Get logs from server
-    (next) -> service.logs from, to, next
+    # Retrieve the job status.
+    (next) -> service.jobStatus job, next
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err
@@ -57,6 +44,6 @@ module.exports = logs = (from, to, command, cb) ->
 
 # Register the command.
 program
-  .command      'logs [from] [to]'
-  .description  'retrieve and display Internal Flex Service logs'
-  .action       logs
+  .command     'job [id]'
+  .description 'return the job status of a deploy command'
+  .action      status

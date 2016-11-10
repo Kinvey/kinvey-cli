@@ -25,18 +25,20 @@ config   = require 'config'
 
 # Local modules.
 KinveyError = require './error.coffee'
-logger  = require './logger.coffee'
-project = require './project.coffee'
-prompt = require './prompt.coffee'
-user    = require './user.coffee'
-util    = require './util.coffee'
+logger      = require './logger.coffee'
+project     = require './project.coffee'
+prompt      = require './prompt.coffee'
+user        = require './user.coffee'
+util        = require './util.coffee'
 
-# Define the datalink class.
-class Datalink
+STATUS_CONSTANTS =
+  ONLINE   : 'ONLINE'
+  NEW      : 'NEW'
+  UPDATING : 'UPDATING'
+  ERROR    : 'ERROR'
 
-  # `logs` command query values fetched via prompt
-  logStartTimestamp: null
-  logEndTimestamp: null
+# Kinvey Service
+class Service
 
   # Packages and uploads the project.
   deploy: (dir, version, cb) =>
@@ -57,7 +59,7 @@ class Datalink
       headers  : { 'Transfer-Encoding': 'chunked' }
       formData : {
         type   : 'deployDataLink'
-        params : JSON.stringify { appId: project.app, dataLinkId: project.datalink, version: version }
+        params : JSON.stringify { appId: project.app, dataLinkId: project.service, version: version }
         file   : attachment
       }
       refresh  : false # Do not attempt to authenticate, just assume token is valid.
@@ -65,6 +67,8 @@ class Datalink
     }, (err, response) ->
       if err? then req.emit 'error', err # Trigger request error.
       else # OK.
+        project.lastJobId = response.body.job
+        project.save()
         logger.info 'Deploy initiated, received job %s', chalk.cyan response.body.job # Debug.
         cb() # Continue.
 
@@ -111,23 +115,19 @@ class Datalink
     }]
     archive.finalize()
 
-  # Gets query params
-  getAndSetLogRequestParams: (cb) =>
-    async.series [
-      this._selectAndSetLogStartTimestamp
-      this._selectAndSetLogEndTimestamp
-    ], cb
-
   # Lists all Kinvey logs.
-  logs: (cb) =>
-    this._execDatalinkLogs (err, logs) ->
+  logs: (from, to, cb) =>
+    this._execDatalinkLogs from, to, (err, logs) ->
       if err? then cb err # Continue with error.
       else # Log info.
         logs.forEach (log) ->
-          console.log '%s %s - %s', chalk.green(log.containerId), log.timestamp, chalk.cyan(log.message.trim())
-        logger.info 'Query returned %s logs for Kinvey DLC %s (%s):', chalk.cyan(logs.length), chalk.cyan(project.datalink),
-          chalk.gray(project.datalinkName)
-        cb() # Continue.
+          if log.threshold?
+            console.log '[%s] %s %s - %s', log.threshold, chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
+          else
+            console.log '%s %s - %s', chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
+        console.log 'Query returned %s logs for Kinvey DLC %s (%s)', chalk.cyan(logs.length), chalk.cyan(project.service),
+          chalk.gray(project.serviceName)
+        cb null, logs # Continue.
 
   # Recycles the containers that host the DLC.
   recycle: (cb) =>
@@ -138,8 +138,11 @@ class Datalink
         cb() # Continue.
 
   # Returns the deploy job status.
-  status: (job, cb) =>
-    this._execStatus job, (err, response) ->
+  jobStatus: (job, cb) =>
+    if not job?
+      job = project.lastJobId
+      if not job? then return cb new Error 'No previous job stored. Please provide a job ID.'
+    this._execJobStatus job, (err, response) ->
       if err? then cb err # Continue with error.
       else # OK.
         suffix =
@@ -149,35 +152,46 @@ class Datalink
         logger.info 'Job status: %s%s', chalk.cyan(response.body.status), suffix
         cb null, response.body.status # Continue.
 
+  # Returns the KMR service status.
+  serviceStatus: (cb) =>
+    this._execServiceStatus (err, response) ->
+      if err? then cb err # Continue with error.
+      else # OK.
+        status = response.body.status
+        if status is STATUS_CONSTANTS.ONLINE then status = chalk.green STATUS_CONSTANTS.ONLINE
+        if status is STATUS_CONSTANTS.UPDATING then status = chalk.yellow STATUS_CONSTANTS.UPDATING
+        if status is STATUS_CONSTANTS.NEW then status = chalk.cyan STATUS_CONSTANTS.NEW
+        if status is STATUS_CONSTANTS.ERROR then status = chalk.red STATUS_CONSTANTS.ERROR
+        logger.info 'Service status: %s', status
+        cb null, response.body.status # Continue.
+
   # Validates the project.
   validate: (dir, cb) ->
     packagePath = path.join dir, 'package.json' # Lookup package in provided dir.
     util.readJSON packagePath, (err, json) ->
-      unless json?.dependencies?['kinvey-backend-sdk']?
+      unless json?.dependencies?['kinvey-flex-sdk']?
         return cb new KinveyError 'InvalidProject'
       unless project.isConfigured()
         return cb new KinveyError 'ProjectNotConfigured'
       cb err, json.version # Continue with version.
 
-# Executes a GET /apps/:app/datalinks/:datalink/logs request.
-  _execDatalinkLogs: (cb) =>
+  # Executes a GET /apps/:app/datalinks/:datalink/logs request.
+  _execDatalinkLogs: (from, to, cb) ->
     paramAdded = false
-    url = "/v#{project.schemaVersion}/data-links/#{project.datalink}/logs"
+    url = "/v#{project.schemaVersion}/data-links/#{project.service}/logs"
 
-    logger.debug "Log start timestamp: #{this.logStartTimestamp}"
-    logger.debug "Logs end timestamp: #{this.logEndTimestamp}"
+    logger.debug "Log start timestamp: #{from}"
+    logger.debug "Logs end timestamp: #{to}"
 
     # Request URL creation (versus user input params)
-    if this.logStartTimestamp
-      url += "?from=#{this.logStartTimestamp}"
+    if from?
+      url += "?from=#{from}"
       paramAdded = true
-    if this.logEndTimestamp
+    if to?
       if paramAdded
-        url += "&to=#{this.logEndTimestamp}"
+        url += "&to=#{to}"
       else
-        url += "?to=#{this.logEndTimestamp}"
-
-    logger.debug "Logs URI: #{url}"
+        url += "?to=#{to}"
 
     util.makeRequest {
       url: url
@@ -191,13 +205,17 @@ class Datalink
       url    : "/v#{project.schemaVersion}/jobs"
       body   : {
         type   : 'recycleDataLink'
-        params : { appId: project.app, dataLinkId: project.datalink }
+        params : { appId: project.app, dataLinkId: project.service }
       }
     }, cb
 
   # Executes a GET /apps/:app/datalink/:datalink/<type> request.
-  _execStatus: (job, cb) ->
+  _execJobStatus: (job, cb) ->
     util.makeRequest { url: "/v#{project.schemaVersion}/jobs/#{job}" }, cb
+
+  # Executes a GET /apps/:app/datalink/:datalink/<type> request.
+  _execServiceStatus: (cb) ->
+    util.makeRequest { url: "/v#{project.schemaVersion}/data-links/#{project.service}/status" }, cb
 
   # Returns true if the provided path is an artifact.
   _isArtifact: (base, filepath) ->
@@ -207,17 +225,5 @@ class Datalink
         return true
     false
 
-  # Attempts to select a log start time
-  _selectAndSetLogStartTimestamp: (cb) =>
-    prompt.getLogStartTimestamp null, (err, startTimestamp) =>
-      if startTimestamp? then this.logStartTimestamp = startTimestamp
-      cb err # Continue.
-
-  # Attempts to select a log end time
-  _selectAndSetLogEndTimestamp: (cb) =>
-    prompt.getLogEndTimestamp null, (err, endTimestamp) =>
-      if endTimestamp? then this.logEndTimestamp = endTimestamp
-      cb err # Continue.
-
 # Exports.
-module.exports = new Datalink()
+module.exports = new Service()

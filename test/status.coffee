@@ -19,7 +19,7 @@ sinon = require 'sinon'
 
 # Local modules.
 command  = require './fixtures/command.coffee'
-datalink = require '../lib/datalink.coffee'
+service = require '../lib/service.coffee'
 logger   = require '../lib/logger.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
@@ -30,10 +30,10 @@ user     = require '../lib/user.coffee'
 describe "./#{pkg.name} status", () ->
   # Configure.
   before 'configure', () ->
-    project.app = project.datalink = '123'
+    project.app = project.service = '123'
     project.schemaVersion = 1
   after  'configure', () ->
-  project.app = project.datalink = project.schemaVersion = null # Reset.
+  project.app = project.service = project.schemaVersion = null # Reset.
 
   # Stub user.setup().
   before    'user', () -> sinon.stub(user, 'setup').callsArg 1
@@ -45,25 +45,23 @@ describe "./#{pkg.name} status", () ->
   afterEach 'project', () -> project.restore.reset()
   after     'project', () -> project.restore.restore()
 
-  # Stub datalink.status().
-  before    'datalink', () -> sinon.stub(datalink, 'status').callsArg 1
-  afterEach 'datalink', () -> datalink.status.reset()
-  after     'datalink', () -> datalink.status.restore()
+  # Stub service.jobStatus().
+  before    'service', () -> sinon.stub(service, 'serviceStatus').callsArg 0
+  afterEach 'service', () -> service.serviceStatus.reset()
+  after     'service', () -> service.serviceStatus.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    status '123', command, (err) ->
+    status.call command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    status '123', command, (err) ->
+    status.call command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
-  it 'should print the current datalink.', (cb) ->
-    jobId = '123'
-    status jobId, command, (err) ->
-      expect(datalink.status).to.be.calledOnce
-      expect(datalink.status).to.be.calledWith jobId
+  it 'should print the current KMR service status.', (cb) ->
+    status.call command, (err) ->
+      expect(service.serviceStatus).to.be.calledOnce
       cb err

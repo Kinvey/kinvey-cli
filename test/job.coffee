@@ -19,14 +19,23 @@ sinon = require 'sinon'
 
 # Local modules.
 command  = require './fixtures/command.coffee'
-service  = require '../lib/service.coffee'
-logs     = require '../cmd/logs.coffee'
+service = require '../lib/service.coffee'
+logger   = require '../lib/logger.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
+job      = require '../cmd/job.coffee'
 user     = require '../lib/user.coffee'
 
 # Test suite.
-describe "./#{pkg.name} logs", () ->
+describe "./#{pkg.name} job", () ->
+  # Configure.
+  before 'configure', () ->
+    project.app = project.service = '123'
+    project.schemaVersion = 1
+    project.lastJobId = 'abcdef'
+  after  'configure', () ->
+  project.app = project.service = project.schemaVersion = null # Reset.
+
   # Stub user.setup().
   before    'user', () -> sinon.stub(user, 'setup').callsArg 1
   afterEach 'user', () -> user.setup.reset()
@@ -37,35 +46,31 @@ describe "./#{pkg.name} logs", () ->
   afterEach 'project', () -> project.restore.reset()
   after     'project', () -> project.restore.restore()
 
-  # Stub service.logs().
-  before    'logs', () -> sinon.stub(service, 'logs').callsArg 2
-  afterEach 'logs', () -> service.logs.reset()
-  after     'logs', () -> service.logs.restore()
+  # Stub service.jobStatus().
+  before    'service', () -> sinon.stub(service, 'jobStatus').callsArg 1
+  afterEach 'service', () -> service.jobStatus.reset()
+  after     'service', () -> service.jobStatus.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    logs null, null, command, (err) ->
+    job '123', command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    logs null, null, command, (err) ->
+    job '123', command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
-  it 'should retrieve log entries based on query', (cb) ->
-    logs null, null, command, (err) ->
-      expect(service.logs).to.be.calledOnce
+  it 'should print the current job status.', (cb) ->
+    jobId = '123'
+    job jobId, command, (err) ->
+      expect(service.jobStatus).to.be.calledOnce
+      expect(service.jobStatus).to.be.calledWith jobId
       cb err
 
-  it 'should fail with an invalid \'from\' timestamp', (done) ->
-    logs 'abc', null, command, (err) ->
-      expect(err).to.exist
-      expect(err.message).to.equal "Logs \'from\' timestamp invalid (ISO-8601 required)"
-      done()
-
-  it 'should fail with an invalid \'to\' timestamp', (done) ->
-    logs null, 'abc', command, (err) ->
-      expect(err).to.exist
-      expect(err.message).to.equal "Logs \'to\' timestamp invalid (ISO-8601 required)"
-      done()
+  it 'should print the current job status when called without an id.', (cb) ->
+    job null, command, (err) ->
+      expect(service.jobStatus).to.be.calledOnce
+      expect(service.jobStatus).to.be.calledWith null
+      cb err

@@ -23,8 +23,12 @@ pkg    = require '../package.json'
 
 # Enumerate errors.
 errors =
+  ConnectionError:
+    message: 'The connection to the remote host was unsuccessful. Please try again or contact Kinvey support if the problem persists.'
+  InvalidConfigUrl:
+    message: 'The configuration URL is invalid. Please use a valid Kinvey instance name or URL.'
   InvalidProject:
-    message: 'This project is not valid. Please implement the kinvey-backend-sdk node module.'
+    message: 'This project is not valid. Please implement the kinvey-flex-sdk node module.'
   ProjectNotConfigured:
     message: "This project is not configured. Use `#{pkg.name} config` to get started."
   ProjectMaxFileSizeExceeded:
@@ -35,7 +39,7 @@ errors =
     message: 'You have no apps yet. Head over to the console to create one.'
   NoDatalinksFound:
     message: 'You have no eligible datalinks yet.'
-  NoDatalinkHostsFound:
+  NoServiceHostsFound:
     message: 'There are no logs for this Data Link Connector'
 
 # Extend the error class.

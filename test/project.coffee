@@ -36,21 +36,21 @@ describe 'project', () ->
   # project.isConfigured()
   describe 'isConfigured', () ->
     beforeEach 'configure', () ->
-      project.app = project.datalink = '123'
+      project.app = project.service = '123'
       project.schemaVersion = 1
     afterEach 'configure', () ->
-      project.app = project.datalink = project.schemaVersion = null # Reset.
+      project.app = project.service = project.schemaVersion = null # Reset.
 
     # Tests.
-    it 'should return true if the app and datalink were configured.', () ->
+    it 'should return true if the app and service were configured.', () ->
       expect(project.isConfigured()).to.be.true
 
     it 'should return false if the app was not configured.', () ->
       project.app = null
       expect(project.isConfigured()).to.be.false
 
-    it 'should return false if the datalink was not configured.', () ->
-      project.datalink = null
+    it 'should return false if the service was not configured.', () ->
+      project.service = null
       expect(project.isConfigured()).to.be.false
 
     it 'should return false if the schema was not configured.', () ->
@@ -60,33 +60,13 @@ describe 'project', () ->
   # project.list().
   describe 'list', () ->
     # Configure.
-    beforeEach 'configure', () -> project.app = project.datalink = '123'
-    afterEach  'configure', () -> project.app = project.datalink = null # Reset.
+    beforeEach 'configure', () -> project.app = project.service = '123'
+    afterEach  'configure', () -> project.app = project.service = null # Reset.
 
     # Stub.
     before    'stub', -> sinon.stub logger, 'info'
     afterEach 'stub', -> logger.info.reset()
     after     'stub', -> logger.info.restore()
-
-    describe 'for v1 apps', ->
-      # Configure.
-      beforeEach 'configure', () -> project.schemaVersion = 1
-      afterEach  'configure', () -> project.schemaVersion = null # Reset.
-
-      # Mock the API.
-      beforeEach 'api', () ->
-        this.mock = api.get('/v1/apps/123/data-links')
-          .reply 200, [ ]
-      afterEach 'api', () ->
-        this.mock.done()
-        delete this.mock
-
-      # Tests.
-      it 'should list all Kinvey datalinks.', (cb) ->
-        project.list (err) ->
-          expect(logger.info).to.be.called
-          expect(logger.info).to.be.calledWith 'The datalink used in this project is marked with *'
-          cb err
 
     describe 'for v2 apps', ->
       # Configure.
@@ -105,38 +85,60 @@ describe 'project', () ->
       it 'should list all Kinvey datalinks.', (cb) ->
         project.list (err) ->
           expect(logger.info).to.be.called
-          expect(logger.info).to.be.calledWith 'The datalink used in this project is marked with *'
+          expect(logger.info).to.be.calledWith 'The service used in this project is marked with *'
+          cb err
+
+  # project.logout().
+  describe 'logout', () ->
+    # Configure.
+    beforeEach 'configure', () -> project.app = project.service = '123'
+    afterEach  'configure', () -> project.app = project.service = null # Reset.
+
+    # Stub.
+    before    'stub', -> sinon.stub logger, 'info'
+    afterEach 'stub', -> logger.info.reset()
+    after     'stub', -> logger.info.restore()
+
+    describe 'for v2 apps', ->
+      # Configure.
+      beforeEach 'configure', () -> project.schemaVersion = 2
+      afterEach  'configure', () -> project.schemaVersion = null # Reset.
+
+      # Tests.
+      it 'should log out the user', (cb) ->
+        project.logout (err) ->
+          expect(logger.info).to.be.calledOnce
           cb err
 
   # project.restore()
   describe 'restore', () ->
     describe 'when the project file exists', () ->
-      # Set app, datalink, and schema.
+      # Set app, service, and schema.
       before 'configure', () ->
-        this.app = this.datalink = 123
+        this.app = this.service = 123
         this.schemaVersion = 2
       after  'configure', () ->
         delete this.app
-        delete this.datalink
+        delete this.service
         delete this.schemaVersion
 
       # Stub util.readJSON().
       before 'stub', () ->
         sinon.stub(util, 'readJSON').callsArgWith 1, null, {
           app           : this.app
-          datalink      : this.datalink
+          service      : this.service
           schemaVersion : this.schemaVersion
         }
       afterEach 'stub', () -> util.readJSON.reset()
       after     'stub', () -> util.readJSON.restore()
 
       # Tests.
-      it 'should set the project app, datalink, and schema.', (cb) ->
+      it 'should set the project app, service, and schema.', (cb) ->
         project.restore (err) =>
           expect(util.readJSON).to.be.calledOnce
           expect(util.readJSON).to.be.calledWith config.paths.project
           expect(project.app).to.equal this.app
-          expect(project.datalink).to.equal this.datalink
+          expect(project.service).to.equal this.service
           expect(project.schemaVersion).to.equal this.schemaVersion
           cb err
 
@@ -155,12 +157,12 @@ describe 'project', () ->
 
   # project.save()
   describe 'save', () ->
-    # Set app, datalink, and schema.
+    # Set app, service, and schema.
     before 'configure', () ->
-      project.app = project.datalink = '123'
+      project.app = project.service = '123'
       project.schemaVersion = 1
     after 'configure', () ->
-      project.app = project.datalink = project.schemaVersion = null # Reset.
+      project.app = project.service = project.schemaVersion = null # Reset.
 
     # Stub util.writeJSON().
     before    'stub', () -> sinon.stub(util, 'writeJSON').callsArg 2
@@ -173,8 +175,9 @@ describe 'project', () ->
         expect(util.writeJSON).to.be.calledOnce
         expect(util.writeJSON).to.be.calledWith config.paths.project, {
           app           : project.app
-          datalink      : project.datalink
-          datalinkName  : undefined
+          service      : project.service
+          serviceName  : undefined
+          lastJobId     : undefined
           schemaVersion : project.schemaVersion
         }
         cb err
@@ -182,7 +185,7 @@ describe 'project', () ->
   # project.select()
   describe 'select', () ->
     afterEach 'configure', () ->
-      project.app = project.datalink = project.schemaVersion = null # Reset.
+      project.app = project.service = project.schemaVersion = null # Reset.
 
     describe 'given invalid credentials', () ->
       # Stub user.refresh().
@@ -208,7 +211,7 @@ describe 'project', () ->
           expect(err).to.have.property 'name', 'NoAppsFound'
           cb()
 
-    describe 'given the user has an app and eligible datalink', () ->
+    describe 'given the user has an app and eligible service', () ->
       # Stub project.save().
       before    'save', () -> sinon.stub(project, 'save').callsArg 0
       afterEach 'save', () -> project.save.reset()
@@ -221,30 +224,30 @@ describe 'project', () ->
       afterEach 'getApp', () -> prompt.getApp.reset()
       after     'getApp', () -> prompt.getApp.restore()
 
-      # Stub prompt.getDatalink().
-      before 'getDatalink', () ->
-        stub = sinon.stub prompt, 'getDatalink'
+      # Stub prompt.getService().
+      before 'getService', () ->
+        stub = sinon.stub prompt, 'getService'
         stub.callsArgWith 1, null, fixtures.kinveyDlc
-      afterEach 'getDatalink', () -> prompt.getDatalink.reset()
-      after     'getDatalink', () -> prompt.getDatalink.restore()
+      afterEach 'getService', () -> prompt.getService.reset()
+      after     'getService', () -> prompt.getService.restore()
 
       # Mock the API.
       beforeEach 'api', () ->
         this.mocks = [
           api.get('/apps').reply 200, [ fixtures.app ]
-          api.get('/v1/apps/123/data-links').reply 200, [ fixtures.kinveyDlc ]
+          api.get('/v2/apps/123/data-links').reply 200, [ fixtures.kinveyDlc ]
         ]
       afterEach 'api', () ->
         mock.done() for mock in this.mocks
         delete this.mocks
 
       # Tests.
-      it 'should select the app and datalink to use.', (cb) ->
+      it 'should select the app and service to use.', (cb) ->
         project.select (err) ->
           expect(prompt.getApp).to.be.calledOnce
           expect(prompt.getApp).to.be.calledWith [ fixtures.app ]
-          expect(prompt.getDatalink).to.be.calledOnce
-          expect(prompt.getDatalink).to.be.calledWith [ fixtures.kinveyDlc ]
+          expect(prompt.getService).to.be.calledOnce
+          expect(prompt.getService).to.be.calledWith [ fixtures.kinveyDlc ]
           cb err
 
       it 'should save the project.', (cb) ->
@@ -280,7 +283,7 @@ describe 'project', () ->
         this.mocks = [
           api.get('/apps') # Return one app.
             .reply 200, [ fixtures.app ]
-          api.get('/v1/apps/123/data-links') # Return ineligible datalink.
+          api.get('/v2/apps/123/data-links') # Return ineligible datalink.
             .reply 200, [ fixtures.datalink ]
         ]
       afterEach 'api', () ->

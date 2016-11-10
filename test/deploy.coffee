@@ -19,7 +19,7 @@ sinon = require 'sinon'
 
 # Local modules.
 command  = require './fixtures/command.coffee'
-datalink = require '../lib/datalink.coffee'
+service = require '../lib/service.coffee'
 deploy   = require '../cmd/deploy.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
@@ -37,15 +37,15 @@ describe "./#{pkg.name} deploy", () ->
   afterEach 'project', () -> project.restore.reset()
   after     'project', () -> project.restore.restore()
 
-  # Stub datalink.validate().
-  before    'validate', () -> sinon.stub(datalink, 'validate').callsArg 1
-  afterEach 'validate', () -> datalink.validate.reset()
-  after     'validate', () -> datalink.validate.restore()
+  # Stub service.validate().
+  before    'validate', () -> sinon.stub(service, 'validate').callsArg 1
+  afterEach 'validate', () -> service.validate.reset()
+  after     'validate', () -> service.validate.restore()
 
-  # Stub datalink.deploy().
-  before    'deploy', () -> sinon.stub(datalink, 'deploy').callsArg 1
-  afterEach 'deploy', () -> datalink.deploy.reset()
-  after     'deploy', () -> datalink.deploy.restore()
+  # Stub service.deploy().
+  before    'deploy', () -> sinon.stub(service, 'deploy').callsArg 1
+  afterEach 'deploy', () -> service.deploy.reset()
+  after     'deploy', () -> service.deploy.restore()
 
   # Tests.
   it 'should setup the user.', (cb) ->
@@ -58,12 +58,12 @@ describe "./#{pkg.name} deploy", () ->
       expect(project.restore).to.be.calledOnce
       cb err
 
-  it 'should validate the datalink.', (cb) ->
+  it 'should validate the service.', (cb) ->
     deploy.call command, (err) ->
-      expect(datalink.validate).to.be.calledOnce
+      expect(service.validate).to.be.calledOnce
       cb err
 
-  it 'should deploy the datalink.', (cb) ->
+  it 'should deploy the service.', (cb) ->
     deploy.call command, (err) ->
-      expect(datalink.deploy).to.be.calledOnce
+      expect(service.deploy).to.be.calledOnce
       cb err

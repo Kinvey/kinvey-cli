@@ -19,24 +19,20 @@ async   = require 'async'
 program = require 'commander'
 
 # Local modules.
-datalink = require '../lib/service.coffee'
-init     = require '../lib/init.coffee'
-logger   = require '../lib/logger.coffee'
-project  = require '../lib/project.coffee'
-user     = require '../lib/user.coffee'
+init    = require '../lib/init.coffee'
+logger  = require '../lib/logger.coffee'
+project = require '../lib/project.coffee'
+user    = require '../lib/user.coffee'
 
-# Entry point for the deploy command.
-module.exports = deploy = (argv..., cb) ->
+# Entry point for the config command.
+module.exports = logout = (argv..., cb) ->
   options = init this # Initialize the command.
 
-  async.waterfall [
-    # Set-up user and restore project.
-    (next) -> user.setup options, next
-    project.restore
-
-    # Validate and deploy the project.
-    (next) -> datalink.validate process.cwd(), next
-    (version, next) -> datalink.deploy process.cwd(), version, next
+  # Clear sessions and project settings
+  async.series [
+    # Log out user.
+    (next) -> user.logout    next
+    (next) -> project.logout next
   ], (err) ->
     if err? # Display errors.
       logger.error '%s', err
@@ -45,6 +41,6 @@ module.exports = deploy = (argv..., cb) ->
 
 # Register the command.
 program
-  .command     'deploy'
-  .description 'deploy the current project as a Kinvey-backed Data Link Connector'
-  .action      deploy
+.command     'logout'
+.description 'resets host, removes sessions, and clears project settings'
+.action      logout

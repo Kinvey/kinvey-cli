@@ -13,7 +13,9 @@
     "Mark van Seventer <mark@kinvey.com>",
     "Sam Levin <sam@kinvey.com>"
   ],
-  "bin": "./bin/cli.js",
+  "bin": {
+    "kinvey": "./bin/cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "Kinvey/kinvey-cli"

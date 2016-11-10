@@ -63,7 +63,7 @@ class Project
 
   logout: (cb) =>
     logger.debug 'Clearing project configuration from file %s', chalk.cyan this.projectPath
-    logger.info "Logout complete. Run 'kinvey config' to get started."
+    logger.info 'Session and project data cleared. Run %s to get started.', chalk.green 'kinvey config', chalk.cyan '[instance]'
     util.writeJSON this.projectPath, '', cb
 
   # Restores the project from file.

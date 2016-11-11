@@ -44,5 +44,5 @@ module.exports = list = (argv..., cb) ->
 # Register the command.
 program
   .command     'list'
-  .description 'list the configured Kinvey-backed Data Link Connectors for the current app'
+  .description 'list Internal Flex Services for the current app'
   .action      list

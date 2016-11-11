@@ -30,7 +30,7 @@ errors =
   InvalidProject:
     message: 'This project is not valid. Please implement the kinvey-flex-sdk node module.'
   ProjectNotConfigured:
-    message: "This project is not configured. Use `#{pkg.name} config` to get started."
+    message: "This project is not configured. Use `kinvey config` to get started."
   ProjectMaxFileSizeExceeded:
     message: "This project is too big to be deployed. The max project size is #{config.maxUploadSize} bytes."
   RequestError:
@@ -40,7 +40,7 @@ errors =
   NoDatalinksFound:
     message: 'You have no eligible datalinks yet.'
   NoServiceHostsFound:
-    message: 'There are no logs for this Data Link Connector'
+    message: 'There are no logs for this Internal Flex Service'
 
 # Extend the error class.
 KinveyError = (name, message) ->

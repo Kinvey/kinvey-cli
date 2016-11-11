@@ -46,5 +46,5 @@ module.exports = deploy = (argv..., cb) ->
 # Register the command.
 program
   .command     'deploy'
-  .description 'deploy the current project as a Kinvey-backed Data Link Connector'
+  .description 'deploy the current project to the Kinvey FlexService Runtime'
   .action      deploy

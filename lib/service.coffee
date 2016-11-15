@@ -134,6 +134,8 @@ class Service
     this._execRecycle (err, response) ->
       if err? then cb err # Continue with error.
       else # OK.
+        project.lastJobId = response.body.job
+        project.save()
         logger.info 'Recycle initiated, received job %s', chalk.cyan response.body.job
         cb() # Continue.
 

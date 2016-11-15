@@ -83,7 +83,9 @@ describe 'service', () ->
     # Test v2 apps.
     describe 'for v2 apps', ->
       # Configure.
-      beforeEach 'configure', () -> project.schemaVersion = 2
+      beforeEach 'configure', () ->
+        project.schemaVersion = 2
+        this.jobId = uuid.v4()
       afterEach  'configure', () -> project.schemaVersion = null # Reset.
 
       # Mock the API.
@@ -91,8 +93,7 @@ describe 'service', () ->
         this.subject = null
         this.mock = api
           .post '/v2/jobs'
-          .reply 202, (uri, requestBody) =>
-            this.subject = requestBody
+          .reply 202, { job: this.jobId }
 
       afterEach 'api', () ->
         this.mock.done()
@@ -100,11 +101,10 @@ describe 'service', () ->
         delete this.subject
 
       # Tests.
-      it 'should package the project.', (cb) ->
+      it 'should package and deploy the project and cache the last job ID.', (cb) ->
         # Deploy and test.
         service.deploy fixtures.valid, '0.1.0', (err) =>
-          expect(this.subject).to.exist
-          expect(this.subject).to.have.length.above 1
+          expect(project.lastJobId).to.equal this.jobId
           cb err
 
       it 'should fail when the project is too big.', (cb) ->
@@ -112,9 +112,6 @@ describe 'service', () ->
           expect(err).to.exist
           expect(err.name).to.equal 'ProjectMaxFileSizeExceeded'
           cb()
-
-      it 'should upload.', (cb) ->
-        service.deploy fixtures.valid, '0.1.0', cb
 
   # service.recycle().
   describe 'recycle', () ->
@@ -142,20 +139,24 @@ describe 'service', () ->
 
     # Test v2 apps.
     describe 'for v2 apps', ->
-      beforeEach 'configure', () -> project.schemaVersion = 2
+      beforeEach 'configure', () ->
+        project.schemaVersion = 2
+        this.jobId = uuid.v4()
       afterEach  'configure', () -> project.schemaVersion = null # Reset.
 
       # Mock the API.
       beforeEach 'api', () ->
         this.mock = api.post '/v2/jobs'
-          .reply 202, { job: 123 }
+          .reply 202, { job: this.jobId }
       afterEach 'api', () ->
         this.mock.done()
         delete this.mock
 
       # Tests.
       it 'should recycle.', (cb) ->
-        service.recycle cb
+        service.recycle (err) =>
+          expect(project.lastJobId).to.equal this.jobId
+          cb err
 
   describe 'job', () ->
     # Configure.

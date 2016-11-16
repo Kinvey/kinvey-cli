@@ -78,6 +78,7 @@ class User
         unless this.host? then this.host = data.host
 
       request.Request = request.Request.defaults { baseUrl: this.host } # Save.
+      if this.host? and this.host.indexOf(config.host) is -1 then logger.info 'host: %s', chalk.cyan this.host
       if data?.tokens? then this.tokens = data.tokens
 
       if this.tokens?[this.host]? # Save token.

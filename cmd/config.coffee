@@ -30,7 +30,6 @@ util        = require '../lib/util.coffee'
 initUrl = (host, cb) ->
   if host? # Format and adjust host.
     result = util.formatHost host
-    logger.info 'Using host: ' + chalk.cyan result
     user.host = result
   else
     user.host = config.host

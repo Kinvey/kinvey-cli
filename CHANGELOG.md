@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 (2016-11-15)
+* Cache last recycle job ID
+* Update session storage filename
+
 ## 1.0.0 (2016-11-10)
 * Add support for refactored KBW/KMR 'status' command. Repurpose existing 'status' command into 'job'
 * Cache last deploy job for ease of retrieval using `kinvey job`

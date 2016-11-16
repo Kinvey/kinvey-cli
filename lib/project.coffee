@@ -70,7 +70,7 @@ class Project
   restore: (cb) =>
     logger.debug 'Restoring project from file %s', chalk.cyan this.projectPath
     util.readJSON this.projectPath, (err, data) =>
-      if data?.app and data.service # Save ids.
+      if data?.app? and data.service? # Save ids.
         logger.debug 'Restored project from file %s', chalk.cyan this.projectPath
         this.app           = data.app
         this.service       = data.service

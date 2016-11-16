@@ -46,7 +46,7 @@ describe "./#{pkg.name} config", () ->
   it 'configure the project with the default host.', (cb) ->
     this.config null, command, (err) ->
       expect(project.config).to.be.calledOnce
-      expect(user.host).to.equal 'https://manage.kinvey.com/'
+      expect(user.host).to.equal null # host not set by stub
       cb err
 
   describe 'with a custom HTTP host', () ->

@@ -5,7 +5,7 @@
 `npm install -g kinvey-cli`
 
 ## Usage
-In your project directory, run `kinvey config` to set-up your project. The CLI will prompt for Kinvey credentials, app, and Internal Flex Service.
+In your project directory, run `kinvey config` to set-up your project. The CLI will prompt for Kinvey credentials, app or organization, and Internal Flex Service.
 
 ### Commands
 * `config [instance]` - set project options (including optional dedicated Kinvey instance name)

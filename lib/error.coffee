@@ -30,7 +30,7 @@ errors =
   InvalidProject:
     message: 'This project is not valid. Please implement the kinvey-flex-sdk node module.'
   ProjectNotConfigured:
-    message: "This project is not configured. Use `kinvey config` to get started."
+    message: "This project is not configured. Use `kinvey config [instance]` to get started."
   ProjectMaxFileSizeExceeded:
     message: "This project is too big to be deployed. The max project size is #{config.maxUploadSize} bytes."
   RequestError:

@@ -208,10 +208,6 @@ describe 'user', () ->
 
   # user.save()
   describe 'save', () ->
-    # Set user token.
-    before 'token', () -> user.token = '123'
-    after  'token', () -> user.token = null # Reset.
-
     # Stub util.writeJSON().
     before    'stub', () -> sinon.stub(util, 'writeJSON').callsArg 2
     afterEach 'stub', () -> util.writeJSON.reset()
@@ -221,9 +217,10 @@ describe 'user', () ->
     it 'should write the token to file.', (cb) ->
       user.save (err) ->
         tokens =
-          host: null
+          host: 'https://manage.kinvey.com/'
           tokens:
             abc: '123'
+        tokens.tokens['https://manage.kinvey.com/'] = null
         expect(util.writeJSON).to.be.calledOnce
         expect(util.writeJSON).to.be.calledWith config.paths.session, tokens
         cb err

@@ -31,8 +31,6 @@ initUrl = (host, cb) ->
   if host? # Format and adjust host.
     result = util.formatHost host
     user.host = result
-  else
-    user.host = config.host
   cb()
 
 # Entry point for the config command.

@@ -40,6 +40,30 @@ exports.getApp = (apps, cb) ->
   }], (answers) ->
     cb null, answers.app # Continue.
 
+# Prompts the user for the app to use.
+exports.getAppOrOrg = (options, cb) ->
+  logger.debug 'Prompting for app or organization'
+  inquirer.prompt [{
+    message : 'Would you like to select a service from a Kinvey app or org?'
+    name    : 'option'
+    type    : 'list'
+    choices : util.formatList options
+    when    : 0 < options.length
+  }], (answers) ->
+    cb null, answers.option # Continue.
+
+# Prompts the user for the app to use.
+exports.getOrg = (orgs, cb) ->
+  logger.debug 'Prompting for organization'
+  inquirer.prompt [{
+    message : 'Which organization would you like to use?'
+    name    : 'org'
+    type    : 'list'
+    choices : util.formatList orgs
+    when    : 0 < orgs.length
+  }], (answers) ->
+    cb null, answers.org # Continue.
+
 # Prompts the user for the service to use.
 exports.getService = (services, cb) ->
   logger.debug 'Prompting for service'

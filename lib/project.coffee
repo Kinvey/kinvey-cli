@@ -31,6 +31,7 @@ class Project
 
   # App, service, and schema.
   app           : null
+  org           : null
   service       : null
   serviceName   : null
   schemaVersion : null
@@ -46,7 +47,7 @@ class Project
 
   # Returns whether the project is configured.
   isConfigured: () =>
-    this.app? and this.service? and this.schemaVersion?
+    return (this.app? or this.org?) and (this.service? and this.schemaVersion?)
 
   # Lists all Kinvey datalinks.
   list: (cb) =>
@@ -70,9 +71,10 @@ class Project
   restore: (cb) =>
     logger.debug 'Restoring project from file %s', chalk.cyan this.projectPath
     util.readJSON this.projectPath, (err, data) =>
-      if data?.app? and data.service? # Save ids.
+      if (data?.app or data?.org) and data.service # Save ids.
         logger.debug 'Restored project from file %s', chalk.cyan this.projectPath
         this.app           = data.app
+        this.org           = data.org
         this.service       = data.service
         this.serviceName   = data.serviceName
         this.schemaVersion = data.schemaVersion
@@ -87,6 +89,7 @@ class Project
     logger.debug 'Saving project to file %s', chalk.cyan this.projectPath
     util.writeJSON this.projectPath, {
       app           : this.app
+      org           : this.org
       service       : this.service
       serviceName   : this.serviceName
       schemaVersion : this.schemaVersion
@@ -96,7 +99,7 @@ class Project
   # Selects and save app, and service.
   select: (cb) =>
     async.series [
-      this._selectApp
+      this._selectAppOrOrg
       this._selectService
       this.save
     ], cb
@@ -124,14 +127,26 @@ class Project
           if x.name.toLowerCase() < y.name.toLowerCase() then -1 else 1
         cb null, body
 
+  # Executes a GET /apps request.
+  _execOrgs: (cb) ->
+    util.makeRequest { url: '/organizations' }, (err, response) ->
+      cb err, response?.body
+
   # Executes a GET /apps/:app/datalinks request.
   _execServices: (cb) ->
+    if this.org?
+      resourceType = 'organizations'
+      entity = this.org
+    else
+      resourceType = 'apps'
+      entity = this.app
+
     util.makeRequest {
-      url: "/v#{this.schemaVersion}/apps/#{this.app}/data-links"
+      url: "/v#{this.schemaVersion}/#{resourceType}/#{entity}/data-links"
     }, (err, response) ->
       cb err, response?.body
 
-  # Attempts to select the app.
+  # Attempts to select an app.
   _selectApp: (cb) =>
     async.waterfall [
       this._execApps
@@ -140,8 +155,34 @@ class Project
         else prompt.getApp apps, next
     ], (err, app) =>
       if app? # Save.
+        this.org           = null
         this.app           = app.id
         this.schemaVersion = app.schemaVersion or config.defaultSchemaVersion
+      cb err # Continue.
+
+  # Prompts user to select an app or organization.
+  _selectAppOrOrg: (cb) =>
+    options = [{
+      name: 'App'
+    }, {
+      name: 'Organization'
+    }]
+    prompt.getAppOrOrg options, (err, choice) =>
+      if choice.name is 'App' then this._selectApp cb
+      else this._selectOrg cb
+
+  # Attempts to select an org.
+  _selectOrg: (cb) =>
+    async.waterfall [
+      this._execOrgs
+      (orgs, next) ->
+        if 0 is orgs.length then next new KinveyError 'NoOrgsFound'
+        else prompt.getOrg orgs, next
+    ], (err, org) =>
+      if org? # Save.
+        this.app           = null
+        this.org           = org.id
+        this.schemaVersion = 2 # TODO fix this
       cb err # Continue.
 
   # Attempts to select the service
@@ -149,7 +190,7 @@ class Project
     async.waterfall [
       this._execKinveyServices
       (services, next) ->
-        if 0 is services.length then next new KinveyError 'NoDatalinksFound'
+        if 0 is services.length then next new KinveyError 'NoFlexServicesFound'
         else prompt.getService services, next
     ], (err, service) =>
       if service?

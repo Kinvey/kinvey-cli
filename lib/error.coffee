@@ -37,8 +37,10 @@ errors =
     message: 'There was an error processing your request.'
   NoAppsFound:
     message: 'You have no apps yet. Head over to the console to create one.'
-  NoDatalinksFound:
-    message: 'You have no eligible datalinks yet.'
+  NoFlexServicesFound:
+    message: 'You have no eligible Internal Flex Services yet.'
+  NoOrgsFound:
+    message: 'You have no organizations yet. Head over to the console to create one.'
   NoServiceHostsFound:
     message: 'There are no logs for this Internal Flex Service'
 

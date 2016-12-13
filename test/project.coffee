@@ -30,6 +30,7 @@ fixtures =
   app       : require './fixtures/app.json'
   datalink  : require './fixtures/datalink.json'
   kinveyDlc : require './fixtures/kinvey-dlc.json'
+  org       : require './fixtures/org.json'
 
 # Test suite.
 describe 'project', () ->
@@ -126,7 +127,7 @@ describe 'project', () ->
       before 'stub', () ->
         sinon.stub(util, 'readJSON').callsArgWith 1, null, {
           app           : this.app
-          service      : this.service
+          service       : this.service
           schemaVersion : this.schemaVersion
         }
       afterEach 'stub', () -> util.readJSON.reset()
@@ -174,10 +175,11 @@ describe 'project', () ->
       project.save (err) ->
         expect(util.writeJSON).to.be.calledOnce
         expect(util.writeJSON).to.be.calledWith config.paths.project, {
-          app           : project.app
+          app          : project.app
+          org          : project.org
           service      : project.service
           serviceName  : undefined
-          lastJobId     : undefined
+          lastJobId    : undefined
           schemaVersion : project.schemaVersion
         }
         cb err
@@ -192,6 +194,13 @@ describe 'project', () ->
       before    'refresh', () -> sinon.stub(user, 'refresh').callsArg 0
       afterEach 'refresh', () -> user.refresh.reset()
       after     'refresh', () -> user.refresh.restore()
+
+      # Stub prompt.getAppOrOrg().
+      before 'getApp', () ->
+        stub = sinon.stub prompt, 'getAppOrOrg'
+        stub.callsArgWith 1, null, { name: 'App' }
+      afterEach 'getApp', () -> prompt.getAppOrOrg.reset()
+      after     'getApp', () -> prompt.getAppOrOrg.restore()
 
       # Mock the API.
       beforeEach 'api', () ->
@@ -211,18 +220,11 @@ describe 'project', () ->
           expect(err).to.have.property 'name', 'NoAppsFound'
           cb()
 
-    describe 'given the user has an app and eligible service', () ->
+    describe 'given the user has an app or org and eligible service', () ->
       # Stub project.save().
       before    'save', () -> sinon.stub(project, 'save').callsArg 0
       afterEach 'save', () -> project.save.reset()
       after     'save', () -> project.save.restore()
-
-      # Stub prompt.getApp().
-      before 'getApp', () ->
-        stub = sinon.stub prompt, 'getApp'
-        stub.callsArgWith 1, null, fixtures.app
-      afterEach 'getApp', () -> prompt.getApp.reset()
-      after     'getApp', () -> prompt.getApp.restore()
 
       # Stub prompt.getService().
       before 'getService', () ->
@@ -231,31 +233,95 @@ describe 'project', () ->
       afterEach 'getService', () -> prompt.getService.reset()
       after     'getService', () -> prompt.getService.restore()
 
-      # Mock the API.
-      beforeEach 'api', () ->
-        this.mocks = [
-          api.get('/apps').reply 200, [ fixtures.app ]
-          api.get('/v2/apps/123/data-links').reply 200, [ fixtures.kinveyDlc ]
-        ]
-      afterEach 'api', () ->
-        mock.done() for mock in this.mocks
-        delete this.mocks
+      describe 'for apps', () ->
+        # Stub prompt.getAppOrOrg().
+        before 'getApp', () ->
+          stub = sinon.stub prompt, 'getAppOrOrg'
+          stub.callsArgWith 1, null, { name: 'App' }
+        afterEach 'getApp', () -> prompt.getAppOrOrg.reset()
+        after     'getApp', () -> prompt.getAppOrOrg.restore()
 
-      # Tests.
-      it 'should select the app and service to use.', (cb) ->
-        project.select (err) ->
-          expect(prompt.getApp).to.be.calledOnce
-          expect(prompt.getApp).to.be.calledWith [ fixtures.app ]
-          expect(prompt.getService).to.be.calledOnce
-          expect(prompt.getService).to.be.calledWith [ fixtures.kinveyDlc ]
-          cb err
+        # Stub prompt.getApp().
+        before 'getApp', () ->
+          stub = sinon.stub prompt, 'getApp'
+          stub.callsArgWith 1, null, fixtures.app
+        afterEach 'getApp', () -> prompt.getApp.reset()
+        after     'getApp', () -> prompt.getApp.restore()
 
-      it 'should save the project.', (cb) ->
-        project.select (err) ->
-          expect(project.save).to.be.calledOnce
-          cb err
+        # Mock the API.
+        beforeEach 'api', () ->
+          this.mocks = [
+            api.get('/apps').reply 200, [ fixtures.app ]
+            api.get('/v2/apps/123/data-links').reply 200, [ fixtures.kinveyDlc ]
+          ]
+        afterEach 'api', () ->
+          mock.done() for mock in this.mocks
+          delete this.mocks
+
+        # Tests.
+        it 'should select the app and service to use.', (cb) ->
+          project.select (err) ->
+            expect(prompt.getApp).to.be.calledOnce
+            expect(prompt.getApp).to.be.calledWith [ fixtures.app ]
+            expect(prompt.getService).to.be.calledOnce
+            expect(prompt.getService).to.be.calledWith [ fixtures.kinveyDlc ]
+            cb err
+
+        it 'should save the project.', (cb) ->
+          project.select (err) ->
+            expect(project.save).to.be.calledOnce
+            cb err
+
+      describe 'for orgs', () ->
+        before 'config', () -> project.org = fixtures.org.name
+        after 'config', () -> delete project.org
+
+        # Stub prompt.getAppOrOrg().
+        before 'getAppOrOrg', () ->
+          stub = sinon.stub prompt, 'getAppOrOrg'
+          stub.callsArgWith 1, null, { name: 'Organization' }
+        afterEach 'getApp', () -> prompt.getAppOrOrg.reset()
+        after     'getApp', () -> prompt.getAppOrOrg.restore()
+
+        # Stub prompt.getApp().
+        before 'getOrg', () ->
+          stub = sinon.stub prompt, 'getOrg'
+          stub.callsArgWith 1, null, fixtures.org
+        afterEach 'getOrg', () -> prompt.getOrg.reset()
+        after     'getOrg', () -> prompt.getOrg.restore()
+
+        # Mock the API.
+        beforeEach 'api', () ->
+          this.mocks = [
+            api.get('/organizations').reply 200, [ fixtures.org ]
+            api.get('/v2/organizations/123/data-links').reply 200, [ fixtures.kinveyDlc ]
+          ]
+        afterEach 'api', () ->
+          mock.done() for mock in this.mocks
+          delete this.mocks
+
+        # Tests.
+        it 'should select the org and service to use.', (cb) ->
+          project.select (err) ->
+            expect(prompt.getOrg).to.be.calledOnce
+            expect(prompt.getOrg).to.be.calledWith [ fixtures.org ]
+            expect(prompt.getService).to.be.calledOnce
+            expect(prompt.getService).to.be.calledWith [ fixtures.kinveyDlc ]
+            cb err
+
+        it 'should save the project.', (cb) ->
+          project.select (err) ->
+            expect(project.save).to.be.calledOnce
+            cb err
 
     describe 'given the user has no apps or eligible datalinks', () ->
+      # Stub prompt.getAppOrOrg().
+      before 'getApp', () ->
+        stub = sinon.stub prompt, 'getAppOrOrg'
+        stub.callsArgWith 1, null, { name: 'App' }
+      afterEach 'getApp', () -> prompt.getAppOrOrg.reset()
+      after     'getApp', () -> prompt.getAppOrOrg.restore()
+
       # Mock the API.
       beforeEach 'api', () ->
         this.mock = api.get('/apps').reply 200, [ ]
@@ -271,6 +337,13 @@ describe 'project', () ->
           cb()
 
     describe 'given no eligible datalinks', () ->
+      # Stub prompt.getAppOrOrg().
+      before 'getApp', () ->
+        stub = sinon.stub prompt, 'getAppOrOrg'
+        stub.callsArgWith 1, null, { name: 'App' }
+      afterEach 'getApp', () -> prompt.getAppOrOrg.reset()
+      after     'getApp', () -> prompt.getAppOrOrg.restore()
+
       # Stub prompt.getApp().
       before 'stub', () ->
         stub = sinon.stub prompt, 'getApp'
@@ -294,7 +367,7 @@ describe 'project', () ->
       it 'should fail.', (cb) ->
         project.select (err) ->
           expect(err).to.exist
-          expect(err.name).to.equal 'NoDatalinksFound'
+          expect(err.name).to.equal 'NoFlexServicesFound'
           cb()
 
   # project.setup()

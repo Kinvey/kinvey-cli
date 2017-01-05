@@ -221,7 +221,7 @@ class Service
 
   # Returns true if the provided path is an artifact.
   _isArtifact: (base, filepath) ->
-    relative = path.relative base, filepath
+    relative = path.normalize path.relative base, filepath
     for pattern in config.artifacts
       if 0 is relative.indexOf(pattern) or "#{relative}/" is pattern # Exclude both files and dirs.
         return true

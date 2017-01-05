@@ -28,7 +28,7 @@ module.exports =
   defaultSchemaVersion: 2
 
   # Project archive settings.
-  artifacts     : [ '.git/', '.svn/', 'node_modules/', 'output.log' ]
+  artifacts     : [ '.git', '.svn', 'node_modules', 'output.log' ]
   maxUploadSize : 10 * 1024 * 1024 # 10 MB
 
   # Timeouts.

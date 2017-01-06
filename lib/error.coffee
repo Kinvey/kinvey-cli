@@ -33,6 +33,8 @@ errors =
     message: "This project is not configured. Use `kinvey config [instance]` to get started."
   ProjectMaxFileSizeExceeded:
     message: "This project is too big to be deployed. The max project size is #{config.maxUploadSize} bytes."
+  ProjectRestoreError:
+    message: 'This project could not be properly restored. Run `kinvey logout` and then `kinvey config [instance]` to get started.'
   RequestError:
     message: 'There was an error processing your request.'
   NoAppsFound:

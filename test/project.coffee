@@ -364,25 +364,50 @@ describe 'project', () ->
 
   # project.setup()
   describe 'setup', () ->
-    # Stub project.restore().
-    before 'restore', () ->
-      sinon.stub(project, 'restore').callsArgWith 0, new Error 'ProjectNotConfigured'
-    afterEach 'restore', () -> project.restore.reset()
-    after     'restore', () -> project.restore.restore()
+    describe 'when the project is not configured', () ->
+      # Stub project.restore().
+      before 'restore', () ->
+        sinon.stub(project, 'restore').callsArgWith 0, new Error 'ProjectNotConfigured'
+      afterEach 'restore', () -> project.restore.reset()
+      after     'restore', () -> project.restore.restore()
 
-    # Stub project.select().
-    before    'select', () -> sinon.stub(project, 'select').callsArg 0
-    afterEach 'select', () -> project.select.reset()
-    after     'select', () -> project.select.restore()
+      # Stub project.select().
+      before    'select', () -> sinon.stub(project, 'select').callsArg 0
+      afterEach 'select', () -> project.select.reset()
+      after     'select', () -> project.select.restore()
 
-    # Tests.
-    it 'should restore the project.', (cb) ->
-      project.setup { }, (err) ->
-        expect(project.restore).to.be.calledOnce
-        cb err
+      # Tests.
+      it 'should restore the project.', (cb) ->
+        project.setup { }, (err) ->
+          expect(project.restore).to.be.calledOnce
+          cb err
 
-    # Tests.
-    it 'should select the project if not configured.', (cb) ->
-      project.setup { }, (err) ->
-        expect(project.select).to.be.calledOnce
-        cb err
+      # Tests.
+      it 'should select the project if not configured.', (cb) ->
+        project.setup { }, (err) ->
+          expect(project.select).to.be.calledOnce
+          cb err
+
+    describe 'when the project can not be properly restored', () ->
+      # Stub project.restore().
+      before 'restore', () ->
+        sinon.stub(project, 'restore').callsArgWith 0, new Error 'ProjectRestoreError'
+      afterEach 'restore', () -> project.restore.reset()
+      after     'restore', () -> project.restore.restore()
+
+      # Stub project.select().
+      before    'select', () -> sinon.stub(project, 'select').callsArg 0
+      afterEach 'select', () -> project.select.reset()
+      after     'select', () -> project.select.restore()
+
+      # Tests.
+      it 'should restore the project.', (cb) ->
+        project.setup { }, (err) ->
+          expect(project.restore).to.be.calledOnce
+          cb err
+
+      # Tests.
+      it 'should select the project if not configured.', (cb) ->
+        project.setup { }, (err) ->
+          expect(project.select).to.be.calledOnce
+          cb err

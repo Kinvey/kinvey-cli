@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0 (2017-01-09)
+* CLI now supports operations against data links backed by Kinvey organizations
+* `kinvey config` targets the default Kinvey instance for data link selection if a host is not provided (even if the CLI was previously configured with a custom host)
+* Fixed 'Archive Limit Exceeded' bug occasionally encountered during deployment of valid Kinvey services from within Windows environments
+* Update CLI update check frequency (interval shortened to 30 minutes)
+* Fixed bug where 'ProjectNotConfigured' was not correctly displayed after attempting to execute commands without a valid CLI configuration
+
 ## 1.0.2 (2016-11-15)
 * Remove duplicate 'host' output during config command when using custom Kinvey instance
 

@@ -47,7 +47,7 @@ class Project
 
   # Returns whether the project is configured.
   isConfigured: () =>
-    return (this.app? or this.org?) and (this.service? and this.schemaVersion?)
+    return this.service? and this.schemaVersion?
 
   # Lists all Kinvey datalinks.
   list: (cb) =>
@@ -71,25 +71,21 @@ class Project
   restore: (cb) =>
     logger.debug 'Restoring project from file %s', chalk.cyan this.projectPath
     util.readJSON this.projectPath, (err, data) =>
-      if (data?.app or data?.org) and data.service # Save ids.
+      if err? then return cb new KinveyError 'ProjectRestoreError'
+      if data?.service? # Save ids.
         logger.debug 'Restored project from file %s', chalk.cyan this.projectPath
-        this.app           = data.app
-        this.org           = data.org
         this.service       = data.service
         this.serviceName   = data.serviceName
         this.schemaVersion = data.schemaVersion
         this.lastJobId     = data.lastJobId
-        cb()
-      else
-        logger.debug 'Failed to restore project from file %s', chalk.cyan this.projectPath
-        cb new KinveyError 'ProjectNotConfigured' # Continue with error.
+        return cb()
+      logger.debug 'Failed to restore project from file %s', chalk.cyan this.projectPath
+      cb new KinveyError 'ProjectNotConfigured' # Continue with error.
 
   # Saves the project details to file.
   save: (cb) =>
     logger.debug 'Saving project to file %s', chalk.cyan this.projectPath
     util.writeJSON this.projectPath, {
-      app           : this.app
-      org           : this.org
       service       : this.service
       serviceName   : this.serviceName
       schemaVersion : this.schemaVersion

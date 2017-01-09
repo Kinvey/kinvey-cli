@@ -59,7 +59,7 @@ class Service
       headers  : { 'Transfer-Encoding': 'chunked' }
       formData : {
         type   : 'deployDataLink'
-        params : JSON.stringify { appId: project.app, dataLinkId: project.service, version: version }
+        params : JSON.stringify { dataLinkId: project.service, version: version }
         file   : attachment
       }
       refresh  : false # Do not attempt to authenticate, just assume token is valid.
@@ -207,7 +207,7 @@ class Service
       url    : "/v#{project.schemaVersion}/jobs"
       body   : {
         type   : 'recycleDataLink'
-        params : { appId: project.app, dataLinkId: project.service }
+        params : { dataLinkId: project.service }
       }
     }, cb
 

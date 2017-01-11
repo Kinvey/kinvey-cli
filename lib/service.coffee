@@ -120,12 +120,17 @@ class Service
     this._execDatalinkLogs from, to, (err, logs) ->
       if err? then cb err # Continue with error.
       else # Log info.
+        skippedLogEntries = 0
         logs.forEach (log) ->
-          if log.threshold?
-            console.log '[%s] %s %s - %s', log.threshold, chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
+          if log?.message?
+            if log.threshold?
+              console.log '[%s] %s %s - %s', log.threshold, chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
+            else
+              console.log '%s %s - %s', chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
           else
-            console.log '%s %s - %s', chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
-        console.log 'Query returned %s logs for FSR service %s (%s)', chalk.cyan(logs.length), chalk.cyan(project.service),
+            skippedLogEntries++
+            log.skipped = true
+        console.log 'Query returned %s logs for FSR service %s (%s)', chalk.cyan(logs.length - skippedLogEntries), chalk.cyan(project.service),
           chalk.gray(project.serviceName)
         cb null, logs # Continue.
 

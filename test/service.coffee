@@ -306,6 +306,30 @@ describe 'service', () ->
             expect(logs[0].containerId).to.equal this.containerId
             cb err
 
+      describe 'with an undefined message in a result object', () ->
+        # Mock the API.
+        beforeEach 'api', () ->
+          this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.service}/logs"
+            .reply 200, [
+              {
+                threshold: 'info'
+                timestamp: new Date().toISOString()
+                containerId: this.containerId
+              }
+            ]
+        afterEach 'api', () ->
+          this.mock.done()
+          delete this.mock
+
+        # Tests.
+        it 'should not return any logs.', (cb) ->
+          service.logs null, null, (err, logs) =>
+            expect(logs[0].threshold).to.equal 'info'
+            expect(logs[0].message).not.to.exist
+            expect(logs[0].containerId).to.equal this.containerId
+            expect(logs[0].skipped).to.equal true # entry was skipped due to lack of valid `message` property
+            cb err
+
   # service.validate().
   describe 'validate', () ->
     # Configure.

@@ -120,7 +120,7 @@ class Service
     this._execDatalinkLogs from, to, (err, logs) ->
       if err? then cb err # Continue with error.
       else # Log info.
-        skippedLogEntries = 0
+        skippedLogEntries = []
         logs.forEach (log) ->
           if log?.message?
             if log.threshold?
@@ -128,10 +128,10 @@ class Service
             else
               console.log '%s %s - %s', chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
           else
-            skippedLogEntries++
             log.skipped = true
-        console.log 'Query returned %s logs for FSR service %s (%s)', chalk.cyan(logs.length - skippedLogEntries), chalk.cyan(project.service),
-          chalk.gray(project.serviceName)
+            skippedLogEntries.push log
+        if skippedLogEntries.length > 0 then logger.debug '%s skipped log entries for FSR service %s (%s): %s', skippedLogEntries.length, project.service, project.serviceName, JSON.stringify(skippedLogEntries)
+        console.log 'Query returned %s logs for FSR service %s (%s)', chalk.cyan(logs.length - skippedLogEntries.length), chalk.cyan(project.service), chalk.gray(project.serviceName)
         cb null, logs # Continue.
 
   # Recycles the containers that host the DLC.

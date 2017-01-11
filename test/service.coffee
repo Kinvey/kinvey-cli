@@ -22,8 +22,9 @@ path = require 'path'
 
 # Local modules.
 api      = require './lib/api.coffee'
-service = require '../lib/service.coffee'
+logger   = require '../lib/logger'
 project  = require '../lib/project.coffee'
+service  = require '../lib/service.coffee'
 util     = require '../lib/util.coffee'
 
 # Configure.
@@ -307,6 +308,12 @@ describe 'service', () ->
             cb err
 
       describe 'with an undefined message in a result object', () ->
+        before 'log level', () ->
+          logger.config { level: 0 } # Verbose for this test
+
+        after 'log level', () ->
+          logger.config { level: 3 } # Silent afterward
+
         # Mock the API.
         beforeEach 'api', () ->
           this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.service}/logs"

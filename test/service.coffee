@@ -22,8 +22,10 @@ path = require 'path'
 
 # Local modules.
 api      = require './lib/api.coffee'
-service = require '../lib/service.coffee'
+stdout   = require('test-console').stdout
+logger   = require '../lib/logger'
 project  = require '../lib/project.coffee'
+service  = require '../lib/service.coffee'
 util     = require '../lib/util.coffee'
 
 # Configure.
@@ -303,6 +305,63 @@ describe 'service', () ->
           service.logs this.from, this.to, (err, logs) =>
             expect(logs[0].threshold).to.equal 'info'
             expect(logs[0].message).to.equal this.message
+            expect(logs[0].containerId).to.equal this.containerId
+            cb err
+
+      describe 'with an undefined message in a result object', () ->
+        before 'log level', () ->
+          logger.config { level: 0 } # Verbose for this test
+
+        after 'log level', () ->
+          logger.config { level: 3 } # Silent afterward
+
+        # Mock the API.
+        beforeEach 'api', () ->
+          this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.service}/logs"
+            .reply 200, [
+              {
+                threshold: 'info'
+                timestamp: new Date().toISOString()
+                containerId: this.containerId
+              }
+            ]
+        afterEach 'api', () ->
+          this.mock.done()
+          delete this.mock
+
+        # Tests.
+        it 'should not return any logs.', (cb) ->
+          service.logs null, null, (err, logs) =>
+            expect(logs[0].threshold).to.equal 'info'
+            expect(logs[0].message).not.to.exist
+            expect(logs[0].containerId).to.equal this.containerId
+            expect(logs[0].skipped).to.equal true # entry was skipped due to lack of valid `message` property
+            cb err
+
+      describe 'with a non-string message body', () ->
+        # Mock the API.
+        beforeEach 'api', () ->
+          this.mock = api.get "/v#{project.schemaVersion}/data-links/#{project.service}/logs"
+            .reply 200, [
+              {
+                threshold: 'info'
+                message: [this.message]
+                timestamp: new Date().toISOString()
+                containerId: this.containerId
+              }
+            ]
+        afterEach 'api', () ->
+          this.mock.done()
+          delete this.mock
+
+        # Tests.
+        it 'should return a stringified message.', (cb) ->
+          inspect = stdout.inspect() # hook into STDOUT to verify that message is actually printed
+          service.logs null, null, (err, logs) =>
+            inspect.restore()
+            stdoutResult = inspect.output
+            expect(stdoutResult[0]).to.contain this.message
+            expect(logs[0].threshold).to.equal 'info'
             expect(logs[0].containerId).to.equal this.containerId
             cb err
 

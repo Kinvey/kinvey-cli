@@ -49,7 +49,8 @@
     "mocha": "2.3.3",
     "nock": "2.12.0",
     "sinon": "1.17.0",
-    "sinon-chai": "2.8.0"
+    "sinon-chai": "2.8.0",
+    "test-console": "1.0.0"
   },
   "engines": {
     "node": ">=6.x.x"

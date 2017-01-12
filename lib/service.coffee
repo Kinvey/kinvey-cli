@@ -118,21 +118,19 @@ class Service
   # Lists all Kinvey logs.
   logs: (from, to, cb) =>
     this._execDatalinkLogs from, to, (err, logs) ->
-      if err? then cb err # Continue with error.
-      else # Log info.
-        skippedLogEntries = []
-        logs.forEach (log) ->
-          if log?.message?
-            if log.threshold?
-              console.log '[%s] %s %s - %s', log.threshold, chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
-            else
-              console.log '%s %s - %s', chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(log.message.trim())
-          else
-            log.skipped = true
-            skippedLogEntries.push log
-        if skippedLogEntries.length > 0 then logger.debug '%s skipped log entries for FSR service %s (%s): %s', skippedLogEntries.length, project.service, project.serviceName, JSON.stringify(skippedLogEntries)
-        console.log 'Query returned %s logs for FSR service %s (%s)', chalk.cyan(logs.length - skippedLogEntries.length), chalk.cyan(project.service), chalk.gray(project.serviceName)
-        cb null, logs # Continue.
+      if err? then return cb err # Continue with error.
+      skippedLogEntries = []
+      logs.forEach (log) ->
+        messageString = log?.message
+        unless messageString?
+          log.skipped = true
+          return skippedLogEntries.push log
+        if Object.prototype.toString.call messageString isnt "[object String]" then messageString = JSON.stringify messageString
+        if log.threshold? then return console.log '[%s] %s %s - %s', log.threshold, chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(messageString.trim())
+        console.log '%s %s - %s', chalk.green(log.containerId.substring(0, 12)), log.timestamp, chalk.cyan(messageString.trim())
+      if skippedLogEntries.length > 0 then logger.debug '%s skipped log entries for FSR service %s (%s): %s', skippedLogEntries.length, project.service, project.serviceName, JSON.stringify(skippedLogEntries)
+      console.log 'Query returned %s logs for FSR service %s (%s)', chalk.cyan(logs.length - skippedLogEntries.length), chalk.cyan(project.service), chalk.gray(project.serviceName)
+      cb null, logs # Continue.
 
   # Recycles the containers that host the DLC.
   recycle: (cb) =>

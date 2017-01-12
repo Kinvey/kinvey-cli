@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1 (2017-01-12)
+* Fixed bug which resulted in a CLI crash when parsing/printing non-string log message data
+  * Skip log entries which have no corresponding message (and report which entries have been skipped when running CLI in verbose mode)
+
 ## 1.1.0 (2017-01-09)
 * CLI now supports operations against data links backed by Kinvey organizations
 * `kinvey config` targets the default Kinvey instance for data link selection if a host is not provided (even if the CLI was previously configured with a custom host)

@@ -74,6 +74,8 @@ class Project
       if err? then return cb new KinveyError 'ProjectRestoreError'
       if data?.service? # Save ids.
         logger.debug 'Restored project from file %s', chalk.cyan this.projectPath
+        this.app           = data.app
+        this.org           = data.org
         this.service       = data.service
         this.serviceName   = data.serviceName
         this.schemaVersion = data.schemaVersion
@@ -86,10 +88,12 @@ class Project
   save: (cb) =>
     logger.debug 'Saving project to file %s', chalk.cyan this.projectPath
     util.writeJSON this.projectPath, {
+      app           : this.app
+      org           : this.org
+      lastJobId     : this.lastJobId
       service       : this.service
       serviceName   : this.serviceName
       schemaVersion : this.schemaVersion
-      lastJobId     : this.lastJobId
     }, cb
 
   # Selects and save app, and service.

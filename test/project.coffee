@@ -24,6 +24,7 @@ project = require '../lib/project.coffee'
 prompt  = require '../lib/prompt.coffee'
 user    = require '../lib/user.coffee'
 util    = require '../lib/util.coffee'
+uuid    = require 'uuid'
 
 # Fixtures.
 fixtures =
@@ -152,29 +153,61 @@ describe 'project', () ->
 
   # project.save()
   describe 'save', () ->
-    # Set app, service, and schema.
-    before 'configure', () ->
-      project.app = project.service = '123'
-      project.schemaVersion = 1
-    after 'configure', () ->
-      project.app = project.service = project.schemaVersion = null # Reset.
+    describe 'with an app', () ->
+      # Set app, service, and schema.
+      before 'configure', () ->
+        project.app = project.service = project.serviceName = uuid.v4()
+        project.schemaVersion = 1
+      after 'configure', () ->
+        project.app = project.service = project.schemaVersion = null # Reset.
 
-    # Stub util.writeJSON().
-    before    'stub', () -> sinon.stub(util, 'writeJSON').callsArg 2
-    afterEach 'stub', () -> util.writeJSON.reset()
-    after     'stub', () -> util.writeJSON.restore()
+      # Stub util.writeJSON().
+      before    'stub', () -> sinon.stub(util, 'writeJSON').callsArg 2
+      afterEach 'stub', () -> util.writeJSON.reset()
+      after     'stub', () -> util.writeJSON.restore()
 
-    # Tests.
-    it 'should write the project to file.', (cb) ->
-      project.save (err) ->
-        expect(util.writeJSON).to.be.calledOnce
-        expect(util.writeJSON).to.be.calledWith config.paths.project, {
-          service      : project.service
-          serviceName  : undefined
-          lastJobId    : undefined
-          schemaVersion : project.schemaVersion
-        }
-        cb err
+      # Tests.
+      it 'should write the project to file.', (cb) ->
+        project.save (err) ->
+          expect(util.writeJSON).to.be.calledOnce
+          expect(util.writeJSON).to.be.calledWith config.paths.project, {
+            app           : project.app
+            lastJobId     : undefined
+            org           : undefined
+            schemaVersion : project.schemaVersion
+            service       : project.service
+            serviceName   : project.serviceName
+          }
+          expect(project.org).to.be.undefined
+          cb err
+
+    describe 'with an org', () ->
+      # Set app, service, and schema.
+      before 'configure', () ->
+        project.org = project.service = project.serviceName = uuid.v4()
+        project.schemaVersion = 1
+      after 'configure', () ->
+        project.org = project.service = project.schemaVersion = null # Reset.
+
+      # Stub util.writeJSON().
+      before    'stub', () -> sinon.stub(util, 'writeJSON').callsArg 2
+      afterEach 'stub', () -> util.writeJSON.reset()
+      after     'stub', () -> util.writeJSON.restore()
+
+      # Tests.
+      it 'should write the project to file.', (cb) ->
+        project.save (err) ->
+          expect(util.writeJSON).to.be.calledOnce
+          expect(util.writeJSON).to.be.calledWith config.paths.project, {
+            app           : null
+            lastJobId     : undefined
+            org           : project.org
+            schemaVersion : project.schemaVersion
+            service       : project.service
+            serviceName   : project.serviceName
+          }
+          expect(project.app).to.be.null
+          cb err
 
   # project.select()
   describe 'select', () ->

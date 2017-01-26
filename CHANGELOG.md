@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.2 (2017-01-26)
+* Fixed bug which resulted in a 'ProjectNotConfigured' error when running the `list` command with a successfully configured project
+
 ## 1.1.1 (2017-01-12)
 * Fixed bug which resulted in a CLI crash when parsing/printing non-string log message data
   * Skip log entries which have no corresponding message (and report which entries have been skipped when running CLI in verbose mode)

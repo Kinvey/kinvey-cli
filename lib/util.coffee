@@ -23,7 +23,7 @@ chalk    = require 'chalk'
 validUrl = require 'valid-url'
 
 # Local modules.
-KinveyError = require './error.coffee'
+KinveyError = require './error.js'
 logger  = require './logger.coffee'
 request = require './request.coffee'
 user    = require './user.coffee'

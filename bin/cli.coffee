@@ -41,7 +41,7 @@ module.exports = (args) ->
   # Register sub-commands.
   require '../cmd/config'
   require '../cmd/deploy.js'
-  require '../cmd/list.coffee'
+  require '../cmd/list.js'
   require '../cmd/logout.coffee'
   require '../cmd/logs.coffee'
   require '../cmd/recycle.coffee'

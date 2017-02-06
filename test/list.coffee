@@ -19,7 +19,7 @@ sinon = require 'sinon'
 
 # Local modules.
 command  = require './fixtures/command.coffee'
-list     = require '../cmd/list.coffee'
+list     = require '../cmd/list.js'
 logger   = require '../lib/logger.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
@@ -44,16 +44,16 @@ describe "./#{pkg.name} list", () ->
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    list.call command, (err) ->
+    list.call command, command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    list.call command, (err) ->
+    list.call command, command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
   it 'should list the Kinvey datalinks.', (cb) ->
-    list.call command, (err) ->
+    list.call command, command, (err) ->
       expect(project.list).to.be.calledOnce
       cb err

@@ -14,20 +14,18 @@
  */
 
 const async = require('async');
-const program = require('commander');
-const service = require('../lib/service.coffee');
 const init = require('../lib/init.coffee');
 const logger = require('../lib/logger.coffee');
+const program = require('commander');
 const project = require('../lib/project.coffee');
 const user = require('../lib/user.coffee');
 
-function deploy(command, cb) {
+function list(command, cb) {
   const options = init(command);
-  return async.waterfall([
+  return async.series([
     (next) => { user.setup(options, next); },
     project.restore,
-    (next) => { service.validate(process.cwd(), next); },
-    (version, next) => { service.deploy(process.cwd(), version, next); }
+    project.list
   ], (err) => {
     if (err != null) {
       logger.error('%s', err);
@@ -37,9 +35,9 @@ function deploy(command, cb) {
   });
 }
 
-module.exports = deploy;
+module.exports = list;
 
 program
-  .command('deploy')
-  .description('deploy the current project to the Kinvey FlexService Runtime')
-  .action(deploy);
+  .command('list')
+  .description('list Internal Flex Services for the current app')
+  .action(list);

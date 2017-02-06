@@ -15,24 +15,20 @@
 
 const async = require('async');
 const program = require('commander');
+const service = require('../lib/service.coffee');
 const init = require('../lib/init.coffee');
 const logger = require('../lib/logger.coffee');
 const project = require('../lib/project.coffee');
 const user = require('../lib/user.coffee');
-const util = require('../lib/util.coffee');
 
-function initUrl(host, cb) {
-  if (host != null) user.host = util.formatHost(host);
-  cb();
-}
-
-function configure(host, command, cb) {
-  const options = init(command);
-  return async.series([
-    (next) => { initUrl(host, next); },
+function deploy(...argv) {
+  const cb = [...argv].pop();
+  const options = init(this);
+  return async.waterfall([
     (next) => { user.setup(options, next); },
-    (next) => { project.config(options, next); },
-    (next) => { user.save(next); }
+    project.restore,
+    (next) => { service.validate(process.cwd(), next); },
+    (version, next) => { service.deploy(process.cwd(), version, next); }
   ], (err) => {
     if (err != null) {
       logger.error('%s', err);
@@ -42,9 +38,9 @@ function configure(host, command, cb) {
   });
 }
 
-module.exports = configure;
+module.exports = deploy;
 
 program
-  .command('config [instance]')
-  .description("set project options (including optional Kinvey instance, i.e. 'acme-us1)")
-  .action(configure);
+  .command('deploy')
+  .description('deploy the current project to the Kinvey FlexService Runtime')
+  .action(deploy);

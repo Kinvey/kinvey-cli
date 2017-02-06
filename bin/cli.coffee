@@ -40,7 +40,7 @@ module.exports = (args) ->
 
   # Register sub-commands.
   require '../cmd/config'
-  require '../cmd/deploy.coffee'
+  require '../cmd/deploy.js'
   require '../cmd/list.coffee'
   require '../cmd/logout.coffee'
   require '../cmd/logs.coffee'

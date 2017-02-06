@@ -22,7 +22,7 @@ command  = require './fixtures/command.coffee'
 service = require '../lib/service.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
-recycle  = require '../cmd/recycle.coffee'
+recycle  = require '../cmd/recycle.js'
 user     = require '../lib/user.coffee'
 
 # Test suite.
@@ -44,16 +44,16 @@ describe "./#{pkg.name} recycle", () ->
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    recycle.call command, (err) ->
+    recycle.call command, command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    recycle.call command, (err) ->
+    recycle.call command, command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
   it 'should reset the service.', (cb) ->
-    recycle.call command, (err) ->
+    recycle.call command, command, (err) ->
       expect(service.recycle).to.be.calledOnce
       cb err

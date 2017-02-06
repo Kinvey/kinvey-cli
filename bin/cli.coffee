@@ -43,7 +43,7 @@ module.exports = (args) ->
   require '../cmd/deploy.js'
   require '../cmd/list.js'
   require '../cmd/logout.js'
-  require '../cmd/logs.coffee'
+  require '../cmd/logs.js'
   require '../cmd/recycle.coffee'
   require '../cmd/status.coffee'
   require '../cmd/job.js'

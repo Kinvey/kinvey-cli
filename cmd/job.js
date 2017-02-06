@@ -21,26 +21,24 @@ const logger = require('../lib/logger.coffee');
 const project = require('../lib/project.coffee');
 const user = require('../lib/user.coffee');
 
-function deploy(command, cb) {
+function status(job, command, cb) {
   const options = init(command);
-  return async.waterfall([
+  return async.series([
     (next) => { user.setup(options, next); },
     project.restore,
-    (next) => { service.validate(process.cwd(), next); },
-    (version, next) => { service.deploy(process.cwd(), version, next); }
+    (next) => { service.jobStatus(job, next); }
   ], (err) => {
     if (err != null) {
       logger.error('%s', err);
       if (cb == null) process.exit(-1);
     }
-    console.dir(cb);
     if (cb != null) cb(err);
   });
 }
 
-module.exports = deploy;
+module.exports = status;
 
 program
-  .command('deploy')
-  .description('deploy the current project to the Kinvey FlexService Runtime')
-  .action(deploy);
+  .command('job [id]')
+  .description('return the job status of a deploy command')
+  .action(status);

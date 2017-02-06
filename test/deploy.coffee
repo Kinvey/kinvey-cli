@@ -49,21 +49,21 @@ describe "./#{pkg.name} deploy", () ->
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    deploy.call command, (err) ->
+    deploy.call command, command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    deploy.call command, (err) ->
+    deploy.call command, command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
   it 'should validate the service.', (cb) ->
-    deploy.call command, (err) ->
+    deploy.call command, command, (err) ->
       expect(service.validate).to.be.calledOnce
       cb err
 
   it 'should deploy the service.', (cb) ->
-    deploy.call command, (err) ->
+    deploy.call command, command, (err) ->
       expect(service.deploy).to.be.calledOnce
       cb err

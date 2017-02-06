@@ -23,7 +23,7 @@ service = require '../lib/service.coffee'
 logger   = require '../lib/logger.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
-job      = require '../cmd/job.coffee'
+job      = require '../cmd/job.js'
 user     = require '../lib/user.coffee'
 
 # Test suite.

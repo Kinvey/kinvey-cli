@@ -46,7 +46,7 @@ module.exports = (args) ->
   require '../cmd/logs.coffee'
   require '../cmd/recycle.coffee'
   require '../cmd/status.coffee'
-  require '../cmd/job.coffee'
+  require '../cmd/job.js'
 
   # Default action.
   program

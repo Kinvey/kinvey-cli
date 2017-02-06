@@ -19,7 +19,7 @@ sinon = require 'sinon'
 
 # Local modules.
 command = require './fixtures/command.coffee'
-logout  = require '../cmd/logout.coffee'
+logout  = require '../cmd/logout.js'
 pkg     = require '../package.json'
 project = require '../lib/project.coffee'
 user    = require '../lib/user.coffee'
@@ -38,11 +38,11 @@ describe "./#{pkg.name} logout", () ->
 
   # Tests.
   it 'should logout the user.', (cb) ->
-    logout.call command, (err) ->
+    logout.call command, command, (err) ->
       expect(user.logout).to.be.calledOnce
       cb err
 
   it 'should logout the project.', (cb) ->
-    logout.call command, (err) ->
+    logout.call command, command, (err) ->
       expect(project.logout).to.be.calledOnce
       cb err

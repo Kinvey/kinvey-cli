@@ -39,7 +39,7 @@ module.exports = (args) ->
     .option  '-v, --verbose',                'output debug messages'
 
   # Register sub-commands.
-  require '../cmd/config.coffee'
+  require '../cmd/config'
   require '../cmd/deploy.coffee'
   require '../cmd/list.coffee'
   require '../cmd/logout.coffee'

@@ -25,7 +25,7 @@ user    = require '../lib/user.coffee'
 
 # Test suite.
 describe "./#{pkg.name} config", () ->
-  beforeEach () -> this.config  = require '../cmd/config.coffee'
+  beforeEach () -> this.config  = require '../cmd/config.js'
 
   # Stub user.setup().
   before    'user', () -> sinon.stub(user, 'setup').callsArg 1

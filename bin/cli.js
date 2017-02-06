@@ -15,9 +15,5 @@
  * limitations under the License.
  */
 
-// Strict mode.
-'use strict';
-
-// Exports.
 require('coffee-script/register');
 require('./cli.coffee')(process.argv);

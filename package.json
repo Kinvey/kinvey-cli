@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "./bin/cli.js",
-    "pretest": "./node_modules/.bin/coffeelint --file ./.coffeelint bin/ cmd/ config/ lib/ test/",
+    "pretest": "./node_modules/.bin/eslint bin cmd config lib test",
     "test": "./node_modules/.bin/mocha test/"
   },
   "dependencies": {
@@ -46,6 +46,9 @@
   "devDependencies": {
     "chai": "3.3.0",
     "coffeelint": "1.12.1",
+    "eslint": "2.11.1",
+    "eslint-config-airbnb-base": "3.0.1",
+    "eslint-plugin-import": "1.8.1",
     "mocha": "2.3.3",
     "nock": "2.12.0",
     "sinon": "1.17.0",

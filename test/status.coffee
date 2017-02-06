@@ -23,7 +23,7 @@ service = require '../lib/service.coffee'
 logger   = require '../lib/logger.coffee'
 pkg      = require '../package.json'
 project  = require '../lib/project.coffee'
-status   = require '../cmd/status.coffee'
+status   = require '../cmd/status.js'
 user     = require '../lib/user.coffee'
 
 # Test suite.
@@ -52,16 +52,16 @@ describe "./#{pkg.name} status", () ->
 
   # Tests.
   it 'should setup the user.', (cb) ->
-    status.call command, (err) ->
+    status.call command, command, (err) ->
       expect(user.setup).to.be.calledOnce
       cb err
 
   it 'should restore the project.', (cb) ->
-    status.call command, (err) ->
+    status.call command, command, (err) ->
       expect(project.restore).to.be.calledOnce
       cb err
 
   it 'should print the current KMR service status.', (cb) ->
-    status.call command, (err) ->
+    status.call command, command, (err) ->
       expect(service.serviceStatus).to.be.calledOnce
       cb err

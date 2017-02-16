@@ -27,7 +27,7 @@ config   = require 'config'
 KinveyError = require './error.js'
 logger      = require './logger.js'
 project     = require './project.js'
-prompt      = require './prompt.coffee'
+prompt      = require './prompt.js'
 user        = require './user.coffee'
 util        = require './util.coffee'
 

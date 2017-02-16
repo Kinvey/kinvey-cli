@@ -21,7 +21,7 @@ config = require 'config'
 
 # Local modules.
 logger  = require './logger.js'
-prompt  = require './prompt.coffee'
+prompt  = require './prompt.js'
 request = require './request.coffee'
 util    = require './util.coffee'
 

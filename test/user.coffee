@@ -19,7 +19,7 @@ config   = require 'config'
 
 # Imports.
 api     = require './lib/api.coffee'
-prompt  = require '../lib/prompt.coffee'
+prompt  = require '../lib/prompt.js'
 user    = require '../lib/user.coffee'
 util    = require '../lib/util.coffee'
 

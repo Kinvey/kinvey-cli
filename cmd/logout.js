@@ -15,8 +15,8 @@
 
 const async = require('async');
 const program = require('commander');
-const logger = require('../lib/logger.coffee');
-const project = require('../lib/project.coffee');
+const logger = require('../lib/logger.js');
+const project = require('../lib/project.js');
 const user = require('../lib/user.coffee');
 
 function logout(command, cb) {

@@ -20,9 +20,9 @@ sinon = require 'sinon'
 # Local modules.
 command  = require './fixtures/command.coffee'
 list     = require '../cmd/list.js'
-logger   = require '../lib/logger.coffee'
+logger   = require '../lib/logger.js'
 pkg      = require '../package.json'
-project  = require '../lib/project.coffee'
+project  = require '../lib/project.js'
 user     = require '../lib/user.coffee'
 
 # Test suite.

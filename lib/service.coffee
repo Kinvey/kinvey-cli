@@ -25,8 +25,8 @@ config   = require 'config'
 
 # Local modules.
 KinveyError = require './error.js'
-logger      = require './logger.coffee'
-project     = require './project.coffee'
+logger      = require './logger.js'
+project     = require './project.js'
 prompt      = require './prompt.coffee'
 user        = require './user.coffee'
 util        = require './util.coffee'

@@ -22,8 +22,8 @@ updateNotifier = require('update-notifier').UpdateNotifier
 
 # Local modules.
 cli     = require '../bin/cli.coffee'
-init    = require '../lib/init.coffee'
-logger  = require '../lib/logger.coffee'
+init    = require '../lib/init.js'
+logger  = require '../lib/logger.js'
 pkg     = require '../package.json'
 request = require '../lib/request.coffee'
 

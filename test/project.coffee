@@ -19,8 +19,8 @@ config   = require 'config'
 
 # Local modules.
 api     = require './lib/api.coffee'
-logger  = require '../lib/logger.coffee'
-project = require '../lib/project.coffee'
+logger  = require '../lib/logger.js'
+project = require '../lib/project.js'
 prompt  = require '../lib/prompt.coffee'
 user    = require '../lib/user.coffee'
 util    = require '../lib/util.coffee'

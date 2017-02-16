@@ -16,9 +16,9 @@
 const async = require('async');
 const program = require('commander');
 const service = require('../lib/service.coffee');
-const init = require('../lib/init.coffee');
-const logger = require('../lib/logger.coffee');
-const project = require('../lib/project.coffee');
+const init = require('../lib/init.js');
+const logger = require('../lib/logger.js');
+const project = require('../lib/project.js');
 const user = require('../lib/user.coffee');
 
 function status(command, cb) {

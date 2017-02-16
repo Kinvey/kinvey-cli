@@ -20,7 +20,7 @@ chalk  = require 'chalk'
 config = require 'config'
 
 # Local modules.
-logger  = require './logger.coffee'
+logger  = require './logger.js'
 prompt  = require './prompt.coffee'
 request = require './request.coffee'
 util    = require './util.coffee'

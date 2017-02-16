@@ -21,7 +21,7 @@ sinon = require 'sinon'
 command  = require './fixtures/command.coffee'
 service = require '../lib/service.coffee'
 pkg      = require '../package.json'
-project  = require '../lib/project.coffee'
+project  = require '../lib/project.js'
 recycle  = require '../cmd/recycle.js'
 user     = require '../lib/user.coffee'
 

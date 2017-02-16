@@ -20,16 +20,16 @@ inquirer = require 'inquirer'
 isEmail  = require 'isemail'
 
 # Local modules.
-logger = require './logger.coffee'
+logger = require './logger.js'
 util   = require './util.coffee'
 
 # Configure.
-validateEmail = (email) ->
+validateEmail = (email) =>
   if isEmail email then true
   else 'Please enter a valid e-mail address.'
 
 # Prompts the user for the app to use.
-exports.getApp = (apps, cb) ->
+exports.getApp = (apps, cb) =>
   logger.debug 'Prompting for application'
   inquirer.prompt [{
     message : 'Which app would you like to use?'
@@ -41,7 +41,7 @@ exports.getApp = (apps, cb) ->
     cb null, answers.app # Continue.
 
 # Prompts the user for the app to use.
-exports.getAppOrOrg = (options, cb) ->
+exports.getAppOrOrg = (options, cb) =>
   logger.debug 'Prompting for app or organization'
   inquirer.prompt [{
     message : 'Would you like to select a service from a Kinvey app or org?'
@@ -49,11 +49,11 @@ exports.getAppOrOrg = (options, cb) ->
     type    : 'list'
     choices : util.formatList options
     when    : 0 < options.length
-  }], (answers) ->
+  }], (answers) =>
     cb null, answers.option # Continue.
 
 # Prompts the user for the app to use.
-exports.getOrg = (orgs, cb) ->
+exports.getOrg = (orgs, cb) =>
   logger.debug 'Prompting for organization'
   inquirer.prompt [{
     message : 'Which organization would you like to use?'
@@ -65,7 +65,7 @@ exports.getOrg = (orgs, cb) ->
     cb null, answers.org # Continue.
 
 # Prompts the user for the service to use.
-exports.getService = (services, cb) ->
+exports.getService = (services, cb) =>
   logger.debug 'Prompting for service'
   inquirer.prompt [{
     message : 'Which service would you like to use?'
@@ -77,7 +77,7 @@ exports.getService = (services, cb) ->
     cb null, answers.service # Continue.
 
 # Prompts the user for email and/or password.
-exports.getEmailPassword = (email, password, cb) ->
+exports.getEmailPassword = (email, password, cb) =>
   logger.debug 'Prompting for email and/or password'
   inquirer.prompt [
     { message: 'E-mail',   name: 'email', validate: validateEmail, when: not email?    }
@@ -88,7 +88,7 @@ exports.getEmailPassword = (email, password, cb) ->
     cb null, email, password # Continue.
 
 # Prompts the user for log start time.
-exports.getLogStartTimestamp = (startTs, cb) ->
+exports.getLogStartTimestamp = (startTs, cb) =>
   logger.debug 'Prompting for log start timestamp'
   prompt = inquirer.prompt [
     { message: 'From ISO-8601 date: (leave blank for the beginning)',   name: 'startTimestamp', validate: validateTimestamp, when: not startTs?    }
@@ -99,7 +99,7 @@ exports.getLogStartTimestamp = (startTs, cb) ->
     cb null, startTs # Continue.
 
 # Prompts the user for log end time.
-exports.getLogEndTimestamp = (endTs, cb) ->
+exports.getLogEndTimestamp = (endTs, cb) =>
   logger.debug 'Prompting for log end timestamp'
   inquirer.prompt [
     { message: 'To ISO-8601 date: (leave blank for the most recent)',   name: 'endTimestamp', validate: validateTimestamp, when: not endTs?    }

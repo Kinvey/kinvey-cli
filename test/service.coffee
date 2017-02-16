@@ -24,7 +24,7 @@ path = require 'path'
 api      = require './lib/api.coffee'
 stdout   = require('test-console').stdout
 logger   = require '../lib/logger'
-project  = require '../lib/project.coffee'
+project  = require '../lib/project.js'
 service  = require '../lib/service.coffee'
 util     = require '../lib/util.coffee'
 

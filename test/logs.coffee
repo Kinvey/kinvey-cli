@@ -22,7 +22,7 @@ command  = require './fixtures/command.coffee'
 service  = require '../lib/service.coffee'
 logs     = require '../cmd/logs.js'
 pkg      = require '../package.json'
-project  = require '../lib/project.coffee'
+project  = require '../lib/project.js'
 user     = require '../lib/user.coffee'
 
 # Test suite.

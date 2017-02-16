@@ -19,7 +19,7 @@ sinon     = require 'sinon'
 sinonChai = require 'sinon-chai'
 
 # Local modules.
-logger = require '../../lib/logger.coffee'
+logger = require '../../lib/logger.js'
 
 # Configure.
 chai.use sinonChai

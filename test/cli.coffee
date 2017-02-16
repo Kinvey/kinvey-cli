@@ -25,7 +25,7 @@ cli     = require '../bin/cli.coffee'
 init    = require '../lib/init.js'
 logger  = require '../lib/logger.js'
 pkg     = require '../package.json'
-request = require '../lib/request.coffee'
+request = require '../lib/request.js'
 
 # Test suite.
 describe "./#{pkg.name}", () ->

@@ -25,7 +25,7 @@ validUrl = require 'valid-url'
 # Local modules.
 KinveyError = require './error.js'
 logger  = require './logger.js'
-request = require './request.coffee'
+request = require './request.js'
 user    = require './user.coffee'
 
 # Formats the host argument to be a valid URL.

@@ -22,7 +22,7 @@ config = require 'config'
 # Local modules.
 logger  = require './logger.js'
 prompt  = require './prompt.js'
-request = require './request.coffee'
+request = require './request.js'
 util    = require './util.coffee'
 
 # Define the user class.

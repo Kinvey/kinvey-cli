@@ -18,7 +18,7 @@ limitations under the License.
 config   = require 'config'
 
 # Imports.
-api     = require './lib/api.coffee'
+api     = require './lib/api.js'
 prompt  = require '../lib/prompt.js'
 user    = require '../lib/user.js'
 util    = require '../lib/util.js'

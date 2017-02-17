@@ -18,7 +18,7 @@ limitations under the License.
 config   = require 'config'
 
 # Local modules.
-api     = require './lib/api.coffee'
+api     = require './lib/api.js'
 logger  = require '../lib/logger.js'
 project = require '../lib/project.js'
 prompt  = require '../lib/prompt.js'

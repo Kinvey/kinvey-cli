@@ -18,7 +18,7 @@ limitations under the License.
 sinon = require 'sinon'
 
 # Local modules.
-command  = require './fixtures/command.coffee'
+command  = require './fixtures/command.js'
 service = require '../lib/service.js'
 deploy   = require '../cmd/deploy.js'
 pkg      = require '../package.json'

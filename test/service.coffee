@@ -21,7 +21,7 @@ uuid = require 'uuid'
 path = require 'path'
 
 # Local modules.
-api      = require './lib/api.coffee'
+api      = require './lib/api.js'
 stdout   = require('test-console').stdout
 logger   = require '../lib/logger'
 project  = require '../lib/project.js'

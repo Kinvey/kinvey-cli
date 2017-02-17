@@ -24,7 +24,7 @@ logger   = require '../lib/logger.js'
 pkg      = require '../package.json'
 project  = require '../lib/project.js'
 job      = require '../cmd/job.js'
-user     = require '../lib/user.coffee'
+user     = require '../lib/user.js'
 
 # Test suite.
 describe "./#{pkg.name} job", () ->

@@ -21,7 +21,7 @@ sinon = require 'sinon'
 command = require './fixtures/command.coffee'
 pkg     = require '../package.json'
 project = require '../lib/project.js'
-user    = require '../lib/user.coffee'
+user    = require '../lib/user.js'
 
 # Test suite.
 describe "./#{pkg.name} config", () ->

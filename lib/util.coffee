@@ -26,7 +26,7 @@ validUrl = require 'valid-url'
 KinveyError = require './error.js'
 logger  = require './logger.js'
 request = require './request.js'
-user    = require './user.coffee'
+user    = require './user.js'
 
 # Formats the host argument to be a valid URL.
 exports.formatHost = (host) ->

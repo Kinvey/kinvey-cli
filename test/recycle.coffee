@@ -23,7 +23,7 @@ service = require '../lib/service.js'
 pkg      = require '../package.json'
 project  = require '../lib/project.js'
 recycle  = require '../cmd/recycle.js'
-user     = require '../lib/user.coffee'
+user     = require '../lib/user.js'
 
 # Test suite.
 describe "./#{pkg.name} recycle", () ->

@@ -23,7 +23,7 @@ list     = require '../cmd/list.js'
 logger   = require '../lib/logger.js'
 pkg      = require '../package.json'
 project  = require '../lib/project.js'
-user     = require '../lib/user.coffee'
+user     = require '../lib/user.js'
 
 # Test suite.
 describe "./#{pkg.name} list", () ->

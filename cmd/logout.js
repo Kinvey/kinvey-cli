@@ -17,7 +17,7 @@ const async = require('async');
 const program = require('commander');
 const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
-const user = require('../lib/user.coffee');
+const user = require('../lib/user.js');
 
 function logout(command, cb) {
   return async.series([

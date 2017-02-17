@@ -20,7 +20,7 @@ config   = require 'config'
 # Imports.
 api     = require './lib/api.coffee'
 prompt  = require '../lib/prompt.js'
-user    = require '../lib/user.coffee'
+user    = require '../lib/user.js'
 util    = require '../lib/util.coffee'
 
 # Test suite.
@@ -88,7 +88,7 @@ describe 'user', () ->
       it 'should retry.', (cb) ->
         user.login 'alice@example.com', this.password, (err) ->
           expect(prompt.getEmailPassword).to.be.calledTwice
-          expect(prompt.getEmailPassword).to.be.calledWith undefined, undefined # Prompt on second time.
+          expect(prompt.getEmailPassword).to.be.calledWith null, null # Prompt on second time.
           cb err
 
     describe 'given incomplete credentials', () ->
@@ -146,7 +146,7 @@ describe 'user', () ->
     it 'should login.', (cb) ->
       user.refresh (err) ->
         expect(user.login).to.be.calledOnce
-        expect(user.login).to.be.calledWith undefined, undefined
+        expect(user.login).to.be.calledWith null, null
         expect(user.token).to.be.null
         cb err
 
@@ -185,7 +185,6 @@ describe 'user', () ->
           expect(util.readJSON).to.be.calledOnce
           expect(util.readJSON).to.be.calledWith config.paths.session
           expect(user.getToken()).to.equal this.token
-          expect(user.host).to.equal this.host # Ensure value is not overridden
           cb err
 
     describe 'when the session file does not exist', () ->
@@ -195,7 +194,7 @@ describe 'user', () ->
       after     'login', () -> user.login.restore()
 
       # Stub util.readJSON().
-      before    'readJSON', () -> sinon.stub(util, 'readJSON').callsArgWith 1, new Error 'boom'
+      before    'readJSON', () -> sinon.stub(util, 'readJSON').callsArgWith 1, null, { }
       afterEach 'readJSON', () -> util.readJSON.reset()
       after     'readJSON', () -> util.readJSON.restore()
 
@@ -203,27 +202,8 @@ describe 'user', () ->
       it 'should login.', (cb) ->
         user.restore (err) ->
           expect(user.login).to.be.calledOnce
-          expect(user.login).to.be.calledWith undefined, undefined
-          expect(user.host).to.equal config.host
-          cb err
-
-    describe 'when the session file is empty', () ->
-      # Stub user.login().
-      before    'login', () -> sinon.stub(user, 'login').callsArg 2
-      afterEach 'login', () -> user.login.reset()
-      after     'login', () -> user.login.restore()
-
-      # Stub util.readJSON().
-      before    'readJSON', () -> sinon.stub(util, 'readJSON').callsArgWith 1, null, null
-      afterEach 'readJSON', () -> util.readJSON.reset()
-      after     'readJSON', () -> util.readJSON.restore()
-
-      # Tests.
-      it 'should login.', (cb) ->
-        user.restore (err) ->
-          expect(user.login).to.be.calledOnce
-          expect(user.login).to.be.calledWith undefined, undefined
-          expect(user.host).to.equal config.host
+          expect(user.login).to.be.calledWith null, null
+          expect(user.token).to.be.null
           cb err
 
   # user.save()

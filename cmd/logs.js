@@ -20,7 +20,7 @@ const service = require('../lib/service.js');
 const init = require('../lib/init.js');
 const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
-const user = require('../lib/user.coffee');
+const user = require('../lib/user.js');
 
 function validateTimestamp(ts) {
   if (ts == null) return true;

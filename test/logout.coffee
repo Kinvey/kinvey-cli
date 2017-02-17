@@ -22,7 +22,7 @@ command = require './fixtures/command.coffee'
 logout  = require '../cmd/logout.js'
 pkg     = require '../package.json'
 project = require '../lib/project.js'
-user    = require '../lib/user.coffee'
+user    = require '../lib/user.js'
 
 # Test suite.
 describe "./#{pkg.name} logout", () ->

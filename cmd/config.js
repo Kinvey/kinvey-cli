@@ -18,7 +18,7 @@ const program = require('commander');
 const init = require('../lib/init.js');
 const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
-const user = require('../lib/user.coffee');
+const user = require('../lib/user.js');
 const util = require('../lib/util.coffee');
 
 function initUrl(host, cb) {

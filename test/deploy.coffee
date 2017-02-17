@@ -23,7 +23,7 @@ service = require '../lib/service.js'
 deploy   = require '../cmd/deploy.js'
 pkg      = require '../package.json'
 project  = require '../lib/project.js'
-user     = require '../lib/user.coffee'
+user     = require '../lib/user.js'
 
 # Test suite.
 describe "./#{pkg.name} deploy", () ->

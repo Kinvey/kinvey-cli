@@ -19,7 +19,7 @@ const init = require('../lib/init.js');
 const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
-const util = require('../lib/util.coffee');
+const util = require('../lib/util.js');
 
 function initUrl(host, cb) {
   if (host != null) user.host = util.formatHost(host);

@@ -21,7 +21,7 @@ config   = require 'config'
 api     = require './lib/api.coffee'
 prompt  = require '../lib/prompt.js'
 user    = require '../lib/user.js'
-util    = require '../lib/util.coffee'
+util    = require '../lib/util.js'
 
 # Test suite.
 describe 'user', () ->

@@ -23,7 +23,7 @@ logger  = require '../lib/logger.js'
 project = require '../lib/project.js'
 prompt  = require '../lib/prompt.js'
 user    = require '../lib/user.js'
-util    = require '../lib/util.coffee'
+util    = require '../lib/util.js'
 uuid    = require 'uuid'
 
 # Fixtures.

@@ -26,7 +26,7 @@ stdout   = require('test-console').stdout
 logger   = require '../lib/logger'
 project  = require '../lib/project.js'
 service  = require '../lib/service.js'
-util     = require '../lib/util.coffee'
+util     = require '../lib/util.js'
 
 # Configure.
 fixtures =

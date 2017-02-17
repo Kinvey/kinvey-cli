@@ -21,7 +21,7 @@ sinon          = require 'sinon'
 updateNotifier = require('update-notifier').UpdateNotifier
 
 # Local modules.
-cli     = require '../bin/cli.coffee'
+cli     = require '../bin/kinveyCli.js'
 init    = require '../lib/init.js'
 logger  = require '../lib/logger.js'
 pkg     = require '../package.json'

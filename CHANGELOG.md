@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.3 (2017-02-25)
+* Added HTTPS proxy usage information to README
+
 ## 1.1.2 (2017-01-26)
 * Fixed bug which resulted in a 'ProjectNotConfigured' error when running the `list` command with a successfully configured project
 

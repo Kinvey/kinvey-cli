@@ -29,7 +29,17 @@ In your project directory, run `kinvey config` to set-up your project. The CLI w
 * `-c, --suppress-version-check` - do not check for package updates.
 * `-v, --verbose` - output debug messages.
 
-The Kinvey CLI supports one-time session creation using the `-e` and `-p` (and optionally `--host`) flags. Set these parameters explicitly in your calls if you are unable to init with `kinvey config`.
+You can create a one-time session using the `-e` and `-p` (and optionally `--host`) flags. Set these parameters explicitly in your calls if you are unable to init with `kinvey config [host]`.
+
+### Proxy Settings
+
+The Kinvey CLI supports the universal ENV variables `HTTPS_PROXY` and `https_proxy` for routing commands through a proxy server. For example:
+
+```
+export HTTPS_PROXY=proxy.local && kinvey config
+```
+
+**Note**: The CLI sends binary data (content type "multipart/form-data") as part of the deploy process. Deploy jobs will fail if traffic of this type is blocked within your network.
 
 ## Troubleshooting
 Run any command with the `-v` (`--verbose`) flag to see what is going on when executing a command. If problems persist, please contact [Kinvey](http://support.kinvey.com). In any case, make sure you have configured your project using the `config` command before attempting to execute any other commands.

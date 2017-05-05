@@ -104,7 +104,7 @@ exports.readFile = readFile = (file, cb) ->
   fs.readFile file, cb # Forward to fs.
 
 # Reads JSON contents from the specified file.
-exports.readJSON = readJSON = (file, cb) ->
+exports.readJSON = (file, cb) ->
   logger.debug 'Reading JSON from file %s', chalk.cyan file # Debug.
   async.waterfall [
     (next)       -> readFile file, next
@@ -125,7 +125,7 @@ exports.writeFile = writeFile = (file, contents, cb) ->
   fs.writeFile file, contents, cb # Forward to fs.
 
 # Writes JSON contents to the specified file.
-exports.writeJSON = writeJSON = (file, json, cb) ->
+exports.writeJSON = (file, json, cb) ->
   logger.debug 'Writing JSON to file %s', chalk.cyan file # Debug.
   contents = JSON.stringify json
   writeFile file, contents, cb

@@ -194,7 +194,7 @@ describe 'user', () ->
       after     'login', () -> user.login.restore()
 
       # Stub util.readJSON().
-      before    'readJSON', () -> sinon.stub(util, 'readJSON').callsArgWith 1, null, { }
+      before    'readJSON', () -> sinon.stub(util, 'readJSON').callsArgWith 1, new Error 'boom'
       afterEach 'readJSON', () -> util.readJSON.reset()
       after     'readJSON', () -> util.readJSON.restore()
 
@@ -203,7 +203,26 @@ describe 'user', () ->
         user.restore (err) ->
           expect(user.login).to.be.calledOnce
           expect(user.login).to.be.calledWith undefined, undefined
-          expect(user.token).to.be.null
+          expect(user.host).to.equal config.host
+          cb err
+
+    describe 'when the session file is empty', () ->
+      # Stub user.login().
+      before    'login', () -> sinon.stub(user, 'login').callsArg 2
+      afterEach 'login', () -> user.login.reset()
+      after     'login', () -> user.login.restore()
+
+      # Stub util.readJSON().
+      before    'readJSON', () -> sinon.stub(util, 'readJSON').callsArgWith 1, null, null
+      afterEach 'readJSON', () -> util.readJSON.reset()
+      after     'readJSON', () -> util.readJSON.restore()
+
+      # Tests.
+      it 'should login.', (cb) ->
+        user.restore (err) ->
+          expect(user.login).to.be.calledOnce
+          expect(user.login).to.be.calledWith undefined, undefined
+          expect(user.host).to.equal config.host
           cb err
 
   # user.save()

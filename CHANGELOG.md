@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.4 (2017-05-05)
+* Fixed crash on `config` against the default instance (under certain scenarios)
+
 ## 1.1.3 (2017-02-25)
 * Added HTTPS proxy usage information to README
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.5 (2017-06-20)
+* Fixed bug where `instance` param was not respected when running `config [instance]` in a fresh environment
+
 ## 1.1.4 (2017-05-05)
 * Fixed crash on `config` against the default instance (under certain scenarios)
 

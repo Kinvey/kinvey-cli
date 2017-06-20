@@ -185,6 +185,7 @@ describe 'user', () ->
           expect(util.readJSON).to.be.calledOnce
           expect(util.readJSON).to.be.calledWith config.paths.session
           expect(user.getToken()).to.equal this.token
+          expect(user.host).to.equal this.host # Ensure value is not overridden
           cb err
 
     describe 'when the session file does not exist', () ->

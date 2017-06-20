@@ -71,11 +71,11 @@ class User
   restore: (cb) =>
     logger.debug 'Restoring session from file %s', chalk.cyan this.userPath
     util.readJSON this.userPath, (err, data) =>
-      if err? then this.host = config.host
-      else
-        if data?.host? then this.host ?= data.host
+      unless this.host? # this.host manually overridden by user
+        if err? then this.host = config.host # error retrieving saved value, use default
+        else if data?.host? then this.host ?= data.host # no override, use stored/configured value
         else
-          this.host ?= config.host
+          this.host ?= config.host # use default host (no call override, no stored value)
 
       request.Request = request.Request.defaults { baseUrl: this.host } # Save.
       if this.host? and this.host.indexOf(config.host) is -1 then logger.info 'host: %s', chalk.cyan this.host

@@ -23,9 +23,9 @@ const user = require('../lib/user.js');
 function list(command, cb) {
   const options = init(command);
   return async.series([
-    (next) => { user.setup(options, next); },
-    project.restore,
-    project.list
+    (next) => user.setup(options, next),
+    (next) => project.restore(next),
+    (next) => project.list(next)
   ], (err) => {
     if (err != null) {
       logger.error('%s', err);

@@ -24,10 +24,10 @@ const user = require('../lib/user.js');
 function deploy(command, cb) {
   const options = init(command);
   return async.waterfall([
-    (next) => { user.setup(options, next); },
-    project.restore,
-    (next) => { service.validate(process.cwd(), next); },
-    (version, next) => { service.deploy(process.cwd(), version, next); }
+    (next) => user.setup(options, next),
+    (next) => project.restore(next),
+    (next) => service.validate(process.cwd(), next),
+    (version, next) => service.deploy(process.cwd(), version, next)
   ], (err) => {
     if (err != null) {
       logger.error('%s', err);

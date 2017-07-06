@@ -21,8 +21,8 @@ const user = require('../lib/user.js');
 
 function logout(command, cb) {
   return async.series([
-    (next) => { user.logout(next); },
-    (next) => { project.logout(next); }
+    (next) => user.logout(next),
+    (next) => project.logout(next)
   ], (err) => {
     if (err != null) {
       logger.error('%s', err);

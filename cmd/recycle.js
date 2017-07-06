@@ -24,9 +24,9 @@ const user = require('../lib/user.js');
 function recycle(command, cb) {
   const options = init(command);
   return async.series([
-    (next) => { user.setup(options, next); },
-    project.restore,
-    service.recycle
+    (next) => user.setup(options, next),
+    (next) => project.restore(next),
+    (next) => service.recycle(next)
   ], (err) => {
     if (err != null) {
       logger.error('%s', err);

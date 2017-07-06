@@ -32,9 +32,9 @@ function logs(from, to, command, cb) {
   if (!validateTimestamp(from)) return cb(new Error('Logs \'from\' timestamp invalid (ISO-8601 required)'));
   if (!validateTimestamp(to)) return cb(new Error('Logs \'to\' timestamp invalid (ISO-8601 required)'));
   return async.series([
-    (next) => { user.setup(options, next); },
-    project.restore,
-    (next) => { service.logs(from, to, next); }
+    (next) => user.setup(options, next),
+    (next) => project.restore(next),
+    (next) => service.logs(from, to, next)
   ], (err) => {
     if (err != null) {
       logger.error('%s', err);

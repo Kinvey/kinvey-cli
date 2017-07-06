@@ -29,10 +29,10 @@ function initUrl(host, cb) {
 function configure(host, command, cb) {
   const options = init(command);
   return async.series([
-    (next) => { initUrl(host, next); },
-    (next) => { user.setup(options, next); },
-    (next) => { project.config(options, next); },
-    (next) => { user.save(next); }
+    (next) => initUrl(host, next),
+    (next) => user.setup(options, next),
+    (next) => project.config(options, next),
+    (next) => user.save(next)
   ], (err) => {
     if (err != null) {
       logger.error('%s', err);

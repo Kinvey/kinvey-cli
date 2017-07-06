@@ -235,11 +235,12 @@ describe('user', () => {
           expect(util.readJSON).to.be.calledOnce;
           expect(util.readJSON).to.be.calledWith(config.paths.session);
           expect(user.getToken()).to.equal(this.token);
+          expect(user.host).to.equal(this.host);
           return cb(err);
         });
       });
     });
-    return describe('when the session file does not exist', () => {
+    describe('when the session file does not exist', () => {
       before('login', () => {
         return sinon.stub(user, 'login').callsArg(2);
       });
@@ -265,6 +266,34 @@ describe('user', () => {
           expect(user.token).to.be.null;
           return cb(err);
         });
+      });
+    });
+  });
+  describe('when the session file is empty', () => {
+    before('login', () => {
+      sinon.stub(user, 'login').callsArg(2);
+    });
+    afterEach('login', () => {
+      user.login.reset();
+    });
+    after('login', () => {
+      user.login.restore();
+    });
+    before('readJSON', () => {
+      sinon.stub(util, 'readJSON').callsArgWith(1, null, null);
+    });
+    afterEach('readJSON', () => {
+      util.readJSON.reset();
+    });
+    after('readJSON', () => {
+      util.readJSON.restore();
+    });
+    it('should login.', (cb) => {
+      user.restore((err) => {
+        expect(user.login).to.be.calledOnce;
+        expect(user.login).to.be.calledWith(null, null);
+        expect(user.host).to.equal(config.host);
+        return cb(err);
       });
     });
   });

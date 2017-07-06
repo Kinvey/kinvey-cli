@@ -22,35 +22,35 @@ const user = require('../lib/user.js');
 
 describe(`./${pkg.name} logout`, () => {
   before('user', () => {
-    return sinon.stub(user, 'logout').callsArg(0);
+    sinon.stub(user, 'logout').callsArg(0);
   });
   afterEach('user', () => {
-    return user.logout.reset();
+    user.logout.reset();
   });
   after('user', () => {
-    return user.logout.restore();
+    user.logout.restore();
   });
 
   before('project', () => {
-    return sinon.stub(project, 'logout').callsArg(0);
+    sinon.stub(project, 'logout').callsArg(0);
   });
   afterEach('project', () => {
-    return project.logout.reset();
+    project.logout.reset();
   });
   after('project', () => {
-    return project.logout.restore();
+    project.logout.restore();
   });
 
   it('should logout the user.', (cb) => {
-    return logout.call(command, command, (err) => {
+    logout.call(command, command, (err) => {
       expect(user.logout).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
-  return it('should logout the project.', (cb) => {
-    return logout.call(command, command, (err) => {
+  it('should logout the project.', (cb) => {
+    logout.call(command, command, (err) => {
       expect(project.logout).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
 });

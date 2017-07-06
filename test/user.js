@@ -293,22 +293,22 @@ describe('user', () => {
         expect(user.login).to.be.calledOnce;
         expect(user.login).to.be.calledWith(null, null);
         expect(user.host).to.equal(config.host);
-        return cb(err);
+        cb(err);
       });
     });
   });
   describe('save', () => {
     before('stub', () => {
-      return sinon.stub(util, 'writeJSON').callsArg(2);
+      sinon.stub(util, 'writeJSON').callsArg(2);
     });
     afterEach('stub', () => {
-      return util.writeJSON.reset();
+      util.writeJSON.reset();
     });
     after('stub', () => {
-      return util.writeJSON.restore();
+      util.writeJSON.restore();
     });
-    return it('should write the token to file.', (cb) => {
-      return user.save((err) => {
+    it('should write the token to file.', (cb) => {
+      user.save((err) => {
         const tokens = {
           host: 'https://manage.kinvey.com/',
           tokens: {
@@ -318,64 +318,64 @@ describe('user', () => {
         tokens.tokens['https://manage.kinvey.com/'] = null;
         expect(util.writeJSON).to.be.calledOnce;
         expect(util.writeJSON).to.be.calledWith(config.paths.session, tokens);
-        return cb(err);
+        cb(err);
       });
     });
   });
-  return describe('setup', () => {
+  describe('setup', () => {
     before('login', () => {
-      return sinon.stub(user, 'login').callsArg(2);
+      sinon.stub(user, 'login').callsArg(2);
     });
     afterEach('login', () => {
-      return user.login.reset();
+      user.login.reset();
     });
     after('login', () => {
-      return user.login.restore();
+      user.login.restore();
     });
     before('restore', () => {
-      return sinon.stub(user, 'restore').callsArg(0);
+      sinon.stub(user, 'restore').callsArg(0);
     });
     afterEach('restore', () => {
-      return user.restore.reset();
+      user.restore.reset();
     });
     after('restore', () => {
-      return user.restore.restore();
+      user.restore.restore();
     });
     it('should restore the user session.', (cb) => {
-      return user.setup({}, (err) => {
+      user.setup({}, (err) => {
         expect(user.restore).to.be.calledOnce;
-        return cb(err);
+        cb(err);
       });
     });
     it('should login given email.', (cb) => {
       const options = {
         email: 'bob@example.com'
       };
-      return user.setup(options, (err) => {
+      user.setup(options, (err) => {
         expect(user.login).to.be.calledOnce;
         expect(user.login).to.be.calledWith(options.email, void 0);
-        return cb(err);
+        cb(err);
       });
     });
     it('should login given password.', (cb) => {
       const options = {
         password: 'test123'
       };
-      return user.setup(options, (err) => {
+      user.setup(options, (err) => {
         expect(user.login).to.be.calledOnce;
         expect(user.login).to.be.calledWith(void 0, options.password);
-        return cb(err);
+        cb(err);
       });
     });
-    return it('should login given email and password.', (cb) => {
+    it('should login given email and password.', (cb) => {
       const options = {
         email: 'bob@example.com',
         password: 'test123'
       };
-      return user.setup(options, (err) => {
+      user.setup(options, (err) => {
         expect(user.login).to.be.calledOnce;
         expect(user.login).to.be.calledWith(options.email, options.password);
-        return cb(err);
+        cb(err);
       });
     });
   });

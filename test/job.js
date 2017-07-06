@@ -26,64 +26,64 @@ describe(`./${pkg.name} job`, () => {
   before('configure', () => {
     project.app = project.service = '123';
     project.schemaVersion = 1;
-    return project.lastJobId = 'abcdef';
+    project.lastJobId = 'abcdef';
   });
   after('configure', () => {
     project.app = project.service = project.schemaVersion = null;
   });
 
   before('user', () => {
-    return sinon.stub(user, 'setup').callsArg(1);
+    sinon.stub(user, 'setup').callsArg(1);
   });
   afterEach('user', () => {
-    return user.setup.reset();
+    user.setup.reset();
   });
   after('user', () => {
-    return user.setup.restore();
+    user.setup.restore();
   });
   before('project', () => {
-    return sinon.stub(project, 'restore').callsArg(0);
+    sinon.stub(project, 'restore').callsArg(0);
   });
   afterEach('project', () => {
-    return project.restore.reset();
+    project.restore.reset();
   });
   after('project', () => {
-    return project.restore.restore();
+    project.restore.restore();
   });
   before('service', () => {
-    return sinon.stub(service, 'jobStatus').callsArg(1);
+    sinon.stub(service, 'jobStatus').callsArg(1);
   });
   afterEach('service', () => {
-    return service.jobStatus.reset();
+    service.jobStatus.reset();
   });
   after('service', () => {
-    return service.jobStatus.restore();
+    service.jobStatus.restore();
   });
   it('should setup the user.', (cb) => {
-    return job('123', command, (err) => {
+    job('123', command, (err) => {
       expect(user.setup).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
   it('should restore the project.', (cb) => {
-    return job('123', command, (err) => {
+    job('123', command, (err) => {
       expect(project.restore).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
   it('should print the current job status.', (cb) => {
     const jobId = '123';
-    return job(jobId, command, (err) => {
+    job(jobId, command, (err) => {
       expect(service.jobStatus).to.be.calledOnce;
       expect(service.jobStatus).to.be.calledWith(jobId);
-      return cb(err);
+      cb(err);
     });
   });
-  return it('should print the current job status when called without an id.', (cb) => {
-    return job(null, command, (err) => {
+  it('should print the current job status when called without an id.', (cb) => {
+    job(null, command, (err) => {
       expect(service.jobStatus).to.be.calledOnce;
       expect(service.jobStatus).to.be.calledWith(null);
-      return cb(err);
+      cb(err);
     });
   });
 });

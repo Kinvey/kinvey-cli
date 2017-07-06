@@ -23,65 +23,65 @@ const user = require('../lib/user.js');
 
 describe(`./${pkg.name} logs`, () => {
   before('user', () => {
-    return sinon.stub(user, 'setup').callsArg(1);
+    sinon.stub(user, 'setup').callsArg(1);
   });
   afterEach('user', () => {
-    return user.setup.reset();
+    user.setup.reset();
   });
   after('user', () => {
-    return user.setup.restore();
+    user.setup.restore();
   });
 
   before('project', () => {
-    return sinon.stub(project, 'restore').callsArg(0);
+    sinon.stub(project, 'restore').callsArg(0);
   });
   afterEach('project', () => {
-    return project.restore.reset();
+    project.restore.reset();
   });
   after('project', () => {
-    return project.restore.restore();
+    project.restore.restore();
   });
 
   before('logs', () => {
-    return sinon.stub(service, 'logs').callsArg(2);
+    sinon.stub(service, 'logs').callsArg(2);
   });
   afterEach('logs', () => {
-    return service.logs.reset();
+    service.logs.reset();
   });
   after('logs', () => {
-    return service.logs.restore();
+    service.logs.restore();
   });
 
   it('should setup the user.', (cb) => {
-    return logs(null, null, command, (err) => {
+    logs(null, null, command, (err) => {
       expect(user.setup).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
   it('should restore the project.', (cb) => {
-    return logs(null, null, command, (err) => {
+    logs(null, null, command, (err) => {
       expect(project.restore).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
   it('should retrieve log entries based on query', (cb) => {
-    return logs(null, null, command, (err) => {
+    logs(null, null, command, (err) => {
       expect(service.logs).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
   it('should fail with an invalid \'from\' timestamp', (done) => {
-    return logs('abc', null, command, (err) => {
+    logs('abc', null, command, (err) => {
       expect(err).to.exist;
       expect(err.message).to.equal("Logs \'from\' timestamp invalid (ISO-8601 required)");
-      return done();
+      done();
     });
   });
-  return it('should fail with an invalid \'to\' timestamp', (done) => {
-    return logs(null, 'abc', command, (err) => {
+  it('should fail with an invalid \'to\' timestamp', (done) => {
+    logs(null, 'abc', command, (err) => {
       expect(err).to.exist;
       expect(err.message).to.equal("Logs \'to\' timestamp invalid (ISO-8601 required)");
-      return done();
+      done();
     });
   });
 });

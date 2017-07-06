@@ -25,52 +25,52 @@ const request = require('../lib/request.js');
 
 describe(`./${pkg.name}`, () => {
   before('command', () => {
-    return program.command('test').action(init);
+    program.command('test').action(init);
   });
   after('command', () => {
     logger.config({
       level: 3
     });
-    return request.Request = request.Request.defaults({
+    request.Request = request.Request.defaults({
       baseUrl: config.host
     });
   });
   before('stub', () => {
-    return sinon.stub(logger, 'config');
+    sinon.stub(logger, 'config');
   });
   afterEach('stub', () => {
-    return logger.config.reset();
+    logger.config.reset();
   });
   after('stub', () => {
-    return logger.config.restore();
+    logger.config.restore();
   });
   describe('-s, --silent', () => {
-    return it('should not output anything.', () => {
+    it('should not output anything.', () => {
       cli(['node', pkg.name, 'test', '--silent']);
-      return expect(logger.config).to.be.calledWith({
+      expect(logger.config).to.be.calledWith({
         level: 3
       });
     });
   });
   describe('-c, --suppress-version-check', () => {
     before('stub', () => {
-      return sinon.stub(updateNotifier.prototype, 'notify');
+      sinon.stub(updateNotifier.prototype, 'notify');
     });
     afterEach('stub', () => {
-      return updateNotifier.prototype.notify.reset();
+      updateNotifier.prototype.notify.reset();
     });
     after('stub', () => {
-      return updateNotifier.prototype.notify.restore();
+      updateNotifier.prototype.notify.restore();
     });
-    return it('should not check for package updates.', () => {
+    it('should not check for package updates.', () => {
       cli(['node', pkg.name, 'test', '--suppress-version-check']);
-      return expect(updateNotifier.prototype.notify).not.to.be.called;
+      expect(updateNotifier.prototype.notify).not.to.be.called;
     });
   });
-  return describe('-v, --verbose', () => {
-    return it('should output debug messages.', () => {
+  describe('-v, --verbose', () => {
+    it('should output debug messages.', () => {
       cli(['node', pkg.name, 'test', '--verbose']);
-      return expect(logger.config).to.be.calledWith({
+      expect(logger.config).to.be.calledWith({
         level: 0
       });
     });

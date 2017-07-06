@@ -23,51 +23,51 @@ const user = require('../lib/user.js');
 
 describe(`./${pkg.name} list`, () => {
   before('user', () => {
-    return sinon.stub(user, 'setup').callsArg(1);
+    sinon.stub(user, 'setup').callsArg(1);
   });
   afterEach('user', () => {
-    return user.setup.reset();
+    user.setup.reset();
   });
   after('user', () => {
-    return user.setup.restore();
+    user.setup.restore();
   });
 
   before('restore', () => {
-    return sinon.stub(project, 'restore').callsArg(0);
+    sinon.stub(project, 'restore').callsArg(0);
   });
   afterEach('restore', () => {
-    return project.restore.reset();
+    project.restore.reset();
   });
   after('restore', () => {
-    return project.restore.restore();
+    project.restore.restore();
   });
 
   before('list', () => {
-    return sinon.stub(project, 'list').callsArg(0);
+    sinon.stub(project, 'list').callsArg(0);
   });
   afterEach('list', () => {
-    return project.list.reset();
+    project.list.reset();
   });
   after('list', () => {
-    return project.list.restore();
+    project.list.restore();
   });
 
   it('should setup the user.', (cb) => {
-    return list.call(command, command, (err) => {
+    list.call(command, command, (err) => {
       expect(user.setup).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
   it('should restore the project.', (cb) => {
-    return list.call(command, command, (err) => {
+    list.call(command, command, (err) => {
       expect(project.restore).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
-  return it('should list the Kinvey datalinks.', (cb) => {
-    return list.call(command, command, (err) => {
+  it('should list the Kinvey datalinks.', (cb) => {
+    list.call(command, command, (err) => {
       expect(project.list).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
 });

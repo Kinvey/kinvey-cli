@@ -25,58 +25,58 @@ const user = require('../lib/user.js');
 describe(`./${pkg.name} status`, () => {
   before('configure', () => {
     project.app = project.service = '123';
-    return project.schemaVersion = 1;
+    project.schemaVersion = 1;
   });
   after('configure', () => {
     project.app = project.service = project.schemaVersion = null;
   });
 
   before('user', () => {
-    return sinon.stub(user, 'setup').callsArg(1);
+    sinon.stub(user, 'setup').callsArg(1);
   });
   afterEach('user', () => {
-    return user.setup.reset();
+    user.setup.reset();
   });
   after('user', () => {
-    return user.setup.restore();
+    user.setup.restore();
   });
 
   before('project', () => {
-    return sinon.stub(project, 'restore').callsArg(0);
+    sinon.stub(project, 'restore').callsArg(0);
   });
   afterEach('project', () => {
-    return project.restore.reset();
+    project.restore.reset();
   });
   after('project', () => {
-    return project.restore.restore();
+    project.restore.restore();
   });
 
   before('service', () => {
-    return sinon.stub(service, 'serviceStatus').callsArg(0);
+    sinon.stub(service, 'serviceStatus').callsArg(0);
   });
   afterEach('service', () => {
-    return service.serviceStatus.reset();
+    service.serviceStatus.reset();
   });
   after('service', () => {
-    return service.serviceStatus.restore();
+    service.serviceStatus.restore();
   });
 
   it('should setup the user.', (cb) => {
-    return status.call(command, command, (err) => {
+    status.call(command, command, (err) => {
       expect(user.setup).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
   it('should restore the project.', (cb) => {
-    return status.call(command, command, (err) => {
+    status.call(command, command, (err) => {
       expect(project.restore).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
-  return it('should print the current KMR service status.', (cb) => {
-    return status.call(command, command, (err) => {
+  it('should print the current KMR service status.', (cb) => {
+    status.call(command, command, (err) => {
       expect(service.serviceStatus).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
 });

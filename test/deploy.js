@@ -23,67 +23,67 @@ const user = require('../lib/user.js');
 
 describe(`./${pkg.name} deploy`, () => {
   before('user', () => {
-    return sinon.stub(user, 'setup').callsArg(1);
+    sinon.stub(user, 'setup').callsArg(1);
   });
   afterEach('user', () => {
-    return user.setup.reset();
+    user.setup.reset();
   });
   after('user', () => {
-    return user.setup.restore();
+    user.setup.restore();
   });
 
   before('project', () => {
-    return sinon.stub(project, 'restore').callsArg(0);
+    sinon.stub(project, 'restore').callsArg(0);
   });
   afterEach('project', () => {
-    return project.restore.reset();
+    project.restore.reset();
   });
   after('project', () => {
-    return project.restore.restore();
+    project.restore.restore();
   });
 
   before('validate', () => {
-    return sinon.stub(service, 'validate').callsArg(1);
+    sinon.stub(service, 'validate').callsArg(1);
   });
   afterEach('validate', () => {
-    return service.validate.reset();
+    service.validate.reset();
   });
   after('validate', () => {
-    return service.validate.restore();
+    service.validate.restore();
   });
 
   before('deploy', () => {
-    return sinon.stub(service, 'deploy').callsArg(1);
+    sinon.stub(service, 'deploy').callsArg(1);
   });
   afterEach('deploy', () => {
-    return service.deploy.reset();
+    service.deploy.reset();
   });
   after('deploy', () => {
-    return service.deploy.restore();
+    service.deploy.restore();
   });
 
   it('should setup the user.', (cb) => {
-    return deploy.call(command, command, (err) => {
+    deploy.call(command, command, (err) => {
       expect(user.setup).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
   it('should restore the project.', (cb) => {
-    return deploy.call(command, command, (err) => {
+    deploy.call(command, command, (err) => {
       expect(project.restore).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
   it('should validate the service.', (cb) => {
-    return deploy.call(command, command, (err) => {
+    deploy.call(command, command, (err) => {
       expect(service.validate).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
-  return it('should deploy the service.', (cb) => {
-    return deploy.call(command, command, (err) => {
+  it('should deploy the service.', (cb) => {
+    deploy.call(command, command, (err) => {
       expect(service.deploy).to.be.calledOnce;
-      return cb(err);
+      cb(err);
     });
   });
 });

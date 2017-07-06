@@ -33,96 +33,96 @@ describe('project', () => {
   describe('isConfigured', () => {
     beforeEach('configure', () => {
       project.service = '123';
-      return project.schemaVersion = 2;
+      project.schemaVersion = 2;
     });
     afterEach('configure', () => {
-      return project.app = project.service = project.schemaVersion = null;
+      project.app = project.service = project.schemaVersion = null;
     });
-    it('should return true if the app and service were configured.', () => {
-      return expect(project.isConfigured()).to.be.true;
+    it('should true if the app and service were configured.', () => {
+      expect(project.isConfigured()).to.be.true;
     });
-    it('should return false if the service was not configured.', () => {
+    it('should false if the service was not configured.', () => {
       project.service = null;
-      return expect(project.isConfigured()).to.be.false;
+      expect(project.isConfigured()).to.be.false;
     });
-    return it('should return false if the schema was not configured.', () => {
+    it('should false if the schema was not configured.', () => {
       project.schemaVersion = null;
-      return expect(project.isConfigured()).to.be.false;
+      expect(project.isConfigured()).to.be.false;
     });
   });
   describe('list', () => {
     beforeEach('configure', () => {
-      return project.app = project.service = '123';
+      project.app = project.service = '123';
     });
     afterEach('configure', () => {
-      return project.app = project.service = null;
+      project.app = project.service = null;
     });
 
     before('stub', () => {
-      return sinon.stub(logger, 'info');
+      sinon.stub(logger, 'info');
     });
     afterEach('stub', () => {
-      return logger.info.reset();
+      logger.info.reset();
     });
     after('stub', () => {
-      return logger.info.restore();
+      logger.info.restore();
     });
 
-    return describe('for v2 apps', () => {
+    describe('for v2 apps', () => {
       beforeEach('configure', () => {
-        return project.schemaVersion = 2;
+        project.schemaVersion = 2;
       });
       afterEach('configure', () => {
-        return project.schemaVersion = null;
+        project.schemaVersion = null;
       });
 
       beforeEach('api', () => {
-        return this.mock = api.get('/v2/apps/123/data-links').reply(200, []);
+        this.mock = api.get('/v2/apps/123/data-links').reply(200, []);
       });
       afterEach('api', () => {
         this.mock.done();
-        return delete this.mock;
+        delete this.mock;
       });
 
-      return it('should list all Kinvey datalinks.', (cb) => {
-        return project.list((err) => {
+      it('should list all Kinvey datalinks.', (cb) => {
+        project.list((err) => {
           expect(logger.info).to.be.called;
           expect(logger.info).to.be.calledWith('The service used in this project is marked with *');
-          return cb(err);
+          cb(err);
         });
       });
     });
   });
   describe('logout', () => {
     beforeEach('configure', () => {
-      return project.app = project.service = '123';
+      project.app = project.service = '123';
     });
     afterEach('configure', () => {
-      return project.app = project.service = null;
+      project.app = project.service = null;
     });
 
     before('stub', () => {
-      return sinon.stub(logger, 'info');
+      sinon.stub(logger, 'info');
     });
     afterEach('stub', () => {
-      return logger.info.reset();
+      logger.info.reset();
     });
     after('stub', () => {
-      return logger.info.restore();
+      logger.info.restore();
     });
 
-    return describe('for v2 apps', () => {
+    describe('for v2 apps', () => {
       beforeEach('configure', () => {
-        return project.schemaVersion = 2;
+        project.schemaVersion = 2;
       });
       afterEach('configure', () => {
-        return project.schemaVersion = null;
+        project.schemaVersion = null;
       });
 
-      return it('should log out the user', (cb) => {
-        return project.logout((err) => {
+      it('should log out the user', (cb) => {
+        project.logout((err) => {
           expect(logger.info).to.be.calledOnce;
-          return cb(err);
+          cb(err);
         });
       });
     });
@@ -131,53 +131,53 @@ describe('project', () => {
     describe('when the project file exists', () => {
       before('configure', () => {
         this.app = this.service = 123;
-        return this.schemaVersion = 2;
+        this.schemaVersion = 2;
       });
       after('configure', () => {
         delete this.app;
         delete this.service;
-        return delete this.schemaVersion;
+        delete this.schemaVersion;
       });
 
       before('stub', () => {
-        return sinon.stub(util, 'readJSON').callsArgWith(1, null, {
+        sinon.stub(util, 'readJSON').callsArgWith(1, null, {
           service: this.service,
           schemaVersion: this.schemaVersion
         });
       });
       afterEach('stub', () => {
-        return util.readJSON.reset();
+        util.readJSON.reset();
       });
       after('stub', () => {
-        return util.readJSON.restore();
+        util.readJSON.restore();
       });
 
-      return it('should set the project app, service, and schema.', (cb) => {
-        return project.restore((err) => {
+      it('should set the project app, service, and schema.', (cb) => {
+        project.restore((err) => {
           expect(util.readJSON).to.be.calledOnce;
           expect(util.readJSON).to.be.calledWith(config.paths.project);
           expect(project.service).to.equal(this.service);
           expect(project.schemaVersion).to.equal(this.schemaVersion);
-          return cb(err);
+          cb(err);
         });
       });
     });
-    return describe('when the project file does not exists', () => {
+    describe('when the project file does not exists', () => {
       before('stub', () => {
-        return sinon.stub(util, 'readJSON').callsArgWith(1, null, {});
+        sinon.stub(util, 'readJSON').callsArgWith(1, null, {});
       });
       afterEach('stub', () => {
-        return util.readJSON.reset();
+        util.readJSON.reset();
       });
       after('stub', () => {
-        return util.readJSON.restore();
+        util.readJSON.restore();
       });
 
-      return it('should fail.', (cb) => {
-        return project.restore((err) => {
+      it('should fail.', (cb) => {
+        project.restore((err) => {
           expect(err).to.exist;
           expect(err.name).to.equal('ProjectNotConfigured');
-          return cb();
+          cb();
         });
       });
     });
@@ -186,24 +186,24 @@ describe('project', () => {
     describe('with an app', () => {
       before('configure', () => {
         project.app = project.service = project.serviceName = uuid.v4();
-        return project.schemaVersion = 1;
+        project.schemaVersion = 1;
       });
       after('configure', () => {
-        return project.app = project.service = project.schemaVersion = null;
+        project.app = project.service = project.schemaVersion = null;
       });
 
       before('stub', () => {
-        return sinon.stub(util, 'writeJSON').callsArg(2);
+        sinon.stub(util, 'writeJSON').callsArg(2);
       });
       afterEach('stub', () => {
-        return util.writeJSON.reset();
+        util.writeJSON.reset();
       });
       after('stub', () => {
-        return util.writeJSON.restore();
+        util.writeJSON.restore();
       });
 
-      return it('should write the project to file.', (cb) => {
-        return project.save((err) => {
+      it('should write the project to file.', (cb) => {
+        project.save((err) => {
           expect(util.writeJSON).to.be.calledOnce;
           expect(util.writeJSON).to.be.calledWith(config.paths.project, {
             app: project.app,
@@ -214,31 +214,31 @@ describe('project', () => {
             serviceName: project.serviceName
           });
           expect(project.org).to.be.undefined;
-          return cb(err);
+          cb(err);
         });
       });
     });
-    return describe('with an org', () => {
+    describe('with an org', () => {
       before('configure', () => {
         project.org = project.service = project.serviceName = uuid.v4();
-        return project.schemaVersion = 1;
+        project.schemaVersion = 1;
       });
       after('configure', () => {
-        return project.org = project.service = project.schemaVersion = null;
+        project.org = project.service = project.schemaVersion = null;
       });
 
       before('stub', () => {
-        return sinon.stub(util, 'writeJSON').callsArg(2);
+        sinon.stub(util, 'writeJSON').callsArg(2);
       });
       afterEach('stub', () => {
-        return util.writeJSON.reset();
+        util.writeJSON.reset();
       });
       after('stub', () => {
-        return util.writeJSON.restore();
+        util.writeJSON.restore();
       });
 
-      return it('should write the project to file.', (cb) => {
-        return project.save((err) => {
+      it('should write the project to file.', (cb) => {
+        project.save((err) => {
           expect(util.writeJSON).to.be.calledOnce;
           expect(util.writeJSON).to.be.calledWith(config.paths.project, {
             app: null,
@@ -249,41 +249,41 @@ describe('project', () => {
             serviceName: project.serviceName
           });
           expect(project.app).to.be.null;
-          return cb(err);
+          cb(err);
         });
       });
     });
   });
   describe('select', () => {
     afterEach('configure', () => {
-      return project.app = project.service = project.schemaVersion = null;
+      project.app = project.service = project.schemaVersion = null;
     });
     describe('given invalid credentials', () => {
       before('refresh', () => {
-        return sinon.stub(user, 'refresh').callsArg(0);
+        sinon.stub(user, 'refresh').callsArg(0);
       });
       afterEach('refresh', () => {
-        return user.refresh.reset();
+        user.refresh.reset();
       });
       after('refresh', () => {
-        return user.refresh.restore();
+        user.refresh.restore();
       });
 
       before('getApp', () => {
         const stub = sinon.stub(prompt, 'getAppOrOrg');
-        return stub.callsArgWith(1, null, {
+        stub.callsArgWith(1, null, {
           name: 'App'
         });
       });
       afterEach('getApp', () => {
-        return prompt.getAppOrOrg.reset();
+        prompt.getAppOrOrg.reset();
       });
       after('getApp', () => {
-        return prompt.getAppOrOrg.restore();
+        prompt.getAppOrOrg.restore();
       });
 
       beforeEach('api', () => {
-        return this.mocks = [
+        this.mocks = [
           api.get('/apps').reply(401, {
             code: 'InvalidCredentials'
           }), api.get('/apps').reply(200, [])
@@ -294,147 +294,147 @@ describe('project', () => {
           const mock = this.mocks[i];
           mock.done();
         }
-        return delete this.mocks;
+        delete this.mocks;
       });
 
-      return it('should retry.', (cb) => {
-        return project.select((err) => {
+      it('should retry.', (cb) => {
+        project.select((err) => {
           expect(user.refresh).to.be.calledOnce;
           expect(err).to.have.property('name', 'NoAppsFound');
-          return cb();
+          cb();
         });
       });
     });
     describe('given the user has an app or org and eligible service', () => {
       before('save', () => {
-        return sinon.stub(project, 'save').callsArg(0);
+        sinon.stub(project, 'save').callsArg(0);
       });
       afterEach('save', () => {
-        return project.save.reset();
+        project.save.reset();
       });
       after('save', () => {
-        return project.save.restore();
+        project.save.restore();
       });
 
       before('getService', () => {
         const stub = sinon.stub(prompt, 'getService');
-        return stub.callsArgWith(1, null, fixtures.kinveyDlc);
+        stub.callsArgWith(1, null, fixtures.kinveyDlc);
       });
       afterEach('getService', () => {
-        return prompt.getService.reset();
+        prompt.getService.reset();
       });
       after('getService', () => {
-        return prompt.getService.restore();
+        prompt.getService.restore();
       });
 
       describe('for apps', () => {
         before('getAppOrOrg', () => {
           const stub = sinon.stub(prompt, 'getAppOrOrg');
-          return stub.callsArgWith(1, null, {
+          stub.callsArgWith(1, null, {
             name: 'App'
           });
         });
         afterEach('getAppOrOrg', () => {
-          return prompt.getAppOrOrg.reset();
+          prompt.getAppOrOrg.reset();
         });
         after('getAppOrOrg', () => {
-          return prompt.getAppOrOrg.restore();
+          prompt.getAppOrOrg.restore();
         });
 
         before('getApp', () => {
           const stub = sinon.stub(prompt, 'getApp');
-          return stub.callsArgWith(1, null, fixtures.app);
+          stub.callsArgWith(1, null, fixtures.app);
         });
         afterEach('getApp', () => {
-          return prompt.getApp.reset();
+          prompt.getApp.reset();
         });
         after('getApp', () => {
-          return prompt.getApp.restore();
+          prompt.getApp.restore();
         });
 
         beforeEach('api', () => {
-          return this.mocks = [api.get('/apps').reply(200, [fixtures.app]), api.get('/v2/apps/123/data-links').reply(200, [fixtures.kinveyDlc])];
+          this.mocks = [api.get('/apps').reply(200, [fixtures.app]), api.get('/v2/apps/123/data-links').reply(200, [fixtures.kinveyDlc])];
         });
         afterEach('api', () => {
           for (let i = 0; i < this.mocks; i++) {
             const mock = this.mocks[i];
             mock.done();
           }
-          return delete this.mocks;
+          delete this.mocks;
         });
 
         it('should select the app and service to use.', (cb) => {
-          return project.select((err) => {
+          project.select((err) => {
             expect(prompt.getApp).to.be.calledOnce;
             expect(prompt.getApp).to.be.calledWith([fixtures.app]);
             expect(prompt.getService).to.be.calledOnce;
             expect(prompt.getService).to.be.calledWith([fixtures.kinveyDlc]);
-            return cb(err);
+            cb(err);
           });
         });
-        return it('should save the project.', (cb) => {
-          return project.select((err) => {
+        it('should save the project.', (cb) => {
+          project.select((err) => {
             expect(project.save).to.be.calledOnce;
-            return cb(err);
+            cb(err);
           });
         });
       });
-      return describe('for orgs', () => {
+      describe('for orgs', () => {
         before('config', () => {
-          return project.org = fixtures.org.name;
+          project.org = fixtures.org.name;
         });
         after('config', () => {
-          return delete project.org;
+          delete project.org;
         });
 
         before('getAppOrOrg', () => {
           const stub = sinon.stub(prompt, 'getAppOrOrg');
-          return stub.callsArgWith(1, null, {
+          stub.callsArgWith(1, null, {
             name: 'Organization'
           });
         });
         afterEach('getAppOrOrg', () => {
-          return prompt.getAppOrOrg.reset();
+          prompt.getAppOrOrg.reset();
         });
         after('getAppOrOrg', () => {
-          return prompt.getAppOrOrg.restore();
+          prompt.getAppOrOrg.restore();
         });
 
         before('getOrg', () => {
           const stub = sinon.stub(prompt, 'getOrg');
-          return stub.callsArgWith(1, null, fixtures.org);
+          stub.callsArgWith(1, null, fixtures.org);
         });
         afterEach('getOrg', () => {
-          return prompt.getOrg.reset();
+          prompt.getOrg.reset();
         });
         after('getOrg', () => {
-          return prompt.getOrg.restore();
+          prompt.getOrg.restore();
         });
 
         beforeEach('api', () => {
-          return this.mocks = [api.get('/organizations').reply(200, [fixtures.org]), api.get('/v2/organizations/123/data-links').reply(200, [fixtures.kinveyDlc])];
+          this.mocks = [api.get('/organizations').reply(200, [fixtures.org]), api.get('/v2/organizations/123/data-links').reply(200, [fixtures.kinveyDlc])];
         });
         afterEach('api', () => {
           for (let i = 0; i < this.mocks; i++) {
             const mock = this.mocks[i];
             mock.done();
           }
-          return delete this.mocks;
+          delete this.mocks;
         });
 
         it('should select the org and service to use.', (cb) => {
-          return project.select((err) => {
+          project.select((err) => {
             expect(prompt.getOrg).to.be.calledOnce;
             expect(prompt.getOrg).to.be.calledWith([fixtures.org]);
             expect(prompt.getService).to.be.calledOnce;
             expect(prompt.getService).to.be.calledWith([fixtures.kinveyDlc]);
-            return cb(err);
+            cb(err);
           });
         });
-        return it('should save the project.', (cb) => {
-          return project.select((err) => {
+        it('should save the project.', (cb) => {
+          project.select((err) => {
             expect(project.save).to.be.calledOnce;
-            return cb(err);
+            cb(err);
           });
         });
       });
@@ -442,148 +442,148 @@ describe('project', () => {
     describe('given the user has no apps or eligible datalinks', () => {
       before('getAppOrOrg', () => {
         const stub = sinon.stub(prompt, 'getAppOrOrg');
-        return stub.callsArgWith(1, null, {
+        stub.callsArgWith(1, null, {
           name: 'App'
         });
       });
       afterEach('getAppOrOrg', () => {
-        return prompt.getAppOrOrg.reset();
+        prompt.getAppOrOrg.reset();
       });
       after('getAppOrOrg', () => {
-        return prompt.getAppOrOrg.restore();
+        prompt.getAppOrOrg.restore();
       });
 
       beforeEach('api', () => {
-        return this.mock = api.get('/apps').reply(200, []);
+        this.mock = api.get('/apps').reply(200, []);
       });
       afterEach('api', () => {
         this.mock.done();
-        return delete this.mock;
+        delete this.mock;
       });
 
-      return it('should fail.', (cb) => {
-        return project.select((err) => {
+      it('should fail.', (cb) => {
+        project.select((err) => {
           expect(err).to.exist;
           expect(err.name).to.equal('NoAppsFound');
-          return cb();
+          cb();
         });
       });
     });
-    return describe('given no eligible datalinks', () => {
+    describe('given no eligible datalinks', () => {
       before('getAppOrOrg', () => {
         const stub = sinon.stub(prompt, 'getAppOrOrg');
-        return stub.callsArgWith(1, null, {
+        stub.callsArgWith(1, null, {
           name: 'App'
         });
       });
       afterEach('getAppOrOrg', () => {
-        return prompt.getAppOrOrg.reset();
+        prompt.getAppOrOrg.reset();
       });
       after('getAppOrOrg', () => {
-        return prompt.getAppOrOrg.restore();
+        prompt.getAppOrOrg.restore();
       });
 
       before('stub', () => {
         const stub = sinon.stub(prompt, 'getApp');
-        return stub.callsArgWith(1, null, {
+        stub.callsArgWith(1, null, {
           id: '123'
         }, {
           id: '456'
         });
       });
       afterEach('stub', () => {
-        return prompt.getApp.reset();
+        prompt.getApp.reset();
       });
       after('stub', () => {
-        return prompt.getApp.restore();
+        prompt.getApp.restore();
       });
 
       beforeEach('api', () => {
-        return this.mocks = [api.get('/apps').reply(200, [fixtures.app]), api.get('/v2/apps/123/data-links').reply(200, [fixtures.datalink])];
+        this.mocks = [api.get('/apps').reply(200, [fixtures.app]), api.get('/v2/apps/123/data-links').reply(200, [fixtures.datalink])];
       });
       afterEach('api', () => {
         for (let i = 0; i < this.mocks; i++) {
           const mock = this.mocks[i];
           mock.done();
         }
-        return delete this.mocks;
+        delete this.mocks;
       });
 
-      return it('should fail.', (cb) => {
-        return project.select((err) => {
+      it('should fail.', (cb) => {
+        project.select((err) => {
           expect(err).to.exist;
           expect(err.name).to.equal('NoFlexServicesFound');
-          return cb();
+          cb();
         });
       });
     });
   });
-  return describe('setup', () => {
+  describe('setup', () => {
     describe('when the project is not configured', () => {
       before('restore', () => {
-        return sinon.stub(project, 'restore').callsArgWith(0, new Error('ProjectNotConfigured'));
+        sinon.stub(project, 'restore').callsArgWith(0, new Error('ProjectNotConfigured'));
       });
       afterEach('restore', () => {
-        return project.restore.reset();
+        project.restore.reset();
       });
       after('restore', () => {
-        return project.restore.restore();
+        project.restore.restore();
       });
 
       before('select', () => {
-        return sinon.stub(project, 'select').callsArg(0);
+        sinon.stub(project, 'select').callsArg(0);
       });
       afterEach('select', () => {
-        return project.select.reset();
+        project.select.reset();
       });
       after('select', () => {
-        return project.select.restore();
+        project.select.restore();
       });
 
       it('should restore the project.', (cb) => {
-        return project.setup({}, (err) => {
+        project.setup({}, (err) => {
           expect(project.restore).to.be.calledOnce;
-          return cb(err);
+          cb(err);
         });
       });
-      return it('should select the project if not configured.', (cb) => {
-        return project.setup({}, (err) => {
+      it('should select the project if not configured.', (cb) => {
+        project.setup({}, (err) => {
           expect(project.select).to.be.calledOnce;
-          return cb(err);
+          cb(err);
         });
       });
     });
-    return describe('when the project can not be properly restored', () => {
+    describe('when the project can not be properly restored', () => {
       before('restore', () => {
-        return sinon.stub(project, 'restore').callsArgWith(0, new Error('ProjectRestoreError'));
+        sinon.stub(project, 'restore').callsArgWith(0, new Error('ProjectRestoreError'));
       });
       afterEach('restore', () => {
-        return project.restore.reset();
+        project.restore.reset();
       });
       after('restore', () => {
-        return project.restore.restore();
+        project.restore.restore();
       });
 
       before('select', () => {
-        return sinon.stub(project, 'select').callsArg(0);
+        sinon.stub(project, 'select').callsArg(0);
       });
       afterEach('select', () => {
-        return project.select.reset();
+        project.select.reset();
       });
       after('select', () => {
-        return project.select.restore();
+        project.select.restore();
       });
 
       it('should restore the project.', (cb) => {
-        return project.setup({}, (err) => {
+        project.setup({}, (err) => {
           expect(project.restore).to.be.calledOnce;
-          return cb(err);
+          cb(err);
         });
       });
-      return it('should select the project if not configured.', (cb) => {
-        return project.setup({}, (err) => {
+      it('should select the project if not configured.', (cb) => {
+        project.setup({}, (err) => {
           expect(project.select).to.be.calledOnce;
-          return cb(err);
+          cb(err);
         });
       });
     });

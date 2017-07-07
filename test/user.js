@@ -68,7 +68,7 @@ describe('user', () => {
         return delete this.mock;
       });
       return it('should login.', (cb) => {
-        return user.login(this.email, this.password, (err) => {
+        return user.login(this.email, this.password, null, (err) => {
           expect(user.isLoggedIn()).to.be.true;
           expect(user.getToken()).to.equal(this.token);
           return cb(err);
@@ -103,7 +103,7 @@ describe('user', () => {
         return prompt.getEmailPassword.restore();
       });
       return it('should retry.', (cb) => {
-        return user.login('alice@example.com', this.password, (err) => {
+        return user.login('alice@example.com', this.password, null, (err) => {
           expect(prompt.getEmailPassword).to.be.calledTwice;
           expect(prompt.getEmailPassword).to.be.calledWith(null, null);
           return cb(err);
@@ -132,9 +132,9 @@ describe('user', () => {
         return prompt.getEmailPassword.restore();
       });
       return it('should prompt.', (cb) => {
-        return user.login(void 0, this.password, ((err) => {
+        return user.login(null, this.password, null, ((err) => {
           expect(prompt.getEmailPassword).to.be.calledOnce;
-          expect(prompt.getEmailPassword).to.be.calledWith(void 0, this.password);
+          expect(prompt.getEmailPassword).to.be.calledWith(null, this.password);
           return cb(err);
         }));
       });
@@ -166,7 +166,7 @@ describe('user', () => {
       return delete this.token;
     });
     before('login', () => {
-      return sinon.stub(user, 'login').callsArg(2);
+      return sinon.stub(user, 'login').callsArg(3);
     });
     afterEach('login', () => {
       return user.login.reset();
@@ -242,7 +242,7 @@ describe('user', () => {
     });
     describe('when the session file does not exist', () => {
       before('login', () => {
-        return sinon.stub(user, 'login').callsArg(2);
+        return sinon.stub(user, 'login').callsArg(3);
       });
       afterEach('login', () => {
         return user.login.reset();
@@ -271,7 +271,7 @@ describe('user', () => {
   });
   describe('when the session file is empty', () => {
     before('login', () => {
-      sinon.stub(user, 'login').callsArg(2);
+      sinon.stub(user, 'login').callsArg(3);
     });
     afterEach('login', () => {
       user.login.reset();
@@ -324,7 +324,7 @@ describe('user', () => {
   });
   describe('setup', () => {
     before('login', () => {
-      sinon.stub(user, 'login').callsArg(2);
+      sinon.stub(user, 'login').callsArg(3);
     });
     afterEach('login', () => {
       user.login.reset();
@@ -353,7 +353,7 @@ describe('user', () => {
       };
       user.setup(options, (err) => {
         expect(user.login).to.be.calledOnce;
-        expect(user.login).to.be.calledWith(options.email, void 0);
+        expect(user.login).to.be.calledWith(options.email, undefined, undefined);
         cb(err);
       });
     });
@@ -363,7 +363,7 @@ describe('user', () => {
       };
       user.setup(options, (err) => {
         expect(user.login).to.be.calledOnce;
-        expect(user.login).to.be.calledWith(void 0, options.password);
+        expect(user.login).to.be.calledWith(undefined, options.password, undefined);
         cb(err);
       });
     });

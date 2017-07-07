@@ -21,63 +21,63 @@ const util = require('../lib/util.js');
 
 describe('user', () => {
   describe('isLoggedIn', () => {
-    it('should return true if the token was set.', () => {
+    it('should true if the token was set.', () => {
       user.host = 'abc';
       user.tokens = {
         abc: 123
       };
-      return expect(user.isLoggedIn()).to.be.true;
+      expect(user.isLoggedIn()).to.be.true;
     });
-    return it('should return false if the token was not set.', () => {
+    it('should false if the token was not set.', () => {
       user.tokens = null;
       user.host = null;
-      return expect(user.isLoggedIn()).to.be.false;
+      expect(user.isLoggedIn()).to.be.false;
     });
   });
   describe('login', () => {
     beforeEach('token', () => {
-      return user.token = null;
+      user.token = null;
     });
     before('token', () => {
-      return this.token = '123';
+      this.token = '123';
     });
     after('token', () => {
-      return delete this.token;
+      delete this.token;
     });
     before('email', () => {
-      return this.email = 'bob@example.com';
+      this.email = 'bob@example.com';
     });
     before('password', () => {
-      return this.password = 'test123';
+      this.password = 'test123';
     });
     after('email', () => {
-      return delete this.email;
+      delete this.email;
     });
     after('password', () => {
-      return delete this.password;
+      delete this.password;
     });
     describe('given valid credentials', () => {
       beforeEach('api', () => {
-        return this.mock = api.post('/session').reply(200, {
+        this.mock = api.post('/session').reply(200, {
           email: this.email,
           token: this.token
         });
       });
       afterEach('api', () => {
         this.mock.done();
-        return delete this.mock;
+        delete this.mock;
       });
-      return it('should login.', (cb) => {
-        return user.login(this.email, this.password, null, (err) => {
+      it('should login.', (cb) => {
+        user.login(this.email, this.password, null, (err) => {
           expect(user.isLoggedIn()).to.be.true;
           expect(user.getToken()).to.equal(this.token);
-          return cb(err);
+          cb(err);
         });
       });
     });
     describe('given invalid credentials', () => {
       beforeEach('api', () => {
-        return this.mock = api.post('/session')
+        this.mock = api.post('/session')
           .reply(401, {
             code: 'InvalidCredentials',
             description: ''
@@ -90,181 +90,293 @@ describe('user', () => {
       });
       afterEach('api', () => {
         this.mock.done();
-        return delete this.mock;
+        delete this.mock;
       });
       before('stub', () => {
         const stub = sinon.stub(prompt, 'getEmailPassword');
-        return stub.callsArgWith(2, null, this.email, this.password);
+        stub.callsArgWith(2, null, this.email, this.password);
       });
       afterEach('stub', () => {
-        return prompt.getEmailPassword.reset();
+        prompt.getEmailPassword.reset();
       });
       after('stub', () => {
-        return prompt.getEmailPassword.restore();
+        prompt.getEmailPassword.restore();
       });
-      return it('should retry.', (cb) => {
-        return user.login('alice@example.com', this.password, null, (err) => {
+      it('should retry.', (cb) => {
+        user.login('alice@example.com', this.password, null, (err) => {
           expect(prompt.getEmailPassword).to.be.calledTwice;
           expect(prompt.getEmailPassword).to.be.calledWith(null, null);
-          return cb(err);
+          cb(err);
         });
       });
     });
-    return describe('given incomplete credentials', () => {
+    describe('given incomplete credentials', () => {
       beforeEach('api', () => {
-        return this.mock = api.post('/session').reply(200, {
+        this.mock = api.post('/session').reply(200, {
           email: this.email,
           token: this.token
         });
       });
       afterEach('api', () => {
         this.mock.done();
-        return delete this.mock;
+        delete this.mock;
       });
       before('stub', () => {
         const stub = sinon.stub(prompt, 'getEmailPassword');
-        return stub.callsArgWith(2, null, this.email, this.password);
+        stub.callsArgWith(2, null, this.email, this.password);
       });
       afterEach('stub', () => {
-        return prompt.getEmailPassword.reset();
+        prompt.getEmailPassword.reset();
       });
       after('stub', () => {
-        return prompt.getEmailPassword.restore();
+        prompt.getEmailPassword.restore();
       });
-      return it('should prompt.', (cb) => {
-        return user.login(null, this.password, null, ((err) => {
+      it('should prompt.', (cb) => {
+        user.login(null, this.password, null, ((err) => {
           expect(prompt.getEmailPassword).to.be.calledOnce;
           expect(prompt.getEmailPassword).to.be.calledWith(null, this.password);
-          return cb(err);
+          cb(err);
+        }));
+      });
+    });
+  });
+  describe('2FA login', () => {
+    beforeEach('token', () => {
+      user.token = null;
+    });
+    before('token', () => {
+      this.token = '123';
+    });
+    after('token', () => {
+      delete this.token;
+    });
+    before('email', () => {
+      this.email = 'bob@example.com';
+    });
+    before('password', () => {
+      this.password = 'test123';
+    });
+    before('token', () => {
+      this.token = 123456;
+    });
+    after('token', () => {
+      delete this.token;
+    });
+    after('email', () => {
+      delete this.email;
+    });
+    after('password', () => {
+      delete this.password;
+    });
+    describe('given valid token as option', () => {
+      beforeEach('api', () => {
+        this.mock = api.post('/session').reply(200, {
+          email: this.email,
+          token: this.token
+        });
+      });
+      afterEach('api', () => {
+        this.mock.done();
+        delete this.mock;
+      });
+      it('should login.', (cb) => {
+        user.mfaLogin(this.email, this.password, this.token, (err) => {
+          expect(user.isLoggedIn()).to.be.true;
+          expect(user.getToken()).to.equal(this.token);
+          cb(err);
+        });
+      });
+    });
+    describe('given invalid credentials', () => {
+      beforeEach('api', () => {
+        this.mock = api.post('/session')
+          .reply(401, {
+            code: 'InvalidTwoFactorAuth',
+            description: ''
+          })
+          .post('/session')
+          .reply(200, {
+            email: this.email,
+            token: this.token
+          });
+      });
+      afterEach('api', () => {
+        this.mock.done();
+        delete this.mock;
+      });
+      before('stub', () => {
+        const stub = sinon.stub(prompt, 'getTwoFactorToken');
+        stub.callsArgWith(1, null, this.token);
+      });
+      afterEach('stub', () => {
+        prompt.getTwoFactorToken.reset();
+      });
+      after('stub', () => {
+        prompt.getTwoFactorToken.restore();
+      });
+      it('should retry.', (cb) => {
+        user.mfaLogin(this.email, this.password, null, (err) => {
+          expect(prompt.getTwoFactorToken).to.be.calledTwice;
+          expect(prompt.getTwoFactorToken).to.be.calledWith(null);
+          cb(err);
+        });
+      });
+    });
+    describe('given incomplete credentials', () => {
+      beforeEach('api', () => {
+        this.mock = api.post('/session').reply(200, {
+          email: this.email,
+          token: this.token
+        });
+      });
+      afterEach('api', () => {
+        this.mock.done();
+        delete this.mock;
+      });
+      before('stub', () => {
+        const stub = sinon.stub(prompt, 'getTwoFactorToken');
+        stub.callsArgWith(1, null, this.token);
+      });
+      afterEach('stub', () => {
+        prompt.getTwoFactorToken.reset();
+      });
+      after('stub', () => {
+        prompt.getTwoFactorToken.restore();
+      });
+      it('should prompt.', (cb) => {
+        user.mfaLogin(this.email, this.password, null, ((err) => {
+          expect(prompt.getTwoFactorToken).to.be.calledOnce;
+          expect(prompt.getTwoFactorToken).to.be.calledWith(null);
+          cb(err);
         }));
       });
     });
   });
   describe('logout', () => {
     before('stub', () => {
-      return sinon.stub(util, 'writeJSON').callsArg(2);
+      sinon.stub(util, 'writeJSON').callsArg(2);
     });
     afterEach('stub', () => {
-      return util.writeJSON.reset();
+      util.writeJSON.reset();
     });
     after('stub', () => {
-      return util.writeJSON.restore();
+      util.writeJSON.restore();
     });
-    return it('should clear token data from session file.', (cb) => {
-      return user.logout((err) => {
+    it('should clear token data from session file.', (cb) => {
+      user.logout((err) => {
         expect(util.writeJSON).to.be.calledOnce;
         expect(util.writeJSON).to.be.calledWith(config.paths.session, '');
-        return cb(err);
+        cb(err);
       });
     });
   });
   describe('refresh', () => {
     before('token', () => {
-      return this.token = '123';
+      this.token = '123';
     });
     after('token', () => {
-      return delete this.token;
+      delete this.token;
     });
     before('login', () => {
-      return sinon.stub(user, 'login').callsArg(3);
+      sinon.stub(user, 'login').callsArg(3);
     });
     afterEach('login', () => {
-      return user.login.reset();
+      user.login.reset();
     });
     after('login', () => {
-      return user.login.restore();
+      user.login.restore();
     });
     before('save', () => {
-      return sinon.stub(user, 'save').callsArg(0);
+      sinon.stub(user, 'save').callsArg(0);
     });
     afterEach('save', () => {
-      return user.save.reset();
+      user.save.reset();
     });
     after('save', () => {
-      return user.save.restore();
+      user.save.restore();
     });
     it('should login.', (cb) => {
-      return user.refresh((err) => {
+      user.refresh((err) => {
         expect(user.login).to.be.calledOnce;
         expect(user.login).to.be.calledWith(null, null);
         expect(user.token).to.be.null;
-        return cb(err);
+        cb(err);
       });
     });
-    return it('should save.', (cb) => {
-      return user.refresh((err) => {
+    it('should save.', (cb) => {
+      user.refresh((err) => {
         expect(user.save).to.be.calledOnce;
-        return cb(err);
+        cb(err);
       });
     });
   });
   describe('restore', () => {
     beforeEach('token', () => {
       user.token = null;
-      return user.host = null;
+      user.host = null;
     });
     describe('when the session file exists', () => {
       before('token', () => {
-        return this.token = '123';
+        this.token = '123';
       });
       after('token', () => {
-        return delete this.token;
+        delete this.token;
       });
       before('host', () => {
-        return this.host = 'abc';
+        this.host = 'abc';
       });
       after('host', () => {
-        return delete this.host;
+        delete this.host;
       });
       before('stub', () => {
         const tokens = {};
         tokens[this.host] = this.token;
-        return sinon.stub(util, 'readJSON').callsArgWith(1, null, {
+        sinon.stub(util, 'readJSON').callsArgWith(1, null, {
           tokens
         });
       });
       afterEach('stub', () => {
-        return util.readJSON.reset();
+        util.readJSON.reset();
       });
       after('stub', () => {
-        return util.readJSON.restore();
+        util.readJSON.restore();
       });
-      return it('should set the user token.', (cb) => {
+      it('should set the user token.', (cb) => {
         user.host = this.host;
-        return user.restore((err) => {
+        user.restore((err) => {
           expect(util.readJSON).to.be.calledOnce;
           expect(util.readJSON).to.be.calledWith(config.paths.session);
           expect(user.getToken()).to.equal(this.token);
           expect(user.host).to.equal(this.host);
-          return cb(err);
+          cb(err);
         });
       });
     });
     describe('when the session file does not exist', () => {
       before('login', () => {
-        return sinon.stub(user, 'login').callsArg(3);
+        sinon.stub(user, 'login').callsArg(3);
       });
       afterEach('login', () => {
-        return user.login.reset();
+        user.login.reset();
       });
       after('login', () => {
-        return user.login.restore();
+        user.login.restore();
       });
       before('readJSON', () => {
-        return sinon.stub(util, 'readJSON').callsArgWith(1, null, {});
+        sinon.stub(util, 'readJSON').callsArgWith(1, null, {});
       });
       afterEach('readJSON', () => {
-        return util.readJSON.reset();
+        util.readJSON.reset();
       });
       after('readJSON', () => {
-        return util.readJSON.restore();
+        util.readJSON.restore();
       });
-      return it('should login.', (cb) => {
-        return user.restore((err) => {
+      it('should login.', (cb) => {
+        user.restore((err) => {
           expect(user.login).to.be.calledOnce;
           expect(user.login).to.be.calledWith(null, null);
           expect(user.token).to.be.null;
-          return cb(err);
+          cb(err);
         });
       });
     });
@@ -367,6 +479,16 @@ describe('user', () => {
         cb(err);
       });
     });
+    it('should login given token.', (cb) => {
+      const options = {
+        token: '123456'
+      };
+      user.setup(options, (err) => {
+        expect(user.login).to.be.calledOnce;
+        expect(user.login).to.be.calledWith(undefined, undefined, options.token);
+        cb(err);
+      });
+    });
     it('should login given email and password.', (cb) => {
       const options = {
         email: 'bob@example.com',
@@ -375,6 +497,18 @@ describe('user', () => {
       user.setup(options, (err) => {
         expect(user.login).to.be.calledOnce;
         expect(user.login).to.be.calledWith(options.email, options.password);
+        cb(err);
+      });
+    });
+    it('should login given email, password, and token.', (cb) => {
+      const options = {
+        email: 'bob@example.com',
+        password: 'test123',
+        token: '123456'
+      };
+      user.setup(options, (err) => {
+        expect(user.login).to.be.calledOnce;
+        expect(user.login).to.be.calledWith(options.email, options.password, options.token);
         cb(err);
       });
     });

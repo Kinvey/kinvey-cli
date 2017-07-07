@@ -13,6 +13,7 @@
  * contents is a violation of applicable laws.
  */
 
+const config = require('config');
 const uuid = require('uuid');
 const path = require('path');
 const api = require('./lib/api.js');
@@ -39,6 +40,14 @@ describe('service', () => {
 
   describe('deploy', () => {
     describe('for v2 apps', () => {
+      before('lower deploy request timeout', () => {
+        this.oldConfigValue = config.uploadTimeout;
+        config.uploadTimeout = 500;
+      });
+      after('lower deploy request timeout', () => {
+        config.uploadTimeout = this.oldConfigValue;
+      });
+
       beforeEach('configure', () => {
         project.schemaVersion = 2;
         this.jobId = uuid.v4();
@@ -47,22 +56,15 @@ describe('service', () => {
         project.schemaVersion = null;
       });
 
-      beforeEach('api', () => {
-        this.subject = null;
-        this.mock = api.post('/v2/jobs').reply(202, {
+      it('should package and deploy the project and cache the last job ID.', (cb) => {
+        let mock = api.post('/v2/jobs').reply(202, {
           job: this.jobId
         });
-      });
-      afterEach('api', () => {
-        this.mock.done();
-        delete this.mock;
-        delete this.subject;
-      });
-
-      it('should package and deploy the project and cache the last job ID.', (cb) => {
         service.deploy(fixtures.valid, '0.1.0', (err) => {
           expect(project.lastJobId).to.equal(this.jobId);
-          cb(err);
+          mock.done();
+          mock = null;
+          cb();
         });
       });
       it('should fail when the project is too big.', (cb) => {

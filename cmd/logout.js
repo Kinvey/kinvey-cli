@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
  *
@@ -14,4 +13,28 @@
  * contents is a violation of applicable laws.
  */
 
-require('./kinveyCli')(process.argv);
+const async = require('async');
+const program = require('commander');
+const logger = require('../lib/logger.js');
+const project = require('../lib/project.js');
+const user = require('../lib/user.js');
+
+function logout(command, cb) {
+  return async.series([
+    (next) => user.logout(next),
+    (next) => project.logout(next)
+  ], (err) => {
+    if (err != null) {
+      logger.error('%s', err);
+      if (cb == null) process.exit(-1);
+    }
+    if (cb != null) cb(err);
+  });
+}
+
+module.exports = logout;
+
+program
+  .command('logout')
+  .description('resets host, removes sessions, and clears project settings')
+  .action(logout);

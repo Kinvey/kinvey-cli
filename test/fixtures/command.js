@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
  *
@@ -14,4 +13,13 @@
  * contents is a violation of applicable laws.
  */
 
-require('./kinveyCli')(process.argv);
+function noop() {
+  return {};
+}
+
+module.exports = {
+  opts: noop,
+  parent: {
+    opts: noop
+  }
+};

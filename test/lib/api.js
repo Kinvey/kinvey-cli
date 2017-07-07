@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
  *
@@ -14,4 +13,7 @@
  * contents is a violation of applicable laws.
  */
 
-require('./kinveyCli')(process.argv);
+const config = require('config');
+const nock = require('nock');
+
+module.exports = nock(config.host);

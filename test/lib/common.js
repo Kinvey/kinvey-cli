@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
  *
@@ -14,4 +13,16 @@
  * contents is a violation of applicable laws.
  */
 
-require('./kinveyCli')(process.argv);
+const chai = require('chai');
+const sinon = require('sinon');
+const sinonChai = require('sinon-chai');
+const logger = require('../../lib/logger.js');
+
+chai.use(sinonChai);
+
+logger.config({
+  level: 3
+});
+
+global.expect = chai.expect;
+global.sinon = sinon;

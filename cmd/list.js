@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
  *
@@ -14,4 +13,31 @@
  * contents is a violation of applicable laws.
  */
 
-require('./kinveyCli')(process.argv);
+const async = require('async');
+const init = require('../lib/init.js');
+const logger = require('../lib/logger.js');
+const program = require('commander');
+const project = require('../lib/project.js');
+const user = require('../lib/user.js');
+
+function list(command, cb) {
+  const options = init(command);
+  return async.series([
+    (next) => user.setup(options, next),
+    (next) => project.restore(next),
+    (next) => project.list(next)
+  ], (err) => {
+    if (err != null) {
+      logger.error('%s', err);
+      if (cb == null) process.exit(-1);
+    }
+    if (cb != null) cb(err);
+  });
+}
+
+module.exports = list;
+
+program
+  .command('list')
+  .description('list Internal Flex Services for the current app')
+  .action(list);

@@ -18,6 +18,28 @@ const api = require('./lib/api.js');
 const prompt = require('../lib/prompt.js');
 const user = require('../lib/user.js');
 const util = require('../lib/util.js');
+const constants = require('./../lib/constants');
+
+const invalidEmail = 'invalid@example.com';
+const invalidPassword = 'invalidPass';
+
+const helper = {
+  assertLoginIsSuccessful(err, mock, token, done) {
+    expect(err).to.not.exist;
+    expect(user.isLoggedIn()).to.be.true;
+    expect(user.getToken()).to.equal(token);
+    expect(mock.isDone()).to.be.true;
+    done();
+  },
+  setCredentialsInEnvironment(user, password) {
+    process.env[constants.EnvironmentVariables.User] = user;
+    process.env[constants.EnvironmentVariables.Password] = password;
+  },
+  unsetCredentialsInEnvironment() {
+    delete process.env[constants.EnvironmentVariables.User];
+    delete process.env[constants.EnvironmentVariables.Password];
+  }
+};
 
 describe('user', () => {
   describe('isLoggedIn', () => {
@@ -28,12 +50,14 @@ describe('user', () => {
       };
       return expect(user.isLoggedIn()).to.be.true;
     });
-    return it('should return false if the token was not set.', () => {
+
+    it('should return false if the token was not set.', () => {
       user.tokens = null;
       user.host = null;
       return expect(user.isLoggedIn()).to.be.false;
     });
   });
+
   describe('login', () => {
     beforeEach('token', () => {
       return user.token = null;
@@ -56,39 +80,53 @@ describe('user', () => {
     after('password', () => {
       return delete this.password;
     });
+
     describe('given valid credentials', () => {
       beforeEach('api', () => {
-        return this.mock = api.post('/session').reply(200, {
-          email: this.email,
-          token: this.token
+        this.mock = api
+          .post('/session', { email: this.email, password: this.password })
+          .reply(200, { email: this.email, token: this.token
         });
       });
+
       afterEach('api', () => {
-        this.mock.done();
-        return delete this.mock;
+        delete this.mock;
+        helper.unsetCredentialsInEnvironment();
       });
-      return it('should login.', (cb) => {
-        return user.login(this.email, this.password, (err) => {
-          expect(user.isLoggedIn()).to.be.true;
-          expect(user.getToken()).to.equal(this.token);
-          return cb(err);
+
+      it('as args should login.', (cb) => {
+        user.login(this.email, this.password, (err) => {
+          helper.assertLoginIsSuccessful(err, this.mock, this.token, cb);
+        });
+      });
+
+      it('as env variables should login', (cb) => {
+        helper.setCredentialsInEnvironment(this.email, this.password);
+
+        user.login(null, null, (err) => {
+          helper.assertLoginIsSuccessful(err, this.mock, this.token, cb);
+        });
+      });
+
+      it('as args and invalid as env variables should login', (cb) => {
+        helper.setCredentialsInEnvironment(invalidEmail, invalidPassword);
+
+        user.login(this.email, this.password, (err) => {
+          helper.assertLoginIsSuccessful(err, this.mock, this.token, cb);
         });
       });
     });
+
     describe('given invalid credentials', () => {
       beforeEach('api', () => {
-        return this.mock = api.post('/session')
+        this.mock = api.post('/session')
           .reply(401, {
             code: 'InvalidCredentials',
             description: ''
-          })
-          .post('/session')
-          .reply(200, {
-            email: this.email,
-            token: this.token
           });
       });
       afterEach('api', () => {
+        helper.unsetCredentialsInEnvironment();
         this.mock.done();
         return delete this.mock;
       });
@@ -102,15 +140,34 @@ describe('user', () => {
       after('stub', () => {
         return prompt.getEmailPassword.restore();
       });
-      return it('should retry.', (cb) => {
-        return user.login('alice@example.com', this.password, (err) => {
+
+      it('should retry when credentials are provided as args', (cb) => {
+        this.mock.post('/session')
+          .reply(200, {
+            email: this.email,
+            token: this.token
+          });
+
+        user.login(invalidEmail, this.password, (err) => {
           expect(prompt.getEmailPassword).to.be.calledTwice;
           expect(prompt.getEmailPassword).to.be.calledWith(null, null);
           return cb(err);
         });
       });
+
+      it('should not retry when credentials are provided from environment', (cb) => {
+        helper.setCredentialsInEnvironment(invalidEmail, invalidPassword);
+
+        user.login(null, null, (err) => {
+          expect(err).to.not.exist;
+          expect(prompt.getEmailPassword).to.be.calledOnce;
+          expect(prompt.getEmailPassword).to.be.calledWith(invalidEmail, invalidPassword);
+          cb();
+        });
+      });
     });
-    return describe('given incomplete credentials', () => {
+
+    describe('given incomplete credentials', () => {
       beforeEach('api', () => {
         return this.mock = api.post('/session').reply(200, {
           email: this.email,
@@ -323,11 +380,15 @@ describe('user', () => {
     });
   });
   describe('setup', () => {
+    const email = 'bob@example.com';
+    const password = 'test123';
+
     before('login', () => {
       sinon.stub(user, 'login').callsArg(2);
     });
     afterEach('login', () => {
       user.login.reset();
+      helper.unsetCredentialsInEnvironment();
     });
     after('login', () => {
       user.login.restore();
@@ -341,41 +402,46 @@ describe('user', () => {
     after('restore', () => {
       user.restore.restore();
     });
+
     it('should restore the user session.', (cb) => {
       user.setup({}, (err) => {
         expect(user.restore).to.be.calledOnce;
         cb(err);
       });
     });
+
     it('should login given email.', (cb) => {
-      const options = {
-        email: 'bob@example.com'
-      };
-      user.setup(options, (err) => {
+      user.setup({ email }, (err) => {
         expect(user.login).to.be.calledOnce;
-        expect(user.login).to.be.calledWith(options.email, void 0);
+        expect(user.login).to.be.calledWith(email, void 0);
         cb(err);
       });
     });
+
     it('should login given password.', (cb) => {
-      const options = {
-        password: 'test123'
-      };
-      user.setup(options, (err) => {
+      user.setup({ password }, (err) => {
         expect(user.login).to.be.calledOnce;
-        expect(user.login).to.be.calledWith(void 0, options.password);
+        expect(user.login).to.be.calledWith(void 0, password);
         cb(err);
       });
     });
+
     it('should login given email and password.', (cb) => {
-      const options = {
-        email: 'bob@example.com',
-        password: 'test123'
-      };
-      user.setup(options, (err) => {
+      user.setup({ email, password }, (err) => {
         expect(user.login).to.be.calledOnce;
-        expect(user.login).to.be.calledWith(options.email, options.password);
+        expect(user.login).to.be.calledWith(email, password);
         cb(err);
+      });
+    });
+
+    it('should login given email and password in options and invalid ones in environment', (cb) => {
+      helper.setCredentialsInEnvironment(invalidEmail, invalidPassword);
+
+      user.setup({ email, password }, (err) => {
+        expect(err).to.not.exist;
+        expect(user.login).to.be.calledOnce;
+        expect(user.login).to.be.calledWith(email, password);
+        cb();
       });
     });
   });

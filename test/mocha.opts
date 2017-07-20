@@ -1,5 +1,4 @@
 --check-leaks
---compilers coffee:coffee-script/register
 --no-exit
 --recursive
 --reporter spec

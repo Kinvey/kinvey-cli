@@ -24,12 +24,12 @@ const invalidEmail = 'invalid@example.com';
 const invalidPassword = 'invalidPass';
 
 const helper = {
-  assertLoginIsSuccessful(err, mock, token, done) {
+  assertLoginIsSuccessful(err, mock, token, cb) {
     expect(err).to.not.exist;
     expect(user.isLoggedIn()).to.be.true;
     expect(user.getToken()).to.equal(token);
     expect(mock.isDone()).to.be.true;
-    done();
+    cb();
   },
   setCredentialsInEnvironment(user, password) {
     process.env[constants.EnvironmentVariables.USER] = user;

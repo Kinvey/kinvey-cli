@@ -1,6 +1,5 @@
 --check-leaks
 --compilers coffee:coffee-script/register
---no-exit
 --recursive
 --reporter spec
 --require  ./test/lib/common.js

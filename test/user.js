@@ -32,12 +32,12 @@ const helper = {
     done();
   },
   setCredentialsInEnvironment(user, password) {
-    process.env[constants.EnvironmentVariables.User] = user;
-    process.env[constants.EnvironmentVariables.Password] = password;
+    process.env[constants.EnvironmentVariables.USER] = user;
+    process.env[constants.EnvironmentVariables.PASSWORD] = password;
   },
   unsetCredentialsInEnvironment() {
-    delete process.env[constants.EnvironmentVariables.User];
-    delete process.env[constants.EnvironmentVariables.Password];
+    delete process.env[constants.EnvironmentVariables.USER];
+    delete process.env[constants.EnvironmentVariables.PASSWORD];
   }
 };
 

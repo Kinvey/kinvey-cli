@@ -31,6 +31,16 @@ In your project directory, run `kinvey config` to set-up your project. The CLI w
 
 You can create a one-time session using the `-e` and `-p` (and optionally `--host`) flags. Set these parameters explicitly in your calls if you are unable to init with `kinvey config [host]`.
 
+### Credentials
+
+Credentials can be specified either as command line options or as environment variables.
+* command line options
+    - run `kinvey config` and the CLI will prompt for Kinvey credentials
+    - use the `-e` and `-p` flags (they take precedence over environment variables)
+* environment variables
+    - `KINVEY_CLI_USER` - e-mail address of your Kinvey account
+    - `KINVEY_CLI_PASSWORD` - password of your Kinvey account
+
 ### Proxy Settings
 
 The Kinvey CLI supports the universal ENV variables `HTTPS_PROXY` and `https_proxy` for routing commands through a proxy server. For example:

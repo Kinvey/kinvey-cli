@@ -1,5 +1,4 @@
 --check-leaks
---no-exit
 --recursive
 --reporter spec
 --require  ./test/lib/common.js

@@ -1,7 +1,9 @@
 # Changelog
 
-## 1.2.0
+## 1.2.0 (2017-07-25)
 * ES6 rewrite
+* Support 2FA token login
+* Add ability to login to the CLI using ENV variables
 
 ## 1.1.5 (2017-06-20)
 * Fixed bug where `instance` param was not respected when running `config [instance]` in a fresh environment

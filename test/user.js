@@ -141,16 +141,10 @@ describe('user', () => {
         prompt.getEmailPassword.restore();
       });
 
-      it('should retry when credentials are provided as args', (cb) => {
-        this.mock.post('/session')
-          .reply(200, {
-            email: this.email,
-            token: this.token
-          });
-
+      it('should not retry when credentials are provided as args', (cb) => {
         user.login(invalidEmail, this.password, null, (err) => {
-          expect(prompt.getEmailPassword).to.be.calledTwice;
-          expect(prompt.getEmailPassword).to.be.calledWith(null, null);
+          expect(prompt.getEmailPassword).to.be.calledOnce;
+          expect(prompt.getEmailPassword).to.be.calledWith(invalidEmail, this.password);
           cb(err);
         });
       });

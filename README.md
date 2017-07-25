@@ -29,7 +29,25 @@ In your project directory, run `kinvey config` to set-up your project. The CLI w
 * `-c, --suppress-version-check` - do not check for package updates.
 * `-v, --verbose` - output debug messages.
 
-You can create a one-time session using the `-e` and `-p` (and optionally `--host`) flags. Set these parameters explicitly in your calls if you are unable to init with `kinvey config [host]`.
+### Credentials
+
+Credentials can be specified either as command line options or as environment variables.
+#### Command line options
+Run `kinvey config` and the CLI will prompt for Kinvey credentials if they are not already set as environment variables.
+
+You can also create a one-time session using the `-e` and `-p` (and optionally `--host`) flags. Set these parameters explicitly in your calls if you are unable to init with `kinvey config [host]`. It's important to note that the `-e` and `-p` flags take precedence over environment variables. Example:
+```
+kinvey config -e kinveyAccount@kinvey.com -p yourKinveyPassword
+```
+
+#### Environment variables
+* `KINVEY_CLI_USER` - e-mail address of your Kinvey account
+* `KINVEY_CLI_PASSWORD` - password of your Kinvey account
+
+Example:
+```
+export KINVEY_CLI_USER=kinveyAccount@example.com && export KINVEY_CLI_PASSWORD=yourKinveyPassword
+```
 
 ### Proxy Settings
 

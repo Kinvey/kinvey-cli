@@ -41,6 +41,11 @@ Credentials can be specified either as command line options or as environment va
     - `KINVEY_CLI_USER` - e-mail address of your Kinvey account
     - `KINVEY_CLI_PASSWORD` - password of your Kinvey account
 
+Example:
+```
+export KINVEY_CLI_USER=kinveyAccount@example.com && export KINVEY_CLI_PASSWORD=yourKinveyPassword
+```
+
 ### Proxy Settings
 
 The Kinvey CLI supports the universal ENV variables `HTTPS_PROXY` and `https_proxy` for routing commands through a proxy server. For example:

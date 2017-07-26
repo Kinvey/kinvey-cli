@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.1 (2017-07-25)
+* Fixed bug resulting in 2FA login crash
+
 ## 1.2.0 (2017-07-25)
 * ES6 rewrite
 * Support 2FA token login

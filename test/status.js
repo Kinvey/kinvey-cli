@@ -23,42 +23,29 @@ const status = require('../cmd/status.js');
 const user = require('../lib/user.js');
 
 describe(`./${pkg.name} status`, () => {
+  const sandbox = sinon.sandbox.create();
+
   before('configure', () => {
     project.app = project.service = '123';
     project.schemaVersion = 1;
   });
+
   after('configure', () => {
     project.app = project.service = project.schemaVersion = null;
   });
 
-  before('user', () => {
-    sinon.stub(user, 'setup').callsArg(1);
-  });
-  afterEach('user', () => {
-    user.setup.reset();
-  });
-  after('user', () => {
-    user.setup.restore();
+  before('setupStubs', () => {
+    sandbox.stub(user, 'setup').callsArg(1);
+    sandbox.stub(project, 'restore').callsArg(0);
+    sandbox.stub(service, 'serviceStatus').callsArg(0);
   });
 
-  before('project', () => {
-    sinon.stub(project, 'restore').callsArg(0);
-  });
-  afterEach('project', () => {
-    project.restore.reset();
-  });
-  after('project', () => {
-    project.restore.restore();
+  afterEach('resetStubs', () => {
+    sandbox.reset();
   });
 
-  before('service', () => {
-    sinon.stub(service, 'serviceStatus').callsArg(0);
-  });
-  afterEach('service', () => {
-    service.serviceStatus.reset();
-  });
-  after('service', () => {
-    service.serviceStatus.restore();
+  after('cleanupStubs', () => {
+    sandbox.restore();
   });
 
   it('should setup the user.', (cb) => {
@@ -67,12 +54,14 @@ describe(`./${pkg.name} status`, () => {
       cb(err);
     });
   });
+
   it('should restore the project.', (cb) => {
     status.call(command, command, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
+
   it('should print the current KMR service status.', (cb) => {
     status.call(command, command, (err) => {
       expect(service.serviceStatus).to.be.calledOnce;

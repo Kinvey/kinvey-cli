@@ -22,34 +22,20 @@ const recycle = require('../cmd/recycle.js');
 const user = require('../lib/user.js');
 
 describe(`./${pkg.name} recycle`, () => {
-  before('user', () => {
-    sinon.stub(user, 'setup').callsArg(1);
-  });
-  afterEach('user', () => {
-    user.setup.reset();
-  });
-  after('user', () => {
-    user.setup.restore();
+  const sandbox = sinon.sandbox.create();
+
+  before('setupStubs', () => {
+    sandbox.stub(user, 'setup').callsArg(1);
+    sandbox.stub(project, 'restore').callsArg(0);
+    sandbox.stub(service, 'recycle').callsArg(0);
   });
 
-  before('project', () => {
-    sinon.stub(project, 'restore').callsArg(0);
-  });
-  afterEach('project', () => {
-    project.restore.reset();
-  });
-  after('project', () => {
-    project.restore.restore();
+  afterEach('resetStubs', () => {
+    sandbox.reset();
   });
 
-  before('service', () => {
-    sinon.stub(service, 'recycle').callsArg(0);
-  });
-  afterEach('service', () => {
-    service.recycle.reset();
-  });
-  after('service', () => {
-    service.recycle.restore();
+  after('cleanupStubs', () => {
+    sandbox.restore();
   });
 
   it('should setup the user.', (cb) => {
@@ -58,12 +44,14 @@ describe(`./${pkg.name} recycle`, () => {
       cb(err);
     });
   });
+
   it('should restore the project.', (cb) => {
     recycle.call(command, command, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
+
   it('should reset the service.', (cb) => {
     recycle.call(command, command, (err) => {
       expect(service.recycle).to.be.calledOnce;

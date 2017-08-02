@@ -21,24 +21,19 @@ const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 
 describe(`./${pkg.name} logout`, () => {
-  before('user', () => {
-    sinon.stub(user, 'logout').callsArg(0);
-  });
-  afterEach('user', () => {
-    user.logout.reset();
-  });
-  after('user', () => {
-    user.logout.restore();
+  const sandbox = sinon.sandbox.create();
+
+  before('setupStubs', () => {
+    sandbox.stub(user, 'logout').callsArg(0);
+    sandbox.stub(project, 'logout').callsArg(0);
   });
 
-  before('project', () => {
-    sinon.stub(project, 'logout').callsArg(0);
+  afterEach('resetStubs', () => {
+    sandbox.reset();
   });
-  afterEach('project', () => {
-    project.logout.reset();
-  });
-  after('project', () => {
-    project.logout.restore();
+
+  after('user', () => {
+    sandbox.restore();
   });
 
   it('should logout the user.', (cb) => {
@@ -47,6 +42,7 @@ describe(`./${pkg.name} logout`, () => {
       cb(err);
     });
   });
+
   it('should logout the project.', (cb) => {
     logout.call(command, command, (err) => {
       expect(project.logout).to.be.calledOnce;

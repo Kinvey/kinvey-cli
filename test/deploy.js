@@ -20,70 +20,113 @@ const deploy = require('../cmd/deploy.js');
 const pkg = require('../package.json');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
+const logger = require('./../lib/logger');
 
 describe(`./${pkg.name} deploy`, () => {
-  before('user', () => {
-    sinon.stub(user, 'setup').callsArg(1);
-  });
-  afterEach('user', () => {
-    user.setup.reset();
-  });
-  after('user', () => {
-    user.setup.restore();
-  });
+  describe('without error', () => {
+    before(() => {
+      sinon.stub(user, 'setup').callsArgWith(1);
+      sinon.stub(project, 'restore').callsArgWith(0);
+      sinon.stub(service, 'validate').callsArgWith(1);
+      sinon.stub(service, 'deploy').callsArgWith(1);
+    });
 
-  before('project', () => {
-    sinon.stub(project, 'restore').callsArg(0);
-  });
-  afterEach('project', () => {
-    project.restore.reset();
-  });
-  after('project', () => {
-    project.restore.restore();
-  });
+    afterEach(() => {
+      user.setup.reset();
+      project.restore.reset();
+      service.validate.reset();
+      service.deploy.reset();
+    });
 
-  before('validate', () => {
-    sinon.stub(service, 'validate').callsArg(1);
-  });
-  afterEach('validate', () => {
-    service.validate.reset();
-  });
-  after('validate', () => {
-    service.validate.restore();
-  });
+    after(() => {
+      user.setup.restore();
+      project.restore.restore();
+      service.validate.restore();
+      service.deploy.restore();
+    });
 
-  before('deploy', () => {
-    sinon.stub(service, 'deploy').callsArg(1);
-  });
-  afterEach('deploy', () => {
-    service.deploy.reset();
-  });
-  after('deploy', () => {
-    service.deploy.restore();
-  });
+    it('should setup the user.', (cb) => {
+      deploy.call(command, command, (err) => {
+        expect(user.setup).to.be.calledOnce;
+        cb(err);
+      });
+    });
 
-  it('should setup the user.', (cb) => {
-    deploy.call(command, command, (err) => {
-      expect(user.setup).to.be.calledOnce;
-      cb(err);
+    it('should restore the project.', (cb) => {
+      deploy.call(command, command, (err) => {
+        expect(project.restore).to.be.calledOnce;
+        cb(err);
+      });
+    });
+
+    it('should validate the service.', (cb) => {
+      deploy.call(command, command, (err) => {
+        expect(service.validate).to.be.calledOnce;
+        cb(err);
+      });
+    });
+
+    it('should deploy the service.', (cb) => {
+      deploy.call(command, command, (err) => {
+        expect(service.deploy).to.be.calledOnce;
+        cb(err);
+      });
     });
   });
-  it('should restore the project.', (cb) => {
-    deploy.call(command, command, (err) => {
-      expect(project.restore).to.be.calledOnce;
-      cb(err);
+
+  describe('with error', () => {
+    const testErr = new Error('Test err');
+    let processExit;
+    let loggerError;
+
+    before(() => {
+      processExit = sinon.stub(process, 'exit');
+      loggerError = sinon.stub(logger, 'error');
+
+      sinon.stub(user, 'setup').callsArg(1);
+      sinon.stub(project, 'restore').callsArg(0);
+
+      // let's produce error here
+      sinon.stub(service, 'validate').callsArgWith(1, testErr);
     });
-  });
-  it('should validate the service.', (cb) => {
-    deploy.call(command, command, (err) => {
-      expect(service.validate).to.be.calledOnce;
-      cb(err);
+
+    afterEach(() => {
+      processExit.reset();
+      loggerError.reset();
+      user.setup.reset();
+      project.restore.reset();
+      service.validate.reset();
     });
-  });
-  it('should deploy the service.', (cb) => {
-    deploy.call(command, command, (err) => {
-      expect(service.deploy).to.be.calledOnce;
-      cb(err);
+
+    after(() => {
+      processExit.restore();
+      loggerError.restore();
+      user.setup.restore();
+      project.restore.restore();
+      service.validate.restore();
+    });
+
+    it('should pass error to callback if both are present', (cb) => {
+      deploy.call(command, command, (err) => {
+        expect(err).to.exist;
+        expect(loggerError).to.be.calledOnce;
+        expect(loggerError).to.be.calledWith('%s', err);
+        expect(err).to.equal(testErr);
+        cb();
+      });
+    });
+
+    it('should not pass error to callback if no callback', (cb) => {
+      deploy.call(command, command);
+
+      // we don't provide a callback to the 'deploy' command, so we have no way of knowing when it is done
+      setTimeout(() => {
+        expect(processExit).to.be.calledOnce;
+        expect(processExit).to.be.calledWith(-1);
+        expect(loggerError).to.be.calledOnce;
+        expect(loggerError).to.be.calledWith('%s', testErr);
+        cb();
+      }, 1000);
     });
   });
 });

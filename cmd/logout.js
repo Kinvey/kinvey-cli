@@ -18,17 +18,14 @@ const program = require('commander');
 const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
+const handleActionFailure = require('./../lib/util').handleActionFailure;
 
 function logout(command, cb) {
   return async.series([
     (next) => user.logout(next),
     (next) => project.logout(next)
   ], (err) => {
-    if (err != null) {
-      logger.error('%s', err);
-      if (cb == null) process.exit(-1);
-    }
-    if (cb != null) cb(err);
+    handleActionFailure(err, cb);
   });
 }
 

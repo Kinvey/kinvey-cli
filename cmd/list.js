@@ -19,6 +19,7 @@ const logger = require('../lib/logger.js');
 const program = require('commander');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
+const handleActionFailure = require('./../lib/util').handleActionFailure;
 
 function list(command, cb) {
   const options = init(command);
@@ -27,11 +28,7 @@ function list(command, cb) {
     (next) => project.restore(next),
     (next) => project.list(next)
   ], (err) => {
-    if (err != null) {
-      logger.error('%s', err);
-      if (cb == null) process.exit(-1);
-    }
-    if (cb != null) cb(err);
+    handleActionFailure(err, cb);
   });
 }
 

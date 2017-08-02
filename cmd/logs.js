@@ -21,6 +21,7 @@ const init = require('../lib/init.js');
 const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
+const handleActionFailure = require('./../lib/util').handleActionFailure;
 
 function validateTimestamp(ts) {
   if (ts == null) return true;
@@ -36,11 +37,7 @@ function logs(from, to, command, cb) {
     (next) => project.restore(next),
     (next) => service.logs(from, to, next)
   ], (err) => {
-    if (err != null) {
-      logger.error('%s', err);
-      if (cb == null) process.exit(-1);
-    }
-    if (cb != null) cb(err);
+    handleActionFailure(err, cb);
   });
 }
 

@@ -20,6 +20,7 @@ const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 const util = require('../lib/util.js');
+const handleActionFailure = require('./../lib/util').handleActionFailure;
 
 function initUrl(host, cb) {
   if (host != null) user.host = util.formatHost(host);
@@ -34,11 +35,7 @@ function configure(host, command, cb) {
     (next) => project.config(options, next),
     (next) => user.save(next)
   ], (err) => {
-    if (err != null) {
-      logger.error('%s', err);
-      if (cb == null) process.exit(-1);
-    }
-    if (cb != null) cb(err);
+    handleActionFailure(err, cb);
   });
 }
 

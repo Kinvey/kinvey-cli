@@ -14,13 +14,15 @@
  */
 
 const sinon = require('sinon');
-const command = require('./fixtures/command.js');
+
 const service = require('../lib/service.js');
 const deploy = require('../cmd/deploy.js');
 const pkg = require('../package.json');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 const logger = require('./../lib/logger');
+const command = require('./fixtures/command.js');
+const helper = require('./lib/helper');
 
 describe(`./${pkg.name} deploy`, () => {
   describe('without error', () => {
@@ -71,15 +73,12 @@ describe(`./${pkg.name} deploy`, () => {
   });
 
   describe('with error', () => {
-    const sandbox = sinon.sandbox.create();sandbox
+    const sandbox = sinon.sandbox.create();
     const testErr = new Error('Test err');
-    let processExit;
-    let loggerError;
 
     before(() => {
-      processExit = sandbox.stub(process, 'exit');
-      loggerError = sandbox.stub(logger, 'error');
-
+      sandbox.stub(process, 'exit');
+      sandbox.stub(logger, 'error');
       sandbox.stub(user, 'setup').callsArg(1);
       sandbox.stub(project, 'restore').callsArg(0);
 
@@ -97,10 +96,7 @@ describe(`./${pkg.name} deploy`, () => {
 
     it('should pass error to callback if both are present', (cb) => {
       deploy.call(command, command, (err) => {
-        expect(err).to.exist;
-        expect(loggerError).to.be.calledOnce;
-        expect(loggerError).to.be.calledWith('%s', err);
-        expect(err).to.equal(testErr);
+        helper.assertions.assertCmdCommandWithCallbackForError(err, testErr);
         cb();
       });
     });
@@ -110,10 +106,7 @@ describe(`./${pkg.name} deploy`, () => {
 
       // we don't provide a callback to the 'deploy' command, so we have no way of knowing when it is done
       setTimeout(() => {
-        expect(processExit).to.be.calledOnce;
-        expect(processExit).to.be.calledWith(-1);
-        expect(loggerError).to.be.calledOnce;
-        expect(loggerError).to.be.calledWith('%s', testErr);
+        helper.assertions.assertCmdCommandWithoutCallbackForError(testErr);
         cb();
       }, 1000);
     });

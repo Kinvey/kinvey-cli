@@ -21,62 +21,98 @@ const pkg = require('../package.json');
 const project = require('../lib/project.js');
 const job = require('../cmd/job.js');
 const user = require('../lib/user.js');
+const helper = require('./lib/helper');
 
 describe(`./${pkg.name} job`, () => {
-  before('configure', () => {
-    project.app = project.service = '123';
-    project.schemaVersion = 1;
-    project.lastJobId = 'abcdef';
-  });
-
   const sandbox = sinon.sandbox.create();
-
-  before('setupStubs', () => {
-    sandbox.stub(user, 'setup').callsArg(1);
-    sandbox.stub(project, 'restore').callsArg(0);
-    sandbox.stub(service, 'jobStatus').callsArg(1);
-  });
 
   afterEach('resetStubs', () => {
     sandbox.reset();
   });
 
-  after('cleanupConfiguration', () => {
-    project.app = project.service = project.schemaVersion = null;
-  });
+  describe('without error', () => {
+    const testJobId = '123';
 
-  after('cleanupStubs', () => {
-    sandbox.restore();
-  });
+    before('configure', () => {
+      project.app = project.service = testJobId;
+      project.schemaVersion = 1;
+      project.lastJobId = 'abcdef';
+    });
 
-  it('should setup the user.', (cb) => {
-    job('123', command, (err) => {
-      expect(user.setup).to.be.calledOnce;
-      cb(err);
+    before('setupStubs', () => {
+      sandbox.stub(user, 'setup').callsArg(1);
+      sandbox.stub(project, 'restore').callsArg(0);
+      sandbox.stub(service, 'jobStatus').callsArg(1);
+    });
+
+    after('cleanupConfiguration', () => {
+      project.app = project.service = project.schemaVersion = null;
+    });
+
+    after('cleanupStubs', () => {
+      sandbox.restore();
+    });
+
+    it('should setup the user.', (cb) => {
+      job(testJobId, command, (err) => {
+        expect(user.setup).to.be.calledOnce;
+        cb(err);
+      });
+    });
+
+    it('should restore the project.', (cb) => {
+      job(testJobId, command, (err) => {
+        expect(project.restore).to.be.calledOnce;
+        cb(err);
+      });
+    });
+
+    it('should print the current job status.', (cb) => {
+      job(testJobId, command, (err) => {
+        expect(service.jobStatus).to.be.calledOnce;
+        expect(service.jobStatus).to.be.calledWith(testJobId);
+        cb(err);
+      });
+    });
+
+    it('should print the current job status when called without an id.', (cb) => {
+      job(null, command, (err) => {
+        expect(service.jobStatus).to.be.calledOnce;
+        expect(service.jobStatus).to.be.calledWith(null);
+        cb(err);
+      });
     });
   });
 
-  it('should restore the project.', (cb) => {
-    job('123', command, (err) => {
-      expect(project.restore).to.be.calledOnce;
-      cb(err);
-    });
-  });
+  describe('with error', () => {
+    const testErr = new Error('Test err');
 
-  it('should print the current job status.', (cb) => {
-    const jobId = '123';
-    job(jobId, command, (err) => {
-      expect(service.jobStatus).to.be.calledOnce;
-      expect(service.jobStatus).to.be.calledWith(jobId);
-      cb(err);
+    before('setupStubs', () => {
+      sandbox.stub(user, 'setup').callsArg(1);
+      sandbox.stub(project, 'restore').callsArgWith(0, testErr);
+      sandbox.stub(process, 'exit');
+      sandbox.stub(logger, 'error');
     });
-  });
 
-  it('should print the current job status when called without an id.', (cb) => {
-    job(null, command, (err) => {
-      expect(service.jobStatus).to.be.calledOnce;
-      expect(service.jobStatus).to.be.calledWith(null);
-      cb(err);
+    after('cleanupStubs', () => {
+      sandbox.restore();
+    });
+
+    it('should pass error to callback if both are present', (cb) => {
+      job(null, command, (err) => {
+        helper.assertions.assertCmdCommandWithCallbackForError(err, testErr);
+        cb();
+      });
+    });
+
+    it('should not pass error to callback if no callback', (cb) => {
+      job(null, command);
+
+      // we don't provide a callback to the 'job' command, so we have no way of knowing when it is done
+      setTimeout(() => {
+        helper.assertions.assertCmdCommandWithoutCallbackForError(testErr);
+        cb();
+      }, 1000);
     });
   });
 });

@@ -24,25 +24,21 @@ const logger = require('./../lib/logger');
 
 describe(`./${pkg.name} deploy`, () => {
   describe('without error', () => {
+    const sandbox = sinon.sandbox.create();
+
     before(() => {
-      sinon.stub(user, 'setup').callsArgWith(1);
-      sinon.stub(project, 'restore').callsArgWith(0);
-      sinon.stub(service, 'validate').callsArgWith(1);
-      sinon.stub(service, 'deploy').callsArgWith(1);
+      sandbox.stub(user, 'setup').callsArgWith(1);
+      sandbox.stub(project, 'restore').callsArgWith(0);
+      sandbox.stub(service, 'validate').callsArgWith(1);
+      sandbox.stub(service, 'deploy').callsArgWith(1);
     });
 
     afterEach(() => {
-      user.setup.reset();
-      project.restore.reset();
-      service.validate.reset();
-      service.deploy.reset();
+      sandbox.reset();
     });
 
     after(() => {
-      user.setup.restore();
-      project.restore.restore();
-      service.validate.restore();
-      service.deploy.restore();
+      sandbox.restore();
     });
 
     it('should setup the user.', (cb) => {
@@ -75,35 +71,28 @@ describe(`./${pkg.name} deploy`, () => {
   });
 
   describe('with error', () => {
+    const sandbox = sinon.sandbox.create();sandbox
     const testErr = new Error('Test err');
     let processExit;
     let loggerError;
 
     before(() => {
-      processExit = sinon.stub(process, 'exit');
-      loggerError = sinon.stub(logger, 'error');
+      processExit = sandbox.stub(process, 'exit');
+      loggerError = sandbox.stub(logger, 'error');
 
-      sinon.stub(user, 'setup').callsArg(1);
-      sinon.stub(project, 'restore').callsArg(0);
+      sandbox.stub(user, 'setup').callsArg(1);
+      sandbox.stub(project, 'restore').callsArg(0);
 
       // let's produce error here
-      sinon.stub(service, 'validate').callsArgWith(1, testErr);
+      sandbox.stub(service, 'validate').callsArgWith(1, testErr);
     });
 
     afterEach(() => {
-      processExit.reset();
-      loggerError.reset();
-      user.setup.reset();
-      project.restore.reset();
-      service.validate.reset();
+      sandbox.reset();
     });
 
     after(() => {
-      processExit.restore();
-      loggerError.restore();
-      user.setup.restore();
-      project.restore.restore();
-      service.validate.restore();
+      sandbox.restore();
     });
 
     it('should pass error to callback if both are present', (cb) => {

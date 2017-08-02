@@ -28,49 +28,41 @@ describe(`./${pkg.name} job`, () => {
     project.schemaVersion = 1;
     project.lastJobId = 'abcdef';
   });
-  after('configure', () => {
+
+  const sandbox = sinon.sandbox.create();
+
+  before('setupStubs', () => {
+    sandbox.stub(user, 'setup').callsArg(1);
+    sandbox.stub(project, 'restore').callsArg(0);
+    sandbox.stub(service, 'jobStatus').callsArg(1);
+  });
+
+  afterEach('resetStubs', () => {
+    sandbox.reset();
+  });
+
+  after('cleanupConfiguration', () => {
     project.app = project.service = project.schemaVersion = null;
   });
 
-  before('user', () => {
-    sinon.stub(user, 'setup').callsArg(1);
+  after('cleanupStubs', () => {
+    sandbox.restore();
   });
-  afterEach('user', () => {
-    user.setup.reset();
-  });
-  after('user', () => {
-    user.setup.restore();
-  });
-  before('project', () => {
-    sinon.stub(project, 'restore').callsArg(0);
-  });
-  afterEach('project', () => {
-    project.restore.reset();
-  });
-  after('project', () => {
-    project.restore.restore();
-  });
-  before('service', () => {
-    sinon.stub(service, 'jobStatus').callsArg(1);
-  });
-  afterEach('service', () => {
-    service.jobStatus.reset();
-  });
-  after('service', () => {
-    service.jobStatus.restore();
-  });
+
   it('should setup the user.', (cb) => {
     job('123', command, (err) => {
       expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
+
   it('should restore the project.', (cb) => {
     job('123', command, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
+
   it('should print the current job status.', (cb) => {
     const jobId = '123';
     job(jobId, command, (err) => {
@@ -79,6 +71,7 @@ describe(`./${pkg.name} job`, () => {
       cb(err);
     });
   });
+
   it('should print the current job status when called without an id.', (cb) => {
     job(null, command, (err) => {
       expect(service.jobStatus).to.be.calledOnce;

@@ -16,17 +16,17 @@
 const config = require('config');
 const uuid = require('uuid');
 const path = require('path');
-const api = require('./lib/api.js');
+const api = require('../api.js');
 const stdout = require('test-console').stdout;
-const logger = require('../lib/logger');
-const project = require('../lib/project.js');
-const service = require('../lib/service.js');
-const util = require('../lib/util.js');
-const JobStatus = require('./../lib/constants').JobStatus;
+const logger = require('../../lib/logger');
+const project = require('../../lib/project.js');
+const service = require('../../lib/service.js');
+const util = require('../../lib/util.js');
+const JobStatus = require('../../lib/constants').JobStatus;
 
 const fixtures = {
-  invalid: path.join(__dirname, 'fixtures/deploy'),
-  valid: path.join(__dirname, 'lib')
+  invalid: path.resolve('./test/fixtures/deploy'),
+  valid: path.resolve('./test/cmd')
 };
 
 describe('service', () => {

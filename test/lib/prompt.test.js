@@ -16,10 +16,10 @@
 const sinon = require('sinon');
 const inquirer = require('inquirer');
 
-const prompt = require('../lib/prompt');
-const logger = require('./../lib/logger');
-const PromptMessages = require('./../lib/constants').PromptMessages;
-const InfoMessages = require('./../lib/constants').InfoMessages;
+const prompt = require('../../lib/prompt');
+const logger = require('../../lib/logger');
+const PromptMessages = require('../../lib/constants').PromptMessages;
+const InfoMessages = require('../../lib/constants').InfoMessages;
 
 function getInquirerPromptStub(sandbox, answers) {
   return sandbox.stub(inquirer, 'prompt', (questions, cb) => {

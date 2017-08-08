@@ -15,19 +15,19 @@
 
 const chalk = require('chalk');
 const config = require('config');
-const api = require('./lib/api.js');
-const logger = require('../lib/logger.js');
-const project = require('../lib/project.js');
-const prompt = require('../lib/prompt.js');
-const user = require('../lib/user.js');
-const util = require('../lib/util.js');
+const api = require('../api.js');
+const logger = require('../../lib/logger.js');
+const project = require('../../lib/project.js');
+const prompt = require('../../lib/prompt.js');
+const user = require('../../lib/user.js');
+const util = require('../../lib/util.js');
 const uuid = require('uuid');
 
 const fixtures = {
-  app: require('./fixtures/app.json'),
-  datalink: require('./fixtures/datalink.json'),
-  kinveyDlc: require('./fixtures/kinvey-dlc.json'),
-  org: require('./fixtures/org.json')
+  app: require('../fixtures/app.json'),
+  datalink: require('../fixtures/datalink.json'),
+  kinveyDlc: require('../fixtures/kinvey-dlc.json'),
+  org: require('../fixtures/org.json')
 };
 
 function getStubCallArg(allCalls, callPosition, argPosition) {

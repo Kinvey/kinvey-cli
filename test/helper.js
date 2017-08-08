@@ -13,16 +13,23 @@
  * contents is a violation of applicable laws.
  */
 
-const chai = require('chai');
-const sinon = require('sinon');
-const sinonChai = require('sinon-chai');
-const logger = require('../../lib/logger.js');
+const logger = require('../lib/logger');
 
-chai.use(sinonChai);
+const helper = {};
 
-logger.config({
-  level: 3
-});
+helper.assertions = {
+  assertCmdCommandWithoutCallbackForError(expectedErr) {
+    expect(process.exit).to.be.calledOnce;
+    expect(process.exit).to.be.calledWith(-1);
+    expect(logger.error).to.be.calledOnce;
+    expect(logger.error).to.be.calledWith('%s', expectedErr);
+  },
+  assertCmdCommandWithCallbackForError(actualErr, expectedErr) {
+    expect(actualErr).to.exist;
+    expect(logger.error).to.be.calledOnce;
+    expect(logger.error).to.be.calledWith('%s', expectedErr);
+    expect(actualErr).to.equal(expectedErr);
+  }
+};
 
-global.expect = chai.expect;
-global.sinon = sinon;
+module.exports = helper;

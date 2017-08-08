@@ -14,30 +14,20 @@
  */
 
 const sinon = require('sinon');
-const command = require('./fixtures/command.js');
-const service = require('../lib/service.js');
-const logger = require('../lib/logger.js');
-const pkg = require('../package.json');
-const project = require('../lib/project.js');
-const status = require('../cmd/status.js');
-const user = require('../lib/user.js');
+const command = require('../fixtures/command.js');
+const service = require('../../lib/service.js');
+const logs = require('../../cmd/logs.js');
+const pkg = require('../../package.json');
+const project = require('../../lib/project.js');
+const user = require('../../lib/user.js');
 
-describe(`./${pkg.name} status`, () => {
+describe(`./${pkg.name} logs`, () => {
   const sandbox = sinon.sandbox.create();
-
-  before('configure', () => {
-    project.app = project.service = '123';
-    project.schemaVersion = 1;
-  });
-
-  after('configure', () => {
-    project.app = project.service = project.schemaVersion = null;
-  });
 
   before('setupStubs', () => {
     sandbox.stub(user, 'setup').callsArg(1);
     sandbox.stub(project, 'restore').callsArg(0);
-    sandbox.stub(service, 'serviceStatus').callsArg(0);
+    sandbox.stub(service, 'logs').callsArg(2);
   });
 
   afterEach('resetStubs', () => {
@@ -49,23 +39,39 @@ describe(`./${pkg.name} status`, () => {
   });
 
   it('should setup the user.', (cb) => {
-    status.call(command, command, (err) => {
+    logs(null, null, command, (err) => {
       expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should restore the project.', (cb) => {
-    status.call(command, command, (err) => {
+    logs(null, null, command, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
 
-  it('should print the current KMR service status.', (cb) => {
-    status.call(command, command, (err) => {
-      expect(service.serviceStatus).to.be.calledOnce;
+  it('should retrieve log entries based on query', (cb) => {
+    logs(null, null, command, (err) => {
+      expect(service.logs).to.be.calledOnce;
       cb(err);
+    });
+  });
+
+  it('should fail with an invalid \'from\' timestamp', (done) => {
+    logs('abc', null, command, (err) => {
+      expect(err).to.exist;
+      expect(err.message).to.equal("Logs \'from\' timestamp invalid (ISO-8601 required)");
+      done();
+    });
+  });
+
+  it('should fail with an invalid \'to\' timestamp', (done) => {
+    logs(null, 'abc', command, (err) => {
+      expect(err).to.exist;
+      expect(err.message).to.equal("Logs \'to\' timestamp invalid (ISO-8601 required)");
+      done();
     });
   });
 });

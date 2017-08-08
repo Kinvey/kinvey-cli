@@ -19,7 +19,7 @@ const logger = require('../lib/logger.js');
 const program = require('commander');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
-const handleActionFailure = require('./../lib/util').handleActionFailure;
+const handleActionFailure = require('./../lib/util').handleCommandFailure;
 
 function list(command, cb) {
   const options = init(command);

@@ -20,7 +20,7 @@ const init = require('../lib/init.js');
 const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
-const handleActionFailure = require('./../lib/util').handleActionFailure;
+const handleActionFailure = require('./../lib/util').handleCommandFailure;
 
 function deploy(command, cb) {
   const options = init(command);

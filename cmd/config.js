@@ -20,7 +20,7 @@ const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 const util = require('../lib/util.js');
-const handleActionFailure = require('./../lib/util').handleActionFailure;
+const handleActionFailure = require('./../lib/util').handleCommandFailure;
 
 function initUrl(host, cb) {
   if (host != null) user.host = util.formatHost(host);

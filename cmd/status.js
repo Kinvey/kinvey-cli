@@ -20,6 +20,7 @@ const init = require('../lib/init.js');
 const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
+const handleActionFailure = require('./../lib/util').handleCommandFailure;
 
 function status(command, cb) {
   const options = init(command);
@@ -28,11 +29,7 @@ function status(command, cb) {
     (next) => project.restore(next),
     (next) => service.serviceStatus(next)
   ], (err) => {
-    if (err != null) {
-      logger.error('%s', err);
-      if (cb == null) process.exit(-1);
-    }
-    if (cb != null) cb(err);
+    handleActionFailure(err, cb);
   });
 }
 

@@ -14,42 +14,28 @@
  */
 
 const sinon = require('sinon');
-const command = require('./fixtures/command.js');
-const service = require('../lib/service.js');
-const logs = require('../cmd/logs.js');
-const pkg = require('../package.json');
-const project = require('../lib/project.js');
-const user = require('../lib/user.js');
+const command = require('../fixtures/command.js');
+const service = require('../../lib/service.js');
+const logs = require('../../cmd/logs.js');
+const pkg = require('../../package.json');
+const project = require('../../lib/project.js');
+const user = require('../../lib/user.js');
 
 describe(`./${pkg.name} logs`, () => {
-  before('user', () => {
-    sinon.stub(user, 'setup').callsArg(1);
-  });
-  afterEach('user', () => {
-    user.setup.reset();
-  });
-  after('user', () => {
-    user.setup.restore();
+  const sandbox = sinon.sandbox.create();
+
+  before('setupStubs', () => {
+    sandbox.stub(user, 'setup').callsArg(1);
+    sandbox.stub(project, 'restore').callsArg(0);
+    sandbox.stub(service, 'logs').callsArg(2);
   });
 
-  before('project', () => {
-    sinon.stub(project, 'restore').callsArg(0);
-  });
-  afterEach('project', () => {
-    project.restore.reset();
-  });
-  after('project', () => {
-    project.restore.restore();
+  afterEach('resetStubs', () => {
+    sandbox.reset();
   });
 
-  before('logs', () => {
-    sinon.stub(service, 'logs').callsArg(2);
-  });
-  afterEach('logs', () => {
-    service.logs.reset();
-  });
-  after('logs', () => {
-    service.logs.restore();
+  after('cleanupStubs', () => {
+    sandbox.restore();
   });
 
   it('should setup the user.', (cb) => {
@@ -58,18 +44,21 @@ describe(`./${pkg.name} logs`, () => {
       cb(err);
     });
   });
+
   it('should restore the project.', (cb) => {
     logs(null, null, command, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
+
   it('should retrieve log entries based on query', (cb) => {
     logs(null, null, command, (err) => {
       expect(service.logs).to.be.calledOnce;
       cb(err);
     });
   });
+
   it('should fail with an invalid \'from\' timestamp', (done) => {
     logs('abc', null, command, (err) => {
       expect(err).to.exist;
@@ -77,6 +66,7 @@ describe(`./${pkg.name} logs`, () => {
       done();
     });
   });
+
   it('should fail with an invalid \'to\' timestamp', (done) => {
     logs(null, 'abc', command, (err) => {
       expect(err).to.exist;

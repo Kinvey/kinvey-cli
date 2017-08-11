@@ -14,85 +14,86 @@
  */
 
 const sinon = require('sinon');
-const command = require('./fixtures/command.js');
-const pkg = require('../package.json');
-const project = require('../lib/project.js');
-const user = require('../lib/user.js');
+const command = require('../fixtures/command.js');
+const pkg = require('../../package.json');
+const project = require('../../lib/project.js');
+const user = require('../../lib/user.js');
+const config = require('../../cmd/config.js');
 
 describe(`./${pkg.name} config`, () => {
-  beforeEach(() => {
-    this.config = require('../cmd/config.js');
+  const sandbox = sinon.sandbox.create();
+
+  before('setupStubs', () => {
+    sandbox.stub(user, 'setup').callsArg(1);
+    sandbox.stub(project, 'config').callsArg(1);
   });
-  before('user', () => {
-    sinon.stub(user, 'setup').callsArg(1);
+
+  afterEach('resetStubs', () => {
+    sandbox.reset();
   });
-  afterEach('user', () => {
-    user.setup.reset();
+
+  after('cleanupStubs', () => {
+    sandbox.restore();
   });
-  after('user', () => {
-    user.setup.restore();
-  });
-  before('project', () => {
-    sinon.stub(project, 'config').callsArg(1);
-  });
-  afterEach('project', () => {
-    project.config.reset();
-  });
-  after('project', () => {
-    project.config.restore();
-  });
+
   it('should setup the user.', (cb) => {
-    this.config(null, command, (err) => {
+    config(null, command, (err) => {
       expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
+
   it('configure the project with the default host.', (cb) => {
-    this.config(null, command, (err) => {
+    config(null, command, (err) => {
       expect(project.config).to.be.calledOnce;
       expect(user.host).to.equal(null);
       cb(err);
     });
   });
+
   describe('with a custom HTTP host', () => {
     it('should configure the project.', (cb) => {
       const host = 'http://host:123/';
-      this.config(host, command, (err) => {
+      config(host, command, (err) => {
         expect(project.config).to.be.calledOnce;
         expect(user.host).to.equal(host);
         cb(err);
       });
     });
+
     it('should add a trailing backslash if one is not supplied.', (cb) => {
       const host = 'http://host:123';
-      this.config(host, command, (err) => {
+      config(host, command, (err) => {
         expect(project.config).to.be.calledOnce;
         expect(user.host).to.equal(`${host}/`);
         cb(err);
       });
     });
   });
+
   describe('with a custom HTTPS host', () => {
     it('should configure the project with a custom HTTPS host.', (cb) => {
       const host = 'https://host:123/';
-      this.config(host, command, (err) => {
+      config(host, command, (err) => {
         expect(project.config).to.be.calledOnce;
         expect(user.host).to.equal(host);
         cb(err);
       });
     });
+
     it('should add a trailing backslash if one is not supplied.', (cb) => {
       const host = 'https://host:123';
-      this.config(host, command, (err) => {
+      config(host, command, (err) => {
         expect(project.config).to.be.calledOnce;
         expect(user.host).to.equal(`${host}/`);
         cb(err);
       });
     });
   });
+
   it('configure the project with a custom host.', (cb) => {
     const host = '123';
-    this.config(host, command, (err) => {
+    config(host, command, (err) => {
       expect(project.config).to.be.calledOnce;
       expect(user.host).to.equal(`https://${host}-manage.kinvey.com/`);
       cb(err);

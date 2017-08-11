@@ -20,6 +20,7 @@ const init = require('../lib/init.js');
 const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
+const handleActionFailure = require('./../lib/util').handleCommandFailure;
 
 function deploy(command, cb) {
   const options = init(command);
@@ -29,11 +30,7 @@ function deploy(command, cb) {
     (next) => service.validate(process.cwd(), next),
     (version, next) => service.deploy(process.cwd(), version, next)
   ], (err) => {
-    if (err != null) {
-      logger.error('%s', err);
-      if (cb == null) process.exit(-1);
-    }
-    if (cb != null) cb(err);
+    handleActionFailure(err, cb);
   });
 }
 

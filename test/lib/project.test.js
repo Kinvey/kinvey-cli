@@ -13,21 +13,26 @@
  * contents is a violation of applicable laws.
  */
 
+const chalk = require('chalk');
 const config = require('config');
-const api = require('./lib/api.js');
-const logger = require('../lib/logger.js');
-const project = require('../lib/project.js');
-const prompt = require('../lib/prompt.js');
-const user = require('../lib/user.js');
-const util = require('../lib/util.js');
+const api = require('../api.js');
+const logger = require('../../lib/logger.js');
+const project = require('../../lib/project.js');
+const prompt = require('../../lib/prompt.js');
+const user = require('../../lib/user.js');
+const util = require('../../lib/util.js');
 const uuid = require('uuid');
 
 const fixtures = {
-  app: require('./fixtures/app.json'),
-  datalink: require('./fixtures/datalink.json'),
-  kinveyDlc: require('./fixtures/kinvey-dlc.json'),
-  org: require('./fixtures/org.json')
+  app: require('../fixtures/app.json'),
+  datalink: require('../fixtures/datalink.json'),
+  kinveyDlc: require('../fixtures/kinvey-dlc.json'),
+  org: require('../fixtures/org.json')
 };
+
+function getStubCallArg(allCalls, callPosition, argPosition) {
+  return allCalls[callPosition].args[argPosition];
+}
 
 describe('project', () => {
   describe('isConfigured', () => {
@@ -35,64 +40,92 @@ describe('project', () => {
       project.service = '123';
       project.schemaVersion = 2;
     });
+
     afterEach('configure', () => {
       project.app = project.service = project.schemaVersion = null;
     });
+
     it('should true if the app and service were configured.', () => {
       expect(project.isConfigured()).to.be.true;
     });
+
     it('should false if the service was not configured.', () => {
       project.service = null;
       expect(project.isConfigured()).to.be.false;
     });
+
     it('should false if the schema was not configured.', () => {
       project.schemaVersion = null;
       expect(project.isConfigured()).to.be.false;
     });
   });
+
+  // list for v2 apps
   describe('list', () => {
+    const sandbox = sinon.sandbox.create();
+    const testAppId = '123';
+    let loggerInfoStub;
+
     beforeEach('configure', () => {
-      project.app = project.service = '123';
+      project.app = project.service = testAppId;
+      project.schemaVersion = 2;
     });
-    afterEach('configure', () => {
+
+    after('configure', () => {
       project.app = project.service = null;
+      project.schemaVersion = null;
     });
 
-    before('stub', () => {
-      sinon.stub(logger, 'info');
-    });
-    afterEach('stub', () => {
-      logger.info.reset();
-    });
-    after('stub', () => {
-      logger.info.restore();
+    beforeEach('setupStubs', () => {
+      loggerInfoStub = sandbox.stub(logger, 'info');
     });
 
-    describe('for v2 apps', () => {
-      beforeEach('configure', () => {
-        project.schemaVersion = 2;
-      });
-      afterEach('configure', () => {
-        project.schemaVersion = null;
-      });
+    afterEach('cleanupStubs', () => {
+      sandbox.restore();
+    });
 
-      beforeEach('api', () => {
-        this.mock = api.get('/v2/apps/123/data-links').reply(200, []);
-      });
-      afterEach('api', () => {
-        this.mock.done();
-        delete this.mock;
-      });
+    it('should list all Kinvey (internal) datalinks sorted when no error', (cb) => {
+      const fakeDbDataLinks = [
+        { type: 'internal', name: 'someName' },
+        { type: 'internal', name: 'zero' },
+        { type: 'shouldNotShow', name: 'y' },
+        { type: 'internal', name: '2d2r' },
+      ];
 
-      it('should list all Kinvey datalinks.', (cb) => {
-        project.list((err) => {
-          expect(logger.info).to.be.called;
-          expect(logger.info).to.be.calledWith('The service used in this project is marked with *');
-          cb(err);
-        });
+      sandbox.stub(util, 'makeRequest').callsArgWith(1, null, { body: fakeDbDataLinks });
+
+      project.list((err) => {
+        expect(err).to.not.exist;
+        expect(loggerInfoStub).to.be.called;
+
+        const loggerCalls = loggerInfoStub.getCalls();
+        const expectedLoggerCallsCount = 5;
+        expect(loggerCalls.length).to.be.at.least(expectedLoggerCallsCount);
+
+        const actualDataLinksCount = getStubCallArg(loggerCalls, 0, 1);
+        expect(actualDataLinksCount).to.equal(chalk.cyan(3));
+
+        expect(getStubCallArg(loggerCalls, 1, 2)).to.equal(chalk.cyan('2d2r'));
+        expect(getStubCallArg(loggerCalls, 2, 2)).to.equal(chalk.cyan('someName'));
+        expect(getStubCallArg(loggerCalls, 3, 2)).to.equal(chalk.cyan('zero'));
+
+        expect(loggerInfoStub).to.be.calledWith('The service used in this project is marked with *');
+        cb();
+      });
+    });
+
+    it('should pass error when one occurs', (cb) => {
+      const fakeErr = new Error('Some err');
+      sandbox.stub(util, 'makeRequest').callsArgWith(1, fakeErr);
+
+      project.list((err) => {
+        expect(err).to.exist.and.to.equal(fakeErr);
+        expect(loggerInfoStub).to.not.be.called;
+        cb();
       });
     });
   });
+
   describe('logout', () => {
     beforeEach('configure', () => {
       project.app = project.service = '123';
@@ -127,6 +160,7 @@ describe('project', () => {
       });
     });
   });
+
   describe('restore', () => {
     describe('when the project file exists', () => {
       before('configure', () => {
@@ -162,6 +196,7 @@ describe('project', () => {
         });
       });
     });
+
     describe('when the project file does not exists', () => {
       before('stub', () => {
         sinon.stub(util, 'readJSON').callsArgWith(1, null, {});
@@ -182,6 +217,7 @@ describe('project', () => {
       });
     });
   });
+
   describe('save', () => {
     describe('with an app', () => {
       before('configure', () => {
@@ -218,6 +254,7 @@ describe('project', () => {
         });
       });
     });
+
     describe('with an org', () => {
       before('configure', () => {
         project.org = project.service = project.serviceName = uuid.v4();
@@ -379,6 +416,7 @@ describe('project', () => {
           });
         });
       });
+
       describe('for orgs', () => {
         before('config', () => {
           project.org = fixtures.org.name;

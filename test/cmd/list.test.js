@@ -14,42 +14,28 @@
  */
 
 const sinon = require('sinon');
-const command = require('./fixtures/command.js');
-const list = require('../cmd/list.js');
-const logger = require('../lib/logger.js');
-const pkg = require('../package.json');
-const project = require('../lib/project.js');
-const user = require('../lib/user.js');
+const command = require('../fixtures/command.js');
+const list = require('../../cmd/list.js');
+const logger = require('../../lib/logger.js');
+const pkg = require('../../package.json');
+const project = require('../../lib/project.js');
+const user = require('../../lib/user.js');
 
 describe(`./${pkg.name} list`, () => {
-  before('user', () => {
-    sinon.stub(user, 'setup').callsArg(1);
-  });
-  afterEach('user', () => {
-    user.setup.reset();
-  });
-  after('user', () => {
-    user.setup.restore();
+  const sandbox = sinon.sandbox.create();
+
+  before('setupStubs', () => {
+    sandbox.stub(user, 'setup').callsArg(1);
+    sandbox.stub(project, 'restore').callsArg(0);
+    sandbox.stub(project, 'list').callsArg(0);
   });
 
-  before('restore', () => {
-    sinon.stub(project, 'restore').callsArg(0);
-  });
-  afterEach('restore', () => {
-    project.restore.reset();
-  });
-  after('restore', () => {
-    project.restore.restore();
+  afterEach('resetStubs', () => {
+    sandbox.reset();
   });
 
-  before('list', () => {
-    sinon.stub(project, 'list').callsArg(0);
-  });
-  afterEach('list', () => {
-    project.list.reset();
-  });
-  after('list', () => {
-    project.list.restore();
+  after('cleanupStubs', () => {
+    sandbox.restore();
   });
 
   it('should setup the user.', (cb) => {
@@ -58,12 +44,14 @@ describe(`./${pkg.name} list`, () => {
       cb(err);
     });
   });
+
   it('should restore the project.', (cb) => {
     list.call(command, command, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
+
   it('should list the Kinvey datalinks.', (cb) => {
     list.call(command, command, (err) => {
       expect(project.list).to.be.calledOnce;

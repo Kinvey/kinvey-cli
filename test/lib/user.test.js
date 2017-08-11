@@ -14,11 +14,11 @@
  */
 
 const config = require('config');
-const api = require('./lib/api.js');
-const prompt = require('../lib/prompt.js');
-const user = require('../lib/user.js');
-const util = require('../lib/util.js');
-const constants = require('./../lib/constants');
+const api = require('../api.js');
+const prompt = require('../../lib/prompt.js');
+const user = require('../../lib/user.js');
+const util = require('../../lib/util.js');
+const constants = require('../../lib/constants');
 
 const loginTestsHelper = {
   assertLoginIsSuccessful(err, mock, token, cb) {

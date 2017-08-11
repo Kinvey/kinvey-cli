@@ -13,29 +13,23 @@
  * contents is a violation of applicable laws.
  */
 
-const constants = {};
+const logger = require('../lib/logger');
 
-constants.EnvironmentVariables = {
-  USER: 'KINVEY_CLI_USER',
-  PASSWORD: 'KINVEY_CLI_PASSWORD',
+const helper = {};
+
+helper.assertions = {
+  assertCmdCommandWithoutCallbackForError(expectedErr) {
+    expect(process.exit).to.be.calledOnce;
+    expect(process.exit).to.be.calledWith(-1);
+    expect(logger.error).to.be.calledOnce;
+    expect(logger.error).to.be.calledWith('%s', expectedErr);
+  },
+  assertCmdCommandWithCallbackForError(actualErr, expectedErr) {
+    expect(actualErr).to.exist;
+    expect(logger.error).to.be.calledOnce;
+    expect(logger.error).to.be.calledWith('%s', expectedErr);
+    expect(actualErr).to.equal(expectedErr);
+  }
 };
 
-constants.PromptMessages = {
-  INVALID_MFA_TOKEN: 'Please enter a valid 2FA token (6 digits).',
-  INVALID_EMAIL_ADDRESS: 'Please enter a valid e-mail address.',
-};
-
-constants.InfoMessages = {
-  APP_PROMPTING: 'Prompting for application',
-  APP_OR_ORG_PROMPTING: 'Prompting for app or organization',
-  ORG_PROMPTING: 'Prompting for organization',
-  SERVICE_PROMPTING: 'Prompting for service',
-  TWO_FACTOR_TOKEN_PROMPTING: 'Prompting for 2FA token',
-  EMAIL_PASSWORD_PROMPTING: 'Prompting for email and/or password'
-};
-
-constants.JobStatus = {
-  COMPLETE: 'COMPLETE'
-};
-
-module.exports = constants;
+module.exports = helper;

@@ -16,16 +16,17 @@
 const config = require('config');
 const uuid = require('uuid');
 const path = require('path');
-const api = require('./lib/api.js');
+const api = require('../api.js');
 const stdout = require('test-console').stdout;
-const logger = require('../lib/logger');
-const project = require('../lib/project.js');
-const service = require('../lib/service.js');
-const util = require('../lib/util.js');
+const logger = require('../../lib/logger');
+const project = require('../../lib/project.js');
+const service = require('../../lib/service.js');
+const util = require('../../lib/util.js');
+const JobStatus = require('../../lib/constants').JobStatus;
 
 const fixtures = {
-  invalid: path.join(__dirname, 'fixtures/deploy'),
-  valid: path.join(__dirname, 'lib')
+  invalid: path.resolve('./test/fixtures/deploy'),
+  valid: path.resolve('./test/cmd')
 };
 
 describe('service', () => {
@@ -33,7 +34,8 @@ describe('service', () => {
     project.app = project.service = '123';
     project.lastJobId = 'abcdef';
   });
-  afterEach('configure', () => {
+
+  after('configure', () => {
     project.app = project.service = null;
     project.lastJobId = null;
   });
@@ -52,7 +54,8 @@ describe('service', () => {
         project.schemaVersion = 2;
         this.jobId = uuid.v4();
       });
-      afterEach('configure', () => {
+
+      after('configure', () => {
         project.schemaVersion = null;
       });
 
@@ -76,11 +79,13 @@ describe('service', () => {
       });
     });
   });
+
   describe('recycle', () => {
     beforeEach('configure', () => {
       project.app = project.service = '123';
     });
-    afterEach('configure', () => {
+
+    after('configure', () => {
       project.app = project.service = null;
     });
 
@@ -89,18 +94,17 @@ describe('service', () => {
         project.schemaVersion = 2;
         this.jobId = uuid.v4();
       });
-      afterEach('configure', () => {
+
+      after('configure', () => {
         project.schemaVersion = null;
       });
 
       beforeEach('api', () => {
-        this.mock = api.post('/v2/jobs').reply(202, {
-          job: this.jobId
-        });
+        sinon.stub(util, 'makeRequest').callsArgWith(1, null, { body: { job: this.jobId } });
       });
+
       afterEach('api', () => {
-        this.mock.done();
-        delete this.mock;
+        util.makeRequest.restore();
       });
 
       it('should recycle.', (cb) => {
@@ -111,123 +115,98 @@ describe('service', () => {
       });
     });
   });
-  describe('job', () => {
+
+
+  describe('job status (v2 apps)', () => {
+    const sandbox = sinon.sandbox.create();
+    const testJobId = '123';
+
     beforeEach('configure', () => {
-      project.app = project.service = '123';
+      project.app = project.service = testJobId;
+      project.schemaVersion = 2;
     });
-    afterEach('configure', () => {
+
+    after('configure', () => {
       project.app = project.service = null;
     });
 
-    describe('for v2 apps', () => {
-      beforeEach('configure', () => {
-        project.schemaVersion = 2;
+    beforeEach(() => {
+      sandbox.restore();
+    });
+
+    it('should fail with a null param and no cached job ID', (cb) => {
+      project.lastJobId = null;
+
+      service.jobStatus(null, (err) => {
+        expect(err).to.exist;
+        expect(err.message).to.equal('No previous job stored. Please provide a job ID.');
+        cb();
       });
-      afterEach('configure', () => {
-        project.schemaVersion = null;
+    });
+
+    it(`should be ${JobStatus.COMPLETE} when job exists and is complete`, (cb) => {
+      sandbox.stub(util, 'makeRequest')
+        .withArgs({ url: `/v${project.schemaVersion}/jobs/${testJobId}` })
+        .callsArgWith(1, null, { body: { status: JobStatus.COMPLETE } });
+
+      service.jobStatus(testJobId, (err, status) => {
+        expect(err).to.not.exist;
+        expect(status).to.equal(JobStatus.COMPLETE);
+        cb();
+      });
+    });
+
+    it('should cache the updated job ID', (cb) => {
+      const someJobId = 'someJobId';
+
+      this.mock = api.get(`/v2/jobs/${someJobId}`).reply(200, {
+        status: JobStatus.COMPLETE
+      });
+      const deployMock = api.post('/v2/jobs').reply(202, {
+        job: someJobId
       });
 
-      describe('with a non-null job id value', () => {
-        beforeEach('api', () => {
-          this.mock = api.get('/v2/jobs/123').reply(200, {
-            status: 'COMPLETE'
-          });
-        });
-        afterEach('api', () => {
-          this.mock.done();
-          delete this.mock;
-        });
+      service.deploy(fixtures.valid, '0.1.0', (err) => {
+        expect(err).to.not.exist;
 
-        it('should the job status.', (cb) => {
-          service.jobStatus('123', (err, status) => {
-            expect(status).to.equal('COMPLETE');
-            cb(err);
-          });
-        });
-      });
-      describe('with a null job id value', () => {
-        beforeEach('api', () => {
-          this.mock = api.get('/v2/jobs/abcdef').reply(200, {
-            status: 'COMPLETE'
-          });
-        });
-        afterEach('api', () => {
-          if (this.mock != null) {
-            this.mock.done();
-            delete this.mock;
-          }
-        });
-
-        it('should the job status for a cached job ID.', (cb) => {
-          service.jobStatus(null, (err, status) => {
-            expect(status).to.equal('COMPLETE');
-            cb(err);
-          });
-        });
-      });
-      it('should fail with a null param and no cached job ID', (cb) => {
-        project.lastJobId = null;
-        delete this.mock;
-        service.jobStatus(null, (err) => {
-          expect(err).to.exist;
-          expect(err.message).to.equal('No previous job stored. Please provide a job ID.');
+        service.jobStatus(null, (err, status) => {
+          expect(err).to.not.exist;
+          expect(status).to.equal(JobStatus.COMPLETE);
           cb();
         });
       });
-      it('should cache the updated job ID', (cb) => {
-        delete this.mock;
-        this.mock = api.get('/v2/jobs/testjob').reply(200, {
-          status: 'COMPLETE'
-        });
-        let deployMock = api.post('/v2/jobs').reply(202, {
-          job: 'testjob'
-        });
-        service.deploy(fixtures.valid, '0.1.0', (err) => {
-          expect(err).to.be.undefined;
-          service.jobStatus(null, (err, status) => {
-            expect(status).to.equal('COMPLETE');
-            deployMock.done();
-            deployMock = null;
-            cb(err);
-          });
-        });
-      });
     });
   });
-  describe('status', () => {
+
+  describe('status (for v2 apps)', () => {
+    const sandbox = sinon.sandbox.create();
+
     beforeEach('configure', () => {
       project.app = project.service = '123';
+      project.schemaVersion = 2;
     });
-    afterEach('configure', () => {
+
+    after('configure', () => {
       project.app = project.service = null;
+      project.schemaVersion = null;
     });
 
-    describe('for v2 apps', () => {
-      beforeEach('configure', () => {
-        project.schemaVersion = 2;
-      });
-      afterEach('configure', () => {
-        project.schemaVersion = null;
-      });
+    after(() => {
+      sandbox.restore();
+    });
 
-      beforeEach('api', () => {
-        this.mock = api.get(`/v${project.schemaVersion}/data-links/${project.service}/status`).reply(200, {
-          status: 'ONLINE'
-        });
-      });
-      afterEach('api', () => {
-        this.mock.done();
-        delete this.mock;
-      });
+    it('should the service status.', (cb) => {
+      sandbox.stub(util, 'makeRequest')
+        .withArgs({ url: `/v${project.schemaVersion}/data-links/${project.service}/status` })
+        .callsArgWith(1, null, { body: { status: 'ONLINE' } });
 
-      it('should the service status.', (cb) => {
-        service.serviceStatus((err, status) => {
-          expect(status).to.equal('ONLINE');
-          cb(err);
-        });
+      service.serviceStatus((err, status) => {
+        expect(status).to.equal('ONLINE');
+        cb(err);
       });
     });
   });
+
   describe('logs', () => {
     beforeEach('configure', () => {
       project.app = project.service = '123';

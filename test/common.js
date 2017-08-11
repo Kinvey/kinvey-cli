@@ -16,7 +16,7 @@
 const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const logger = require('../../lib/logger.js');
+const logger = require('../lib/logger.js');
 
 chai.use(sinonChai);
 

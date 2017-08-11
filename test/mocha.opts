@@ -1,6 +1,6 @@
 --check-leaks
 --recursive
 --reporter spec
---require  ./test/lib/common.js
+--require  ./test/common.js
 --timeout  10000
 --ui       bdd

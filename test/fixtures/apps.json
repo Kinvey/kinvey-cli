@@ -1,0 +1,18 @@
+[
+  {
+    "id"   : "123",
+    "name" : "TestApp",
+    "environments": [{
+      "id"   : "kid123",
+      "name" : "TestEnvironment"
+    }]
+  },
+  {
+    "id"   : "124",
+    "name" : "TestApp0",
+    "environments": [{
+      "id"   : "kid124",
+      "name" : "TestEnvironment"
+    }]
+  }
+]

@@ -20,14 +20,7 @@ const prompt = require('../../lib/prompt');
 const logger = require('../../lib/logger');
 const PromptMessages = require('../../lib/constants').PromptMessages;
 const InfoMessages = require('../../lib/constants').InfoMessages;
-
-function getInquirerPromptStub(sandbox, answers) {
-  return sandbox.stub(inquirer, 'prompt', (questions, cb) => {
-    setTimeout(() => {
-      cb(answers);
-    }, 0);
-  });
-}
+const helperMocks = require('./../helper').mocks;
 
 describe('prompt', () => {
   describe('validate e-mail address', () => {
@@ -131,7 +124,7 @@ describe('prompt', () => {
         let inquirerPromptStub;
 
         before(() => {
-          inquirerPromptStub = getInquirerPromptStub(sandbox, { [x.nameForPrompt]: dataValue });
+          inquirerPromptStub = helperMocks.getInquirerPrompt(sandbox, { [x.nameForPrompt]: dataValue });
         });
 
         afterEach(() => {
@@ -162,7 +155,7 @@ describe('prompt', () => {
       });
 
       it('should return the already provided ones if no answers from prompt', (cb) => {
-        inquirerPromptStub = getInquirerPromptStub(sandbox, {});
+        inquirerPromptStub = helperMocks.getInquirerPrompt(sandbox, {});
 
         const expectedEmail = 'janeDoe@email.com';
         const expectedPassword = 'youShallNotPass';
@@ -179,7 +172,7 @@ describe('prompt', () => {
       it('should return email and password if answers from prompt', (cb) => {
         const expectedEmail = 'janeDoe@email.com';
         const expectedPassword = 'youShallNotPass';
-        inquirerPromptStub = getInquirerPromptStub(sandbox, { email: expectedEmail, password: expectedPassword });
+        inquirerPromptStub = helperMocks.getInquirerPrompt(sandbox, { email: expectedEmail, password: expectedPassword });
 
         prompt.getEmailPassword(null, null, (err, actualEmail, actualPassword) => {
           expect(err).to.not.exist;

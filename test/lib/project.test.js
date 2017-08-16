@@ -30,9 +30,7 @@ const fixtures = {
   org: require('../fixtures/org.json')
 };
 
-function getStubCallArg(allCalls, callPosition, argPosition) {
-  return allCalls[callPosition].args[argPosition];
-}
+const getStubCallArg = require('./../helper').mocks.getStubCallArg;
 
 describe('project', () => {
   describe('isConfigured', () => {

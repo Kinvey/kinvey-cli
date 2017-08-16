@@ -1,0 +1,11 @@
+{
+  "existent": {
+    "email": "janeDoe@mail.com",
+    "password": "superSecurePass"
+  },
+  "nonexistent": {
+    "email": "johnDoe@mail.com",
+    "password": "12345678"
+  },
+  "token": "userToken"
+}

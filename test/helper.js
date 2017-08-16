@@ -13,7 +13,12 @@
  * contents is a violation of applicable laws.
  */
 
+const nock = require('nock');
+const inquirer = require('inquirer');
+
 const logger = require('../lib/logger');
+const api = require('./api');
+const fixtureUser = require('./fixtures/user.json');
 
 const helper = {};
 
@@ -29,6 +34,19 @@ helper.assertions = {
     expect(logger.error).to.be.calledOnce;
     expect(logger.error).to.be.calledWith('%s', expectedErr);
     expect(actualErr).to.equal(expectedErr);
+  }
+};
+
+helper.mocks = {
+  getInquirerPrompt(sandbox, answers) {
+    return sandbox.stub(inquirer, 'prompt', (questions, cb) => {
+      setTimeout(() => {
+        cb(answers);
+      }, 0);
+    });
+  },
+  getStubCallArg(allCalls, callPosition, argPosition) {
+    return allCalls[callPosition].args[argPosition];
   }
 };
 

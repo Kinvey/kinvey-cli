@@ -14,6 +14,7 @@
  */
 
 const async = require('async');
+const config = require('config');
 const moment = require('moment');
 const program = require('commander');
 const service = require('../lib/service.js');
@@ -28,14 +29,25 @@ function validateTimestamp(ts) {
   return moment(ts, moment.ISO_8601, true).isValid();
 }
 
-function logs(from, to, command, cb) {
+function validateNumber(number) {
+  if (number == null) return true;
+  if (number === 0 || number === '0') return false;
+  return /^\d+$/.test(number);
+}
+
+function logs(command, cb) {
   const options = init(command);
-  if (!validateTimestamp(from)) return cb(new Error('Logs \'from\' timestamp invalid (ISO-8601 required)'));
-  if (!validateTimestamp(to)) return cb(new Error('Logs \'to\' timestamp invalid (ISO-8601 required)'));
+
+  // Validate input parameters
+  if (!validateTimestamp(options.start)) return handleActionFailure(new Error('Logs \'start\' timestamp invalid (ISO-8601 expected)'), cb);
+  if (!validateTimestamp(options.end)) return handleActionFailure(new Error('Logs \'end\' timestamp invalid (ISO-8601 expected)'), cb);
+  if (!validateNumber(options.number)) return handleActionFailure(new Error('Logs \'number\' parameter invalid (integer expected)'), cb);
+  if (!validateNumber(options.page)) return handleActionFailure(new Error('Logs \'page\' parameter invalid (integer expected)'), cb);
+
   return async.series([
     (next) => user.setup(options, next),
     (next) => project.restore(next),
-    (next) => service.logs(from, to, next)
+    (next) => service.logs(options.start, options.end, options.number, options.page, next)
   ], (err) => {
     handleActionFailure(err, cb);
   });
@@ -44,6 +56,10 @@ function logs(from, to, command, cb) {
 module.exports = logs;
 
 program
-  .command('logs [from] [to]')
+  .command('logs')
+  .option('--start <string>', 'fetch logs starting from provided timestamp')
+  .option('--end <string>', 'fetch log entries up to provided timestamp')
+  .option('--page <number>', 'page (default=0)')
+  .option('-n, --number <number>', `number of entries to fetch, i.e. page size (default=${config.logFetchDefault}, max=${config.logFetchMax}`)
   .description('retrieve and display Internal Flex Service logs')
   .action(logs);

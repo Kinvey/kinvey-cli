@@ -207,13 +207,15 @@ describe('service', () => {
     });
   });
 
-  describe('logs', () => {
+  describe.only('logs', () => {
     beforeEach('configure', () => {
       project.app = project.service = '123';
       this.message = uuid.v4();
       this.containerId = uuid.v4();
       this.from = uuid.v4();
       this.to = uuid.v4();
+      this.page = Math.floor(Math.random() * 10) + 1;
+      this.limit = Math.floor(Math.random() * 10) + 1;
     });
     afterEach('configure', () => {
       project.app = project.service = null;
@@ -252,7 +254,7 @@ describe('service', () => {
           });
         });
       });
-      describe('with a logs \'to\' filter', () => {
+      describe('with a logs \'from\' filter', () => {
         beforeEach('api', () => {
           this.mock = api.get(`/v${project.schemaVersion}/data-links/${project.service}/logs?from=${this.from}`).reply(200, [
             {
@@ -320,6 +322,106 @@ describe('service', () => {
 
         it('should the service logs.', (cb) => {
           service.logs(this.from, this.to, null, null, (err, logs) => {
+            expect(logs[0].threshold).to.equal('info');
+            expect(logs[0].message).to.equal(this.message);
+            expect(logs[0].containerId).to.equal(this.containerId);
+            cb(err);
+          });
+        });
+      });
+      describe('with a logs \'page\' filter', () => {
+        beforeEach('api', () => {
+          this.mock = api.get(`/v${project.schemaVersion}/data-links/${project.service}/logs?page=${this.page}`).reply(200, [
+            {
+              threshold: 'info',
+              message: this.message,
+              timestamp: new Date().toISOString(),
+              containerId: this.containerId
+            }
+          ]);
+        });
+        afterEach('api', () => {
+          this.mock.done();
+          delete this.mock;
+        });
+
+        it('should retrieve the service logs.', (cb) => {
+          service.logs(null, null, null, this.page, (err, logs) => {
+            expect(logs[0].threshold).to.equal('info');
+            expect(logs[0].message).to.equal(this.message);
+            expect(logs[0].containerId).to.equal(this.containerId);
+            cb(err);
+          });
+        });
+      });
+      describe('with a logs \'number\' filter', () => {
+        beforeEach('api', () => {
+          this.mock = api.get(`/v${project.schemaVersion}/data-links/${project.service}/logs?limit=${this.limit}`).reply(200, [
+            {
+              threshold: 'info',
+              message: this.message,
+              timestamp: new Date().toISOString(),
+              containerId: this.containerId
+            }
+          ]);
+        });
+        afterEach('api', () => {
+          this.mock.done();
+          delete this.mock;
+        });
+
+        it('should retrieve the service logs.', (cb) => {
+          service.logs(null, null, this.limit, null, (err, logs) => {
+            expect(logs[0].threshold).to.equal('info');
+            expect(logs[0].message).to.equal(this.message);
+            expect(logs[0].containerId).to.equal(this.containerId);
+            cb(err);
+          });
+        });
+      });
+      describe('with logs \'number\' and \'page\' filters', () => {
+        beforeEach('api', () => {
+          this.mock = api.get(`/v${project.schemaVersion}/data-links/${project.service}/logs?limit=${this.limit}&page=${this.page}`).reply(200, [
+            {
+              threshold: 'info',
+              message: this.message,
+              timestamp: new Date().toISOString(),
+              containerId: this.containerId
+            }
+          ]);
+        });
+        afterEach('api', () => {
+          this.mock.done();
+          delete this.mock;
+        });
+
+        it('should retrieve the service logs.', (cb) => {
+          service.logs(null, null, this.limit, this.page, (err, logs) => {
+            expect(logs[0].threshold).to.equal('info');
+            expect(logs[0].message).to.equal(this.message);
+            expect(logs[0].containerId).to.equal(this.containerId);
+            cb(err);
+          });
+        });
+      });
+      describe('with all filters', () => {
+        beforeEach('api', () => {
+          this.mock = api.get(`/v${project.schemaVersion}/data-links/${project.service}/logs?from=${this.from}&to=${this.to}&limit=${this.limit}&page=${this.page}`).reply(200, [
+            {
+              threshold: 'info',
+              message: this.message,
+              timestamp: new Date().toISOString(),
+              containerId: this.containerId
+            }
+          ]);
+        });
+        afterEach('api', () => {
+          this.mock.done();
+          delete this.mock;
+        });
+
+        it('should retrieve the service logs.', (cb) => {
+          service.logs(this.from, this.to, this.limit, this.page, (err, logs) => {
             expect(logs[0].threshold).to.equal('info');
             expect(logs[0].message).to.equal(this.message);
             expect(logs[0].containerId).to.equal(this.containerId);

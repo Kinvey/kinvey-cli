@@ -41,8 +41,8 @@ function logs(command, cb) {
   // Validate input parameters
   if (!validateTimestamp(options.start)) return handleActionFailure(new Error('Logs \'start\' timestamp invalid (ISO-8601 expected)'), cb);
   if (!validateTimestamp(options.end)) return handleActionFailure(new Error('Logs \'end\' timestamp invalid (ISO-8601 expected)'), cb);
-  if (!validateNumber(options.number)) return handleActionFailure(new Error('Logs \'number\' parameter invalid (integer expected)'), cb);
-  if (!validateNumber(options.page)) return handleActionFailure(new Error('Logs \'page\' parameter invalid (integer expected)'), cb);
+  if (!validateNumber(options.number)) return handleActionFailure(new Error('Logs \'number\' parameter invalid (non-zero integer expected)'), cb);
+  if (!validateNumber(options.page)) return handleActionFailure(new Error('Logs \'page\' parameter invalid (non-zero integer expected)'), cb);
 
   return async.series([
     (next) => user.setup(options, next),
@@ -57,9 +57,9 @@ module.exports = logs;
 
 program
   .command('logs')
-  .option('--start <string>', 'fetch logs starting from provided timestamp')
+  .option('--start <string>', 'fetch log entries starting from provided timestamp')
   .option('--end <string>', 'fetch log entries up to provided timestamp')
-  .option('--page <number>', 'page (default=1)')
-  .option('-n, --number <number>', `number of entries to fetch, i.e. page size (default=${config.logFetchDefault}, max=${config.logFetchMax}`)
+  .option('--page <number>', 'page (non-zero integer, default=1)')
+  .option('-n, --number <number>', `number of entries to fetch, i.e. page size (non-zero integer, default=${config.logFetchDefault}, max=${config.logFetchLimit})`)
   .description('retrieve and display Internal Flex Service logs')
   .action(logs);

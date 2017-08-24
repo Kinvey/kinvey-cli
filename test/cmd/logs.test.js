@@ -80,4 +80,22 @@ describe(`./${pkg.name} logs`, () => {
       done();
     });
   });
+
+  it('should fail with an invalid \'page\' param', (done) => {
+    command.addOption('page', 'abc');
+    logs(command, (err) => {
+      expect(err).to.exist;
+      expect(err.message).to.equal('Logs \'page\' parameter invalid (non-zero integer expected)');
+      done();
+    });
+  });
+
+  it('should fail with an invalid \'number\' param', (done) => {
+    command.addOption('number', 'abc');
+    logs(command, (err) => {
+      expect(err).to.exist;
+      expect(err.message).to.equal('Logs \'number\' parameter invalid (non-zero integer expected)');
+      done();
+    });
+  });
 });

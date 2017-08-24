@@ -207,7 +207,7 @@ describe('service', () => {
     });
   });
 
-  describe.only('logs', () => {
+  describe('logs', () => {
     beforeEach('configure', () => {
       project.app = project.service = '123';
       this.message = uuid.v4();

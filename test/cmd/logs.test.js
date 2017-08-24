@@ -27,11 +27,15 @@ describe(`./${pkg.name} logs`, () => {
   before('setupStubs', () => {
     sandbox.stub(user, 'setup').callsArg(1);
     sandbox.stub(project, 'restore').callsArg(0);
-    sandbox.stub(service, 'logs').callsArg(2);
+    sandbox.stub(service, 'logs').callsArg(4);
   });
 
   afterEach('resetStubs', () => {
     sandbox.reset();
+  });
+
+  afterEach('clearOptions', () => {
+    command.clearOptions();
   });
 
   after('cleanupStubs', () => {
@@ -39,38 +43,40 @@ describe(`./${pkg.name} logs`, () => {
   });
 
   it('should setup the user.', (cb) => {
-    logs(null, null, command, (err) => {
+    logs(command, (err) => {
       expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should restore the project.', (cb) => {
-    logs(null, null, command, (err) => {
+    logs(command, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should retrieve log entries based on query', (cb) => {
-    logs(null, null, command, (err) => {
+    logs(command, (err) => {
       expect(service.logs).to.be.calledOnce;
       cb(err);
     });
   });
 
-  it('should fail with an invalid \'from\' timestamp', (done) => {
-    logs('abc', null, command, (err) => {
+  it('should fail with an invalid \'start\' timestamp', (done) => {
+    command.addOption('start', 'abc');
+    logs(command, (err) => {
       expect(err).to.exist;
-      expect(err.message).to.equal("Logs \'from\' timestamp invalid (ISO-8601 required)");
+      expect(err.message).to.equal('Logs \'start\' timestamp invalid (ISO-8601 expected)');
       done();
     });
   });
 
-  it('should fail with an invalid \'to\' timestamp', (done) => {
-    logs(null, 'abc', command, (err) => {
+  it('should fail with an invalid \'end\' timestamp', (done) => {
+    command.addOption('end', 'abc');
+    logs(command, (err) => {
       expect(err).to.exist;
-      expect(err.message).to.equal("Logs \'to\' timestamp invalid (ISO-8601 required)");
+      expect(err.message).to.equal('Logs \'end\' timestamp invalid (ISO-8601 expected)');
       done();
     });
   });

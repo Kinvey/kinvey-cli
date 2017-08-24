@@ -244,7 +244,7 @@ describe('service', () => {
         });
 
         it('should the service logs.', (cb) => {
-          service.logs(null, null, (err, logs) => {
+          service.logs(null, null, null, null, (err, logs) => {
             expect(logs[0].threshold).to.equal('info');
             expect(logs[0].message).to.equal(this.message);
             expect(logs[0].containerId).to.equal(this.containerId);
@@ -269,7 +269,7 @@ describe('service', () => {
         });
 
         it('should the service logs.', (cb) => {
-          service.logs(this.from, null, (err, logs) => {
+          service.logs(this.from, null, null, null, (err, logs) => {
             expect(logs[0].threshold).to.equal('info');
             expect(logs[0].message).to.equal(this.message);
             expect(logs[0].containerId).to.equal(this.containerId);
@@ -294,7 +294,7 @@ describe('service', () => {
         });
 
         it('should the service logs.', (cb) => {
-          service.logs(null, this.to, (err, logs) => {
+          service.logs(null, this.to, null, null, (err, logs) => {
             expect(logs[0].threshold).to.equal('info');
             expect(logs[0].message).to.equal(this.message);
             expect(logs[0].containerId).to.equal(this.containerId);
@@ -319,7 +319,7 @@ describe('service', () => {
         });
 
         it('should the service logs.', (cb) => {
-          service.logs(this.from, this.to, (err, logs) => {
+          service.logs(this.from, this.to, null, null, (err, logs) => {
             expect(logs[0].threshold).to.equal('info');
             expect(logs[0].message).to.equal(this.message);
             expect(logs[0].containerId).to.equal(this.containerId);
@@ -354,7 +354,7 @@ describe('service', () => {
         });
 
         it('should not any logs.', (cb) => {
-          service.logs(null, null, (err, logs) => {
+          service.logs(null, null, null, null, (err, logs) => {
             expect(logs[0].threshold).to.equal('info');
             expect(logs[0].message).not.to.exist;
             expect(logs[0].containerId).to.equal(this.containerId);
@@ -381,7 +381,7 @@ describe('service', () => {
 
         it('should a stringified message.', (cb) => {
           const inspect = stdout.inspect();
-          service.logs(null, null, (err, logs) => {
+          service.logs(null, null, null, null, (err, logs) => {
             inspect.restore();
             const stdoutResult = inspect.output;
             expect(stdoutResult[0]).to.contain(this.message);

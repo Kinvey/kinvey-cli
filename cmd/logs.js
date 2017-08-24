@@ -59,7 +59,7 @@ program
   .command('logs')
   .option('--start <string>', 'fetch logs starting from provided timestamp')
   .option('--end <string>', 'fetch log entries up to provided timestamp')
-  .option('--page <number>', 'page (default=0)')
+  .option('--page <number>', 'page (default=1)')
   .option('-n, --number <number>', `number of entries to fetch, i.e. page size (default=${config.logFetchDefault}, max=${config.logFetchMax}`)
   .description('retrieve and display Internal Flex Service logs')
   .action(logs);

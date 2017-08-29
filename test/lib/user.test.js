@@ -19,6 +19,7 @@ const prompt = require('../../lib/prompt.js');
 const user = require('../../lib/user.js');
 const util = require('../../lib/util.js');
 const constants = require('../../lib/constants');
+const helperEnv = require('./../helper').env;
 
 const loginTestsHelper = {
   assertLoginIsSuccessful(err, mock, token, cb) {
@@ -31,10 +32,6 @@ const loginTestsHelper = {
   setCredentialsInEnvironment(user, password) {
     process.env[constants.EnvironmentVariables.USER] = user;
     process.env[constants.EnvironmentVariables.PASSWORD] = password;
-  },
-  unsetCredentialsInEnvironment() {
-    delete process.env[constants.EnvironmentVariables.USER];
-    delete process.env[constants.EnvironmentVariables.PASSWORD];
   }
 };
 
@@ -91,7 +88,7 @@ describe('user', () => {
 
       afterEach('api', () => {
         delete this.mock;
-        loginTestsHelper.unsetCredentialsInEnvironment();
+        helperEnv.unsetCredentials();
       });
 
       it('as args should login.', (cb) => {
@@ -101,7 +98,7 @@ describe('user', () => {
       });
 
       it('as env variables should login', (cb) => {
-        loginTestsHelper.setCredentialsInEnvironment(this.email, this.password);
+        helperEnv.setCredentials(this.email, this.password);
 
         user.login(null, null, null, (err) => {
           loginTestsHelper.assertLoginIsSuccessful(err, this.mock, this.token, cb);
@@ -109,7 +106,7 @@ describe('user', () => {
       });
 
       it('as args and invalid as env variables should login', (cb) => {
-        loginTestsHelper.setCredentialsInEnvironment(invalidEmail, invalidPassword);
+        helperEnv.setCredentials(invalidEmail, invalidPassword);
 
         user.login(this.email, this.password, null, (err) => {
           loginTestsHelper.assertLoginIsSuccessful(err, this.mock, this.token, cb);
@@ -126,7 +123,7 @@ describe('user', () => {
           });
       });
       afterEach('api', () => {
-        loginTestsHelper.unsetCredentialsInEnvironment();
+        helperEnv.unsetCredentials();
         this.mock.done();
         delete this.mock;
       });
@@ -150,7 +147,7 @@ describe('user', () => {
       });
 
       it('should not retry when credentials are provided from environment', (cb) => {
-        loginTestsHelper.setCredentialsInEnvironment(invalidEmail, invalidPassword);
+        helperEnv.setCredentials(invalidEmail, invalidPassword);
 
         user.login(null, null, null, (err) => {
           expect(err).to.not.exist;
@@ -494,7 +491,7 @@ describe('user', () => {
     });
     afterEach('login', () => {
       user.login.reset();
-      loginTestsHelper.unsetCredentialsInEnvironment();
+      helperEnv.unsetCredentials();
     });
     after('login', () => {
       user.login.restore();
@@ -543,7 +540,7 @@ describe('user', () => {
     });
 
     it('should login given email and password in options and invalid ones in environment', (cb) => {
-      loginTestsHelper.setCredentialsInEnvironment(invalidEmail, invalidPassword);
+      helperEnv.setCredentials(invalidEmail, invalidPassword);
 
       user.setup({ email, password }, (err) => {
         expect(err).to.not.exist;

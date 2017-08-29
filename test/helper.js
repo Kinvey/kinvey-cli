@@ -16,6 +16,7 @@
 const nock = require('nock');
 const inquirer = require('inquirer');
 
+const EnvironmentVariables = require('./../lib/constants').EnvironmentVariables;
 const logger = require('../lib/logger');
 const api = require('./api');
 const fixtureUser = require('./fixtures/user.json');
@@ -47,6 +48,17 @@ helper.mocks = {
   },
   getStubCallArg(allCalls, callPosition, argPosition) {
     return allCalls[callPosition].args[argPosition];
+  }
+};
+
+helper.env = {
+  setCredentials(user, password) {
+    process.env[EnvironmentVariables.USER] = user;
+    process.env[EnvironmentVariables.PASSWORD] = password;
+  },
+  unsetCredentials() {
+    delete process.env[EnvironmentVariables.USER];
+    delete process.env[EnvironmentVariables.PASSWORD];
   }
 };
 

@@ -13,13 +13,21 @@
  * contents is a violation of applicable laws.
  */
 
+const async = require('async');
 const nock = require('nock');
 const inquirer = require('inquirer');
 
 const EnvironmentVariables = require('./../lib/constants').EnvironmentVariables;
+const configDefault = require('./../config/default');
 const logger = require('../lib/logger');
-const api = require('./api');
+const prompt = require('./../lib/prompt');
+const util = require('../lib/util');
+
+const command = require('./fixtures/command');
 const fixtureUser = require('./fixtures/user.json');
+const fixtureApps = require('./fixtures/apps.json');
+const fixtureApp = require('./fixtures/app.json');
+const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 
 const helper = {};
 
@@ -35,6 +43,62 @@ helper.assertions = {
     expect(logger.error).to.be.calledOnce;
     expect(logger.error).to.be.calledWith('%s', expectedErr);
     expect(actualErr).to.equal(expectedErr);
+  },
+  // Asserts that the saved session(user) and the saved project are as expected.
+  assertUserProjectSetup(expectedUser, expectedProject, cb) {
+    async.series(
+      [
+        function verifyUser(next) {
+          util.readJSON(configDefault.paths.session, (err, actualUser) => {
+            if (err) {
+              return next(err);
+            }
+
+            if (!expectedUser) {
+              expect(actualUser).to.equal('');
+              return next();
+            }
+
+            const host = expectedUser.host;
+            expect(actualUser.host).to.equal(host);
+
+            if (expectedUser.tokens) {
+              expect(actualUser.tokens).to.exist;
+              expect(actualUser.tokens[host]).to.exist.and.to.equal(expectedUser.tokens[host]);
+            }
+
+            next();
+          });
+        },
+        function verifyProject(next) {
+          util.readJSON(configDefault.paths.project, (err, actualProject) => {
+            if (err) {
+              return next(err);
+            }
+
+            if (!expectedProject) {
+              expect(actualProject).to.equal('');
+              return next();
+            }
+
+            let discrepancy;
+            for (let prop in expectedProject) {
+              let actualValue = actualProject[prop];
+              let expectedValue = expectedProject[prop];
+              if (actualValue !== expectedValue) {
+                discrepancy = `Expected: ${expectedValue}. Actual: ${actualValue}.`;
+                break;
+              }
+            }
+
+            expect(discrepancy).to.not.exist;
+
+            next();
+          });
+        }
+      ],
+      cb
+    );
   }
 };
 
@@ -59,6 +123,65 @@ helper.env = {
   unsetCredentials() {
     delete process.env[EnvironmentVariables.USER];
     delete process.env[EnvironmentVariables.PASSWORD];
+  }
+};
+
+helper.setup = {
+  configureUserAndProject(sandbox, mockServer, cb) {
+    this.userProjectPromptStubsForSuccess(sandbox);
+
+    mockServer.loginForSuccess();
+    mockServer.apps();
+    mockServer.dataLinks();
+
+    require('./../cmd/config')(null, command, (err) => {
+      expect(err).to.not.exist;
+      expect(mockServer.isDone()).to.be.true;
+
+      const expectedUser = {
+        host: configDefault.host,
+        tokens: {
+          [configDefault.host]: fixtureUser.token
+        }
+      };
+
+      const expectedProject = {
+        org: null,
+        lastJobId: null,
+        serviceName: fixtureInternalDataLink.name,
+        schemaVersion: configDefault.defaultSchemaVersion,
+        app: fixtureApp.id
+      };
+
+      helper.assertions.assertUserProjectSetup(expectedUser, expectedProject, cb);
+    });
+  },
+
+  userProjectPromptStubsForSuccess(sandbox) {
+    sandbox.stub(prompt, 'getEmailPassword').callsArgWith(2, null, fixtureUser.existent.email, fixtureUser.existent.password);
+
+    this.projectPromptStubsForSuccess(sandbox);
+  },
+
+  projectPromptStubsForSuccess(sandbox) {
+    sandbox.stub(prompt, 'getAppOrOrg').callsArgWith(1, null, { name: 'App' });
+    sandbox.stub(prompt, 'getApp').callsArgWith(1, null, fixtureApp);
+    sandbox.stub(prompt, 'getService').callsArgWith(1, null, fixtureInternalDataLink);
+  },
+
+  // Clears content in session and project files.
+  clearUserProjectSetup(cb) {
+    async.series(
+      [
+        function clearUser(next) {
+          util.writeJSON(configDefault.paths.session, '', next);
+        },
+        function clearProject(next) {
+          util.writeJSON(configDefault.paths.project, '', next);
+        }
+      ],
+      cb
+    );
   }
 };
 

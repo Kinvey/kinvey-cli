@@ -27,20 +27,7 @@ const fixtureUser = require('./../fixtures/user.json');
 const fixtureApps = require('./../fixtures/apps.json');
 const fixtureApp = require('./../fixtures/app.json');
 const fixtureInternalDataLink = require('./../fixtures/kinvey-dlc.json');
-const helperMocks = require('./../helper').mocks;
-const helperEnv = require('./../helper').env;
-
-function setupPromptStubsForSuccess(sandbox) {
-  sandbox.stub(prompt, 'getEmailPassword').callsArgWith(2, null, fixtureUser.existent.email, fixtureUser.existent.password);
-
-  setupProjectPromptStubsForSuccess(sandbox);
-}
-
-function setupProjectPromptStubsForSuccess(sandbox) {
-  sandbox.stub(prompt, 'getAppOrOrg').callsArgWith(1, null, { name: 'App' });
-  sandbox.stub(prompt, 'getApp').callsArgWith(1, null, fixtureApp);
-  sandbox.stub(prompt, 'getService').callsArgWith(1, null, fixtureInternalDataLink);
-}
+const helper = require('./../helper');
 
 function assertPromptStubsForSuccess(verifyServicePrompt = true) {
   // verify user is prompted for credentials just once
@@ -48,15 +35,15 @@ function assertPromptStubsForSuccess(verifyServicePrompt = true) {
 
   // verify method not called with email and pass
   const emailPassCalls = (prompt.getEmailPassword).getCalls();
-  expect(helperMocks.getStubCallArg(emailPassCalls, 0, 0)).to.not.exist;
-  expect(helperMocks.getStubCallArg(emailPassCalls, 0, 1)).to.not.exist;
+  expect(helper.mocks.getStubCallArg(emailPassCalls, 0, 0)).to.not.exist;
+  expect(helper.mocks.getStubCallArg(emailPassCalls, 0, 1)).to.not.exist;
 
   if (verifyServicePrompt) {
     // verify user is prompted for service selection just once
     expect(prompt.getService).to.be.calledOnce;
 
     const getServiceCalls = (prompt.getService).getCalls();
-    const services = helperMocks.getStubCallArg(getServiceCalls, 0, 0);
+    const services = helper.mocks.getStubCallArg(getServiceCalls, 0, 0);
     expect(services).to.be.an.array;
 
     // verify user can choose only from Flex services and no other
@@ -79,78 +66,6 @@ function buildExpectedProject(appId, org, lastJobId, serviceName, schemaVersion 
     schemaVersion,
     app: appId
   };
-}
-
-// Asserts that the saved session(user) and the saved project are as expected.
-function assertUserProjectSetup(expectedUser, expectedProject, cb) {
-  async.series(
-    [
-      function verifyUser(next) {
-        util.readJSON(configDefault.paths.session, (err, actualUser) => {
-          if (err) {
-            return next(err);
-          }
-
-          if (!expectedUser) {
-            expect(actualUser).to.equal('');
-            return next();
-          }
-
-          const host = expectedUser.host;
-          expect(actualUser.host).to.equal(host);
-
-          if (expectedUser.tokens) {
-            expect(actualUser.tokens).to.exist;
-            expect(actualUser.tokens[host]).to.exist.and.to.equal(expectedUser.tokens[host]);
-          }
-
-          next();
-        });
-      },
-      function verifyProject(next) {
-        util.readJSON(configDefault.paths.project, (err, actualProject) => {
-          if (err) {
-            return next(err);
-          }
-
-          if (!expectedProject) {
-            expect(actualProject).to.equal('');
-            return next();
-          }
-
-          let discrepancy;
-          for (let prop in expectedProject) {
-            let actualValue = actualProject[prop];
-            let expectedValue = expectedProject[prop];
-            if (actualValue !== expectedValue) {
-              discrepancy = `Expected: ${expectedValue}. Actual: ${actualValue}.`;
-              break;
-            }
-          }
-
-          expect(discrepancy).to.not.exist;
-
-          next();
-        });
-      }
-    ],
-    cb
-  );
-}
-
-// Clears content in session and project files.
-function clearUserProjectSetup(cb) {
-  async.series(
-    [
-      function clearUser(next) {
-        util.writeJSON(configDefault.paths.session, '', next);
-      },
-      function clearProject(next) {
-        util.writeJSON(configDefault.paths.project, '', next);
-      }
-    ],
-    cb
-  );
 }
 
 // Ensure modules are reloaded every time and tests are independent (e.g class User -> this.token will be cleared).
@@ -180,7 +95,7 @@ describe('config', () => {
 
     clearRequireCache();
 
-    clearUserProjectSetup(done);
+    helper.setup.clearUserProjectSetup(done);
   });
 
   after(() => {
@@ -189,7 +104,7 @@ describe('config', () => {
 
   describe('without explicit args and from prompts', () => {
     before(() => {
-      setupPromptStubsForSuccess(sandbox);
+      helper.setup.userProjectPromptStubsForSuccess(sandbox);
     });
 
     after(() => {
@@ -206,7 +121,7 @@ describe('config', () => {
         expect(err).to.not.exist;
         assertPromptStubsForSuccess();
         expect(mockServer.isDone()).to.be.true;
-        assertUserProjectSetup(defaultExpectedUser, defaultExpectedProject, cb);
+        helper.assertions.assertUserProjectSetup(defaultExpectedUser, defaultExpectedProject, cb);
       });
     });
 
@@ -228,7 +143,7 @@ describe('config', () => {
         expect(err).to.not.exist;
         assertPromptStubsForSuccess();
         expect(mockServer.isDone()).to.be.true;
-        assertUserProjectSetup(defaultExpectedUser, defaultExpectedProject, cb);
+        helper.assertions.assertUserProjectSetup(defaultExpectedUser, defaultExpectedProject, cb);
       });
     });
 
@@ -246,18 +161,18 @@ describe('config', () => {
         expect(mockServer.isDone()).to.be.true;
 
         const expectedProject = null;
-        assertUserProjectSetup(defaultExpectedUser, expectedProject, cb);
+        helper.assertions.assertUserProjectSetup(defaultExpectedUser, expectedProject, cb);
       });
     });
   });
 
   describe('without explicit args and credentials from environment', () => {
     before(() => {
-      setupProjectPromptStubsForSuccess(sandbox);
+      helper.setup.projectPromptStubsForSuccess(sandbox);
     });
 
     afterEach(() => {
-      helperEnv.unsetCredentials();
+      helper.env.unsetCredentials();
     });
 
     after(() => {
@@ -269,12 +184,12 @@ describe('config', () => {
       mockServer.apps();
       mockServer.dataLinks();
 
-      helperEnv.setCredentials(fixtureUser.existent.email, fixtureUser.existent.password);
+      helper.env.setCredentials(fixtureUser.existent.email, fixtureUser.existent.password);
 
       require('./../../cmd/config')(null, command, (err) => {
         expect(err).to.not.exist;
         expect(mockServer.isDone()).to.be.true;
-        assertUserProjectSetup(defaultExpectedUser, defaultExpectedProject, cb);
+        helper.assertions.assertUserProjectSetup(defaultExpectedUser, defaultExpectedProject, cb);
       });
     });
 
@@ -282,20 +197,20 @@ describe('config', () => {
     // made and that's why the test fails. Probably, a fix should be applied to the code.
     it.skip('with invalid credentials should not prompt and return error', (cb) => {
       mockServer.loginForFail(fixtureUser.nonexistent);
-      helperEnv.setCredentials(fixtureUser.nonexistent.email, fixtureUser.nonexistent.password);
+      helper.env.setCredentials(fixtureUser.nonexistent.email, fixtureUser.nonexistent.password);
 
       require('./../../cmd/config')(null, command, (err) => {
         expect(err).to.exist;
         expect(err.name).to.equal('InvalidCredentials');
         expect(mockServer.isDone()).to.be.true;
-        assertUserProjectSetup(null, null, cb);
+        helper.assertions.assertUserProjectSetup(null, null, cb);
       });
     });
   });
 
   describe('with explicit args', () => {
     before(() => {
-      setupProjectPromptStubsForSuccess(sandbox);
+      helper.setup.projectPromptStubsForSuccess(sandbox);
     });
 
     after(() => {
@@ -335,7 +250,7 @@ describe('config', () => {
             [expectedHost]: fixtureUser.token
           }
         };
-        assertUserProjectSetup(expectedUser, defaultExpectedProject, cb);
+        helper.assertions.assertUserProjectSetup(expectedUser, defaultExpectedProject, cb);
       });
     });
   });

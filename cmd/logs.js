@@ -23,13 +23,14 @@ const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 const handleActionFailure = require('./../lib/util').handleCommandFailure;
+const LogErrorMessages = require('../lib/constants').LogErrorMessages;
 
-function validateTimestamp(ts) {
+function isValidTimestamp(ts) {
   if (ts == null) return true;
   return moment(ts, moment.ISO_8601, true).isValid();
 }
 
-function validateNumber(number) {
+function isValidNonZeroInteger(number) {
   if (number == null) return true;
   if (number === 0 || number === '0') return false;
   return /^\d+$/.test(number);
@@ -39,10 +40,10 @@ function logs(command, cb) {
   const options = init(command);
 
   // Validate input parameters
-  if (!validateTimestamp(options.start)) return handleActionFailure(new Error('Logs \'start\' timestamp invalid (ISO-8601 expected)'), cb);
-  if (!validateTimestamp(options.end)) return handleActionFailure(new Error('Logs \'end\' timestamp invalid (ISO-8601 expected)'), cb);
-  if (!validateNumber(options.number)) return handleActionFailure(new Error('Logs \'number\' parameter invalid (non-zero integer expected)'), cb);
-  if (!validateNumber(options.page)) return handleActionFailure(new Error('Logs \'page\' parameter invalid (non-zero integer expected)'), cb);
+  if (!isValidTimestamp(options.start)) return handleActionFailure(new Error(`Logs \'start\' ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
+  if (!isValidTimestamp(options.end)) return handleActionFailure(new Error(`Logs \'end\' ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
+  if (!isValidNonZeroInteger(options.number)) return handleActionFailure(new Error(`Logs \'number\' ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
+  if (!isValidNonZeroInteger(options.page)) return handleActionFailure(new Error(`Logs \'page\' ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
 
   return async.series([
     (next) => user.setup(options, next),

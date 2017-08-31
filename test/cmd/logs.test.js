@@ -20,6 +20,7 @@ const logs = require('../../cmd/logs.js');
 const pkg = require('../../package.json');
 const project = require('../../lib/project.js');
 const user = require('../../lib/user.js');
+const LogErrorMessages = require('../../lib/constants').LogErrorMessages;
 
 describe(`./${pkg.name} logs`, () => {
   const sandbox = sinon.sandbox.create();
@@ -67,7 +68,7 @@ describe(`./${pkg.name} logs`, () => {
     command.addOption('start', 'abc');
     logs(command, (err) => {
       expect(err).to.exist;
-      expect(err.message).to.equal('Logs \'start\' timestamp invalid (ISO-8601 expected)');
+      expect(err.message).to.contain(LogErrorMessages.INVALID_TIMESTAMP);
       done();
     });
   });
@@ -76,7 +77,7 @@ describe(`./${pkg.name} logs`, () => {
     command.addOption('end', 'abc');
     logs(command, (err) => {
       expect(err).to.exist;
-      expect(err.message).to.equal('Logs \'end\' timestamp invalid (ISO-8601 expected)');
+      expect(err.message).to.contain(LogErrorMessages.INVALID_TIMESTAMP);
       done();
     });
   });
@@ -85,7 +86,7 @@ describe(`./${pkg.name} logs`, () => {
     command.addOption('page', 'abc');
     logs(command, (err) => {
       expect(err).to.exist;
-      expect(err.message).to.equal('Logs \'page\' parameter invalid (non-zero integer expected)');
+      expect(err.message).to.contain(LogErrorMessages.INVALID_NONZEROINT);
       done();
     });
   });
@@ -94,7 +95,7 @@ describe(`./${pkg.name} logs`, () => {
     command.addOption('number', 'abc');
     logs(command, (err) => {
       expect(err).to.exist;
-      expect(err.message).to.equal('Logs \'number\' parameter invalid (non-zero integer expected)');
+      expect(err.message).to.contain(LogErrorMessages.INVALID_NONZEROINT);
       done();
     });
   });

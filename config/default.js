@@ -25,6 +25,7 @@ module.exports = {
   uploadTimeout: 30 * 1000,
   paths: {
     project: path.join(process.cwd(), '.kinvey'),
+    package: path.join(process.cwd()),
     session: path.join(osHomedir(), '.kinvey-cli-session')
   }
 };

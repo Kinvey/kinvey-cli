@@ -13,12 +13,13 @@
  * contents is a violation of applicable laws.
  */
 
+const path = require('path');
 const async = require('async');
 const nock = require('nock');
 const inquirer = require('inquirer');
 
 const EnvironmentVariables = require('./../lib/constants').EnvironmentVariables;
-const configDefault = require('./../config/default');
+const config = require('config');
 const logger = require('../lib/logger');
 const prompt = require('./../lib/prompt');
 const util = require('../lib/util');
@@ -49,7 +50,7 @@ helper.assertions = {
     async.series(
       [
         function verifyUser(next) {
-          util.readJSON(configDefault.paths.session, (err, actualUser) => {
+          util.readJSON(config.paths.session, (err, actualUser) => {
             if (err) {
               return next(err);
             }
@@ -71,7 +72,7 @@ helper.assertions = {
           });
         },
         function verifyProject(next) {
-          util.readJSON(configDefault.paths.project, (err, actualProject) => {
+          util.readJSON(config.paths.project, (err, actualProject) => {
             if (err) {
               return next(err);
             }
@@ -139,9 +140,9 @@ helper.setup = {
       expect(mockServer.isDone()).to.be.true;
 
       const expectedUser = {
-        host: configDefault.host,
+        host: config.host,
         tokens: {
-          [configDefault.host]: fixtureUser.token
+          [config.host]: fixtureUser.token
         }
       };
 
@@ -149,7 +150,7 @@ helper.setup = {
         org: null,
         lastJobId: null,
         serviceName: fixtureInternalDataLink.name,
-        schemaVersion: configDefault.defaultSchemaVersion,
+        schemaVersion: config.defaultSchemaVersion,
         app: fixtureApp.id
       };
 
@@ -174,10 +175,10 @@ helper.setup = {
     async.series(
       [
         function clearUser(next) {
-          util.writeJSON(configDefault.paths.session, '', next);
+          util.writeJSON(config.paths.session, '', next);
         },
         function clearProject(next) {
-          util.writeJSON(configDefault.paths.project, '', next);
+          util.writeJSON(config.paths.project, '', next);
         }
       ],
       cb

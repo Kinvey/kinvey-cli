@@ -16,7 +16,7 @@
 const sinon = require('sinon');
 const async = require('async');
 
-const configDefault = require('./../../config/default');
+const config = require('config');
 
 const Errors = require('./../../lib/constants').Errors;
 const prompt = require('./../../lib/prompt');
@@ -59,16 +59,6 @@ function assertPromptStubsForSuccess(verifyServicePrompt = true) {
   }
 }
 
-function buildExpectedProject(appId, org, lastJobId, serviceName, schemaVersion = configDefault.defaultSchemaVersion) {
-  return {
-    org,
-    lastJobId,
-    serviceName,
-    schemaVersion,
-    app: appId
-  };
-}
-
 // Ensure modules are reloaded every time and tests are independent (e.g class User -> this.token will be cleared).
 function clearRequireCache() {
   delete require.cache[require.resolve('./../../lib/user')];
@@ -80,12 +70,13 @@ function clearRequireCache() {
 describe('config', () => {
   const mockServer = new MockServer(true);
   const defaultExpectedUser = {
-    host: configDefault.host,
+    host: config.host,
     tokens: {
-      [configDefault.host]: fixtureUser.token
+      [config.host]: fixtureUser.token
     }
   };
-  const defaultExpectedProject = buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name);
+
+  const defaultExpectedProject = helper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
 
   const sandbox = sinon.sandbox.create();
 
@@ -155,8 +146,7 @@ describe('config', () => {
       mockServer.dataLinks(fixtureApp.id, []);
 
       require('./../../cmd/config')(null, command, (err) => {
-        expect(err).to.exist;
-        expect(err.name).to.equal(Errors.NoFlexServicesFound);
+        helper.assertions.assertError(err, Errors.NoFlexServicesFound);
         assertPromptStubsForSuccess(false);
 
         expect(mockServer.isDone()).to.be.true;

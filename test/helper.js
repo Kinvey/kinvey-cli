@@ -100,6 +100,21 @@ helper.assertions = {
       ],
       cb
     );
+  },
+  assertError(actualErr, { name, message }) {
+    expect(actualErr).to.exist;
+    expect(actualErr.name).to.equal(name);
+    expect(actualErr.message).to.equal(message);
+  },
+  buildExpectedProject(appId, org, lastJobId, serviceName, service, schemaVersion = config.defaultSchemaVersion) {
+    return {
+      org,
+      lastJobId,
+      serviceName,
+      service,
+      schemaVersion,
+      app: appId
+    };
   }
 };
 
@@ -146,22 +161,19 @@ helper.setup = {
         }
       };
 
-      const expectedProject = {
-        org: null,
-        lastJobId: null,
-        serviceName: fixtureInternalDataLink.name,
-        schemaVersion: config.defaultSchemaVersion,
-        app: fixtureApp.id
-      };
+      const expectedProject = helper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
 
       helper.assertions.assertUserProjectSetup(expectedUser, expectedProject, cb);
     });
   },
 
   userProjectPromptStubsForSuccess(sandbox) {
-    sandbox.stub(prompt, 'getEmailPassword').callsArgWith(2, null, fixtureUser.existent.email, fixtureUser.existent.password);
-
+    this.userPromptStubsForSuccess(sandbox);
     this.projectPromptStubsForSuccess(sandbox);
+  },
+
+  userPromptStubsForSuccess(sandbox) {
+    sandbox.stub(prompt, 'getEmailPassword').callsArgWith(2, null, fixtureUser.existent.email, fixtureUser.existent.password);
   },
 
   projectPromptStubsForSuccess(sandbox) {

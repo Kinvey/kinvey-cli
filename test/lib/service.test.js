@@ -23,6 +23,7 @@ const project = require('../../lib/project.js');
 const service = require('../../lib/service.js');
 const util = require('../../lib/util.js');
 const JobStatus = require('../../lib/constants').JobStatus;
+const Errors = require('../../lib/constants').Errors;
 
 const fixtures = {
   invalid: path.resolve('./test/fixtures/deploy'),
@@ -73,7 +74,7 @@ describe('service', () => {
       it('should fail when the project is too big.', (cb) => {
         service.deploy(fixtures.invalid, '0.1.0', (err) => {
           expect(err).to.exist;
-          expect(err.name).to.equal('ProjectMaxFileSizeExceeded');
+          expect(err.name).to.equal(Errors.ProjectMaxFileSizeExceeded.name);
           cb();
         });
       });
@@ -433,7 +434,7 @@ describe('service', () => {
       it('should fail.', (cb) => {
         service.validate('*', (err) => {
           expect(err).to.exist;
-          expect(err.name).to.equal('InvalidProject');
+          expect(err.name).to.equal(Errors.InvalidProject.name);
           cb();
         });
       });
@@ -455,7 +456,7 @@ describe('service', () => {
       it('should fail.', (cb) => {
         service.validate('*', (err) => {
           expect(err).to.exist;
-          expect(err.name).to.equal('ProjectNotConfigured');
+          expect(err.name).to.equal(Errors.ProjectNotConfigured.name);
           cb();
         });
       });

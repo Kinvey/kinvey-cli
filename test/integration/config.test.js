@@ -18,6 +18,7 @@ const async = require('async');
 
 const configDefault = require('./../../config/default');
 
+const Errors = require('./../../lib/constants').Errors;
 const prompt = require('./../../lib/prompt');
 const util = require('./../../lib/util');
 
@@ -155,7 +156,7 @@ describe('config', () => {
 
       require('./../../cmd/config')(null, command, (err) => {
         expect(err).to.exist;
-        expect(err.name).to.equal('NoFlexServicesFound');
+        expect(err.name).to.equal(Errors.NoFlexServicesFound);
         assertPromptStubsForSuccess(false);
 
         expect(mockServer.isDone()).to.be.true;

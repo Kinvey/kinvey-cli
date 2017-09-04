@@ -127,6 +127,21 @@ class MockServer {
       });
   }
 
+  recycleJob(recycledJobId = fixtureJob.job, dataLinkId = fixtureInternalDataLink.id) {
+    const self = this;
+
+    const expectedBody = {
+      type: 'recycleDataLink',
+      params: { dataLinkId }
+    };
+
+    this.server
+      .post('/v2/jobs', expectedBody)
+      .reply(function() {
+        return self._buildReply(this.req.headers, [202, { job: recycledJobId }]);
+      });
+  }
+
   /**
    * If it turns out that some of the interceptors aren't used, this might indicate a problem with the code.
    * @returns {Boolean}

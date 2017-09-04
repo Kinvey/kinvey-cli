@@ -142,6 +142,15 @@ class MockServer {
       });
   }
 
+  serviceStatus(status = constants.ServiceStatus.ONLINE, dataLinkId = fixtureInternalDataLink.id) {
+    const self = this;
+    this.server
+      .get(`/v2/data-links/${dataLinkId}/status`)
+      .reply(function() {
+        return self._buildReply(this.req.headers, [200, { status }]);
+      });
+  }
+
   /**
    * If it turns out that some of the interceptors aren't used, this might indicate a problem with the code.
    * @returns {Boolean}

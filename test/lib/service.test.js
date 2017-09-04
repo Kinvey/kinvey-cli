@@ -24,6 +24,7 @@ const service = require('../../lib/service.js');
 const util = require('../../lib/util.js');
 const JobStatus = require('../../lib/constants').JobStatus;
 const Errors = require('../../lib/constants').Errors;
+const ServiceStatus = require('../../lib/constants').ServiceStatus;
 
 const fixtures = {
   invalid: path.resolve('./test/fixtures/deploy'),
@@ -199,10 +200,10 @@ describe('service', () => {
     it('should the service status.', (cb) => {
       sandbox.stub(util, 'makeRequest')
         .withArgs({ url: `/v${project.schemaVersion}/data-links/${project.service}/status` })
-        .callsArgWith(1, null, { body: { status: 'ONLINE' } });
+        .callsArgWith(1, null, { body: { status: ServiceStatus.ONLINE } });
 
       service.serviceStatus((err, status) => {
-        expect(status).to.equal('ONLINE');
+        expect(status).to.equal(ServiceStatus.ONLINE);
         cb(err);
       });
     });

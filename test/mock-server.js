@@ -13,13 +13,16 @@
  * contents is a violation of applicable laws.
  */
 
+const nock = require('nock');
+
+const config = require('config');
+const constants = require('./../lib/constants');
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApps = require('./fixtures/apps.json');
 const fixtureApp = require('./fixtures/app.json');
 const fixtureServices = require('./fixtures/datalinks.json');
 const fixtureJob = require('./fixtures/job.json');
-const config = require('config');
-const nock = require('nock');
+const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 
 /**
  * Mocks our MAPI server. Serves as a wrapper around nock.js.
@@ -107,7 +110,7 @@ class MockServer {
     const self = this;
     this.server
       .post(`/v2/jobs`, (body) => {
-        const isFormData = body.includes('Content-Disposition: form-data; name="file"; filename="archive.tar"Content-Type: application/tar.kinvey');
+        const isFormData = body.includes('Content-Disposition: form-data; name="file"; filename="archive.tar"Content-Type: application/tar');
         return isFormData;
       })
       .reply(function() {

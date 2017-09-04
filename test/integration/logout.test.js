@@ -21,23 +21,16 @@ const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
 const helper = require('./../helper');
 
-function clearRequireCache() {
-  delete require.cache[require.resolve('./../../lib/user')];
-  delete require.cache[require.resolve('./../../lib/project')];
-  delete require.cache[require.resolve('./../../cmd/config')];
-}
 
 describe('logout', () => {
   const mockServer = new MockServer(true);
   const sandbox = sinon.sandbox.create();
+  const cmdLogoutPath = './../../cmd/logout';
 
   afterEach((cb) => {
     sandbox.reset();
-
     MockServer.clearAll();
-
-    clearRequireCache();
-
+    helper.setup.clearRequireCache();
     helper.setup.clearUserProjectSetup(cb);
   });
 
@@ -49,7 +42,7 @@ describe('logout', () => {
     helper.setup.configureUserAndProject(sandbox, mockServer, (err) => {
       expect(err).to.not.exist;
 
-      require('./../../cmd/logout')(command, (err) => {
+      require(cmdLogoutPath)(command, (err) => {
         expect(err).to.not.exist;
         helper.assertions.assertUserProjectSetup(null, null, cb);
       });
@@ -57,7 +50,7 @@ describe('logout', () => {
   });
 
   it('when a user is not logged in should not return error', (cb) => {
-    require('./../../cmd/logout')(command, (err) => {
+    require(cmdLogoutPath)(command, (err) => {
       expect(err).to.not.exist;
       cb();
     });

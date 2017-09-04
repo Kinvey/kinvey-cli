@@ -26,41 +26,25 @@ const util = require('./../../lib/util');
 
 const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
-const fixtureUser = require('./../fixtures/user.json');
 const fixtureApp = require('./../fixtures/app.json');
 const fixtureJob = require('./../fixtures/job.json');
 const fixtureInternalDataLink = require('./../fixtures/kinvey-dlc.json');
 const helper = require('./../helper');
 
-function clearRequireCache() {
-  delete require.cache[require.resolve('./../../lib/user')];
-  delete require.cache[require.resolve('./../../lib/project')];
-  delete require.cache[require.resolve('./../../lib/service')];
-  delete require.cache[require.resolve('./../../cmd/deploy')];
-  delete require.cache[require.resolve('./../../cmd/config')];
-}
-
 describe('deploy', () => {
   const mockServer = new MockServer(true);
   const sandbox = sinon.sandbox.create();
 
-  const defaultExpectedUser = {
-    host: config.host,
-    tokens: {
-      [config.host]: fixtureUser.token
-    }
-  };
+  const cmdDeployPath = './../../cmd/deploy';
 
+  const defaultExpectedUser = helper.assertions.buildExpectedUser();
   const expectedProjectBeforeDeploy = helper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
   const expectedProjectAfterDeploy = helper.assertions.buildExpectedProject(fixtureApp.id, null, fixtureJob.job, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
 
   afterEach((cb) => {
     sandbox.restore();
-
     MockServer.clearAll();
-
-    clearRequireCache();
-
+    helper.setup.clearRequireCache();
     helper.setup.clearUserProjectSetup(cb);
   });
 
@@ -74,7 +58,7 @@ describe('deploy', () => {
       it('and valid project setup should initiate deploy', (cb) => {
         mockServer.deployJob();
 
-        require('./../../cmd/deploy')(command, (err) => {
+        require(cmdDeployPath)(command, (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
 
@@ -83,13 +67,10 @@ describe('deploy', () => {
       });
 
       it('and invalid project setup should return error', (cb) => {
-        // setup for failure - service is null
-        const invalidProjectToRestore = helper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, null);
-
-        util.writeJSON(config.paths.project, invalidProjectToRestore, (err) => {
+        helper.setup.setInvalidProject((err, invalidProjectToRestore) => {
           expect(err).to.not.exist;
 
-          require('./../../cmd/deploy')(command, (err) => {
+          require(cmdDeployPath)(command, (err) => {
             helper.assertions.assertError(err, Errors.ProjectNotConfigured);
             helper.assertions.assertUserProjectSetup(defaultExpectedUser, invalidProjectToRestore, cb);
           });
@@ -123,7 +104,7 @@ describe('deploy', () => {
         util.writeJSON(pathPackageJSON, invalidPackageContent, (err) => {
           expect(err).to.not.exist;
 
-          require('./../../cmd/deploy')(command, (err) => {
+          require(cmdDeployPath)(command, (err) => {
             helper.assertions.assertError(err, Errors.InvalidProject);
             helper.assertions.assertUserProjectSetup(defaultExpectedUser, expectedProjectBeforeDeploy, cb);
           });
@@ -140,7 +121,7 @@ describe('deploy', () => {
     it('should set user and return error', (cb) => {
       mockServer.loginForSuccess();
 
-      require('./../../cmd/deploy')(command, (err) => {
+      require(cmdDeployPath)(command, (err) => {
         helper.assertions.assertError(err, Errors.ProjectNotConfigured);
         expect(mockServer.isDone()).to.be.true;
 

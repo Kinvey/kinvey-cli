@@ -29,6 +29,7 @@ const fixtureUser = require('./fixtures/user.json');
 const fixtureApps = require('./fixtures/apps.json');
 const fixtureApp = require('./fixtures/app.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
+const fixtureJob = require('./fixtures/job.json');
 
 const helper = {};
 
@@ -115,6 +116,16 @@ helper.assertions = {
       schemaVersion,
       app: appId
     };
+  },
+  buildExpectedUser(host = config.host, token = fixtureUser.token) {
+    const user = {
+      host,
+      tokens: {
+        [host]: token
+      }
+    };
+
+    return user;
   }
 };
 
@@ -167,6 +178,14 @@ helper.setup = {
     });
   },
 
+  setInvalidProject(cb) {
+    // setup for failure - service is null
+    const invalidProjectToRestore = helper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, null);
+    util.writeJSON(config.paths.project, invalidProjectToRestore, (err) => {
+      cb(err, invalidProjectToRestore);
+    });
+  },
+
   userProjectPromptStubsForSuccess(sandbox) {
     this.userPromptStubsForSuccess(sandbox);
     this.projectPromptStubsForSuccess(sandbox);
@@ -182,6 +201,25 @@ helper.setup = {
     sandbox.stub(prompt, 'getService').callsArgWith(1, null, fixtureInternalDataLink);
   },
 
+  // Deploys a job. User must be already logged in and project must be set.
+  initiateJobDeploy(mockServer, cb) {
+    mockServer.deployJob();
+
+    require('./../cmd/deploy')(command, (err) => {
+      expect(err).to.not.exist;
+      expect(mockServer.isDone()).to.be.true;
+
+      const expectedUser = {
+        host: config.host,
+        tokens: {
+          [config.host]: fixtureUser.token
+        }
+      };
+      const expectedProject = helper.assertions.buildExpectedProject(fixtureApp.id, null, fixtureJob.job, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
+      helper.assertions.assertUserProjectSetup(expectedUser, expectedProject, cb);
+    });
+  },
+
   // Clears content in session and project files.
   clearUserProjectSetup(cb) {
     async.series(
@@ -195,6 +233,19 @@ helper.setup = {
       ],
       cb
     );
+  },
+
+  // Ensure modules are reloaded every time and tests are independent (e.g class User -> this.token will be cleared).
+  clearRequireCache() {
+    const modules = [
+      '/cmd/config', '/cmd/deploy', '/cmd/job', '/cmd/list', '/cmd/logout', '/cmd/logs', '/cmd/recycle', '/cmd/status',
+      '/lib/project', '/lib/service', '/lib/user'
+    ];
+
+    modules.forEach(x => {
+      const pathToResolve = `./..${x}`;
+      delete require.cache[require.resolve(pathToResolve)];
+    });
   }
 };
 

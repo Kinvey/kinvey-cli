@@ -25,7 +25,6 @@ const util = require('./../../lib/util');
 const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
 const fixtureUser = require('./../fixtures/user.json');
-const fixtureApps = require('./../fixtures/apps.json');
 const fixtureApp = require('./../fixtures/app.json');
 const fixtureInternalDataLink = require('./../fixtures/kinvey-dlc.json');
 const helper = require('./../helper');
@@ -59,34 +58,20 @@ function assertPromptStubsForSuccess(verifyServicePrompt = true) {
   }
 }
 
-// Ensure modules are reloaded every time and tests are independent (e.g class User -> this.token will be cleared).
-function clearRequireCache() {
-  delete require.cache[require.resolve('./../../lib/user')];
-  delete require.cache[require.resolve('./../../lib/project')];
-  delete require.cache[require.resolve('./../../cmd/config')];
-}
-
 // Requires 'cmd/config' for each test to ensure that tests are independent.
 describe('config', () => {
   const mockServer = new MockServer(true);
-  const defaultExpectedUser = {
-    host: config.host,
-    tokens: {
-      [config.host]: fixtureUser.token
-    }
-  };
 
+  const defaultExpectedUser = helper.assertions.buildExpectedUser();
   const defaultExpectedProject = helper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
 
   const sandbox = sinon.sandbox.create();
+  const cmdConfigPath = './../../cmd/config';
 
   afterEach((done) => {
     sandbox.reset();
-
     MockServer.clearAll();
-
-    clearRequireCache();
-
+    helper.setup.clearRequireCache();
     helper.setup.clearUserProjectSetup(done);
   });
 
@@ -109,7 +94,7 @@ describe('config', () => {
       mockServer.apps();
       mockServer.dataLinks();
 
-      require('./../../cmd/config')(null, command, (err) => {
+      require(cmdConfigPath)(null, command, (err) => {
         expect(err).to.not.exist;
         assertPromptStubsForSuccess();
         expect(mockServer.isDone()).to.be.true;
@@ -131,7 +116,7 @@ describe('config', () => {
       twoFactorTokenStub.callsArgWith(1, null, fixtureUser.invalidTwoFactorToken);
       twoFactorTokenStub.callsArgWith(1, null, fixtureUser.validTwoFactorToken);
 
-      require('./../../cmd/config')(null, command, (err) => {
+      require(cmdConfigPath)(null, command, (err) => {
         expect(err).to.not.exist;
         assertPromptStubsForSuccess();
         expect(mockServer.isDone()).to.be.true;
@@ -145,7 +130,7 @@ describe('config', () => {
       mockServer.apps();
       mockServer.dataLinks(fixtureApp.id, []);
 
-      require('./../../cmd/config')(null, command, (err) => {
+      require(cmdConfigPath)(null, command, (err) => {
         helper.assertions.assertError(err, Errors.NoFlexServicesFound);
         assertPromptStubsForSuccess(false);
 
@@ -177,7 +162,7 @@ describe('config', () => {
 
       helper.env.setCredentials(fixtureUser.existent.email, fixtureUser.existent.password);
 
-      require('./../../cmd/config')(null, command, (err) => {
+      require(cmdConfigPath)(null, command, (err) => {
         expect(err).to.not.exist;
         expect(mockServer.isDone()).to.be.true;
         helper.assertions.assertUserProjectSetup(defaultExpectedUser, defaultExpectedProject, cb);
@@ -190,7 +175,7 @@ describe('config', () => {
       mockServer.loginForFail(fixtureUser.nonexistent);
       helper.env.setCredentials(fixtureUser.nonexistent.email, fixtureUser.nonexistent.password);
 
-      require('./../../cmd/config')(null, command, (err) => {
+      require(cmdConfigPath)(null, command, (err) => {
         expect(err).to.exist;
         expect(err.name).to.equal('InvalidCredentials');
         expect(mockServer.isDone()).to.be.true;
@@ -230,17 +215,12 @@ describe('config', () => {
         }
       };
 
-      require('./../../cmd/config')(null, commandMock, (err) => {
+      require(cmdConfigPath)(null, commandMock, (err) => {
         expect(err).to.not.exist;
 
         expect(customHostMockServer.isDone()).to.be.true;
 
-        const expectedUser = {
-          host: expectedHost,
-          tokens: {
-            [expectedHost]: fixtureUser.token
-          }
-        };
+        const expectedUser = helper.assertions.buildExpectedUser(expectedHost);
         helper.assertions.assertUserProjectSetup(expectedUser, defaultExpectedProject, cb);
       });
     });

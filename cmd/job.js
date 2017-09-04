@@ -29,6 +29,7 @@ function status(job, command, cb) {
     (next) => project.restore(next),
     (next) => service.jobStatus(job, next)
   ], (err) => {
+    // TODO: cb should receive result from tasks
     handleActionFailure(err, cb);
   });
 }

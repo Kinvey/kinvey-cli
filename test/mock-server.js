@@ -118,6 +118,15 @@ class MockServer {
       });
   }
 
+  jobStatus(status = constants.JobStatus.COMPLETE, jobId = fixtureJob.job) {
+    const self = this;
+    this.server
+      .get(`/v2/jobs/${jobId}`)
+      .reply(function() {
+        return self._buildReply(this.req.headers, [200, { status }]);
+      });
+  }
+
   /**
    * If it turns out that some of the interceptors aren't used, this might indicate a problem with the code.
    * @returns {Boolean}

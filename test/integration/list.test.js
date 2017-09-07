@@ -26,7 +26,7 @@ const helper = require('./../helper');
 
 function assertLoggerInfoOutput(spy, serviceName, expectedServicesCount) {
   const baseMsg = 'Expected to output';
-  expect(spy.calledWith('You have %s Kinvey service connectors:', expectedServicesCount), `${baseMsg} services count`).to.be.true;
+  expect(spy.calledWith('You have %s Kinvey service connectors:', chalk.cyan(expectedServicesCount)), `${baseMsg} services count`).to.be.true;
 
   if (serviceName) {
     const expectedServiceMarker = chalk.green('* ');

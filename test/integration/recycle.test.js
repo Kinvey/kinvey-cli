@@ -17,6 +17,7 @@ const path = require('path');
 
 const sinon = require('sinon');
 const async = require('async');
+const chalk = require('chalk');
 
 const config = require('config');
 const constants = require('./../../lib/constants');
@@ -31,7 +32,8 @@ const fixtureInternalDataLink = require('./../fixtures/kinvey-dlc.json');
 const helper = require('./../helper');
 
 function assertLoggerForRecycleJob(spy, jobId) {
-  expect(spy.withArgs('Recycle initiated, received job %s', jobId)).to.be.calledOnce;
+  const expectedJobId = chalk.cyan(jobId);
+  expect(spy.withArgs('Recycle initiated, received job %s', expectedJobId)).to.be.calledOnce;
 }
 
 describe('recycle', () => {

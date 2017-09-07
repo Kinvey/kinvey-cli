@@ -17,6 +17,7 @@ const path = require('path');
 
 const sinon = require('sinon');
 const async = require('async');
+const chalk = require('chalk');
 
 const config = require('config');
 const constants = require('./../../lib/constants');
@@ -30,7 +31,8 @@ const fixtureJob = require('./../fixtures/job.json');
 const helper = require('./../helper');
 
 function assertLoggerForStatus(spy) {
-  expect(spy.withArgs('Job status: %s%s', constants.JobStatus.COMPLETE, '')).to.be.calledOnce;
+  const expectedStatus = chalk.cyan(constants.JobStatus.COMPLETE);
+  expect(spy.withArgs('Job status: %s%s', expectedStatus, '')).to.be.calledOnce;
 }
 
 describe('job', () => {

@@ -128,7 +128,7 @@ describe('config', () => {
     it('with valid input and no Flex services created should set user and return error', (cb) => {
       mockServer.loginForSuccess();
       mockServer.apps();
-      mockServer.dataLinks(fixtureApp.id, []);
+      mockServer.dataLinks([]);
 
       require(cmdConfigPath)(null, command, (err) => {
         helper.assertions.assertError(err, Errors.NoFlexServicesFound);

@@ -97,10 +97,10 @@ class MockServer {
       });
   }
 
-  dataLinks(appId = fixtureApp.id, dataLinks = fixtureServices) {
+  dataLinks(dataLinks = fixtureServices, id = fixtureApp.id, resourceType = 'apps') {
     const self = this;
     this.server
-      .get(`/v2/apps/${appId}/data-links`)
+      .get(`/v2/${resourceType}/${id}/data-links`)
       .reply(function() {
         return self._buildReply(this.req.headers, [200, dataLinks]);
       });
@@ -159,7 +159,9 @@ class MockServer {
     return this.server.isDone();
   }
 
-  // Clears absolutely all interceptors. Calling it would ensure that if a test fails to use an interceptor, other tests won't get messed up.
+  /**
+   * Clears absolutely all interceptors. Calling it would ensure that if a test fails to use an interceptor, other tests won't get messed up.
+   */
   static clearAll() {
     nock.cleanAll();
   }

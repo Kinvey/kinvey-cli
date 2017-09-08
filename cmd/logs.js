@@ -14,6 +14,7 @@
  */
 
 const async = require('async');
+const config = require('config');
 const moment = require('moment');
 const program = require('commander');
 const service = require('../lib/service.js');
@@ -22,20 +23,32 @@ const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 const handleActionFailure = require('./../lib/util').handleCommandFailure;
+const LogErrorMessages = require('../lib/constants').LogErrorMessages;
 
-function validateTimestamp(ts) {
+function isValidTimestamp(ts) {
   if (ts == null) return true;
   return moment(ts, moment.ISO_8601, true).isValid();
 }
 
-function logs(from, to, command, cb) {
+function isValidNonZeroInteger(number) {
+  if (number == null) return true;
+  if (number === 0 || number === '0') return false;
+  return /^\d+$/.test(number);
+}
+
+function logs(command, cb) {
   const options = init(command);
-  if (!validateTimestamp(from)) return cb(new Error('Logs \'from\' timestamp invalid (ISO-8601 required)'));
-  if (!validateTimestamp(to)) return cb(new Error('Logs \'to\' timestamp invalid (ISO-8601 required)'));
+
+  // Validate input parameters
+  if (!isValidTimestamp(options.start)) return handleActionFailure(new Error(`Logs \'start\' ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
+  if (!isValidTimestamp(options.end)) return handleActionFailure(new Error(`Logs \'end\' ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
+  if (!isValidNonZeroInteger(options.number)) return handleActionFailure(new Error(`Logs \'number\' ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
+  if (!isValidNonZeroInteger(options.page)) return handleActionFailure(new Error(`Logs \'page\' ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
+
   return async.series([
     (next) => user.setup(options, next),
     (next) => project.restore(next),
-    (next) => service.logs(from, to, next)
+    (next) => service.logs(options.start, options.end, options.number, options.page, next)
   ], (err) => {
     handleActionFailure(err, cb);
   });
@@ -44,6 +57,10 @@ function logs(from, to, command, cb) {
 module.exports = logs;
 
 program
-  .command('logs [from] [to]')
+  .command('logs')
+  .option('--start <string>', 'fetch log entries starting from provided timestamp')
+  .option('--end <string>', 'fetch log entries up to provided timestamp')
+  .option('--page <number>', 'page (non-zero integer, default=1)')
+  .option('-n, --number <number>', `number of entries to fetch, i.e. page size (non-zero integer, default=${config.logFetchDefault}, max=${config.logFetchLimit})`)
   .description('retrieve and display Internal Flex Service logs')
   .action(logs);

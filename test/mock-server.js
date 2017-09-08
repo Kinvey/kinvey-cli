@@ -110,7 +110,7 @@ class MockServer {
     const self = this;
     this.server
       .post('/v2/jobs', (body) => {
-        const isFormData = body.includes('Content-Disposition: form-data; name="file"; filename="archive.tar"Content-Type: application/tar');
+        const isFormData = body.includes('Content-Disposition: form-data; name="file"; filename="archive.tar"\r\nContent-Type: application/tar');
         return isFormData;
       })
       .reply(function() {

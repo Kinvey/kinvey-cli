@@ -236,7 +236,7 @@ helper.setup = {
   clearRequireCache() {
     const modules = [
       '/cmd/config', '/cmd/deploy', '/cmd/job', '/cmd/list', '/cmd/logout', '/cmd/logs', '/cmd/recycle', '/cmd/status',
-      '/lib/project', '/lib/service', '/lib/user'
+      '/lib/project', '/lib/service', '/lib/user', '/lib/util'
     ];
 
     modules.forEach(x => {

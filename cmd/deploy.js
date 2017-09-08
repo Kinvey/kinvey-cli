@@ -18,7 +18,6 @@ const program = require('commander');
 const config = require('config');
 const service = require('../lib/service.js');
 const init = require('../lib/init.js');
-const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 const handleActionFailure = require('./../lib/util').handleCommandFailure;

@@ -14,13 +14,9 @@
  */
 
 const sinon = require('sinon');
-const async = require('async');
-
-const config = require('config');
 
 const Errors = require('./../../lib/constants').Errors;
 const prompt = require('./../../lib/prompt');
-const util = require('./../../lib/util');
 
 const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
@@ -210,7 +206,7 @@ describe('config', () => {
               host,
               email: fixtureUser.existent.email,
               password: fixtureUser.existent.password
-            }
+            };
           }
         }
       };

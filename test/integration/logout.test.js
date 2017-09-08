@@ -15,8 +15,6 @@
 
 const sinon = require('sinon');
 
-const prompt = require('./../../lib/prompt');
-
 const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
 const helper = require('./../helper');
@@ -46,7 +44,7 @@ describe('logout', () => {
         expect(err).to.not.exist;
         helper.assertions.assertUserProjectSetup(null, null, cb);
       });
-    })
+    });
   });
 
   it('when a user is not logged in should not return error', (cb) => {

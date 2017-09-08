@@ -13,9 +13,7 @@
  * contents is a violation of applicable laws.
  */
 
-const path = require('path');
 const async = require('async');
-const nock = require('nock');
 const inquirer = require('inquirer');
 
 const EnvironmentVariables = require('./../lib/constants').EnvironmentVariables;
@@ -26,7 +24,6 @@ const util = require('../lib/util');
 
 const command = require('./fixtures/command');
 const fixtureUser = require('./fixtures/user.json');
-const fixtureApps = require('./fixtures/apps.json');
 const fixtureApp = require('./fixtures/app.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureJob = require('./fixtures/job.json');
@@ -84,9 +81,9 @@ helper.assertions = {
             }
 
             let discrepancy;
-            for (let prop in expectedProject) {
-              let actualValue = actualProject[prop];
-              let expectedValue = expectedProject[prop];
+            for (const prop in expectedProject) {
+              const actualValue = actualProject[prop];
+              const expectedValue = expectedProject[prop];
               if (actualValue !== expectedValue) {
                 discrepancy = `Expected: ${expectedValue}. Actual: ${actualValue}.`;
                 break;

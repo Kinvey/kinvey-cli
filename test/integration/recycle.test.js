@@ -13,15 +13,10 @@
  * contents is a violation of applicable laws.
  */
 
-const path = require('path');
-
 const sinon = require('sinon');
-const async = require('async');
 const chalk = require('chalk');
 
-const config = require('config');
 const constants = require('./../../lib/constants');
-const prompt = require('./../../lib/prompt');
 const logger = require('./../../lib/logger');
 
 const command = require('./../fixtures/command.js');

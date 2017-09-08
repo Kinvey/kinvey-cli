@@ -19,6 +19,7 @@ const logout = require('../../cmd/logout.js');
 const pkg = require('../../package.json');
 const project = require('../../lib/project.js');
 const user = require('../../lib/user.js');
+const helper = require('./../helper');
 
 describe(`./${pkg.name} logout`, () => {
   const sandbox = sinon.sandbox.create();
@@ -34,6 +35,10 @@ describe(`./${pkg.name} logout`, () => {
 
   after('user', () => {
     sandbox.restore();
+  });
+
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
   });
 
   it('should logout the user.', (cb) => {

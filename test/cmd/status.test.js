@@ -21,6 +21,7 @@ const pkg = require('../../package.json');
 const project = require('../../lib/project.js');
 const status = require('../../cmd/status.js');
 const user = require('../../lib/user.js');
+const helper = require('./../helper');
 
 describe(`./${pkg.name} status`, () => {
   const sandbox = sinon.sandbox.create();
@@ -30,8 +31,8 @@ describe(`./${pkg.name} status`, () => {
     project.schemaVersion = 1;
   });
 
-  after('configure', () => {
-    project.app = project.service = project.schemaVersion = null;
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
   });
 
   before('setupStubs', () => {

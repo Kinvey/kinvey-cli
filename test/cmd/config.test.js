@@ -19,6 +19,7 @@ const pkg = require('../../package.json');
 const project = require('../../lib/project.js');
 const user = require('../../lib/user.js');
 const config = require('../../cmd/config.js');
+const helper = require('./../helper');
 
 describe(`./${pkg.name} config`, () => {
   const sandbox = sinon.sandbox.create();
@@ -34,6 +35,10 @@ describe(`./${pkg.name} config`, () => {
 
   after('cleanupStubs', () => {
     sandbox.restore();
+  });
+
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
   });
 
   it('should setup the user.', (cb) => {

@@ -26,6 +26,10 @@ const helper = require('../helper');
 describe(`./${pkg.name} job`, () => {
   const sandbox = sinon.sandbox.create();
 
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
+  });
+
   afterEach('resetStubs', () => {
     sandbox.reset();
   });

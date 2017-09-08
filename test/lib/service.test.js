@@ -25,6 +25,7 @@ const util = require('../../lib/util.js');
 const JobStatus = require('../../lib/constants').JobStatus;
 const Errors = require('../../lib/constants').Errors;
 const ServiceStatus = require('../../lib/constants').ServiceStatus;
+const helper = require('./../helper');
 
 const fixtures = {
   invalid: path.resolve('./test/fixtures/deploy'),
@@ -32,6 +33,10 @@ const fixtures = {
 };
 
 describe('service', () => {
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
+  });
+
   beforeEach('configure', () => {
     project.app = project.service = '123';
     project.lastJobId = 'abcdef';

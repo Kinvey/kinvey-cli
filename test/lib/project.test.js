@@ -23,6 +23,7 @@ const user = require('../../lib/user.js');
 const util = require('../../lib/util.js');
 const uuid = require('uuid');
 const Errors = require('./../../lib/constants').Errors;
+const helper = require('./../helper');
 
 const fixtures = {
   app: require('../fixtures/app.json'),
@@ -34,6 +35,10 @@ const fixtures = {
 const getStubCallArg = require('./../helper').mocks.getStubCallArg;
 
 describe('project', () => {
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
+  });
+
   describe('isConfigured', () => {
     beforeEach('configure', () => {
       project.service = '123';

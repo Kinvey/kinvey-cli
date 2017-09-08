@@ -21,8 +21,13 @@ const logger = require('../../lib/logger');
 const PromptMessages = require('../../lib/constants').PromptMessages;
 const InfoMessages = require('../../lib/constants').InfoMessages;
 const helperMocks = require('./../helper').mocks;
+const helper = require('./../helper');
 
 describe('prompt', () => {
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
+  });
+
   describe('validate e-mail address', () => {
     const failureResult = PromptMessages.INVALID_EMAIL_ADDRESS;
     const testCases = [

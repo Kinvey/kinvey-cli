@@ -20,6 +20,7 @@ const user = require('../../lib/user.js');
 const util = require('../../lib/util.js');
 const constants = require('../../lib/constants');
 const helperEnv = require('./../helper').env;
+const helper = require('./../helper');
 
 const loginTestsHelper = {
   assertLoginIsSuccessful(err, mock, token, cb) {
@@ -36,6 +37,10 @@ const loginTestsHelper = {
 };
 
 describe('user', () => {
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
+  });
+
   const invalidEmail = 'invalid@example.com';
   const invalidPassword = 'invalidPass';
 

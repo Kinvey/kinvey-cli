@@ -20,6 +20,7 @@ const logs = require('../../cmd/logs.js');
 const pkg = require('../../package.json');
 const project = require('../../lib/project.js');
 const user = require('../../lib/user.js');
+const helper = require('./../helper');
 
 describe(`./${pkg.name} logs`, () => {
   const sandbox = sinon.sandbox.create();
@@ -36,6 +37,10 @@ describe(`./${pkg.name} logs`, () => {
 
   after('cleanupStubs', () => {
     sandbox.restore();
+  });
+
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
   });
 
   it('should setup the user.', (cb) => {

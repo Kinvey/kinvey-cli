@@ -25,6 +25,10 @@ const command = require('../fixtures/command.js');
 const helper = require('../helper');
 
 describe(`./${pkg.name} deploy`, () => {
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
+  });
+
   describe('without error', () => {
     const sandbox = sinon.sandbox.create();
 

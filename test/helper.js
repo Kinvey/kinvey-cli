@@ -27,6 +27,7 @@ const fixtureUser = require('./fixtures/user.json');
 const fixtureApp = require('./fixtures/app.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureJob = require('./fixtures/job.json');
+const MockServer = require('./mock-server');
 
 const helper = {};
 
@@ -243,6 +244,13 @@ helper.setup = {
       const pathToResolve = `./..${x}`;
       delete require.cache[require.resolve(pathToResolve)];
     });
+  },
+
+  // Clears some cached modules, any unused nock interceptors, user/session info and project setup info.
+  performGeneralCleanup(cb) {
+    helper.setup.clearRequireCache();
+    MockServer.clearAll();
+    helper.setup.clearUserProjectSetup(cb);
   }
 };
 

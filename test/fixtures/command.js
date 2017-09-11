@@ -13,13 +13,25 @@
  * contents is a violation of applicable laws.
  */
 
-function noop() {
-  return {};
+let options = {};
+
+function addOption(key, value) {
+  options[key] = value;
+}
+
+function clearOptions() {
+  options = {};
+}
+
+function opts() {
+  return options;
 }
 
 module.exports = {
-  opts: noop,
+  addOption,
+  clearOptions,
+  opts,
   parent: {
-    opts: noop
+    opts: () => {}
   }
 };

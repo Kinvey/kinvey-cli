@@ -14,13 +14,13 @@
  */
 
 const sinon = require('sinon');
-const command = require('../fixtures/command.js');
-const list = require('../../cmd/list.js');
-const logger = require('../../lib/logger.js');
-const pkg = require('../../package.json');
-const project = require('../../lib/project.js');
-const user = require('../../lib/user.js');
-const helper = require('./../helper');
+const command = require('./../../fixtures/command.js');
+const list = require('./../../../cmd/list.js');
+const logger = require('./../../../lib/logger.js');
+const pkg = require('./../../../package.json');
+const project = require('./../../../lib/project.js');
+const user = require('./../../../lib/user.js');
+const helper = require('./../../helper');
 
 describe(`./${pkg.name} list`, () => {
   const sandbox = sinon.sandbox.create();

@@ -14,17 +14,18 @@
  */
 
 const sinon = require('sinon');
-const command = require('../fixtures/command.js');
-const pkg = require('../../package.json');
-const project = require('../../lib/project.js');
-const user = require('../../lib/user.js');
-const config = require('../../cmd/config.js');
-const helper = require('./../helper');
+const command = require('./../../fixtures/command.js');
+const pkg = require('./../../../package.json');
+const project = require('./../../../lib/project.js');
+const user = require('./../../../lib/user.js');
+const config = require('./../../../cmd/config.js');
+const helper = require('./.././../helper');
 
 describe(`./${pkg.name} config`, () => {
   const sandbox = sinon.sandbox.create();
 
   before('setupStubs', () => {
+    user.host = null;
     sandbox.stub(user, 'setup').callsArg(1);
     sandbox.stub(project, 'config').callsArg(1);
   });

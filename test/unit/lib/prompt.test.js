@@ -16,12 +16,12 @@
 const sinon = require('sinon');
 const inquirer = require('inquirer');
 
-const prompt = require('../../lib/prompt');
-const logger = require('../../lib/logger');
-const PromptMessages = require('../../lib/constants').PromptMessages;
-const InfoMessages = require('../../lib/constants').InfoMessages;
-const helperMocks = require('./../helper').mocks;
-const helper = require('./../helper');
+const prompt = require('./../../../lib/prompt');
+const logger = require('./../../../lib/logger');
+const PromptMessages = require('./../../../lib/constants').PromptMessages;
+const InfoMessages = require('./../../../lib/constants').InfoMessages;
+const helperMocks = require('./../../helper').mocks;
+const helper = require('./../../helper');
 
 describe('prompt', () => {
   after('generalCleanup', (cb) => {

@@ -14,14 +14,14 @@
  */
 
 const sinon = require('sinon');
-const command = require('../fixtures/command.js');
-const service = require('../../lib/service.js');
-const logs = require('../../cmd/logs.js');
-const pkg = require('../../package.json');
-const project = require('../../lib/project.js');
-const user = require('../../lib/user.js');
-const helper = require('./../helper');
-const LogErrorMessages = require('../../lib/constants').LogErrorMessages;
+const command = require('./../../fixtures/command.js');
+const service = require('./../../../lib/service.js');
+const logs = require('./../../../cmd/logs.js');
+const pkg = require('./../../../package.json');
+const project = require('./../../../lib/project.js');
+const user = require('./../../../lib/user.js');
+const helper = require('./../../helper');
+const LogErrorMessages = require('./../../../lib/constants').LogErrorMessages;
 
 describe(`./${pkg.name} logs`, () => {
   const sandbox = sinon.sandbox.create();

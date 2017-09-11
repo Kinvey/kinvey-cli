@@ -16,16 +16,16 @@
 const config = require('config');
 const uuid = require('uuid');
 const path = require('path');
-const api = require('../api.js');
+const api = require('./../../api.js');
 const stdout = require('test-console').stdout;
-const logger = require('../../lib/logger');
-const project = require('../../lib/project.js');
-const service = require('../../lib/service.js');
-const util = require('../../lib/util.js');
-const JobStatus = require('../../lib/constants').JobStatus;
-const Errors = require('../../lib/constants').Errors;
-const ServiceStatus = require('../../lib/constants').ServiceStatus;
-const helper = require('./../helper');
+const logger = require('./../../../lib/logger');
+const project = require('./../../../lib/project.js');
+const service = require('./../../../lib/service.js');
+const util = require('./../../../lib/util.js');
+const JobStatus = require('./../../../lib/constants').JobStatus;
+const Errors = require('./../../../lib/constants').Errors;
+const ServiceStatus = require('./../../../lib/constants').ServiceStatus;
+const helper = require('./../../helper');
 
 const fixtures = {
   invalid: path.resolve('./test/fixtures/deploy'),

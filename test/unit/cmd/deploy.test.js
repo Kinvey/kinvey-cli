@@ -15,14 +15,14 @@
 
 const sinon = require('sinon');
 
-const service = require('../../lib/service.js');
-const deploy = require('../../cmd/deploy.js');
-const pkg = require('../../package.json');
-const project = require('../../lib/project.js');
-const user = require('../../lib/user.js');
-const logger = require('../../lib/logger');
-const command = require('../fixtures/command.js');
-const helper = require('../helper');
+const service = require('./../../../lib/service.js');
+const deploy = require('./../../../cmd/deploy.js');
+const pkg = require('./../../../package.json');
+const project = require('./../../../lib/project.js');
+const user = require('./../../../lib/user.js');
+const logger = require('./../../../lib/logger');
+const command = require('./../../fixtures/command.js');
+const helper = require('./../../helper');
 
 describe(`./${pkg.name} deploy`, () => {
   after('generalCleanup', (cb) => {

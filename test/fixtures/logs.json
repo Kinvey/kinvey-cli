@@ -1,0 +1,79 @@
+[
+  {
+    "_id": "59a672196e911be44f10ba45",
+    "containerId": "3864f1602739e924b257c7082f9e5c7bcd0b43d8986efe3acb4581f4f94dcd65",
+    "message": "*** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...\n",
+    "threshold": null,
+    "timestamp": "2017-08-30T08:06:49.594Z"
+  },
+  {
+    "_id": "59a672190ebdf7a9387befc8",
+    "containerId": "3864f1602739e924b257c7082f9e5c7bcd0b43d8986efe3acb4581f4f94dcd65",
+    "message": "*** Running /etc/rc.local...\n",
+    "threshold": null,
+    "timestamp": "2017-08-30T08:06:49.594Z"
+  },
+  {
+    "_id": "59a67219d49d8e843fb61b14",
+    "containerId": "3864f1602739e924b257c7082f9e5c7bcd0b43d8986efe3acb4581f4f94dcd65",
+    "message": "*** Runit started as PID 11\n",
+    "threshold": null,
+    "timestamp": "2017-08-30T08:06:49.595Z"
+  },
+  {
+    "_id": "59a67219a86d05de4f97ea31",
+    "containerId": "3864f1602739e924b257c7082f9e5c7bcd0b43d8986efe3acb4581f4f94dcd65",
+    "message": "*** Booting runit daemon...\n",
+    "threshold": null,
+    "timestamp": "2017-08-30T08:06:49.595Z"
+  },
+  {
+    "_id": "59a672197f2a6ba14ec962e8",
+    "containerId": "3864f1602739e924b257c7082f9e5c7bcd0b43d8986efe3acb4581f4f94dcd65",
+    "message": "chown: changing ownership of '/dev/xconsole': Operation not permitted\n",
+    "threshold": null,
+    "timestamp": "2017-08-30T08:06:49.595Z"
+  },
+  {
+    "_id": "59a6721b0ebdf7a9387befce",
+    "containerId": "93ab7d50e74a793f7a7b5a9332ad450ebcf4cc2010a71d6f0f46ffdff545887b",
+    "message": "*** Running /etc/rc.local...\n",
+    "threshold": null,
+    "timestamp": "2017-08-30T08:06:51.685Z"
+  },
+  {
+    "_id": "59a6721bf5e0a89f6bfb0950",
+    "containerId": "93ab7d50e74a793f7a7b5a9332ad450ebcf4cc2010a71d6f0f46ffdff545887b",
+    "message": "*** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...\n",
+    "threshold": null,
+    "timestamp": "2017-08-30T08:06:51.685Z"
+  },
+  {
+    "_id": "59a6721bf5e0a89f6bfb0941",
+    "containerId": "93ab7d50e74a793f7a7b5a9332ad450ebcf4cc2010a71d6f0f46ffdff545887b",
+    "threshold": null,
+    "timestamp": "2017-08-30T08:06:51.685Z"
+  },
+  {
+    "_id": "59a6721b456af0fd7a21514d",
+    "containerId": "93ab7d50e74a793f7a7b5a9332ad450ebcf4cc2010a71d6f0f46ffdff545887b",
+    "message": "*** Runit started as PID 9\n",
+    "threshold": null,
+    "timestamp": "2017-08-30T08:06:51.686Z"
+  },
+  {
+    "_id": "59a6721bf6cdeda33868642a",
+    "containerId": "93ab7d50e74a793f7a7b5a9332ad450ebcf4cc2010a71d6f0f46ffdff545887b",
+    "message": "*** Booting runit daemon...\n",
+    "threshold": null,
+    "timestamp": "2017-08-30T08:06:51.686Z"
+  },
+  {
+    "_id": "59a6721bf5e0a89f6bfb0951",
+    "containerId": "93ab7d50e74a793f7a7b5a9332ad450ebcf4cc2010a71d6f0f46ffdff545887b",
+    "message": "chown: changing ownership of '/dev/xconsole': Operation not permitted\n",
+    "threshold": null,
+    "timestamp": "2017-08-30T08:06:51.686Z"
+  }
+]
+

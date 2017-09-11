@@ -18,6 +18,8 @@ const osHomedir = require('os-homedir');
 
 module.exports = {
   host: 'https://manage.kinvey.com/',
+  logFetchDefault: 100,
+  logFetchLimit: 2500,
   defaultSchemaVersion: 2,
   artifacts: ['.git', '.svn', 'node_modules', 'output.log'],
   maxUploadSize: 10 * 1024 * 1024,

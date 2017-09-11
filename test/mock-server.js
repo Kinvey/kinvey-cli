@@ -23,6 +23,7 @@ const fixtureApp = require('./fixtures/app.json');
 const fixtureServices = require('./fixtures/datalinks.json');
 const fixtureJob = require('./fixtures/job.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
+const fixtureLogs = require('./fixtures/logs.json');
 
 /**
  * Mocks our MAPI server. Serves as a wrapper around nock.js.
@@ -103,6 +104,22 @@ class MockServer {
       .get(`/v2/${resourceType}/${id}/data-links`)
       .reply(function() {
         return self._buildReply(this.req.headers, [200, dataLinks]);
+      });
+  }
+
+  /**
+   * Sets up an interceptor for the logs endpoint.
+   * @param {Object|Array} query If specified, it would guarantee that a correct query is sent to the server.
+   * @param logs
+   * @param dataLinkId
+   */
+  logs(query, logs = fixtureLogs, dataLinkId = fixtureInternalDataLink.id) {
+    const self = this;
+    this.server
+      .get(`/v2/data-links/${dataLinkId}/logs`)
+      .query(query)
+      .reply(function() {
+        return self._buildReply(this.req.headers, [200, logs]);
       });
   }
 

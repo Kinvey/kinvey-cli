@@ -25,11 +25,9 @@ describe('logout', () => {
   const sandbox = sinon.sandbox.create();
   const cmdLogoutPath = './../../cmd/logout';
 
-  afterEach((cb) => {
+  afterEach('generalCleanup', (cb) => {
     sandbox.reset();
-    MockServer.clearAll();
-    helper.setup.clearRequireCache();
-    helper.setup.clearUserProjectSetup(cb);
+    helper.setup.performGeneralCleanup(cb);
   });
 
   after(() => {

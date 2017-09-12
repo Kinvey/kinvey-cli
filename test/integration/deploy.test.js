@@ -38,11 +38,9 @@ describe('deploy', () => {
   const expectedProjectBeforeDeploy = helper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
   const expectedProjectAfterDeploy = helper.assertions.buildExpectedProject(fixtureApp.id, null, fixtureJob.job, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
 
-  afterEach((cb) => {
+  afterEach('generalCleanup', (cb) => {
     sandbox.restore();
-    MockServer.clearAll();
-    helper.setup.clearRequireCache();
-    helper.setup.clearUserProjectSetup(cb);
+    helper.setup.performGeneralCleanup(cb);
   });
 
   describe('when user and project are already set', () => {

@@ -64,14 +64,12 @@ describe('config', () => {
   const sandbox = sinon.sandbox.create();
   const cmdConfigPath = './../../cmd/config';
 
-  afterEach((done) => {
+  afterEach('generalCleanup', (done) => {
     sandbox.reset();
-    MockServer.clearAll();
-    helper.setup.clearRequireCache();
-    helper.setup.clearUserProjectSetup(done);
+    helper.setup.performGeneralCleanup(done);
   });
 
-  after(() => {
+  after('cleanupStubs', () => {
     sandbox.restore();
   });
 

@@ -41,11 +41,9 @@ describe('recycle', () => {
   const defaultExpectedUser = helper.assertions.buildExpectedUser();
   const defaultExpectedProject = helper.assertions.buildExpectedProject(fixtureApp.id, null, defaultExpectedJobId, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
 
-  afterEach((cb) => {
+  afterEach('generalCleanup', (cb) => {
     sandbox.restore();
-    MockServer.clearAll();
-    helper.setup.clearRequireCache();
-    helper.setup.clearUserProjectSetup(cb);
+    helper.setup.performGeneralCleanup(cb);
   });
 
   describe('when user and project are already set', () => {

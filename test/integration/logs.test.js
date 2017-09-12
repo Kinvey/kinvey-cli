@@ -78,11 +78,9 @@ describe('logs', () => {
 
   const cmdLogsPath = './../../cmd/logs';
 
-  afterEach((cb) => {
+  afterEach('generalCleanup', (cb) => {
     sandbox.restore();
-    MockServer.clearAll();
-    helper.setup.clearRequireCache();
-    helper.setup.clearUserProjectSetup(cb);
+    helper.setup.performGeneralCleanup(cb);
   });
 
   describe('when user and project are already set', () => {

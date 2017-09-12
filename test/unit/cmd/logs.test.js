@@ -20,7 +20,7 @@ const logs = require('./../../../cmd/logs.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');
-const helper = require('./../../helper');
+const helper = require('../../tests-helper');
 const LogErrorMessages = require('./../../../lib/constants').LogErrorMessages;
 
 describe(`./${pkg.name} logs`, () => {

@@ -21,7 +21,7 @@ const logger = require('./../../lib/logger');
 
 const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
-const helper = require('./../helper');
+const helper = require('../tests-helper');
 
 describe('status', () => {
   const mockServer = new MockServer(true);

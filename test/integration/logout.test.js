@@ -17,7 +17,7 @@ const sinon = require('sinon');
 
 const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
-const helper = require('./../helper');
+const helper = require('../tests-helper');
 
 
 describe('logout', () => {

@@ -22,7 +22,7 @@ const logger = require('./../../lib/logger');
 const command = require('./../fixtures/command.js');
 const fixtureInternalDataLink = require('./../fixtures/kinvey-dlc.json');
 const MockServer = require('./../mock-server');
-const helper = require('./../helper');
+const helper = require('../tests-helper');
 
 function assertLoggerInfoOutput(spy, serviceName, expectedServicesCount) {
   const baseMsg = 'Expected to output';

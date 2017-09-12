@@ -25,7 +25,7 @@ const util = require('./../../lib/util');
 const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
 const fixtureJob = require('./../fixtures/job.json');
-const helper = require('./../helper');
+const helper = require('../tests-helper');
 
 function assertLoggerForStatus(spy) {
   const expectedStatus = chalk.cyan(constants.JobStatus.COMPLETE);

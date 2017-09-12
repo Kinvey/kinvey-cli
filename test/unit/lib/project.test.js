@@ -23,7 +23,7 @@ const user = require('./../../../lib/user.js');
 const util = require('./../../../lib/util.js');
 const uuid = require('uuid');
 const Errors = require('./../../../lib/constants').Errors;
-const helper = require('./../../helper');
+const helper = require('../../tests-helper');
 
 const fixtures = {
   app: require('./../../fixtures/app.json'),
@@ -32,7 +32,7 @@ const fixtures = {
   org: require('./../../fixtures/org.json')
 };
 
-const getStubCallArg = require('./../../helper').mocks.getStubCallArg;
+const getStubCallArg = require('../../tests-helper').mocks.getStubCallArg;
 
 describe('project', () => {
   after('generalCleanup', (cb) => {

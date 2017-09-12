@@ -22,7 +22,7 @@ const command = require('./../fixtures/command.js');
 const fixtureLogs = require('./../fixtures/logs.json');
 const fixtureInternalDataLink = require('./../fixtures/kinvey-dlc.json');
 const MockServer = require('./../mock-server');
-const helper = require('./../helper');
+const helper = require('../tests-helper');
 
 // Assumes that the output should be the logs from fixtures/logs.
 function assertLogsOutput(spy) {

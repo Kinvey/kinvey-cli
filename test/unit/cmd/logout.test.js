@@ -19,7 +19,7 @@ const logout = require('./../../../cmd/logout.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');
-const helper = require('./../../helper');
+const helper = require('../../tests-helper');
 
 describe(`./${pkg.name} logout`, () => {
   const sandbox = sinon.sandbox.create();

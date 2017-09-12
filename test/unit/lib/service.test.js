@@ -25,7 +25,7 @@ const util = require('./../../../lib/util.js');
 const JobStatus = require('./../../../lib/constants').JobStatus;
 const Errors = require('./../../../lib/constants').Errors;
 const ServiceStatus = require('./../../../lib/constants').ServiceStatus;
-const helper = require('./../../helper');
+const helper = require('../../tests-helper');
 
 const fixtures = {
   invalid: path.resolve('./test/fixtures/deploy'),

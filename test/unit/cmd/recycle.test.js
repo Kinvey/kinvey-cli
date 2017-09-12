@@ -20,7 +20,7 @@ const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const recycle = require('./../../../cmd/recycle.js');
 const user = require('./../../../lib/user.js');
-const helper = require('./../../helper');
+const helper = require('../../tests-helper');
 
 describe(`./${pkg.name} recycle`, () => {
   const sandbox = sinon.sandbox.create();

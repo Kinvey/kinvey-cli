@@ -155,7 +155,7 @@ helper.setup = {
   configureUserAndProject(sandbox, mockServer, cb) {
     this.userProjectPromptStubsForSuccess(sandbox);
 
-    mockServer.loginForSuccess();
+    mockServer.loginWithSuccess();
     mockServer.apps();
     mockServer.dataLinks();
 
@@ -240,8 +240,8 @@ helper.setup = {
       '/lib/project', '/lib/service', '/lib/user', '/lib/util'
     ];
 
-    modules.forEach(x => {
-      const pathToResolve = `./..${x}`;
+    modules.forEach(module => {
+      const pathToResolve = `./..${module}`;
       delete require.cache[require.resolve(pathToResolve)];
     });
   },

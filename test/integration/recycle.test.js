@@ -24,7 +24,7 @@ const MockServer = require('./../mock-server');
 const fixtureApp = require('./../fixtures/app.json');
 const fixtureJob = require('./../fixtures/job.json');
 const fixtureInternalDataLink = require('./../fixtures/kinvey-dlc.json');
-const helper = require('./../helper');
+const helper = require('../tests-helper');
 
 function assertLoggerForRecycleJob(spy, jobId) {
   const expectedJobId = chalk.cyan(jobId);

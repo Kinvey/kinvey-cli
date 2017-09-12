@@ -23,7 +23,7 @@ const MockServer = require('./../mock-server');
 const fixtureUser = require('./../fixtures/user.json');
 const fixtureApp = require('./../fixtures/app.json');
 const fixtureInternalDataLink = require('./../fixtures/kinvey-dlc.json');
-const helper = require('./../helper');
+const helper = require('../tests-helper');
 
 function assertPromptStubsForSuccess(verifyServicePrompt = true) {
   // verify user is prompted for credentials just once

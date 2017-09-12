@@ -87,7 +87,7 @@ describe('recycle', () => {
     });
 
     it('should set user and return error', (cb) => {
-      mockServer.loginForSuccess();
+      mockServer.loginWithSuccess();
 
       require(cmdRecyclePath)(command, (err) => {
         helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);

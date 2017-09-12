@@ -197,7 +197,7 @@ describe('logs', () => {
     });
 
     it('should set user and return error', (cb) => {
-      mockServer.loginForSuccess();
+      mockServer.loginWithSuccess();
 
       require(cmdLogsPath)(command, (err) => {
         helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);

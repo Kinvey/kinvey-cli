@@ -26,7 +26,7 @@ const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureLogs = require('./fixtures/logs.json');
 
 /**
- * Mocks our MAPI server. Serves as a wrapper around nock.js.
+ * Mocks MAPI server. Serves as a wrapper around nock.js.
  */
 class MockServer {
   /**
@@ -37,10 +37,9 @@ class MockServer {
   constructor(requireAuth, url = config.host) {
     this.server = nock(url);
     this.requireAuth = requireAuth;
-    return this;
   }
 
-  _isAuth(headers) {
+  _isAuthenticated(headers) {
     if (!this.requireAuth) {
       return true;
     }
@@ -56,7 +55,7 @@ class MockServer {
    * @private
    */
   _buildReply(reqHeaders, successReply) {
-    if (this._isAuth(reqHeaders)) {
+    if (this._isAuthenticated(reqHeaders)) {
       return successReply;
     }
 
@@ -70,13 +69,13 @@ class MockServer {
    * Sets up the 'login' endpoint. If proper e-mail and password are provided, it will respond with 2xx.
    * @param validCredentials
    */
-  loginForSuccess(validCredentials = fixtureUser.existent) {
+  loginWithSuccess(validCredentials = fixtureUser.existent) {
     this.server
       .post('/session', validCredentials)
       .reply(200, { email: validCredentials.email, token: fixtureUser.token });
   }
 
-  loginForFail(invalidCredentials = fixtureUser.nonexistent) {
+  loginWithFail(invalidCredentials = fixtureUser.nonexistent) {
     this.server
       .post('/session', invalidCredentials)
       .reply(401, { code: 'InvalidCredentials', description: '' });

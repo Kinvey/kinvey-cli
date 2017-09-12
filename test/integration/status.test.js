@@ -80,7 +80,7 @@ describe('status', () => {
     });
 
     it('should set user and return error', (cb) => {
-      mockServer.loginForSuccess();
+      mockServer.loginWithSuccess();
 
       require(cmdStatusPath)(command, (err) => {
         helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);

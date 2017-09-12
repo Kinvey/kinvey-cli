@@ -86,7 +86,7 @@ describe('config', () => {
 
     // valid input means user, password and project selection
     it('with valid input and no 2FA required should set user and project', (cb) => {
-      mockServer.loginForSuccess();
+      mockServer.loginWithSuccess();
       mockServer.apps();
       mockServer.dataLinks();
 
@@ -103,7 +103,7 @@ describe('config', () => {
     // Expects user and project to be set properly.
     it('with valid input and 2FA required should set user and project', (cb) => {
       mockServer.loginWithTwoFactorAuthFail();
-      mockServer.loginForSuccess(fixtureUser.existentWith2FA);
+      mockServer.loginWithSuccess(fixtureUser.existentWith2FA);
 
       mockServer.apps();
       mockServer.dataLinks();
@@ -122,7 +122,7 @@ describe('config', () => {
 
     // User/session info must be set even though no internal dataLinks (Flex services) are found.
     it('with valid input and no Flex services created should set user and return error', (cb) => {
-      mockServer.loginForSuccess();
+      mockServer.loginWithSuccess();
       mockServer.apps();
       mockServer.dataLinks([]);
 
@@ -152,7 +152,7 @@ describe('config', () => {
     });
 
     it('with valid project input and valid credentials should set user and project', (cb) => {
-      mockServer.loginForSuccess();
+      mockServer.loginWithSuccess();
       mockServer.apps();
       mockServer.dataLinks();
 
@@ -168,7 +168,7 @@ describe('config', () => {
     // TODO: The config command should fail right after credentials turn out to be invalid. But a few more requests are
     // made and that's why the test fails. Probably, a fix should be applied to the code.
     it.skip('with invalid credentials should not prompt and return error', (cb) => {
-      mockServer.loginForFail(fixtureUser.nonexistent);
+      mockServer.loginWithFail(fixtureUser.nonexistent);
       helper.env.setCredentials(fixtureUser.nonexistent.email, fixtureUser.nonexistent.password);
 
       require(cmdConfigPath)(null, command, (err) => {
@@ -194,7 +194,7 @@ describe('config', () => {
       const host = 'https://host:123';
       const expectedHost = `${host}/`;
       const customHostMockServer = new MockServer(true, expectedHost);
-      customHostMockServer.loginForSuccess();
+      customHostMockServer.loginWithSuccess();
       customHostMockServer.apps();
       customHostMockServer.dataLinks();
 

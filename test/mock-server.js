@@ -97,10 +97,10 @@ class MockServer {
       });
   }
 
-  dataLinks(dataLinks = fixtureServices, id = fixtureApp.id, resourceType = 'apps') {
+  dataLinks(dataLinks = fixtureServices, id = fixtureApp.id, resourceType = 'apps', apiVersion = 'v2') {
     const self = this;
     this.server
-      .get(`/v2/${resourceType}/${id}/data-links`)
+      .get(`/${apiVersion}/${resourceType}/${id}/data-links`)
       .reply(function() {
         return self._buildReply(this.req.headers, [200, dataLinks]);
       });

@@ -38,12 +38,12 @@ function isValidNonZeroInteger(number) {
   return /^\d+$/.test(number);
 }
 
-function logs(from, to, command, cb) {
+function logs(argsArray, command, cb) {
   const options = init(command);
 
   // Handle deprecated logs command params
-  if (from != null || to != null) {
-    return handleActionFailure(new KinveyError('DeprecationError', `Logs ${chalk.whiteBright('[from]')} and ${chalk.whiteBright('[to]')} parameters have been removed. Use ${chalk.blueBright('--from')} and ${chalk.blueBright('--to')} flags instead`), cb);
+  if (argsArray != null && argsArray.length > 0) {
+    return handleActionFailure(new KinveyError('DeprecationError', `Version 1.x ${chalk.whiteBright('[from]')} and ${chalk.whiteBright('[to]')} params have been converted to options. Use ${chalk.blueBright('--from')} and ${chalk.blueBright('--to')} to filter by timestamp instead.`), cb);
   }
 
   // Validate input parameters
@@ -69,10 +69,13 @@ function logs(from, to, command, cb) {
 module.exports = logs;
 
 program
-  .command('logs')
-  .option('--start <string>', 'fetch log entries starting from provided timestamp')
-  .option('--end <string>', 'fetch log entries up to provided timestamp')
+  .command('logs [params...]')
+  .option('--from <string>', 'fetch log entries starting from provided timestamp')
+  .option('--to <string>', 'fetch log entries up to provided timestamp')
   .option('--page <number>', 'page (non-zero integer, default=1)')
   .option('-n, --number <number>', `number of entries to fetch, i.e. page size (non-zero integer, default=${config.logFetchDefault}, max=${config.logFetchLimit})`)
   .description('retrieve and display Internal Flex Service logs')
-  .action(logs);
+  .action(logs)
+    .on('--help', () => {
+      console.log('    Note:  Version 1.x [from] and [to] params have been converted to options. Use \'--from\' and \'--to\' to filter by timestamp instead.\n');
+    });

@@ -44,21 +44,21 @@ describe(`./${pkg.name} logs`, () => {
   });
 
   it('should setup the user.', (cb) => {
-    logs(null, null, command, (err) => {
+    logs(null, command, (err) => {
       expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should restore the project.', (cb) => {
-    logs(null, null, command, (err) => {
+    logs(null, command, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should retrieve log entries based on query', (cb) => {
-    logs(null, null, command, (err) => {
+    logs(null, command, (err) => {
       expect(service.logs).to.be.calledOnce;
       cb(err);
     });
@@ -66,7 +66,7 @@ describe(`./${pkg.name} logs`, () => {
 
   it('should fail with an invalid \'start\' timestamp', (done) => {
     command.addOption('from', 'abc');
-    logs(null, null, command, (err) => {
+    logs(null, command, (err) => {
       expect(err).to.exist;
       expect(err.message).to.contain(LogErrorMessages.INVALID_TIMESTAMP);
       done();
@@ -75,7 +75,7 @@ describe(`./${pkg.name} logs`, () => {
 
   it('should fail with an invalid \'end\' timestamp', (done) => {
     command.addOption('to', 'abc');
-    logs(null, null, command, (err) => {
+    logs(null, command, (err) => {
       expect(err).to.exist;
       expect(err.message).to.contain(LogErrorMessages.INVALID_TIMESTAMP);
       done();
@@ -84,7 +84,7 @@ describe(`./${pkg.name} logs`, () => {
 
   it('should fail with an invalid \'page\' flag', (done) => {
     command.addOption('page', 'abc');
-    logs(null, null, command, (err) => {
+    logs(null, command, (err) => {
       expect(err).to.exist;
       expect(err.message).to.contain(LogErrorMessages.INVALID_NONZEROINT);
       done();
@@ -93,7 +93,7 @@ describe(`./${pkg.name} logs`, () => {
 
   it('should fail with an invalid \'number\' flag', (done) => {
     command.addOption('number', 'abc');
-    logs(null, null, command, (err) => {
+    logs(null, command, (err) => {
       expect(err).to.exist;
       expect(err.message).to.contain(LogErrorMessages.INVALID_NONZEROINT);
       done();
@@ -101,9 +101,9 @@ describe(`./${pkg.name} logs`, () => {
   });
 
   it('should fail with deprecated params included', (done) => {
-    logs('abc', 'def', command, (err) => {
+    logs(['abc', 'def'], command, (err) => {
       expect(err).to.exist;
-      expect(err.message).to.contain('parameters have been removed.');
+      expect(err.message).to.contain('params have been converted to options');
       done();
     });
   });

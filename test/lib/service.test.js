@@ -200,8 +200,8 @@ describe('service', () => {
         .withArgs({ url: `/v${project.schemaVersion}/data-links/${project.service}/status` })
         .callsArgWith(1, null, { body: { status: 'ONLINE' } });
 
-      service.serviceStatus((err, status) => {
-        expect(status).to.equal('ONLINE');
+      service.serviceStatus((err, result) => {
+        expect(result[0]).to.equal('ONLINE');
         cb(err);
       });
     });
@@ -212,9 +212,9 @@ describe('service', () => {
         .withArgs({ url: `/v${project.schemaVersion}/data-links/${project.service}/status` })
         .callsArgWith(1, null, { body: { status: 'ONLINE', version: '0.0.1' } });
 
-      service.serviceStatus((err, status, version) => {
-        expect(status).to.equal('ONLINE');
-        expect(version).to.equal('0.0.1');
+      service.serviceStatus((err, result) => {
+        expect(result[0]).to.equal('ONLINE');
+        expect(result[1]).to.equal('0.0.1');
         cb(err);
       });
     });

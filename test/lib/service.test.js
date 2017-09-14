@@ -201,7 +201,7 @@ describe('service', () => {
         .callsArgWith(1, null, { body: { status: 'ONLINE' } });
 
       service.serviceStatus((err, result) => {
-        expect(result[0]).to.equal('ONLINE');
+        expect(result.status).to.equal('ONLINE');
         cb(err);
       });
     });
@@ -213,8 +213,8 @@ describe('service', () => {
         .callsArgWith(1, null, { body: { status: 'ONLINE', version: '0.0.1' } });
 
       service.serviceStatus((err, result) => {
-        expect(result[0]).to.equal('ONLINE');
-        expect(result[1]).to.equal('0.0.1');
+        expect(result.status).to.equal('ONLINE');
+        expect(result.version).to.equal('0.0.1');
         cb(err);
       });
     });

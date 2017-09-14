@@ -40,10 +40,18 @@ function logs(command, cb) {
   const options = init(command);
 
   // Validate input parameters
-  if (!isValidTimestamp(options.start)) return handleActionFailure(new Error(`Logs \'start\' ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
-  if (!isValidTimestamp(options.end)) return handleActionFailure(new Error(`Logs \'end\' ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
-  if (!isValidNonZeroInteger(options.number)) return handleActionFailure(new Error(`Logs \'number\' ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
-  if (!isValidNonZeroInteger(options.page)) return handleActionFailure(new Error(`Logs \'page\' ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
+  if (!isValidTimestamp(options.start)) {
+    return handleActionFailure(new Error(`Logs \'start\' ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
+  }
+  if (!isValidTimestamp(options.end)) {
+    return handleActionFailure(new Error(`Logs \'end\' ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
+  }
+  if (!isValidNonZeroInteger(options.number)) {
+    return handleActionFailure(new Error(`Logs \'number\' ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
+  }
+  if (!isValidNonZeroInteger(options.page)) {
+    return handleActionFailure(new Error(`Logs \'page\' ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
+  }
 
   return async.series([
     (next) => user.setup(options, next),

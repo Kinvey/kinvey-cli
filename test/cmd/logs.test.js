@@ -100,7 +100,7 @@ describe(`./${pkg.name} logs`, () => {
     });
   });
 
-  it('should succeed with deprecated params included \'number\' flag', (done) => {
+  it('should succeed with deprecated params included', (done) => {
     logs('abc', 'def', command, (err) => {
       expect(err).not.to.exist;
       expect(service.logs).to.be.calledOnce;

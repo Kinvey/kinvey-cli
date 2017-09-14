@@ -65,7 +65,7 @@ describe(`./${pkg.name} logs`, () => {
   });
 
   it('should fail with an invalid \'start\' timestamp', (done) => {
-    command.addOption('start', 'abc');
+    command.addOption('from', 'abc');
     logs(null, null, command, (err) => {
       expect(err).to.exist;
       expect(err.message).to.contain(LogErrorMessages.INVALID_TIMESTAMP);
@@ -74,7 +74,7 @@ describe(`./${pkg.name} logs`, () => {
   });
 
   it('should fail with an invalid \'end\' timestamp', (done) => {
-    command.addOption('end', 'abc');
+    command.addOption('to', 'abc');
     logs(null, null, command, (err) => {
       expect(err).to.exist;
       expect(err.message).to.contain(LogErrorMessages.INVALID_TIMESTAMP);
@@ -100,10 +100,10 @@ describe(`./${pkg.name} logs`, () => {
     });
   });
 
-  it('should succeed with deprecated params included', (done) => {
+  it('should fail with deprecated params included', (done) => {
     logs('abc', 'def', command, (err) => {
-      expect(err).not.to.exist;
-      expect(service.logs).to.be.calledOnce;
+      expect(err).to.exist;
+      expect(err.message).to.contain('parameters have been removed.');
       done();
     });
   });

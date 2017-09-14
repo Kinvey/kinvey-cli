@@ -14,7 +14,9 @@
  */
 
 const async = require('async');
+const chalk = require('chalk');
 const config = require('config');
+const KinveyError = require('../lib/error');
 const moment = require('moment');
 const program = require('commander');
 const service = require('../lib/service.js');
@@ -39,29 +41,26 @@ function isValidNonZeroInteger(number) {
 function logs(from, to, command, cb) {
   const options = init(command);
 
+  // Handle deprecated logs command params
+  if (from != null || to != null) {
+    return handleActionFailure(new KinveyError('DeprecationError', `Logs ${chalk.whiteBright('[from]')} and ${chalk.whiteBright('[to]')} parameters have been removed. Use ${chalk.blueBright('--from')} and ${chalk.blueBright('--to')} flags instead`), cb);
+  }
+
   // Validate input parameters
-  if (!isValidTimestamp(options.start)) {
-    return handleActionFailure(new Error(`Logs \'start\' ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
-  }
-  if (!isValidTimestamp(options.end)) {
-    return handleActionFailure(new Error(`Logs \'end\' ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
-  }
-  if (!isValidNonZeroInteger(options.number)) {
-    return handleActionFailure(new Error(`Logs \'number\' ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
-  }
-  if (!isValidNonZeroInteger(options.page)) {
-    return handleActionFailure(new Error(`Logs \'page\' ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
+  if (!isValidTimestamp(options.from)) {
+    return handleActionFailure(new KinveyError('InvalidParameter', `Logs \'from\' flag ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
+  } else if (!isValidTimestamp(options.to)) {
+    return handleActionFailure(new KinveyError('InvalidParameter', `Logs \'to\' flag ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
+  } else if (!isValidNonZeroInteger(options.number)) {
+    return handleActionFailure(new KinveyError('InvalidParameter', `Logs \'number\' flag ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
+  } else if (!isValidNonZeroInteger(options.page)) {
+    return handleActionFailure(new KinveyError('InvalidParameter', `Logs \'page\' flag ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
   }
 
   return async.series([
     (next) => user.setup(options, next),
     (next) => project.restore(next),
-    (next) => service.logs(options.start, options.end, options.number, options.page, next),
-    (next) => {
-      if (from != null) logger.warn('Logs \'from\' param is deprecated. Please use the \'--start\' flag instead');
-      if (to != null) logger.warn('Logs \'to\' param is deprecated. Please use the \'--end\' flag instead');
-      next();
-    }
+    (next) => service.logs(options.from, options.to, options.number, options.page, next)
   ], (err) => {
     handleActionFailure(err, cb);
   });

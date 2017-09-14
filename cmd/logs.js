@@ -36,7 +36,7 @@ function isValidNonZeroInteger(number) {
   return /^\d+$/.test(number);
 }
 
-function logs(command, cb) {
+function logs(from, to, command, cb) {
   const options = init(command);
 
   // Validate input parameters
@@ -56,7 +56,12 @@ function logs(command, cb) {
   return async.series([
     (next) => user.setup(options, next),
     (next) => project.restore(next),
-    (next) => service.logs(options.start, options.end, options.number, options.page, next)
+    (next) => service.logs(options.start, options.end, options.number, options.page, next),
+    (next) => {
+      if (from != null) logger.warn('Logs \'from\' param is deprecated. Please use the \'--start\' flag instead');
+      if (to != null) logger.warn('Logs \'to\' param is deprecated. Please use the \'--end\' flag instead');
+      next();
+    }
   ], (err) => {
     handleActionFailure(err, cb);
   });

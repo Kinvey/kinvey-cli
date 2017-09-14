@@ -49,7 +49,6 @@ describe('status', () => {
         // TODO: assert status when cb starts receiving it
         require(cmdStatusPath)(command, (err, actualStatus) => {
           expect(err).to.not.exist;
-          // expect(actualStatus).to.exist;
           expect(mockServer.isDone()).to.be.true;
           const paintedStatus = chalk.green(serviceStatus);
           expect(spyLogger.withArgs('Service status: %s', paintedStatus)).to.be.calledOnce;

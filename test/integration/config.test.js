@@ -163,8 +163,7 @@ describe('config', () => {
       });
     });
 
-    // TODO: The config command should fail right after credentials turn out to be invalid. But a few more requests are
-    // made and that's why the test fails. Probably, a fix should be applied to the code.
+    // TODO: Stop skipping the test after #BACK-2845 is resolved
     it.skip('with invalid credentials should not prompt and return error', (cb) => {
       mockServer.loginWithFail(fixtureUser.nonexistent);
       helper.env.setCredentials(fixtureUser.nonexistent.email, fixtureUser.nonexistent.password);

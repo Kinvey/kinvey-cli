@@ -100,10 +100,12 @@ helper.assertions = {
       cb
     );
   },
-  assertError(actualErr, { name, message }) {
+  assertError(actualErr, expectedErr) {
     expect(actualErr).to.exist;
-    expect(actualErr.name).to.equal(name);
-    expect(actualErr.message).to.equal(message);
+    const expectedName = expectedErr.NAME || expectedErr.name;
+    expect(actualErr.name).to.equal(expectedName);
+    const expectedMsg = expectedErr.MESSAGE || expectedErr.message;
+    expect(actualErr.message).to.equal(expectedMsg);
   },
   buildExpectedProject(appId, org, lastJobId, serviceName, service, schemaVersion = config.defaultSchemaVersion) {
     return {

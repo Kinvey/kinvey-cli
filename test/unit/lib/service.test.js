@@ -79,8 +79,7 @@ describe('service', () => {
       });
       it('should fail when the project is too big.', (cb) => {
         service.deploy(fixtures.invalid, '0.1.0', (err) => {
-          expect(err).to.exist;
-          expect(err.name).to.equal(Errors.ProjectMaxFileSizeExceeded.name);
+          helper.assertions.assertError(err, Errors.ProjectMaxFileSizeExceeded);
           cb();
         });
       });
@@ -541,8 +540,7 @@ describe('service', () => {
     describe('when the project does not include the flex-sdk dependency', () => {
       it('should fail.', (cb) => {
         service.validate('*', (err) => {
-          expect(err).to.exist;
-          expect(err.name).to.equal(Errors.InvalidProject.name);
+          helper.assertions.assertError(err, Errors.InvalidProject);
           cb();
         });
       });
@@ -563,8 +561,7 @@ describe('service', () => {
       });
       it('should fail.', (cb) => {
         service.validate('*', (err) => {
-          expect(err).to.exist;
-          expect(err.name).to.equal(Errors.ProjectNotConfigured.name);
+          helper.assertions.assertError(err, Errors.ProjectNotConfigured);
           cb();
         });
       });

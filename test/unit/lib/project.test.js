@@ -214,8 +214,7 @@ describe('project', () => {
 
       it('should fail.', (cb) => {
         project.restore((err) => {
-          expect(err).to.exist;
-          expect(err.name).to.equal(Errors.ProjectNotConfigured.name);
+          helper.assertions.assertError(err, Errors.ProjectNotConfigured);
           cb();
         });
       });
@@ -340,8 +339,7 @@ describe('project', () => {
 
       it('should retry.', (cb) => {
         project.select((err) => {
-          expect(user.refresh).to.be.calledOnce;
-          expect(err).to.have.property('name', Errors.NoAppsFound.name);
+          helper.assertions.assertError(err, Errors.NoAppsFound);
           cb();
         });
       });
@@ -505,8 +503,7 @@ describe('project', () => {
 
       it('should fail.', (cb) => {
         project.select((err) => {
-          expect(err).to.exist;
-          expect(err.name).to.equal(Errors.NoAppsFound.name);
+          helper.assertions.assertError(err, Errors.NoAppsFound);
           cb();
         });
       });
@@ -553,8 +550,7 @@ describe('project', () => {
 
       it('should fail.', (cb) => {
         project.select((err) => {
-          expect(err).to.exist;
-          expect(err.name).to.equal(Errors.NoFlexServicesFound.name);
+          helper.assertions.assertError(err, Errors.NoFlexServicesFound);
           cb();
         });
       });
@@ -563,7 +559,7 @@ describe('project', () => {
   describe('setup', () => {
     describe('when the project is not configured', () => {
       before('restore', () => {
-        sinon.stub(project, 'restore').callsArgWith(0, new Error(Errors.ProjectNotConfigured.name));
+        sinon.stub(project, 'restore').callsArgWith(0, new Error(Errors.ProjectNotConfigured.NAME));
       });
       afterEach('restore', () => {
         project.restore.reset();
@@ -597,7 +593,7 @@ describe('project', () => {
     });
     describe('when the project can not be properly restored', () => {
       before('restore', () => {
-        sinon.stub(project, 'restore').callsArgWith(0, new Error(Errors.ProjectRestoreError.name));
+        sinon.stub(project, 'restore').callsArgWith(0, new Error(Errors.ProjectRestoreError.NAME));
       });
       afterEach('restore', () => {
         project.restore.reset();

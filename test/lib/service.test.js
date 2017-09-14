@@ -195,13 +195,26 @@ describe('service', () => {
       sandbox.restore();
     });
 
-    it('should the service status.', (cb) => {
+    it('should retrieve the service status.', (cb) => {
       sandbox.stub(util, 'makeRequest')
         .withArgs({ url: `/v${project.schemaVersion}/data-links/${project.service}/status` })
         .callsArgWith(1, null, { body: { status: 'ONLINE' } });
 
       service.serviceStatus((err, status) => {
         expect(status).to.equal('ONLINE');
+        cb(err);
+      });
+    });
+
+    it('should retrieve the service status and version.', (cb) => {
+      sandbox.restore();
+      sandbox.stub(util, 'makeRequest')
+        .withArgs({ url: `/v${project.schemaVersion}/data-links/${project.service}/status` })
+        .callsArgWith(1, null, { body: { status: 'ONLINE', version: '0.0.1' } });
+
+      service.serviceStatus((err, status, version) => {
+        expect(status).to.equal('ONLINE');
+        expect(version).to.equal('0.0.1');
         cb(err);
       });
     });

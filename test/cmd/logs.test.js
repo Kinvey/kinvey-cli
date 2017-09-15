@@ -64,7 +64,7 @@ describe(`./${pkg.name} logs`, () => {
     });
   });
 
-  it('should fail with an invalid \'start\' timestamp', (done) => {
+  it('should fail with an invalid \'from\' timestamp', (done) => {
     command.addOption('from', 'abc');
     logs(null, command, (err) => {
       expect(err).to.exist;
@@ -73,7 +73,7 @@ describe(`./${pkg.name} logs`, () => {
     });
   });
 
-  it('should fail with an invalid \'end\' timestamp', (done) => {
+  it('should fail with an invalid \'to\' timestamp', (done) => {
     command.addOption('to', 'abc');
     logs(null, command, (err) => {
       expect(err).to.exist;

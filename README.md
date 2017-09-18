@@ -1,25 +1,29 @@
 # Kinvey CLI
-> Utility for deploying and managing FlexServices on Kinvey's FlexService Runtime
+> Utility for deploying and managing FlexServices on the Kinvey FlexService Runtime
+
+**Note:** If you last deployed a Flex service using Kinvey CLI version 1.x you must initiate a one-time recycle (`kinvey recycle`) before `kinvey status` will output the service version.
 
 ## Installation
 `npm install -g kinvey-cli`
 
 ## Usage
-In your project directory, run `kinvey config` to set-up your project. The CLI will prompt for Kinvey credentials, app or organization, and Internal Flex Service.
+In your project directory, run `kinvey config` to set up your project. The CLI will prompt for Kinvey credentials, app or organization, and an Internal Flex Service to deploy to.
 
 ### Commands
-* `config [instance]` - set project options (including optional dedicated Kinvey instance name)
-* `deploy` - deploy the current project as an Internal Flex Service. You can check the status of a deploy using the `job` command (more info below).
-* `status` - display the health status of an Internal Flex Service
+* `config [instance]` - set project options (including optional dedicated Kinvey instance name).
+* `deploy` - deploy node project in the current directory as an Internal Flex Service. You can check the status of a deploy using the `job` command (more info below).
+* `status` - display the health and version of a deployed Internal Flex Service.
+  * E.g. `ONLINE [v0.0.48]`
 * `help` - display usage information.
-* `list` - list the configured Internal Flex Services for the current app.
-* `logs [from] [to]` - query logs for this Internal Flex Service
-  * 'from' and 'to' arguments represent optional ISO-8601 timestamp strings
-    * **Note:** Logs calls are limited to 10,000 entries
+  * To display help/usage info for a particular command, use `kinvey <command> -h`
+* `list` - list Internal Flex Services for the current app.
+* `logs` - query logs for the current Internal Flex Service
+  * Run `kinvey logs -h` for advanced `logs` commmand usage details, including returning more than the default number of entries, specifying a page number, or filtering by timestamp.
+    * **Note:** Logs calls return 100 entries by default and can return up to 2,000 entries.
   * Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`
-  * E.g. `ac7df839104d 2016-02-23T20:00:29.334Z - hello world`
-* `logout` - clears Kinvey session data and project settings
-* `job <id>` - return the status of a `deploy` command.
+    * E.g. `ac7df839104d 2016-02-23T20:00:29.334Z - hello world`
+* `logout` - clears Kinvey session data and project settings.
+* `job [id]` - return the status of a `deploy` or `recycle` command. Returns the status of the most recent `deploy` or `recycle` command if `[id]` is not specified.
 
 ### Options
 * `-e, --email <e-mail>` - e-mail address of your Kinvey account.
@@ -31,7 +35,8 @@ In your project directory, run `kinvey config` to set-up your project. The CLI w
 
 ### Credentials
 
-Credentials can be specified either as command line options or as environment variables.
+Kinvey credentials can be provided as command line options or as environment variables.
+
 #### Command line options
 Run `kinvey config` and the CLI will prompt for Kinvey credentials if they are not already set as environment variables.
 
@@ -46,7 +51,7 @@ kinvey config -e kinveyAccount@kinvey.com -p yourKinveyPassword
 
 Example:
 ```
-export KINVEY_CLI_USER=kinveyAccount@example.com && export KINVEY_CLI_PASSWORD=yourKinveyPassword
+export KINVEY_CLI_USER=kinveyAccount@example.com && export KINVEY_CLI_PASSWORD=yourKinveyPassword && kinvey config
 ```
 
 ### Proxy Settings
@@ -66,7 +71,7 @@ Run any command with the `-v` (`--verbose`) flag to see what is going on when ex
 See the [Changelog](./CHANGELOG.md) for a list of changes.
 
 ## License
-    Copyright (c) 2016, Kinvey, Inc. All rights reserved.
+    Copyright (c) 2017, Kinvey, Inc. All rights reserved.
 
     This software is licensed to you under the Kinvey terms of service located at
     http://www.kinvey.com/terms-of-use. By downloading, accessing and/or using this

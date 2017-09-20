@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.0
+* `status` command now reports the version of the most recently-deployed service
+* `logs` command enhancements
+  * [from] and [to] optional arguments replaced with `--from` and `--to` flags
+  * Added `-n` (`--number`) and `--page` flags
+  * Only 100 entries are returned by default unless the `-n` flag is supplied
+
 ## 1.2.1 (2017-07-25)
 * Fixed bug resulting in 2FA login crash
 

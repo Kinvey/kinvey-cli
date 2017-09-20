@@ -49,11 +49,11 @@ function buildCmdMock(start, end, pageNum, pageSize) {
       opts: () => {
         const userOptions = {};
         if (start) {
-          userOptions.start = start;
+          userOptions.from = start;
         }
 
         if (end) {
-          userOptions.end = end;
+          userOptions.to = end;
         }
 
         if (pageNum) {
@@ -94,7 +94,7 @@ describe('logs', () => {
 
         const spyConsole = sandbox.spy(console, 'log');
 
-        require(cmdLogsPath)(command, (err) => {
+        require(cmdLogsPath)(null, command, (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
           assertLogsOutput(spyConsole);
@@ -118,7 +118,7 @@ describe('logs', () => {
         const spyConsole = sandbox.spy(console, 'log');
         const commandMock = buildCmdMock(start, end, page, pageSize);
 
-        require(cmdLogsPath)(commandMock, (err) => {
+        require(cmdLogsPath)(null, commandMock, (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
           assertLogsOutput(spyConsole);
@@ -138,7 +138,7 @@ describe('logs', () => {
         const spyConsole = sandbox.spy(console, 'log');
         const commandMock = buildCmdMock(start, end);
 
-        require(cmdLogsPath)(commandMock, (err) => {
+        require(cmdLogsPath)(null, commandMock, (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
           assertLogsOutput(spyConsole);
@@ -153,8 +153,8 @@ describe('logs', () => {
 
         const commandMock = buildCmdMock(start, end, invalidPage);
 
-        require(cmdLogsPath)(commandMock, (err) => {
-          helper.assertions.assertError(err, { name: 'Error', message: `Logs \'page\' ${constants.LogErrorMessages.INVALID_NONZEROINT}` });
+        require(cmdLogsPath)(null, commandMock, (err) => {
+          helper.assertions.assertError(err, { name: 'InvalidParameter', message: `Logs \'page\' flag ${constants.LogErrorMessages.INVALID_NONZEROINT}` });
           cb();
         });
       });
@@ -166,7 +166,7 @@ describe('logs', () => {
 
         const spyConsole = sandbox.spy(console, 'log');
 
-        require(cmdLogsPath)(commandMock, (err) => {
+        require(cmdLogsPath)(null, commandMock, (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
           assertLogsOutput(spyConsole);
@@ -180,7 +180,7 @@ describe('logs', () => {
         helper.setup.setInvalidProject((err) => {
           expect(err).to.not.exist;
 
-          require(cmdLogsPath)(command, (err) => {
+          require(cmdLogsPath)(null, command, (err) => {
             helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);
             cb();
           });
@@ -197,7 +197,7 @@ describe('logs', () => {
     it('should set user and return error', (cb) => {
       mockServer.loginWithSuccess();
 
-      require(cmdLogsPath)(command, (err) => {
+      require(cmdLogsPath)(null, command, (err) => {
         helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);
         expect(mockServer.isDone()).to.be.true;
 

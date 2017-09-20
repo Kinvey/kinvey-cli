@@ -50,7 +50,7 @@ describe('status', () => {
         require(cmdStatusPath)(command, (err, actualStatus) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
-          const paintedStatus = chalk.green(serviceStatus);
+          const paintedStatus = chalk.greenBright(serviceStatus);
           expect(spyLogger.withArgs('Service status: %s', paintedStatus)).to.be.calledOnce;
           cb();
         });

@@ -42,5 +42,5 @@ module.exports = configure;
 
 program
   .command('config [instance]')
-  .description("set project options (including optional Kinvey instance, i.e. 'acme-us1)")
+  .description("set project options (including optional Kinvey instance, e.g. 'acme-us1')")
   .action(configure);

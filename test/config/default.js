@@ -19,15 +19,15 @@ const osHomedir = require('os-homedir');
 module.exports = {
   host: 'https://manage.kinvey.com/',
   logFetchDefault: 100,
-  logFetchLimit: 2000,
+  logFetchLimit: 2500,
   defaultSchemaVersion: 2,
   artifacts: ['.git', '.svn', 'node_modules', 'output.log'],
   maxUploadSize: 10 * 1024 * 1024,
   timeout: 5 * 1000,
   uploadTimeout: 30 * 1000,
   paths: {
-    project: path.join(process.cwd(), '.kinvey'),
-    package: path.join(process.cwd()),
-    session: path.join(osHomedir(), '.kinvey-cli-session')
+    project: path.join(process.cwd(), 'test/integration/project', '.kinvey'),
+    package: path.join(process.cwd(), 'test/integration/project'),
+    session: path.join(osHomedir(), '.kinvey-cli-session-tests')
   }
 };

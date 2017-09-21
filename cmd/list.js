@@ -15,7 +15,6 @@
 
 const async = require('async');
 const init = require('../lib/init.js');
-const logger = require('../lib/logger.js');
 const program = require('commander');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');

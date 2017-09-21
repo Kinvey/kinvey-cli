@@ -18,7 +18,7 @@ In your project directory, run `kinvey config` to set up your project. The CLI w
   * To display help/usage info for a particular command, use `kinvey <command> -h`
 * `list` - list Internal Flex Services for the current app.
 * `logs` - query logs for the current Internal Flex Service
-  * Run `kinvey logs -h` for advanced `logs` commmand usage details, including returning more than the default number of entries, specifying a page number, or filtering by timestamp.
+  * Run `kinvey logs -h` for advanced `logs` command usage details, including returning more than the default number of entries, specifying a page number, or filtering by timestamp.
     * **Note:** Logs calls return 100 entries by default and can return up to 2,000 entries.
   * Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`
     * E.g. `ac7df839104d 2016-02-23T20:00:29.334Z - hello world`

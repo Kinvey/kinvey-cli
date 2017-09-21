@@ -16,13 +16,16 @@
 const config = require('config');
 const uuid = require('uuid');
 const path = require('path');
-const api = require('../api.js');
+const api = require('./../../api.js');
 const stdout = require('test-console').stdout;
-const logger = require('../../lib/logger');
-const project = require('../../lib/project.js');
-const service = require('../../lib/service.js');
-const util = require('../../lib/util.js');
-const JobStatus = require('../../lib/constants').JobStatus;
+const logger = require('./../../../lib/logger');
+const project = require('./../../../lib/project.js');
+const service = require('./../../../lib/service.js');
+const util = require('./../../../lib/util.js');
+const JobStatus = require('./../../../lib/constants').JobStatus;
+const Errors = require('./../../../lib/constants').Errors;
+const ServiceStatus = require('./../../../lib/constants').ServiceStatus;
+const helper = require('../../tests-helper');
 
 const fixtures = {
   invalid: path.resolve('./test/fixtures/deploy'),
@@ -30,6 +33,10 @@ const fixtures = {
 };
 
 describe('service', () => {
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
+  });
+
   beforeEach('configure', () => {
     project.app = project.service = '123';
     project.lastJobId = 'abcdef';
@@ -72,8 +79,7 @@ describe('service', () => {
       });
       it('should fail when the project is too big.', (cb) => {
         service.deploy(fixtures.invalid, '0.1.0', (err) => {
-          expect(err).to.exist;
-          expect(err.name).to.equal('ProjectMaxFileSizeExceeded');
+          helper.assertions.assertError(err, Errors.ProjectMaxFileSizeExceeded);
           cb();
         });
       });
@@ -198,10 +204,10 @@ describe('service', () => {
     it('should retrieve the service status.', (cb) => {
       sandbox.stub(util, 'makeRequest')
         .withArgs({ url: `/v${project.schemaVersion}/data-links/${project.service}/status` })
-        .callsArgWith(1, null, { body: { status: 'ONLINE' } });
+        .callsArgWith(1, null, { body: { status: ServiceStatus.ONLINE } });
 
       service.serviceStatus((err, result) => {
-        expect(result.status).to.equal('ONLINE');
+        expect(result.status).to.equal(ServiceStatus.ONLINE);
         cb(err);
       });
     });
@@ -210,10 +216,10 @@ describe('service', () => {
       sandbox.restore();
       sandbox.stub(util, 'makeRequest')
         .withArgs({ url: `/v${project.schemaVersion}/data-links/${project.service}/status` })
-        .callsArgWith(1, null, { body: { status: 'ONLINE', version: '0.0.1' } });
+        .callsArgWith(1, null, { body: { status: ServiceStatus.ONLINE, version: '0.0.1' } });
 
       service.serviceStatus((err, result) => {
-        expect(result.status).to.equal('ONLINE');
+        expect(result.status).to.equal(ServiceStatus.ONLINE);
         expect(result.version).to.equal('0.0.1');
         cb(err);
       });
@@ -547,8 +553,7 @@ describe('service', () => {
     describe('when the project does not include the flex-sdk dependency', () => {
       it('should fail.', (cb) => {
         service.validate('*', (err) => {
-          expect(err).to.exist;
-          expect(err.name).to.equal('InvalidProject');
+          helper.assertions.assertError(err, Errors.InvalidProject);
           cb();
         });
       });
@@ -569,8 +574,7 @@ describe('service', () => {
       });
       it('should fail.', (cb) => {
         service.validate('*', (err) => {
-          expect(err).to.exist;
-          expect(err.name).to.equal('ProjectNotConfigured');
+          helper.assertions.assertError(err, Errors.ProjectNotConfigured);
           cb();
         });
       });

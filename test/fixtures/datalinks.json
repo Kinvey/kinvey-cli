@@ -1,0 +1,22 @@
+[
+  {
+    "id"  : "12378kdl2",
+    "type" : "internal",
+    "name" : "TestKinveyDatalink",
+    "backingServers": [{
+      "_id"    : "456",
+      "host"   : "https://example.com",
+      "secret" : "789"
+    }]
+  },
+  {
+    "id"  : "124",
+    "type" : "custom",
+    "name" : "TestDatalink",
+    "backingServers": [{
+      "_id"    : "456",
+      "host"   : "https://example.com",
+      "secret" : "789"
+    }]
+  }
+]

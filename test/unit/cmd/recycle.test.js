@@ -14,12 +14,13 @@
  */
 
 const sinon = require('sinon');
-const command = require('../fixtures/command.js');
-const service = require('../../lib/service.js');
-const pkg = require('../../package.json');
-const project = require('../../lib/project.js');
-const recycle = require('../../cmd/recycle.js');
-const user = require('../../lib/user.js');
+const command = require('./../../fixtures/command.js');
+const service = require('./../../../lib/service.js');
+const pkg = require('./../../../package.json');
+const project = require('./../../../lib/project.js');
+const recycle = require('./../../../cmd/recycle.js');
+const user = require('./../../../lib/user.js');
+const helper = require('../../tests-helper');
 
 describe(`./${pkg.name} recycle`, () => {
   const sandbox = sinon.sandbox.create();
@@ -36,6 +37,10 @@ describe(`./${pkg.name} recycle`, () => {
 
   after('cleanupStubs', () => {
     sandbox.restore();
+  });
+
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
   });
 
   it('should setup the user.', (cb) => {

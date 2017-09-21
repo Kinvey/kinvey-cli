@@ -1,0 +1,18 @@
+{
+  "existent": {
+    "email": "janeDoe@mail.com",
+    "password": "superSecurePass"
+  },
+  "existentWith2FA": {
+    "email": "janeDoe@mail.com",
+    "password": "superSecurePass",
+    "twoFactorToken": 123456
+  },
+  "nonexistent": {
+    "email": "johnDoe@mail.com",
+    "password": "12345678"
+  },
+  "token": "userToken",
+  "validTwoFactorToken": 123456,
+  "invalidTwoFactorToken": 135790
+}

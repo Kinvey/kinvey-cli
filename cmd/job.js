@@ -17,7 +17,6 @@ const async = require('async');
 const program = require('commander');
 const service = require('../lib/service.js');
 const init = require('../lib/init.js');
-const logger = require('../lib/logger.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 const handleActionFailure = require('./../lib/util').handleCommandFailure;
@@ -29,6 +28,7 @@ function status(job, command, cb) {
     (next) => project.restore(next),
     (next) => service.jobStatus(job, next)
   ], (err) => {
+    // TODO: cb should receive result from tasks
     handleActionFailure(err, cb);
   });
 }

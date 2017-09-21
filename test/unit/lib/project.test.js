@@ -15,26 +15,30 @@
 
 const chalk = require('chalk');
 const config = require('config');
-const api = require('../api.js');
-const logger = require('../../lib/logger.js');
-const project = require('../../lib/project.js');
-const prompt = require('../../lib/prompt.js');
-const user = require('../../lib/user.js');
-const util = require('../../lib/util.js');
+const api = require('./../../api.js');
+const logger = require('./../../../lib/logger.js');
+const project = require('./../../../lib/project.js');
+const prompt = require('./../../../lib/prompt.js');
+const user = require('./../../../lib/user.js');
+const util = require('./../../../lib/util.js');
 const uuid = require('uuid');
+const Errors = require('./../../../lib/constants').Errors;
+const helper = require('../../tests-helper');
 
 const fixtures = {
-  app: require('../fixtures/app.json'),
-  datalink: require('../fixtures/datalink.json'),
-  kinveyDlc: require('../fixtures/kinvey-dlc.json'),
-  org: require('../fixtures/org.json')
+  app: require('./../../fixtures/app.json'),
+  datalink: require('./../../fixtures/datalink.json'),
+  kinveyDlc: require('./../../fixtures/kinvey-dlc.json'),
+  org: require('./../../fixtures/org.json')
 };
 
-function getStubCallArg(allCalls, callPosition, argPosition) {
-  return allCalls[callPosition].args[argPosition];
-}
+const getStubCallArg = require('../../tests-helper').mocks.getStubCallArg;
 
 describe('project', () => {
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
+  });
+
   describe('isConfigured', () => {
     beforeEach('configure', () => {
       project.service = '123';
@@ -210,8 +214,7 @@ describe('project', () => {
 
       it('should fail.', (cb) => {
         project.restore((err) => {
-          expect(err).to.exist;
-          expect(err.name).to.equal('ProjectNotConfigured');
+          helper.assertions.assertError(err, Errors.ProjectNotConfigured);
           cb();
         });
       });
@@ -336,8 +339,7 @@ describe('project', () => {
 
       it('should retry.', (cb) => {
         project.select((err) => {
-          expect(user.refresh).to.be.calledOnce;
-          expect(err).to.have.property('name', 'NoAppsFound');
+          helper.assertions.assertError(err, Errors.NoAppsFound);
           cb();
         });
       });
@@ -501,8 +503,7 @@ describe('project', () => {
 
       it('should fail.', (cb) => {
         project.select((err) => {
-          expect(err).to.exist;
-          expect(err.name).to.equal('NoAppsFound');
+          helper.assertions.assertError(err, Errors.NoAppsFound);
           cb();
         });
       });
@@ -549,8 +550,7 @@ describe('project', () => {
 
       it('should fail.', (cb) => {
         project.select((err) => {
-          expect(err).to.exist;
-          expect(err.name).to.equal('NoFlexServicesFound');
+          helper.assertions.assertError(err, Errors.NoFlexServicesFound);
           cb();
         });
       });
@@ -559,7 +559,7 @@ describe('project', () => {
   describe('setup', () => {
     describe('when the project is not configured', () => {
       before('restore', () => {
-        sinon.stub(project, 'restore').callsArgWith(0, new Error('ProjectNotConfigured'));
+        sinon.stub(project, 'restore').callsArgWith(0, new Error(Errors.ProjectNotConfigured.NAME));
       });
       afterEach('restore', () => {
         project.restore.reset();
@@ -593,7 +593,7 @@ describe('project', () => {
     });
     describe('when the project can not be properly restored', () => {
       before('restore', () => {
-        sinon.stub(project, 'restore').callsArgWith(0, new Error('ProjectRestoreError'));
+        sinon.stub(project, 'restore').callsArgWith(0, new Error(Errors.ProjectRestoreError.NAME));
       });
       afterEach('restore', () => {
         project.restore.reset();

@@ -40,7 +40,7 @@ describe('status', () => {
     });
 
     describe('setup is valid', () => {
-      it('should return status', (cb) => {
+      it.skip('should return status', (cb) => {
         const serviceStatus = constants.ServiceStatus.ONLINE;
         mockServer.serviceStatus(serviceStatus);
 

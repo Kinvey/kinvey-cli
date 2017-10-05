@@ -14,12 +14,11 @@
  */
 
 const sinon = require('sinon');
-const command = require('./../../fixtures/command.js');
 const service = require('./../../../lib/service.js');
 const logger = require('./../../../lib/logger.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
-const job = require('./../../../cmd/job.js');
+const job = require('./../../../cmd/job.js').handler;
 const user = require('./../../../lib/user.js');
 const helper = require('../../tests-helper');
 
@@ -58,21 +57,21 @@ describe(`./${pkg.name} job`, () => {
     });
 
     it('should setup the user.', (cb) => {
-      job(testJobId, command, (err) => {
+      job({ id: testJobId }, (err) => {
         expect(user.setup).to.be.calledOnce;
         cb(err);
       });
     });
 
     it('should restore the project.', (cb) => {
-      job(testJobId, command, (err) => {
+      job({ id: testJobId }, (err) => {
         expect(project.restore).to.be.calledOnce;
         cb(err);
       });
     });
 
     it('should print the current job status.', (cb) => {
-      job(testJobId, command, (err) => {
+      job({ id: testJobId }, (err) => {
         expect(service.jobStatus).to.be.calledOnce;
         expect(service.jobStatus).to.be.calledWith(testJobId);
         cb(err);
@@ -80,9 +79,9 @@ describe(`./${pkg.name} job`, () => {
     });
 
     it('should print the current job status when called without an id.', (cb) => {
-      job(null, command, (err) => {
+      job({}, (err) => {
         expect(service.jobStatus).to.be.calledOnce;
-        expect(service.jobStatus).to.be.calledWith(null);
+        expect(service.jobStatus).to.be.calledWith(undefined);
         cb(err);
       });
     });
@@ -103,14 +102,14 @@ describe(`./${pkg.name} job`, () => {
     });
 
     it('should pass error to callback if both are present', (cb) => {
-      job(null, command, (err) => {
+      job({}, (err) => {
         helper.assertions.assertCmdCommandWithCallbackForError(err, testErr);
         cb();
       });
     });
 
     it('should not pass error to callback if no callback', (cb) => {
-      job(null, command);
+      job({});
 
       // we don't provide a callback to the 'job' command, so we have no way of knowing when it is done
       setTimeout(() => {

@@ -14,17 +14,16 @@
  */
 
 const async = require('async');
-const program = require('commander');
 const service = require('../lib/service.js');
 const init = require('../lib/init.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 const handleActionFailure = require('./../lib/util').handleCommandFailure;
 
-function status(command, cb) {
-  const options = init(command);
+function status(argv, cb) {
+  init(argv);
   return async.series([
-    (next) => user.setup(options, next),
+    (next) => user.setup(argv, next),
     (next) => project.restore(next),
     (next) => service.serviceStatus(next)
   ], (err) => {
@@ -32,9 +31,8 @@ function status(command, cb) {
   });
 }
 
-module.exports = status;
-
-program
-  .command('status')
-  .description('return the health of a Flex Service cluster')
-  .action(status);
+module.exports = {
+  command: 'status',
+  desc: 'return the health of a Flex Service cluster',
+  handler: status
+};

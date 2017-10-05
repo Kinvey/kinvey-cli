@@ -31,18 +31,17 @@
     "archiver": "1.0.1",
     "async": "1.4.2",
     "chalk": "2.1.0",
-    "commander": "2.8.1",
     "config": "1.16.0",
     "custom-logger": "0.3.1",
     "inquirer": "0.10.0",
     "isemail": "1.2.0",
-    "lodash.merge": "3.3.2",
     "moment": "2.11.2",
     "os-homedir": "1.0.1",
     "request": "2.63.0",
     "update-notifier": "0.5.0",
     "uuid": "2.0.3",
-    "valid-url": "1.0.9"
+    "valid-url": "1.0.9",
+    "yargs": "9.0.1"
   },
   "devDependencies": {
     "chai": "3.3.0",

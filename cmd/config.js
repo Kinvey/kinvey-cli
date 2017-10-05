@@ -14,7 +14,6 @@
  */
 
 const async = require('async');
-const program = require('commander');
 const init = require('../lib/init.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
@@ -26,21 +25,20 @@ function initUrl(host, cb) {
   cb();
 }
 
-function configure(host, command, cb) {
-  const options = init(command);
+function configure(argv, cb) {
+  init(argv);
   return async.series([
-    (next) => initUrl(host, next),
-    (next) => user.setup(options, next),
-    (next) => project.config(options, next),
+    (next) => initUrl(argv.instance, next),
+    (next) => user.setup(argv, next),
+    (next) => project.config(argv, next),
     (next) => user.save(next)
   ], (err) => {
     handleActionFailure(err, cb);
   });
 }
 
-module.exports = configure;
-
-program
-  .command('config [instance]')
-  .description("set project options (including optional Kinvey instance, e.g. 'acme-us1')")
-  .action(configure);
+module.exports = {
+  command: 'config [instance]',
+  desc: "set project options (including optional Kinvey instance, e.g. 'acme-us1')",
+  handler: configure
+};

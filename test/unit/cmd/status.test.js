@@ -14,12 +14,12 @@
  */
 
 const sinon = require('sinon');
-const command = require('./../../fixtures/command.js');
+
 const service = require('./../../../lib/service.js');
 const logger = require('./../../../lib/logger.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
-const status = require('./../../../cmd/status.js');
+const status = require('./../../../cmd/status.js').handler;
 const user = require('./../../../lib/user.js');
 const helper = require('../../tests-helper');
 
@@ -50,21 +50,21 @@ describe(`./${pkg.name} status`, () => {
   });
 
   it('should setup the user.', (cb) => {
-    status.call(command, command, (err) => {
+    status({}, (err) => {
       expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should restore the project.', (cb) => {
-    status.call(command, command, (err) => {
+    status({}, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should print the current KMR service status.', (cb) => {
-    status.call(command, command, (err) => {
+    status({}, (err) => {
       expect(service.serviceStatus).to.be.calledOnce;
       cb(err);
     });

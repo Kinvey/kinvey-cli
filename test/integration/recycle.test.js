@@ -19,7 +19,6 @@ const chalk = require('chalk');
 const constants = require('./../../lib/constants');
 const logger = require('./../../lib/logger');
 
-const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
 const fixtureApp = require('./../fixtures/app.json');
 const fixtureJob = require('./../fixtures/job.json');
@@ -56,7 +55,7 @@ describe('recycle', () => {
         mockServer.recycleJob(defaultExpectedJobId);
         const spyLogger = sandbox.spy(logger, 'info');
 
-        require(cmdRecyclePath)(command, (err) => {
+        require(cmdRecyclePath).handler({}, (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
           assertLoggerForRecycleJob(spyLogger, defaultExpectedJobId);
@@ -70,7 +69,7 @@ describe('recycle', () => {
         helper.setup.setInvalidProject((err) => {
           expect(err).to.not.exist;
 
-          require(cmdRecyclePath)(command, (err) => {
+          require(cmdRecyclePath).handler({}, (err) => {
             helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);
             cb();
           });
@@ -87,7 +86,7 @@ describe('recycle', () => {
     it('should set user and return error', (cb) => {
       mockServer.loginWithSuccess();
 
-      require(cmdRecyclePath)(command, (err) => {
+      require(cmdRecyclePath).handler({}, (err) => {
         helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);
         expect(mockServer.isDone()).to.be.true;
 

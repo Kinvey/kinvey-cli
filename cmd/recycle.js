@@ -14,17 +14,16 @@
  */
 
 const async = require('async');
-const program = require('commander');
 const service = require('../lib/service.js');
 const init = require('../lib/init.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 const handleActionFailure = require('./../lib/util').handleCommandFailure;
 
-function recycle(command, cb) {
-  const options = init(command);
+function recycle(argv, cb) {
+  init(argv);
   return async.series([
-    (next) => user.setup(options, next),
+    (next) => user.setup(argv, next),
     (next) => project.restore(next),
     (next) => service.recycle(next)
   ], (err) => {
@@ -32,9 +31,8 @@ function recycle(command, cb) {
   });
 }
 
-module.exports = recycle;
-
-program
-  .command('recycle')
-  .description('recycle the Service')
-  .action(recycle);
+module.exports = {
+  command: 'recycle',
+  desc: 'recycle the Service',
+  handler: recycle
+};

@@ -22,7 +22,6 @@ const constants = require('./../../lib/constants');
 const logger = require('./../../lib/logger');
 const util = require('./../../lib/util');
 
-const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
 const fixtureJob = require('./../fixtures/job.json');
 const helper = require('../tests-helper');
@@ -56,7 +55,7 @@ describe('job', () => {
           const spyLogger = sandbox.spy(logger, 'info');
 
           // TODO: check actualStatus when cb starts receiving it
-          require(cmdJobPath)(null, command, (err, actualStatus) => {
+          require(cmdJobPath).handler({}, (err, actualStatus) => {
             expect(err).to.not.exist;
             expect(mockServer.isDone()).to.be.true;
             assertLoggerForStatus(spyLogger);
@@ -86,7 +85,7 @@ describe('job', () => {
             mockServer.jobStatus();
             const spyLogger = sandbox.spy(logger, 'info');
 
-            require(cmdJobPath)(fixtureJob.job, command, (err) => {
+            require(cmdJobPath).handler({ id: fixtureJob.job }, (err) => {
               expect(err).to.not.exist;
               expect(mockServer.isDone()).to.be.true;
               assertLoggerForStatus(spyLogger);
@@ -102,7 +101,7 @@ describe('job', () => {
         helper.setup.setInvalidProject((err) => {
           expect(err).to.not.exist;
 
-          require(cmdJobPath)(null, command, (err) => {
+          require(cmdJobPath).handler({}, (err) => {
             helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);
             cb();
           });
@@ -119,7 +118,7 @@ describe('job', () => {
     it('should set user and return error', (cb) => {
       mockServer.loginWithSuccess();
 
-      require(cmdJobPath)(null, command, (err) => {
+      require(cmdJobPath).handler({}, (err) => {
         helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);
         expect(mockServer.isDone()).to.be.true;
 

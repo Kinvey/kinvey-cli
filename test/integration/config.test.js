@@ -18,7 +18,6 @@ const sinon = require('sinon');
 const Errors = require('./../../lib/constants').Errors;
 const prompt = require('./../../lib/prompt');
 
-const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
 const fixtureUser = require('./../fixtures/user.json');
 const fixtureApp = require('./../fixtures/app.json');
@@ -88,7 +87,7 @@ describe('config', () => {
       mockServer.apps();
       mockServer.dataLinks();
 
-      require(cmdConfigPath)(null, command, (err) => {
+      require(cmdConfigPath).handler({}, (err) => {
         expect(err).to.not.exist;
         assertPromptStubsForSuccess();
         expect(mockServer.isDone()).to.be.true;
@@ -110,7 +109,7 @@ describe('config', () => {
       twoFactorTokenStub.callsArgWith(1, null, fixtureUser.invalidTwoFactorToken);
       twoFactorTokenStub.callsArgWith(1, null, fixtureUser.validTwoFactorToken);
 
-      require(cmdConfigPath)(null, command, (err) => {
+      require(cmdConfigPath).handler({}, (err) => {
         expect(err).to.not.exist;
         assertPromptStubsForSuccess();
         expect(mockServer.isDone()).to.be.true;
@@ -124,7 +123,7 @@ describe('config', () => {
       mockServer.apps();
       mockServer.dataLinks([]);
 
-      require(cmdConfigPath)(null, command, (err) => {
+      require(cmdConfigPath).handler({}, (err) => {
         helper.assertions.assertError(err, Errors.NoFlexServicesFound);
         assertPromptStubsForSuccess(false);
 
@@ -156,7 +155,7 @@ describe('config', () => {
 
       helper.env.setCredentials(fixtureUser.existent.email, fixtureUser.existent.password);
 
-      require(cmdConfigPath)(null, command, (err) => {
+      require(cmdConfigPath).handler({}, (err) => {
         expect(err).to.not.exist;
         expect(mockServer.isDone()).to.be.true;
         helper.assertions.assertUserProjectSetup(defaultExpectedUser, defaultExpectedProject, cb);
@@ -168,7 +167,7 @@ describe('config', () => {
       mockServer.loginWithFail(fixtureUser.nonexistent);
       helper.env.setCredentials(fixtureUser.nonexistent.email, fixtureUser.nonexistent.password);
 
-      require(cmdConfigPath)(null, command, (err) => {
+      require(cmdConfigPath).handler({}, (err) => {
         expect(err).to.exist;
         expect(err.name).to.equal('InvalidCredentials');
         expect(mockServer.isDone()).to.be.true;
@@ -196,19 +195,12 @@ describe('config', () => {
       customHostMockServer.dataLinks();
 
       const commandMock = {
-        opts: () => {},
-        parent: {
-          opts: () => {
-            return {
-              host,
-              email: fixtureUser.existent.email,
-              password: fixtureUser.existent.password
-            };
-          }
-        }
+        host,
+        email: fixtureUser.existent.email,
+        password: fixtureUser.existent.password
       };
 
-      require(cmdConfigPath)(null, commandMock, (err) => {
+      require(cmdConfigPath).handler(commandMock, (err) => {
         expect(err).to.not.exist;
 
         expect(customHostMockServer.isDone()).to.be.true;

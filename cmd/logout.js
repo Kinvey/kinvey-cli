@@ -14,12 +14,11 @@
  */
 
 const async = require('async');
-const program = require('commander');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 const handleActionFailure = require('./../lib/util').handleCommandFailure;
 
-function logout(command, cb) {
+function logout(argv, cb) {
   return async.series([
     (next) => user.logout(next),
     (next) => project.logout(next)
@@ -28,9 +27,8 @@ function logout(command, cb) {
   });
 }
 
-module.exports = logout;
-
-program
-  .command('logout')
-  .description('resets host, removes sessions, and clears project settings')
-  .action(logout);
+module.exports = {
+  command: 'logout',
+  desc: 'resets host, removes sessions, and clears project settings',
+  handler: logout
+};

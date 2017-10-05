@@ -15,10 +15,10 @@
 
 const async = require('async');
 const chalk = require('chalk');
+const moment = require('moment');
+
 const config = require('config');
 const KinveyError = require('../lib/kinvey-error');
-const moment = require('moment');
-const program = require('commander');
 const service = require('../lib/service.js');
 const init = require('../lib/init.js');
 const project = require('../lib/project.js');
@@ -37,44 +37,67 @@ function isValidNonZeroInteger(number) {
   return /^\d+$/.test(number);
 }
 
-function logs(argsArray, command, cb) {
-  const options = init(command);
+function logs(argv, cb) {
+  init(argv);
 
+  // FIXME: Stop handling them before #BACK-2775 is merged into master
   // Handle deprecated logs command params
-  if (argsArray != null && argsArray.length > 0) {
+  if (argv._.includes('from') || argv._.includes('to')) {
     return handleActionFailure(new KinveyError('DeprecationError', `Version 1.x ${chalk.whiteBright('[from]')} and ${chalk.whiteBright('[to]')} params have been converted to options. Use ${chalk.blueBright('--from')} and ${chalk.blueBright('--to')} to filter by timestamp instead.`), cb);
   }
 
   // Validate input parameters
-  if (!isValidTimestamp(options.from)) {
+  if (!isValidTimestamp(argv.from)) {
     return handleActionFailure(new KinveyError('InvalidParameter', `Logs \'from\' flag ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
-  } else if (!isValidTimestamp(options.to)) {
+  } else if (!isValidTimestamp(argv.to)) {
     return handleActionFailure(new KinveyError('InvalidParameter', `Logs \'to\' flag ${LogErrorMessages.INVALID_TIMESTAMP}`), cb);
-  } else if (!isValidNonZeroInteger(options.number)) {
+  } else if (!isValidNonZeroInteger(argv.number)) {
     return handleActionFailure(new KinveyError('InvalidParameter', `Logs \'number\' flag ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
-  } else if (!isValidNonZeroInteger(options.page)) {
+  } else if (!isValidNonZeroInteger(argv.page)) {
     return handleActionFailure(new KinveyError('InvalidParameter', `Logs \'page\' flag ${LogErrorMessages.INVALID_NONZEROINT}`), cb);
   }
 
   return async.series([
-    (next) => user.setup(options, next),
+    (next) => user.setup(argv, next),
     (next) => project.restore(next),
-    (next) => service.logs(options.from, options.to, options.number, options.page, next)
+    (next) => service.logs(argv.from, argv.to, argv.number, argv.page, next)
   ], (err) => {
     handleActionFailure(err, cb);
   });
 }
 
-module.exports = logs;
-
-program
-  .command('logs [params...]')
-  .option('--from <string>', 'fetch log entries starting from provided timestamp')
-  .option('--to <string>', 'fetch log entries up to provided timestamp')
-  .option('--page <number>', 'page (non-zero integer, default=1)')
-  .option('-n, --number <number>', `number of entries to fetch, i.e. page size (non-zero integer, default=${config.logFetchDefault}, max=${config.logFetchLimit})`)
-  .description('retrieve and display Internal Flex Service logs')
-  .action(logs)
-    .on('--help', () => {
-      console.log('    Note:  Version 1.x [from] and [to] params have been converted to options. Use \'--from\' and \'--to\' to filter by timestamp instead.\n');
-    });
+module.exports = {
+  command: 'logs',
+  desc: 'retrieve and display Internal Flex Service logs',
+  builder: (yargs) => {
+    yargs
+      .usage('Note:  Version 1.x [from] and [to] params have been converted to options. Use \'--from\' and \'--to\' to filter by timestamp instead.')
+      .option(
+      'from',
+      {
+        global: false,
+        describe: 'fetch log entries starting from provided timestamp',
+        type: 'string'
+      })
+      .option(
+        'to', {
+          global: false,
+          describe: 'fetch log entries up to provided timestamp',
+          type: 'string'
+        })
+      .option(
+        'page', {
+          global: false,
+          describe: 'page (non-zero integer, default=1)',
+          type: 'number'
+        })
+      .option(
+        'number', {
+          alias: 'n',
+          global: false,
+          describe: `number of entries to fetch, i.e. page size (non-zero integer, default=${config.logFetchDefault}, max=${config.logFetchLimit})`,
+          type: 'number'
+        });
+  },
+  handler: logs
+};

@@ -14,7 +14,6 @@
  */
 
 const async = require('async');
-const program = require('commander');
 const config = require('config');
 const service = require('../lib/service.js');
 const init = require('../lib/init.js');
@@ -22,10 +21,10 @@ const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 const handleActionFailure = require('./../lib/util').handleCommandFailure;
 
-function deploy(command, cb) {
-  const options = init(command);
+function deploy(argv, cb) {
+  init(argv);
   return async.waterfall([
-    (next) => user.setup(options, next),
+    (next) => user.setup(argv, next),
     (next) => project.restore(next),
     (next) => service.validate(config.paths.package, next),
     (version, next) => service.deploy(config.paths.package, version, next)
@@ -34,9 +33,8 @@ function deploy(command, cb) {
   });
 }
 
-module.exports = deploy;
-
-program
-  .command('deploy')
-  .description('deploy the current project to the Kinvey FlexService Runtime')
-  .action(deploy);
+module.exports = {
+  command: 'deploy',
+  desc: 'deploy the current project to the Kinvey FlexService Runtime',
+  handler: deploy
+};

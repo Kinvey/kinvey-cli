@@ -14,28 +14,26 @@
  */
 
 const async = require('async');
-const program = require('commander');
 const service = require('../lib/service.js');
 const init = require('../lib/init.js');
 const project = require('../lib/project.js');
 const user = require('../lib/user.js');
 const handleActionFailure = require('./../lib/util').handleCommandFailure;
 
-function status(job, command, cb) {
-  const options = init(command);
+function status(argv, cb) {
+  init(argv);
   return async.series([
-    (next) => user.setup(options, next),
+    (next) => user.setup(argv, next),
     (next) => project.restore(next),
-    (next) => service.jobStatus(job, next)
+    (next) => service.jobStatus(argv.id, next)
   ], (err) => {
     // TODO: cb should receive result from tasks
     handleActionFailure(err, cb);
   });
 }
 
-module.exports = status;
-
-program
-  .command('job [id]')
-  .description('return the job status of a deploy command')
-  .action(status);
+module.exports = {
+  command: 'job [id]',
+  desc: 'return the job status of a deploy command',
+  handler: status
+};

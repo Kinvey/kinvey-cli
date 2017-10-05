@@ -16,12 +16,11 @@
 const sinon = require('sinon');
 
 const service = require('./../../../lib/service.js');
-const deploy = require('./../../../cmd/deploy.js');
+const deploy = require('./../../../cmd/deploy.js').handler;
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');
 const logger = require('./../../../lib/logger');
-const command = require('./../../fixtures/command.js');
 const helper = require('../../tests-helper');
 
 describe(`./${pkg.name} deploy`, () => {
@@ -48,28 +47,28 @@ describe(`./${pkg.name} deploy`, () => {
     });
 
     it('should setup the user.', (cb) => {
-      deploy.call(command, command, (err) => {
+      deploy({}, (err) => {
         expect(user.setup).to.be.calledOnce;
         cb(err);
       });
     });
 
     it('should restore the project.', (cb) => {
-      deploy.call(command, command, (err) => {
+      deploy({}, (err) => {
         expect(project.restore).to.be.calledOnce;
         cb(err);
       });
     });
 
     it('should validate the service.', (cb) => {
-      deploy.call(command, command, (err) => {
+      deploy({}, (err) => {
         expect(service.validate).to.be.calledOnce;
         cb(err);
       });
     });
 
     it('should deploy the service.', (cb) => {
-      deploy.call(command, command, (err) => {
+      deploy({}, (err) => {
         expect(service.deploy).to.be.calledOnce;
         cb(err);
       });
@@ -99,14 +98,14 @@ describe(`./${pkg.name} deploy`, () => {
     });
 
     it('should pass error to callback if both are present', (cb) => {
-      deploy.call(command, command, (err) => {
+      deploy({}, (err) => {
         helper.assertions.assertCmdCommandWithCallbackForError(err, testErr);
         cb();
       });
     });
 
     it('should not pass error to callback if no callback', (cb) => {
-      deploy.call(command, command);
+      deploy({});
 
       // we don't provide a callback to the 'deploy' command, so we have no way of knowing when it is done
       setTimeout(() => {

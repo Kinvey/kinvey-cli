@@ -19,9 +19,9 @@ const chalk = require('chalk');
 const constants = require('./../../lib/constants');
 const logger = require('./../../lib/logger');
 
-const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
 const helper = require('../tests-helper');
+const fixtureInternalDataLink = require('./../fixtures/kinvey-dlc.json');
 
 describe('status', () => {
   const mockServer = new MockServer(true);
@@ -40,18 +40,23 @@ describe('status', () => {
     });
 
     describe('setup is valid', () => {
-      it.skip('should return status', (cb) => {
+      it('should return status', (cb) => {
         const serviceStatus = constants.ServiceStatus.ONLINE;
         mockServer.serviceStatus(serviceStatus);
 
-        const spyLogger = sandbox.spy(logger, 'info');
+        const spyConsole = sandbox.spy(console, 'log');
 
         // TODO: assert status when cb starts receiving it
-        require(cmdStatusPath)(command, (err, actualStatus) => {
+        require(cmdStatusPath).handler({}, (err, actualStatus) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
+
+          const paintedServiceId = chalk.cyan(fixtureInternalDataLink.id);
+          const paintedServiceName = chalk.gray(fixtureInternalDataLink.name);
+          expect(spyConsole.withArgs('Status of FSR service %s (%s)', paintedServiceId, paintedServiceName)).to.be.calledOnce;
+
           const paintedStatus = chalk.greenBright(serviceStatus);
-          expect(spyLogger.withArgs('Service status: %s', paintedStatus)).to.be.calledOnce;
+          expect(spyConsole.withArgs('  Status:   %s', paintedStatus)).to.be.calledOnce;
           cb();
         });
       });
@@ -62,7 +67,7 @@ describe('status', () => {
         helper.setup.setInvalidProject((err) => {
           expect(err).to.not.exist;
 
-          require(cmdStatusPath)(command, (err) => {
+          require(cmdStatusPath).handler({}, (err) => {
             helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);
             cb();
           });
@@ -79,7 +84,7 @@ describe('status', () => {
     it('should set user and return error', (cb) => {
       mockServer.loginWithSuccess();
 
-      require(cmdStatusPath)(command, (err) => {
+      require(cmdStatusPath).handler({}, (err) => {
         helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);
         expect(mockServer.isDone()).to.be.true;
 

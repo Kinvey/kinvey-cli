@@ -19,7 +19,6 @@ const chalk = require('chalk');
 const constants = require('./../../lib/constants');
 const logger = require('./../../lib/logger');
 
-const command = require('./../fixtures/command.js');
 const fixtureInternalDataLink = require('./../fixtures/kinvey-dlc.json');
 const MockServer = require('./../mock-server');
 const helper = require('../tests-helper');
@@ -60,7 +59,7 @@ describe('list', () => {
 
         const spyLogger = sandbox.spy(logger, 'info');
 
-        require(cmdListPath)(command, (err) => {
+        require(cmdListPath).handler({}, (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
           assertLoggerInfoOutput(spyLogger, defaultExpectedServiceName, '1');
@@ -73,7 +72,7 @@ describe('list', () => {
 
         const spyLogger = sandbox.spy(logger, 'info');
 
-        require(cmdListPath)(command, (err) => {
+        require(cmdListPath).handler({}, (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
           assertLoggerInfoOutput(spyLogger, null, '0');
@@ -87,7 +86,7 @@ describe('list', () => {
         helper.setup.setInvalidProject((err) => {
           expect(err).to.not.exist;
 
-          require(cmdListPath)(command, (err) => {
+          require(cmdListPath).handler({}, (err) => {
             helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);
             cb();
           });

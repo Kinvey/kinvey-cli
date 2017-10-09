@@ -21,7 +21,6 @@ const config = require('config');
 const Errors = require('./../../lib/constants').Errors;
 const util = require('./../../lib/util');
 
-const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
 const fixtureApp = require('./../fixtures/app.json');
 const fixtureJob = require('./../fixtures/job.json');
@@ -53,7 +52,7 @@ describe('deploy', () => {
       it('and valid project setup should initiate deploy', (cb) => {
         mockServer.deployJob();
 
-        require(cmdDeployPath)(command, (err) => {
+        require(cmdDeployPath).handler({}, (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
 
@@ -65,7 +64,7 @@ describe('deploy', () => {
         helper.setup.setInvalidProject((err, invalidProjectToRestore) => {
           expect(err).to.not.exist;
 
-          require(cmdDeployPath)(command, (err) => {
+          require(cmdDeployPath).handler({}, (err) => {
             helper.assertions.assertError(err, Errors.ProjectNotConfigured);
             helper.assertions.assertUserProjectSetup(defaultExpectedUser, invalidProjectToRestore, cb);
           });
@@ -99,7 +98,7 @@ describe('deploy', () => {
         util.writeJSON(pathPackageJSON, invalidPackageContent, (err) => {
           expect(err).to.not.exist;
 
-          require(cmdDeployPath)(command, (err) => {
+          require(cmdDeployPath).handler({}, (err) => {
             helper.assertions.assertError(err, Errors.InvalidProject);
             helper.assertions.assertUserProjectSetup(defaultExpectedUser, expectedProjectBeforeDeploy, cb);
           });
@@ -116,7 +115,7 @@ describe('deploy', () => {
     it('should set user and return error', (cb) => {
       mockServer.loginWithSuccess();
 
-      require(cmdDeployPath)(command, (err) => {
+      require(cmdDeployPath).handler({}, (err) => {
         helper.assertions.assertError(err, Errors.ProjectNotConfigured);
         expect(mockServer.isDone()).to.be.true;
 

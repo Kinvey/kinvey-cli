@@ -13,10 +13,10 @@
  * contents is a violation of applicable laws.
  */
 
+const yargs = require('yargs');
 const sinon = require('sinon');
-const command = require('./../../fixtures/command.js');
 const service = require('./../../../lib/service.js');
-const logs = require('./../../../cmd/logs.js');
+const logs = require('./../../../cmd/logs.js').handler;
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');
@@ -25,6 +25,7 @@ const LogErrorMessages = require('./../../../lib/constants').LogErrorMessages;
 
 describe(`./${pkg.name} logs`, () => {
   const sandbox = sinon.sandbox.create();
+  const argsWithoutOptions = yargs.parse('logs');
 
   before('setupStubs', () => {
     sandbox.stub(user, 'setup').callsArg(1);
@@ -36,10 +37,6 @@ describe(`./${pkg.name} logs`, () => {
     sandbox.reset();
   });
 
-  afterEach('clearOptions', () => {
-    command.clearOptions();
-  });
-
   after('cleanupStubs', () => {
     sandbox.restore();
   });
@@ -49,29 +46,29 @@ describe(`./${pkg.name} logs`, () => {
   });
 
   it('should setup the user.', (cb) => {
-    logs(null, command, (err) => {
+    logs(argsWithoutOptions, (err) => {
       expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should restore the project.', (cb) => {
-    logs(null, command, (err) => {
+    logs(argsWithoutOptions, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should retrieve log entries based on query', (cb) => {
-    logs(null, command, (err) => {
+    logs(argsWithoutOptions, (err) => {
       expect(service.logs).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should fail with an invalid \'from\' timestamp', (done) => {
-    command.addOption('from', 'abc');
-    logs(null, command, (err) => {
+    const args = yargs.parse('--from abc');
+    logs(args, (err) => {
       expect(err).to.exist;
       expect(err.message).to.contain(LogErrorMessages.INVALID_TIMESTAMP);
       done();
@@ -79,8 +76,8 @@ describe(`./${pkg.name} logs`, () => {
   });
 
   it('should fail with an invalid \'to\' timestamp', (done) => {
-    command.addOption('to', 'abc');
-    logs(null, command, (err) => {
+    const args = yargs.parse('--to abc');
+    logs(args, (err) => {
       expect(err).to.exist;
       expect(err.message).to.contain(LogErrorMessages.INVALID_TIMESTAMP);
       done();
@@ -88,8 +85,8 @@ describe(`./${pkg.name} logs`, () => {
   });
 
   it('should fail with an invalid \'page\' flag', (done) => {
-    command.addOption('page', 'abc');
-    logs(null, command, (err) => {
+    const args = yargs.parse('--page abc');
+    logs(args, (err) => {
       expect(err).to.exist;
       expect(err.message).to.contain(LogErrorMessages.INVALID_NONZEROINT);
       done();
@@ -97,8 +94,8 @@ describe(`./${pkg.name} logs`, () => {
   });
 
   it('should fail with an invalid \'number\' flag', (done) => {
-    command.addOption('number', 'abc');
-    logs(null, command, (err) => {
+    const args = yargs.parse('--number abc');
+    logs(args, (err) => {
       expect(err).to.exist;
       expect(err.message).to.contain(LogErrorMessages.INVALID_NONZEROINT);
       done();
@@ -106,7 +103,8 @@ describe(`./${pkg.name} logs`, () => {
   });
 
   it('should fail with deprecated params included', (done) => {
-    logs(['abc', 'def'], command, (err) => {
+    const args = yargs.parse('logs from 2016 to 2017');
+    logs(args, (err) => {
       expect(err).to.exist;
       expect(err.message).to.contain('params have been converted to options');
       done();

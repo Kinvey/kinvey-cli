@@ -14,11 +14,11 @@
  */
 
 const sinon = require('sinon');
-const command = require('./../../fixtures/command.js');
+
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');
-const config = require('./../../../cmd/config.js');
+const config = require('./../../../cmd/config.js').handler;
 const helper = require('../../tests-helper');
 
 describe(`./${pkg.name} config`, () => {
@@ -43,14 +43,14 @@ describe(`./${pkg.name} config`, () => {
   });
 
   it('should setup the user.', (cb) => {
-    config(null, command, (err) => {
+    config({}, (err) => {
       expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('configure the project with the default host.', (cb) => {
-    config(null, command, (err) => {
+    config({}, (err) => {
       expect(project.config).to.be.calledOnce;
       expect(user.host).to.equal(null);
       cb(err);
@@ -60,7 +60,7 @@ describe(`./${pkg.name} config`, () => {
   describe('with a custom HTTP host', () => {
     it('should configure the project.', (cb) => {
       const host = 'http://host:123/';
-      config(host, command, (err) => {
+      config({ instance: host }, (err) => {
         expect(project.config).to.be.calledOnce;
         expect(user.host).to.equal(host);
         cb(err);
@@ -69,7 +69,7 @@ describe(`./${pkg.name} config`, () => {
 
     it('should add a trailing backslash if one is not supplied.', (cb) => {
       const host = 'http://host:123';
-      config(host, command, (err) => {
+      config({ instance: host }, (err) => {
         expect(project.config).to.be.calledOnce;
         expect(user.host).to.equal(`${host}/`);
         cb(err);
@@ -80,7 +80,7 @@ describe(`./${pkg.name} config`, () => {
   describe('with a custom HTTPS host', () => {
     it('should configure the project with a custom HTTPS host.', (cb) => {
       const host = 'https://host:123/';
-      config(host, command, (err) => {
+      config({ instance: host }, (err) => {
         expect(project.config).to.be.calledOnce;
         expect(user.host).to.equal(host);
         cb(err);
@@ -89,7 +89,7 @@ describe(`./${pkg.name} config`, () => {
 
     it('should add a trailing backslash if one is not supplied.', (cb) => {
       const host = 'https://host:123';
-      config(host, command, (err) => {
+      config({ instance: host }, (err) => {
         expect(project.config).to.be.calledOnce;
         expect(user.host).to.equal(`${host}/`);
         cb(err);
@@ -99,7 +99,7 @@ describe(`./${pkg.name} config`, () => {
 
   it('configure the project with a custom host.', (cb) => {
     const host = '123';
-    config(host, command, (err) => {
+    config({ instance: host }, (err) => {
       expect(project.config).to.be.calledOnce;
       expect(user.host).to.equal(`https://${host}-manage.kinvey.com/`);
       cb(err);

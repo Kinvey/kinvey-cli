@@ -14,36 +14,80 @@
  */
 
 const path = require('path');
-const program = require('commander');
-const pkg = require('../package.json');
-
+// Make sure config path is set before requiring anything
 process.env.NODE_CONFIG_DIR = path.join(__dirname, '../config');
 
+const yargs = require('yargs');
+
+const cmdConfig = require('./../cmd/config');
+const cmdLogout = require('./../cmd/logout');
+const cmdDeploy = require('./../cmd/deploy');
+const cmdJob = require('./../cmd/job');
+const cmdRecycle = require('./../cmd/recycle');
+const cmdStatus = require('./../cmd/status');
+const cmdList = require('./../cmd/list');
+const cmdLogs = require('./../cmd/logs');
+
 function cli(args) {
-  program.version(pkg.version)
-    .option('-e, --email <e-mail>', 'e-mail address of your Kinvey account')
-    .option('--host <host>', 'set host of the Kinvey service')
-    .option('-p, --password <password>', 'password of your Kinvey account')
-    .option('-s, --silent', 'do not output anything')
-    .option('-c, --suppress-version-check', 'do not check for package updates')
-    .option('-v, --verbose', 'output debug messages');
+  // for testing purposes
+  if (args) {
+    yargs(args);
+  }
 
-  require('../cmd/config');
-  require('../cmd/deploy.js');
-  require('../cmd/list.js');
-  require('../cmd/logout.js');
-  require('../cmd/logs.js');
-  require('../cmd/recycle.js');
-  require('../cmd/status.js');
-  require('../cmd/job.js');
-
-  program.command('*').description('display usage information').action(function () {
-    return program.outputHelp();
-  });
-
-  program.parse(args);
-
-  if (!args.slice(2).length) program.outputHelp();
+  const argv = yargs
+    .usage('kinvey <command> [args] [options]')
+    .option(
+      'email', {
+        alias: 'e',
+        global: true,
+        describe: 'e-mail address of your Kinvey account',
+        type: 'string'
+      }
+    )
+    .option(
+      'password', {
+        alias: 'p',
+        global: true,
+        describe: 'password of your Kinvey account',
+        type: 'string'
+      }
+    )
+    .option(
+      'silent', {
+        alias: 's',
+        global: true,
+        describe: 'do not output anything',
+        type: 'boolean'
+      }
+    )
+    .option(
+      'suppress-version-check', {
+        alias: 'c',
+        global: true,
+        describe: 'do not check for package updates',
+        type: 'boolean'
+      }
+    )
+    .option('verbose', {
+      alias: 'v',
+      global: true,
+      describe: 'output debug messages',
+      type: 'boolean'
+    })
+    .command(cmdConfig)
+    .command(cmdLogout)
+    .command(cmdDeploy)
+    .command(cmdJob)
+    .command(cmdRecycle)
+    .command(cmdStatus)
+    .command(cmdList)
+    .command(cmdLogs)
+    .demand(1, '')
+    .strict(true)
+    .help('h')
+    .alias('h', 'help')
+    .showHelpOnFail(true)
+    .argv;
 }
 
 module.exports = cli;

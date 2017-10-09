@@ -18,7 +18,6 @@ const chalk = require('chalk');
 
 const constants = require('./../../lib/constants');
 
-const command = require('./../fixtures/command.js');
 const fixtureLogs = require('./../fixtures/logs.json');
 const fixtureInternalDataLink = require('./../fixtures/kinvey-dlc.json');
 const MockServer = require('./../mock-server');
@@ -43,33 +42,26 @@ function assertLogsOutput(spy) {
 }
 
 function buildCmdMock(start, end, pageNum, pageSize) {
-  const commandMock = {
-    opts: () => {},
-    parent: {
-      opts: () => {
-        const userOptions = {};
-        if (start) {
-          userOptions.from = start;
-        }
+  const userOptions = {};
+  userOptions._ = [];
 
-        if (end) {
-          userOptions.to = end;
-        }
+  if (start) {
+    userOptions.from = start;
+  }
 
-        if (pageNum) {
-          userOptions.page = pageNum;
-        }
+  if (end) {
+    userOptions.to = end;
+  }
 
-        if (pageSize) {
-          userOptions.number = pageSize;
-        }
+  if (pageNum) {
+    userOptions.page = pageNum;
+  }
 
-        return userOptions;
-      }
-    }
-  };
+  if (pageSize) {
+    userOptions.number = pageSize;
+  }
 
-  return commandMock;
+  return userOptions;
 }
 
 describe('logs', () => {
@@ -94,7 +86,7 @@ describe('logs', () => {
 
         const spyConsole = sandbox.spy(console, 'log');
 
-        require(cmdLogsPath)(null, command, (err) => {
+        require(cmdLogsPath).handler(buildCmdMock(), (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
           assertLogsOutput(spyConsole);
@@ -118,7 +110,7 @@ describe('logs', () => {
         const spyConsole = sandbox.spy(console, 'log');
         const commandMock = buildCmdMock(start, end, page, pageSize);
 
-        require(cmdLogsPath)(null, commandMock, (err) => {
+        require(cmdLogsPath).handler(commandMock, (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
           assertLogsOutput(spyConsole);
@@ -138,7 +130,7 @@ describe('logs', () => {
         const spyConsole = sandbox.spy(console, 'log');
         const commandMock = buildCmdMock(start, end);
 
-        require(cmdLogsPath)(null, commandMock, (err) => {
+        require(cmdLogsPath).handler(commandMock, (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
           assertLogsOutput(spyConsole);
@@ -153,7 +145,7 @@ describe('logs', () => {
 
         const commandMock = buildCmdMock(start, end, invalidPage);
 
-        require(cmdLogsPath)(null, commandMock, (err) => {
+        require(cmdLogsPath).handler(commandMock, (err) => {
           helper.assertions.assertError(err, { name: 'InvalidParameter', message: `Logs \'page\' flag ${constants.LogErrorMessages.INVALID_NONZEROINT}` });
           cb();
         });
@@ -166,7 +158,7 @@ describe('logs', () => {
 
         const spyConsole = sandbox.spy(console, 'log');
 
-        require(cmdLogsPath)(null, commandMock, (err) => {
+        require(cmdLogsPath).handler(commandMock, (err) => {
           expect(err).to.not.exist;
           expect(mockServer.isDone()).to.be.true;
           assertLogsOutput(spyConsole);
@@ -180,7 +172,7 @@ describe('logs', () => {
         helper.setup.setInvalidProject((err) => {
           expect(err).to.not.exist;
 
-          require(cmdLogsPath)(null, command, (err) => {
+          require(cmdLogsPath).handler(buildCmdMock(), (err) => {
             helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);
             cb();
           });
@@ -197,7 +189,7 @@ describe('logs', () => {
     it('should set user and return error', (cb) => {
       mockServer.loginWithSuccess();
 
-      require(cmdLogsPath)(null, command, (err) => {
+      require(cmdLogsPath).handler(buildCmdMock(), (err) => {
         helper.assertions.assertError(err, constants.Errors.ProjectNotConfigured);
         expect(mockServer.isDone()).to.be.true;
 

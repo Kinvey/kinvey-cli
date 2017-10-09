@@ -14,8 +14,7 @@
  */
 
 const sinon = require('sinon');
-const command = require('./../../fixtures/command.js');
-const list = require('./../../../cmd/list.js');
+const list = require('./../../../cmd/list.js').handler;
 const logger = require('./../../../lib/logger.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
@@ -44,21 +43,21 @@ describe(`./${pkg.name} list`, () => {
   });
 
   it('should setup the user.', (cb) => {
-    list.call(command, command, (err) => {
+    list({}, (err) => {
       expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should restore the project.', (cb) => {
-    list.call(command, command, (err) => {
+    list({}, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should list the Kinvey datalinks.', (cb) => {
-    list.call(command, command, (err) => {
+    list({}, (err) => {
       expect(project.list).to.be.calledOnce;
       cb(err);
     });

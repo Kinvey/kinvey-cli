@@ -15,7 +15,6 @@
 
 const sinon = require('sinon');
 
-const command = require('./../fixtures/command.js');
 const MockServer = require('./../mock-server');
 const helper = require('../tests-helper');
 
@@ -38,7 +37,7 @@ describe('logout', () => {
     helper.setup.configureUserAndProject(sandbox, mockServer, (err) => {
       expect(err).to.not.exist;
 
-      require(cmdLogoutPath)(command, (err) => {
+      require(cmdLogoutPath).handler({}, (err) => {
         expect(err).to.not.exist;
         helper.assertions.assertUserProjectSetup(null, null, cb);
       });
@@ -46,7 +45,7 @@ describe('logout', () => {
   });
 
   it('when a user is not logged in should not return error', (cb) => {
-    require(cmdLogoutPath)(command, (err) => {
+    require(cmdLogoutPath).handler({}, (err) => {
       expect(err).to.not.exist;
       cb();
     });

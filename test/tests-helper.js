@@ -22,7 +22,6 @@ const logger = require('../lib/logger');
 const prompt = require('./../lib/prompt');
 const util = require('../lib/util');
 
-const command = require('./fixtures/command');
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApp = require('./fixtures/app.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
@@ -161,7 +160,7 @@ helper.setup = {
     mockServer.apps();
     mockServer.dataLinks();
 
-    require('./../cmd/config')(null, command, (err) => {
+    require('./../cmd/config').handler({}, (err) => {
       expect(err).to.not.exist;
       expect(mockServer.isDone()).to.be.true;
 
@@ -205,7 +204,7 @@ helper.setup = {
   initiateJobDeploy(mockServer, cb) {
     mockServer.deployJob();
 
-    require('./../cmd/deploy')(command, (err) => {
+    require('./../cmd/deploy').handler({}, (err) => {
       expect(err).to.not.exist;
       expect(mockServer.isDone()).to.be.true;
 

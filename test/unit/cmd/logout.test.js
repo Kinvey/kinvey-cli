@@ -14,8 +14,7 @@
  */
 
 const sinon = require('sinon');
-const command = require('./../../fixtures/command.js');
-const logout = require('./../../../cmd/logout.js');
+const logout = require('./../../../cmd/logout.js').handler;
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');
@@ -42,14 +41,14 @@ describe(`./${pkg.name} logout`, () => {
   });
 
   it('should logout the user.', (cb) => {
-    logout.call(command, command, (err) => {
+    logout({}, (err) => {
       expect(user.logout).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should logout the project.', (cb) => {
-    logout.call(command, command, (err) => {
+    logout({}, (err) => {
       expect(project.logout).to.be.calledOnce;
       cb(err);
     });

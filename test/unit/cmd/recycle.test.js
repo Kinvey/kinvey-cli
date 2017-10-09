@@ -14,11 +14,11 @@
  */
 
 const sinon = require('sinon');
-const command = require('./../../fixtures/command.js');
+
 const service = require('./../../../lib/service.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
-const recycle = require('./../../../cmd/recycle.js');
+const recycle = require('./../../../cmd/recycle.js').handler;
 const user = require('./../../../lib/user.js');
 const helper = require('../../tests-helper');
 
@@ -44,21 +44,21 @@ describe(`./${pkg.name} recycle`, () => {
   });
 
   it('should setup the user.', (cb) => {
-    recycle.call(command, command, (err) => {
+    recycle({}, (err) => {
       expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should restore the project.', (cb) => {
-    recycle.call(command, command, (err) => {
+    recycle({}, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should reset the service.', (cb) => {
-    recycle.call(command, command, (err) => {
+    recycle({}, (err) => {
       expect(service.recycle).to.be.calledOnce;
       cb(err);
     });

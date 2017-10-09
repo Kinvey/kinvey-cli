@@ -227,14 +227,14 @@ describe('service', () => {
 
     it('should retrieve the service status, version, deploy time, and deployer email address.', (cb) => {
       sandbox.restore();
-      const deployedAt = new Date().toISOString();
+      const requestedAt = new Date().toISOString();
       const testEmailAddress = uuid.v4();
       sandbox.stub(util, 'makeRequest')
         .withArgs({ url: `/v${project.schemaVersion}/data-links/${project.service}/status` })
         .callsArgWith(1, null, { body: {
           status: ServiceStatus.ONLINE,
           version: '0.0.1',
-          deployedAt,
+          requestedAt,
           deployUserInfo: {
             email: testEmailAddress
           }
@@ -243,7 +243,7 @@ describe('service', () => {
       service.serviceStatus((err, result) => {
         expect(result.status).to.equal(ServiceStatus.ONLINE);
         expect(result.version).to.equal('0.0.1');
-        expect(result.deployedAt).to.equal(deployedAt);
+        expect(result.requestedAt).to.equal(requestedAt);
         expect(result.deployUserInfo.email).to.equal(testEmailAddress);
         cb(err);
       });
@@ -251,7 +251,7 @@ describe('service', () => {
 
     it('should retrieve the service status, version, deploy time, deployer email address, and deployer first/last name.', (cb) => {
       sandbox.restore();
-      const deployedAt = new Date().toISOString();
+      const requestedAt = new Date().toISOString();
       const testEmailAddress = uuid.v4();
       const testFirstName = uuid.v4();
       const testLastName = uuid.v4();
@@ -261,7 +261,7 @@ describe('service', () => {
           body: {
             status: ServiceStatus.ONLINE,
             version: '0.0.1',
-            deployedAt,
+            requestedAt,
             deployUserInfo: {
               email: testEmailAddress,
               firstName: testFirstName,
@@ -273,7 +273,7 @@ describe('service', () => {
       service.serviceStatus((err, result) => {
         expect(result.status).to.equal(ServiceStatus.ONLINE);
         expect(result.version).to.equal('0.0.1');
-        expect(result.deployedAt).to.equal(deployedAt);
+        expect(result.requestedAt).to.equal(requestedAt);
         expect(result.deployUserInfo.email).to.equal(testEmailAddress);
         expect(result.deployUserInfo.firstName).to.equal(testFirstName);
         expect(result.deployUserInfo.lastName).to.equal(testLastName);

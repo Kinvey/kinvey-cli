@@ -61,7 +61,7 @@ describe('config', () => {
   const defaultExpectedProject = helper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
 
   const sandbox = sinon.sandbox.create();
-  const cmdConfigPath = './../../lib/commands/config';
+  const cmdConfigPath = './../../lib/commands/flex/config';
 
   afterEach('generalCleanup', (done) => {
     sandbox.reset();

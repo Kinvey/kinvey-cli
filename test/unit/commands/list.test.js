@@ -14,7 +14,7 @@
  */
 
 const sinon = require('sinon');
-const list = require('../../../lib/commands/list.js').handler;
+const list = require('../../../lib/commands/flex/list.js').handler;
 const logger = require('./../../../lib/logger.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');

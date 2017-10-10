@@ -160,7 +160,7 @@ helper.setup = {
     mockServer.apps();
     mockServer.dataLinks();
 
-    require('../lib/commands/config').handler({}, (err) => {
+    require('../lib/commands/flex/config').handler({}, (err) => {
       expect(err).to.not.exist;
       expect(mockServer.isDone()).to.be.true;
 
@@ -204,7 +204,7 @@ helper.setup = {
   initiateJobDeploy(mockServer, cb) {
     mockServer.deployJob();
 
-    require('../lib/commands/deploy').handler({}, (err) => {
+    require('../lib/commands/flex/deploy').handler({}, (err) => {
       expect(err).to.not.exist;
       expect(mockServer.isDone()).to.be.true;
 
@@ -237,7 +237,7 @@ helper.setup = {
   // Ensure modules are reloaded every time and tests are independent (e.g class User -> this.token will be cleared).
   clearRequireCache() {
     const modules = [
-      '/commands/config', '/commands/deploy', '/commands/job', '/commands/list', '/commands/logout', '/commands/logs', '/commands/recycle', '/commands/status',
+      '/commands/flex/config', '/commands/flex/deploy', '/commands/flex/job', '/commands/flex/list', '/commands/flex/logout', '/commands/flex/logs', '/commands/flex/recycle', '/commands/flex/status',
       '/project', '/service', '/user', '/util'
     ];
 

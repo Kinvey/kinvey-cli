@@ -19,14 +19,7 @@ process.env.NODE_CONFIG_DIR = path.join(__dirname, '../config');
 
 const yargs = require('yargs');
 
-const cmdConfig = require('./../lib/commands/config');
-const cmdLogout = require('./../lib/commands/logout');
-const cmdDeploy = require('./../lib/commands/deploy');
-const cmdJob = require('./../lib/commands/job');
-const cmdRecycle = require('./../lib/commands/recycle');
-const cmdStatus = require('./../lib/commands/status');
-const cmdList = require('./../lib/commands/list');
-const cmdLogs = require('./../lib/commands/logs');
+const cmdFlex = require('./../lib/commands/flex');
 
 function cli(args) {
   // for testing purposes
@@ -74,14 +67,7 @@ function cli(args) {
       describe: 'output debug messages',
       type: 'boolean'
     })
-    .command(cmdConfig)
-    .command(cmdLogout)
-    .command(cmdDeploy)
-    .command(cmdJob)
-    .command(cmdRecycle)
-    .command(cmdStatus)
-    .command(cmdList)
-    .command(cmdLogs)
+    .command('flex', 'Deploy and manage flex services. Run \'kinvey flex -h\' for details.', cmdFlex)
     .demand(1, '')
     .strict(true)
     .help('h')

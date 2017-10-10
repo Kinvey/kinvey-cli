@@ -14,7 +14,7 @@
  */
 
 const sinon = require('sinon');
-const logout = require('../../../lib/commands/logout.js').handler;
+const logout = require('../../../lib/commands/flex/logout.js').handler;
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');

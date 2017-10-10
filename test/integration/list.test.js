@@ -40,7 +40,7 @@ describe('list', () => {
   const mockServer = new MockServer(true);
   const sandbox = sinon.sandbox.create();
 
-  const cmdListPath = './../../lib/commands/list';
+  const cmdListPath = './../../lib/commands/flex/list';
   const defaultExpectedServiceName = fixtureInternalDataLink.name;
 
   afterEach('generalCleanup', (cb) => {

@@ -18,7 +18,7 @@ const sinon = require('sinon');
 const service = require('./../../../lib/service.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
-const recycle = require('../../../lib/commands/recycle.js').handler;
+const recycle = require('../../../lib/commands/flex/recycle.js').handler;
 const user = require('./../../../lib/user.js');
 const helper = require('../../tests-helper');
 

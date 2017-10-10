@@ -19,7 +19,7 @@ const service = require('./../../../lib/service.js');
 const logger = require('./../../../lib/logger.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
-const status = require('../../../lib/commands/status.js').handler;
+const status = require('../../../lib/commands/flex/status.js').handler;
 const user = require('./../../../lib/user.js');
 const helper = require('../../tests-helper');
 

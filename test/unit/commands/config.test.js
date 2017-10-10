@@ -18,7 +18,7 @@ const sinon = require('sinon');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');
-const config = require('./../../../cmd/config.js').handler;
+const config = require('../../../lib/commands/config.js').handler;
 const helper = require('../../tests-helper');
 
 describe(`./${pkg.name} config`, () => {

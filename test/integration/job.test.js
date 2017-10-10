@@ -34,7 +34,7 @@ function assertLoggerForStatus(spy) {
 describe('job', () => {
   const mockServer = new MockServer(true);
   const sandbox = sinon.sandbox.create();
-  const cmdJobPath = './../../cmd/job';
+  const cmdJobPath = './../../lib/commands/job';
 
   afterEach('generalCleanup', (cb) => {
     sandbox.restore();

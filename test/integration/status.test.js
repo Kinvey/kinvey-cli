@@ -27,7 +27,7 @@ describe('status', () => {
   const mockServer = new MockServer(true);
   const sandbox = sinon.sandbox.create();
 
-  const cmdStatusPath = './../../cmd/status';
+  const cmdStatusPath = './../../lib/commands/status';
 
   afterEach('generalCleanup', (cb) => {
     sandbox.restore();

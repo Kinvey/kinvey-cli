@@ -16,29 +16,19 @@
 const sinon = require('sinon');
 
 const service = require('./../../../lib/service.js');
-const logger = require('./../../../lib/logger.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
-const status = require('./../../../cmd/status.js').handler;
+const recycle = require('../../../lib/commands/recycle.js').handler;
 const user = require('./../../../lib/user.js');
 const helper = require('../../tests-helper');
 
-describe(`./${pkg.name} status`, () => {
+describe(`./${pkg.name} recycle`, () => {
   const sandbox = sinon.sandbox.create();
-
-  before('configure', () => {
-    project.app = project.service = '123';
-    project.schemaVersion = 1;
-  });
-
-  after('generalCleanup', (cb) => {
-    helper.setup.performGeneralCleanup(cb);
-  });
 
   before('setupStubs', () => {
     sandbox.stub(user, 'setup').callsArg(1);
     sandbox.stub(project, 'restore').callsArg(0);
-    sandbox.stub(service, 'serviceStatus').callsArg(0);
+    sandbox.stub(service, 'recycle').callsArg(0);
   });
 
   afterEach('resetStubs', () => {
@@ -49,23 +39,27 @@ describe(`./${pkg.name} status`, () => {
     sandbox.restore();
   });
 
+  after('generalCleanup', (cb) => {
+    helper.setup.performGeneralCleanup(cb);
+  });
+
   it('should setup the user.', (cb) => {
-    status({}, (err) => {
+    recycle({}, (err) => {
       expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should restore the project.', (cb) => {
-    status({}, (err) => {
+    recycle({}, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
 
-  it('should print the current KMR service status.', (cb) => {
-    status({}, (err) => {
-      expect(service.serviceStatus).to.be.calledOnce;
+  it('should reset the service.', (cb) => {
+    recycle({}, (err) => {
+      expect(service.recycle).to.be.calledOnce;
       cb(err);
     });
   });

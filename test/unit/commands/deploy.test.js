@@ -16,7 +16,7 @@
 const sinon = require('sinon');
 
 const service = require('./../../../lib/service.js');
-const deploy = require('./../../../cmd/deploy.js').handler;
+const deploy = require('../../../lib/commands/deploy.js').handler;
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');

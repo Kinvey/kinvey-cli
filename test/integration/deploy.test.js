@@ -31,7 +31,7 @@ describe('deploy', () => {
   const mockServer = new MockServer(true);
   const sandbox = sinon.sandbox.create();
 
-  const cmdDeployPath = './../../cmd/deploy';
+  const cmdDeployPath = './../../lib/commands/deploy';
 
   const defaultExpectedUser = helper.assertions.buildExpectedUser();
   const expectedProjectBeforeDeploy = helper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, fixtureInternalDataLink.id);

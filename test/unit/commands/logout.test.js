@@ -14,27 +14,25 @@
  */
 
 const sinon = require('sinon');
-const list = require('./../../../cmd/list.js').handler;
-const logger = require('./../../../lib/logger.js');
+const logout = require('../../../lib/commands/logout.js').handler;
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');
 const helper = require('../../tests-helper');
 
-describe(`./${pkg.name} list`, () => {
+describe(`./${pkg.name} logout`, () => {
   const sandbox = sinon.sandbox.create();
 
   before('setupStubs', () => {
-    sandbox.stub(user, 'setup').callsArg(1);
-    sandbox.stub(project, 'restore').callsArg(0);
-    sandbox.stub(project, 'list').callsArg(0);
+    sandbox.stub(user, 'logout').callsArg(0);
+    sandbox.stub(project, 'logout').callsArg(0);
   });
 
   afterEach('resetStubs', () => {
     sandbox.reset();
   });
 
-  after('cleanupStubs', () => {
+  after('user', () => {
     sandbox.restore();
   });
 
@@ -42,23 +40,16 @@ describe(`./${pkg.name} list`, () => {
     helper.setup.performGeneralCleanup(cb);
   });
 
-  it('should setup the user.', (cb) => {
-    list({}, (err) => {
-      expect(user.setup).to.be.calledOnce;
+  it('should logout the user.', (cb) => {
+    logout({}, (err) => {
+      expect(user.logout).to.be.calledOnce;
       cb(err);
     });
   });
 
-  it('should restore the project.', (cb) => {
-    list({}, (err) => {
-      expect(project.restore).to.be.calledOnce;
-      cb(err);
-    });
-  });
-
-  it('should list the Kinvey datalinks.', (cb) => {
-    list({}, (err) => {
-      expect(project.list).to.be.calledOnce;
+  it('should logout the project.', (cb) => {
+    logout({}, (err) => {
+      expect(project.logout).to.be.calledOnce;
       cb(err);
     });
   });

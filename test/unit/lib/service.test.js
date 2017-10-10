@@ -29,7 +29,7 @@ const helper = require('../../tests-helper');
 
 const fixtures = {
   invalid: path.resolve('./test/fixtures/deploy'),
-  valid: path.resolve('./test/cmd')
+  valid: path.resolve('./test/commands')
 };
 
 describe('service', () => {

@@ -22,7 +22,7 @@ const helper = require('../tests-helper');
 describe('logout', () => {
   const mockServer = new MockServer(true);
   const sandbox = sinon.sandbox.create();
-  const cmdLogoutPath = './../../cmd/logout';
+  const cmdLogoutPath = './../../lib/commands/logout';
 
   afterEach('generalCleanup', (cb) => {
     sandbox.reset();

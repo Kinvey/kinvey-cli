@@ -19,14 +19,14 @@ process.env.NODE_CONFIG_DIR = path.join(__dirname, '../config');
 
 const yargs = require('yargs');
 
-const cmdConfig = require('./../cmd/config');
-const cmdLogout = require('./../cmd/logout');
-const cmdDeploy = require('./../cmd/deploy');
-const cmdJob = require('./../cmd/job');
-const cmdRecycle = require('./../cmd/recycle');
-const cmdStatus = require('./../cmd/status');
-const cmdList = require('./../cmd/list');
-const cmdLogs = require('./../cmd/logs');
+const cmdConfig = require('./../lib/commands/config');
+const cmdLogout = require('./../lib/commands/logout');
+const cmdDeploy = require('./../lib/commands/deploy');
+const cmdJob = require('./../lib/commands/job');
+const cmdRecycle = require('./../lib/commands/recycle');
+const cmdStatus = require('./../lib/commands/status');
+const cmdList = require('./../lib/commands/list');
+const cmdLogs = require('./../lib/commands/logs');
 
 function cli(args) {
   // for testing purposes

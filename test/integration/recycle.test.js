@@ -34,7 +34,7 @@ describe('recycle', () => {
   const mockServer = new MockServer(true);
   const sandbox = sinon.sandbox.create();
 
-  const cmdRecyclePath = './../../cmd/recycle';
+  const cmdRecyclePath = './../../lib/commands/recycle';
 
   const defaultExpectedJobId = fixtureJob.job;
   const defaultExpectedUser = helper.assertions.buildExpectedUser();

@@ -68,7 +68,7 @@ describe('logs', () => {
   const mockServer = new MockServer(true);
   const sandbox = sinon.sandbox.create();
 
-  const cmdLogsPath = './../../cmd/logs';
+  const cmdLogsPath = './../../lib/commands/flex/logs';
 
   afterEach('generalCleanup', (cb) => {
     sandbox.restore();

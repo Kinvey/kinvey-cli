@@ -14,100 +14,104 @@
  */
 
 const sinon = require('sinon');
-
 const service = require('./../../../lib/service.js');
-const deploy = require('./../../../cmd/deploy.js').handler;
+const logger = require('./../../../lib/logger.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
+const job = require('../../../lib/commands/flex/job.js').handler;
 const user = require('./../../../lib/user.js');
-const logger = require('./../../../lib/logger');
 const helper = require('../../tests-helper');
 
-describe(`./${pkg.name} deploy`, () => {
+describe(`./${pkg.name} job`, () => {
+  const sandbox = sinon.sandbox.create();
+
   after('generalCleanup', (cb) => {
     helper.setup.performGeneralCleanup(cb);
   });
 
+  afterEach('resetStubs', () => {
+    sandbox.reset();
+  });
+
   describe('without error', () => {
-    const sandbox = sinon.sandbox.create();
+    const testJobId = '123';
 
-    before(() => {
-      sandbox.stub(user, 'setup').callsArgWith(1);
-      sandbox.stub(project, 'restore').callsArgWith(0);
-      sandbox.stub(service, 'validate').callsArgWith(1);
-      sandbox.stub(service, 'deploy').callsArgWith(1);
+    before('configure', () => {
+      project.app = project.service = testJobId;
+      project.schemaVersion = 1;
+      project.lastJobId = 'abcdef';
     });
 
-    afterEach(() => {
-      sandbox.reset();
+    before('setupStubs', () => {
+      sandbox.stub(user, 'setup').callsArg(1);
+      sandbox.stub(project, 'restore').callsArg(0);
+      sandbox.stub(service, 'jobStatus').callsArg(1);
     });
 
-    after(() => {
+    after('cleanupConfiguration', () => {
+      project.app = project.service = project.schemaVersion = null;
+    });
+
+    after('cleanupStubs', () => {
       sandbox.restore();
     });
 
     it('should setup the user.', (cb) => {
-      deploy({}, (err) => {
+      job({ id: testJobId }, (err) => {
         expect(user.setup).to.be.calledOnce;
         cb(err);
       });
     });
 
     it('should restore the project.', (cb) => {
-      deploy({}, (err) => {
+      job({ id: testJobId }, (err) => {
         expect(project.restore).to.be.calledOnce;
         cb(err);
       });
     });
 
-    it('should validate the service.', (cb) => {
-      deploy({}, (err) => {
-        expect(service.validate).to.be.calledOnce;
+    it('should print the current job status.', (cb) => {
+      job({ id: testJobId }, (err) => {
+        expect(service.jobStatus).to.be.calledOnce;
+        expect(service.jobStatus).to.be.calledWith(testJobId);
         cb(err);
       });
     });
 
-    it('should deploy the service.', (cb) => {
-      deploy({}, (err) => {
-        expect(service.deploy).to.be.calledOnce;
+    it('should print the current job status when called without an id.', (cb) => {
+      job({}, (err) => {
+        expect(service.jobStatus).to.be.calledOnce;
+        expect(service.jobStatus).to.be.calledWith(undefined);
         cb(err);
       });
     });
   });
 
   describe('with error', () => {
-    const sandbox = sinon.sandbox.create();
     const testErr = new Error('Test err');
 
-    before(() => {
+    before('setupStubs', () => {
+      sandbox.stub(user, 'setup').callsArg(1);
+      sandbox.stub(project, 'restore').callsArgWith(0, testErr);
       sandbox.stub(process, 'exit');
       sandbox.stub(logger, 'error');
-      sandbox.stub(user, 'setup').callsArg(1);
-      sandbox.stub(project, 'restore').callsArg(0);
-
-      // let's produce error here
-      sandbox.stub(service, 'validate').callsArgWith(1, testErr);
     });
 
-    afterEach(() => {
-      sandbox.reset();
-    });
-
-    after(() => {
+    after('cleanupStubs', () => {
       sandbox.restore();
     });
 
     it('should pass error to callback if both are present', (cb) => {
-      deploy({}, (err) => {
+      job({}, (err) => {
         helper.assertions.assertCmdCommandWithCallbackForError(err, testErr);
         cb();
       });
     });
 
     it('should not pass error to callback if no callback', (cb) => {
-      deploy({});
+      job({});
 
-      // we don't provide a callback to the 'deploy' command, so we have no way of knowing when it is done
+      // we don't provide a callback to the 'job' command, so we have no way of knowing when it is done
       setTimeout(() => {
         helper.assertions.assertCmdCommandWithoutCallbackForError(testErr);
         cb();

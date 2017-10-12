@@ -53,7 +53,7 @@ function assertPromptStubsForSuccess(verifyServicePrompt = true) {
   }
 }
 
-// Requires 'cmd/config' for each test to ensure that tests are independent.
+// Requires 'commands/config' for each test to ensure that tests are independent.
 describe('config', () => {
   const mockServer = new MockServer(true);
 
@@ -61,7 +61,7 @@ describe('config', () => {
   const defaultExpectedProject = helper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
 
   const sandbox = sinon.sandbox.create();
-  const cmdConfigPath = './../../cmd/config';
+  const cmdConfigPath = './../../lib/commands/flex/config';
 
   afterEach('generalCleanup', (done) => {
     sandbox.reset();

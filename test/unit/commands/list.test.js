@@ -14,21 +14,20 @@
  */
 
 const sinon = require('sinon');
-
-const service = require('./../../../lib/service.js');
+const list = require('../../../lib/commands/flex/list.js').handler;
+const logger = require('./../../../lib/logger.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
-const recycle = require('./../../../cmd/recycle.js').handler;
 const user = require('./../../../lib/user.js');
 const helper = require('../../tests-helper');
 
-describe(`./${pkg.name} recycle`, () => {
+describe(`./${pkg.name} list`, () => {
   const sandbox = sinon.sandbox.create();
 
   before('setupStubs', () => {
     sandbox.stub(user, 'setup').callsArg(1);
     sandbox.stub(project, 'restore').callsArg(0);
-    sandbox.stub(service, 'recycle').callsArg(0);
+    sandbox.stub(project, 'list').callsArg(0);
   });
 
   afterEach('resetStubs', () => {
@@ -44,22 +43,22 @@ describe(`./${pkg.name} recycle`, () => {
   });
 
   it('should setup the user.', (cb) => {
-    recycle({}, (err) => {
+    list({}, (err) => {
       expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
 
   it('should restore the project.', (cb) => {
-    recycle({}, (err) => {
+    list({}, (err) => {
       expect(project.restore).to.be.calledOnce;
       cb(err);
     });
   });
 
-  it('should reset the service.', (cb) => {
-    recycle({}, (err) => {
-      expect(service.recycle).to.be.calledOnce;
+  it('should list the Kinvey datalinks.', (cb) => {
+    list({}, (err) => {
+      expect(project.list).to.be.calledOnce;
       cb(err);
     });
   });

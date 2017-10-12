@@ -14,42 +14,58 @@
  */
 
 const sinon = require('sinon');
-const logout = require('./../../../cmd/logout.js').handler;
+
+const service = require('./../../../lib/service.js');
+const logger = require('./../../../lib/logger.js');
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
+const status = require('../../../lib/commands/flex/status.js').handler;
 const user = require('./../../../lib/user.js');
 const helper = require('../../tests-helper');
 
-describe(`./${pkg.name} logout`, () => {
+describe(`./${pkg.name} status`, () => {
   const sandbox = sinon.sandbox.create();
 
-  before('setupStubs', () => {
-    sandbox.stub(user, 'logout').callsArg(0);
-    sandbox.stub(project, 'logout').callsArg(0);
-  });
-
-  afterEach('resetStubs', () => {
-    sandbox.reset();
-  });
-
-  after('user', () => {
-    sandbox.restore();
+  before('configure', () => {
+    project.app = project.service = '123';
+    project.schemaVersion = 1;
   });
 
   after('generalCleanup', (cb) => {
     helper.setup.performGeneralCleanup(cb);
   });
 
-  it('should logout the user.', (cb) => {
-    logout({}, (err) => {
-      expect(user.logout).to.be.calledOnce;
+  before('setupStubs', () => {
+    sandbox.stub(user, 'setup').callsArg(1);
+    sandbox.stub(project, 'restore').callsArg(0);
+    sandbox.stub(service, 'serviceStatus').callsArg(0);
+  });
+
+  afterEach('resetStubs', () => {
+    sandbox.reset();
+  });
+
+  after('cleanupStubs', () => {
+    sandbox.restore();
+  });
+
+  it('should setup the user.', (cb) => {
+    status({}, (err) => {
+      expect(user.setup).to.be.calledOnce;
       cb(err);
     });
   });
 
-  it('should logout the project.', (cb) => {
-    logout({}, (err) => {
-      expect(project.logout).to.be.calledOnce;
+  it('should restore the project.', (cb) => {
+    status({}, (err) => {
+      expect(project.restore).to.be.calledOnce;
+      cb(err);
+    });
+  });
+
+  it('should print the current KMR service status.', (cb) => {
+    status({}, (err) => {
+      expect(service.serviceStatus).to.be.calledOnce;
       cb(err);
     });
   });

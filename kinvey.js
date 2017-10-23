@@ -13,12 +13,23 @@
  * contents is a violation of applicable laws.
  */
 
-module.exports = (ctrl) => {
-  return {
-    command: 'job [id]',
-    desc: 'Get the job status of a deploy command',
-    handler: (options) => {
-      ctrl.job(options);
-    }
-  }
-};
+const path = require('path');
+// TODO: Figure out if we really need this - seems it's not bad to stay, just remove max upload size
+process.env.NODE_CONFIG_DIR = path.join(__dirname, 'config');
+
+const updateNotifier = require('update-notifier');
+
+const config = require('config');
+const CLIManager = require('./lib/cli-manager');
+const logger = require('./lib/logger.js');
+const pkg = require('./package.json');
+const Setup = require('./lib/setup');
+
+const setup = new Setup(config.paths.session);
+const notifier = updateNotifier({
+  pkg,
+  updateCheckInterval: 1000 * 60 * 60
+});
+const Prompter = require('./lib/prompter');
+const kinveyCLIManager = new CLIManager({ setup, config, logger, notifier, prompter: Prompter });
+kinveyCLIManager.init();

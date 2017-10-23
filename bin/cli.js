@@ -14,4 +14,4 @@
  * contents is a violation of applicable laws.
  */
 
-require('./kinveyCli')();
+require('./../kinvey');

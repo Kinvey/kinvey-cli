@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.0
+* `status` command now reports the email address (plus first/last name, if set) of deployer and the date/time at which service was deployed
+
 ## 2.0.0
 * `status` command now reports the version of the most recently-deployed service
 * `logs` command enhancements

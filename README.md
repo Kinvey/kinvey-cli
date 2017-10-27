@@ -1,8 +1,6 @@
 # Kinvey CLI
 > Utility for deploying and managing FlexServices on the Kinvey FlexService Runtime
 
-**Note:** If you last deployed a Flex service using Kinvey CLI version 1.x you must initiate a one-time recycle (`kinvey recycle`) before `kinvey status` will output the service version.
-
 ## Installation
 `npm install -g kinvey-cli`
 
@@ -12,7 +10,7 @@ In your project directory, run `kinvey config` to set up your project. The CLI w
 ### Commands
 * `config [instance]` - set project options (including optional dedicated Kinvey instance name).
 * `deploy` - deploy node project in the current directory as an Internal Flex Service. You can check the status of a deploy using the `job` command (more info below).
-* `status` - display the health and version of a deployed Internal Flex Service.
+* `status` - display the health and deployment metadata (version, deployer info, requested at) of a deployed Internal Flex Service.
   * E.g. `ONLINE [v0.0.48]`
 * `help` - display usage information.
   * To display help/usage info for a particular command, use `kinvey <command> -h`

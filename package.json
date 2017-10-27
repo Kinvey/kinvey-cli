@@ -1,6 +1,6 @@
 {
   "name": "kinvey-cli",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Utility for deploying and managing FlexServices on Kinvey's FlexService Runtime",
   "keywords": [
     "Kinvey"

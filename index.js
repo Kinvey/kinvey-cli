@@ -13,8 +13,10 @@
  * contents is a violation of applicable laws.
  */
 
+const yargs = require('yargs');
+
 const path = require('path');
-// TODO: Figure out if we really need this - seems it's not bad to stay, just remove max upload size
+// advisable to happen before any other require
 process.env.NODE_CONFIG_DIR = path.join(__dirname, 'config');
 
 const updateNotifier = require('update-notifier');
@@ -31,5 +33,6 @@ const notifier = updateNotifier({
   updateCheckInterval: 1000 * 60 * 60
 });
 const Prompter = require('./lib/prompter');
-const kinveyCLIManager = new CLIManager({ setup, config, logger, notifier, prompter: Prompter });
+
+const kinveyCLIManager = new CLIManager({ setup, config, logger, notifier, prompter: Prompter, commandsManager: yargs });
 kinveyCLIManager.init();

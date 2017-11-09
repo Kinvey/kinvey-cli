@@ -35,6 +35,7 @@
     "custom-logger": "0.3.1",
     "inquirer": "0.10.0",
     "isemail": "1.2.0",
+    "lodash.clonedeep": "4.5.0",
     "lodash.isempty": "4.4.0",
     "lodash.isnil": "4.0.0",
     "moment": "2.11.2",
@@ -45,15 +46,19 @@
     "yargs": "9.0.1"
   },
   "devDependencies": {
+    "body-parser": "1.18.2",
     "chai": "3.3.0",
     "eslint": "2.11.1",
     "eslint-config-airbnb-base": "3.0.1",
     "eslint-plugin-import": "1.8.1",
+    "express": "4.16.2",
     "mocha": "2.3.3",
     "nock": "9.0.14",
     "nyc": "11.1.0",
     "sinon": "1.17.0",
     "sinon-chai": "2.8.0",
+    "snap-shot-it": "4.0.1",
+    "strip-ansi": "4.0.0",
     "test-console": "1.0.0"
   },
   "engines": {

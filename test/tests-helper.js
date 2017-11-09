@@ -15,18 +15,23 @@
 
 const async = require('async');
 const inquirer = require('inquirer');
+const snapshot = require('snap-shot-it');
+const stripAnsi = require('strip-ansi');
+
+const childProcess = require('child_process');
 
 const EnvironmentVariables = require('./../lib/constants').EnvironmentVariables;
-const config = require('config');
+//const config = require('config');
 const logger = require('../lib/logger');
-const prompt = require('./../lib/prompt');
-const util = require('../lib/utils');
+// const prompt = require('./../lib/prompt');
+const { isEmpty, isNullOrUndefined, readJSON, writeJSON } = require('../lib/utils');
 
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApp = require('./fixtures/app.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureJob = require('./fixtures/job.json');
-const MockServer = require('./mock-server');
+const testsConfig = require('./tests-config');
+const mockServer = require('./mock-server');
 
 const helper = {};
 
@@ -106,6 +111,53 @@ helper.assertions = {
     const expectedMsg = expectedErr.MESSAGE || expectedErr.message;
     expect(actualErr.message).to.equal(expectedMsg);
   },
+  assertGlobalSetup(expected, path = testsConfig.paths.session, done) {
+    readJSON(path, (err, actual) => {
+      if (err) {
+        return done(err);
+      }
+
+      /*{
+       active: {},
+       profiles: {
+       [profileName]: expectedValidUser
+       }
+       };*/
+
+      /*console.log('--expected--');
+      console.log(expected);
+      console.log('--end of expected--');
+
+      console.log('--actual--');
+      console.log(actual);
+      console.log('--end of actual--');*/
+
+      if (!expected) {
+        const actualDoesNotContainData = isEmpty(actual) || (isEmpty(actual.active) && isEmpty(actual.profiles));
+        expect(actualDoesNotContainData, `Setup at ${path} is empty.`).to.be.true;
+        return done(null);
+      }
+
+      expect(actual).to.deep.equal(expected);
+      done(null);
+
+
+      /*if (!expected) {
+        expect(actual).to.equal('');
+        return done();
+      }
+
+      const host = expectedUser.host;
+      expect(actualUser.host).to.equal(host);
+
+      if (expectedUser.tokens) {
+        expect(actualUser.tokens).to.exist;
+        expect(actualUser.tokens[host]).to.exist.and.to.equal(expectedUser.tokens[host]);
+      }
+
+      next();*/
+    });
+  },
   buildExpectedProject(appId, org, lastJobId, serviceName, service, schemaVersion = config.defaultSchemaVersion) {
     return {
       org,
@@ -125,6 +177,37 @@ helper.assertions = {
     };
 
     return user;
+  },
+  buildExpectedProfile(profileName, host, email, token) {
+    const profile = {
+      [profileName] : {
+        email,
+        token,
+        host
+      }
+    };
+
+    return profile;
+  },
+  buildExpectedProfiles(profiles) {
+    if (!Array.isArray(profiles)) {
+      profiles = [profiles];
+    }
+
+    const result = {};
+
+    profiles.forEach((p) => {
+      const name = Object.keys(p)[0];
+      result[name] = p[name];
+    });
+
+    return result;
+  },
+  buildExpectedGlobalSetup(activeItems, profiles) {
+    return {
+      active: activeItems,
+      profiles: profiles
+    }
   }
 };
 
@@ -234,6 +317,11 @@ helper.setup = {
     );
   },
 
+  clearGlobalSetup(path, done) {
+    path = path || testsConfig.paths.session;
+    writeJSON(path, '', done);
+  },
+
   // Ensure modules are reloaded every time and tests are independent (e.g class User -> this.token will be cleared).
   clearRequireCache() {
     const modules = [
@@ -250,9 +338,101 @@ helper.setup = {
   // Clears some cached modules, any unused nock interceptors, user/session info and project setup info.
   performGeneralCleanup(cb) {
     helper.setup.clearRequireCache();
-    MockServer.clearAll();
+    mockServer.clearAll();
     helper.setup.clearUserProjectSetup(cb);
   }
+};
+
+helper.execCmd = function execCmd(cliCmd, options, done) {
+  const fullCmd = `node .\\bin\\cli.js ${cliCmd}`;
+  return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
+    /*console.log(err);
+    console.log('================end of err=============');
+    console.log(stdout);
+    console.log('===========end of stdout ============');
+    const stripped = stripAnsi(stdout);
+    console.log(stripped);
+    snapshot(stripped);
+    /!*utils.writeFile('testMe.txt', stripped, (err) => {
+     done(err);
+     });*!/
+    console.log(stderr);
+    console.log('========= end of stderr');*/
+    done(err, stdout, stderr);
+  });
+};
+
+helper.getOutputWithoutSetupPaths = function getOutputWithoutSetupPaths(output) {
+  const globalSetupWithoutEscapedSlashes = testsConfig.paths.session;
+  const globalSetupWithEscapedSlashes = globalSetupWithoutEscapedSlashes.replace(/\\/g, '\\\\');
+  const globalSetupReg = new RegExp(globalSetupWithEscapedSlashes, 'gi');
+  const outputWithoutSetupPaths = output.replace(globalSetupReg, 'globalSetupPath');
+
+  // TODO: create a method to escape slashes and get regex
+  const projectSetupWithoutEscapedSlashes = testsConfig.paths.project;
+  const projectSetupWithEscapedSlashes = projectSetupWithoutEscapedSlashes.replace(/\\/g, '\\\\');
+  const projectSetupReg = new RegExp(projectSetupWithEscapedSlashes, 'gi');
+  const result = outputWithoutSetupPaths.replace(projectSetupReg, 'projectSetupPath');
+  return result;
+};
+
+helper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshotIt, clearSetupPaths, escapeSlashes, done) {
+  apiOptions = apiOptions || {};
+
+  let ms = {};
+
+  async.series([
+    (next) => {
+      ms = mockServer(apiOptions, next);
+    },
+    (next) => {
+      helper.execCmd(cliCmd, cmdOptions, (err, stdout, stderr) => {
+        // I don't think I'll need it, will remove probably
+        /*const errIsExpected = !isNullOrUndefined(expectedErr);
+        if (errIsExpected) {
+          helper.assertions.assertError(err, expectedErr);
+        } else {
+          expect(err).to.not.exist;
+        }*/
+
+        let output;
+        if (stdout) {
+          output = stdout;
+        } else if (stderr) {
+          output = stderr;
+        } else {
+          output = err;
+        }
+
+        const strippedOutput = stripAnsi(output) || '';
+        let finalOutput;
+        
+        // paths will be different for each machine so let's just remove them
+        if (clearSetupPaths) {
+          finalOutput = helper.getOutputWithoutSetupPaths(strippedOutput);
+        } else if (escapeSlashes && process.env.SNAPSHOT_UPDATE === "1") {
+          // if we save in a snapshot 'bin\cli.js', then when we compare, snap-shot-it retrieves the value as 'bincli.js' and the actual value is 'bin\cli.js', hence the test fails
+          finalOutput = strippedOutput.replace(/\\/g, '\\\\');
+        } else {
+          finalOutput = strippedOutput;
+        }
+
+        if (snapshotIt) {
+          snapshot(finalOutput);
+        }
+
+        next(null, finalOutput);
+      });
+    }
+  ], (err, results) => {
+    ms.close(() => {
+      if (err) {
+        return done(err);
+      }
+
+      done(null, results.pop());
+    });
+  });
 };
 
 module.exports = helper;

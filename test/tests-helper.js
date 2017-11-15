@@ -206,6 +206,11 @@ helper.assertions = {
 
     return result;
   },
+  buildExpectedActiveItems(profileName) {
+    return {
+      profile: profileName
+    }
+  },
   buildExpectedGlobalSetup(activeItems, profiles) {
     return {
       active: activeItems,

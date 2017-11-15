@@ -20,7 +20,7 @@ const stripAnsi = require('strip-ansi');
 
 const childProcess = require('child_process');
 
-const EnvironmentVariables = require('./../lib/constants').EnvironmentVariables;
+const { AuthOptionsNames, EnvironmentVariables } = require('./../lib/constants');
 //const config = require('config');
 const logger = require('../lib/logger');
 // const prompt = require('./../lib/prompt');
@@ -32,6 +32,8 @@ const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureJob = require('./fixtures/job.json');
 const testsConfig = require('./tests-config');
 const mockServer = require('./mock-server');
+
+const existentUser = fixtureUser.existent;
 
 const helper = {};
 
@@ -111,7 +113,8 @@ helper.assertions = {
     const expectedMsg = expectedErr.MESSAGE || expectedErr.message;
     expect(actualErr.message).to.equal(expectedMsg);
   },
-  assertGlobalSetup(expected, path = testsConfig.paths.session, done) {
+  assertGlobalSetup(expected, path, done) {
+    path = path || testsConfig.paths.session;
     readJSON(path, (err, actual) => {
       if (err) {
         return done(err);
@@ -181,9 +184,9 @@ helper.assertions = {
   buildExpectedProfile(profileName, host, email, token) {
     const profile = {
       [profileName] : {
-        email,
-        token,
-        host
+        email: email || existentUser.email,
+        token: token || fixtureUser.token,
+        host: host || testsConfig.host
       }
     };
 
@@ -236,6 +239,40 @@ helper.env = {
 };
 
 helper.setup = {
+  createProfiles(names, done) {
+    if (!Array.isArray(names)) {
+      names = [names];
+    }
+
+    async.eachSeries(
+      names,
+      (name, next) => {
+        const cmd = `profile create ${name} --verbose --${AuthOptionsNames.EMAIL} ${existentUser.email} --${AuthOptionsNames.PASSWORD} ${existentUser.password}`;
+
+        helper.execCmdWithoutAssertion(cmd, null, (err) => {
+          if (err) {
+            return next(err);
+          }
+
+          const path = testsConfig.paths.session;
+          readJSON(path, (err, actualSetup) => {
+            if (err) {
+              return next(err);
+            }
+
+            const isCreated = actualSetup && actualSetup.profiles && !isEmpty(actualSetup.profiles[name]);
+            if (!isCreated) {
+              return next(new Error(`Failed to create profile with name ${names}.`));
+            }
+
+            next(null);
+          });
+        });
+      },
+      done
+    );
+  },
+
   configureUserAndProject(sandbox, mockServer, cb) {
     this.userProjectPromptStubsForSuccess(sandbox);
 
@@ -346,19 +383,29 @@ helper.setup = {
 helper.execCmd = function execCmd(cliCmd, options, done) {
   const fullCmd = `node .\\bin\\cli.js ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
-    /*console.log(err);
-    console.log('================end of err=============');
-    console.log(stdout);
-    console.log('===========end of stdout ============');
-    const stripped = stripAnsi(stdout);
-    console.log(stripped);
-    snapshot(stripped);
-    /!*utils.writeFile('testMe.txt', stripped, (err) => {
-     done(err);
-     });*!/
-    console.log(stderr);
-    console.log('========= end of stderr');*/
     done(err, stdout, stderr);
+  });
+};
+
+helper.execCmdWithoutAssertion = function (cliCmd, options, done) {
+  options = options || {
+    env: {
+      NODE_CONFIG: JSON.stringify(testsConfig)
+    }
+  };
+
+  let ms = {};
+  async.series([
+    (next) => {
+      ms = mockServer(null, next);
+    },
+    (next) => {
+      helper.execCmd(cliCmd, options, next);
+    }
+  ], (err) => {
+    ms.close(() => {
+      done(err);
+    });
   });
 };
 
@@ -377,8 +424,6 @@ helper.getOutputWithoutSetupPaths = function getOutputWithoutSetupPaths(output) 
 };
 
 helper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshotIt, clearSetupPaths, escapeSlashes, done) {
-  apiOptions = apiOptions || {};
-
   let ms = {};
 
   async.series([

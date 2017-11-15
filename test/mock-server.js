@@ -114,6 +114,7 @@ function build({ schemaVersion = testsConfig.defaultSchemaVersion, port = testsC
 
 
 module.exports = (options, done) => {
+  options = options || {};
   return build(options, done);
 };
 

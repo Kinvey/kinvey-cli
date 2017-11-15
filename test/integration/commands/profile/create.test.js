@@ -62,6 +62,21 @@ describe('profile create', () => {
       });
     });
 
+    it('set as options and existent profile name should override', (done) => {
+      setup.createProfiles(defaultProfileName, (err) => {
+        expect(err).to.not.exist;
+
+        const cmd = `${baseCmd} ${defaultProfileName} --verbose --${AuthOptionsNames.EMAIL} ${existentUser.email} --${AuthOptionsNames.PASSWORD} ${existentUser.password}`;
+
+        execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, () => {
+          assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+            expect(err).to.not.exist;
+            done();
+          });
+        });
+      });
+    });
+
     it('set as environment variables should create', (done) => {
       const cmd = `${baseCmd} ${defaultProfileName} --verbose`;
       const env = cloneDeep(defaultEnv);

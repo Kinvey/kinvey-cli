@@ -381,6 +381,12 @@ helper.setup = {
 };
 
 helper.execCmd = function execCmd(cliCmd, options, done) {
+  options = options || {
+      env: {
+        NODE_CONFIG: JSON.stringify(testsConfig)
+      }
+    };
+
   const fullCmd = `node .\\bin\\cli.js ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
     done(err, stdout, stderr);
@@ -388,12 +394,6 @@ helper.execCmd = function execCmd(cliCmd, options, done) {
 };
 
 helper.execCmdWithoutAssertion = function (cliCmd, options, done) {
-  options = options || {
-    env: {
-      NODE_CONFIG: JSON.stringify(testsConfig)
-    }
-  };
-
   let ms = {};
   async.series([
     (next) => {

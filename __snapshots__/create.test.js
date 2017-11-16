@@ -66,7 +66,7 @@ error:  ValidationError: Validation failed.
 `
 
 exports['profile create with insufficient info without profile name should fail 1'] = `
-bin\\cli.js profile create <name>
+bin\cli.js profile create <name>
 
 Options:
   --version                 Show version number                        [boolean]

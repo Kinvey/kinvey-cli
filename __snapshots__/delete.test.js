@@ -27,7 +27,7 @@ info:  Could not find profile with name 'nonExistentProfileName'.
 `
 
 exports['profile delete without a name should fail 1'] = `
-bin\\cli.js profile delete <name>
+bin\cli.js profile delete <name>
 
 Options:
   --version                 Show version number                        [boolean]

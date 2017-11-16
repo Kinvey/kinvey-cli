@@ -16,8 +16,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const config = require('config');
-const { HTTPMethod } = require('./../lib/constants');
+const { HTTPMethod, ServiceStatus } = require('./../lib/constants');
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApps = require('./fixtures/apps.json');
 const fixtureApp = require('./fixtures/app.json');
@@ -28,17 +27,28 @@ const fixtureLogs = require('./fixtures/logs.json');
 
 const testsConfig = require('./tests-config');
 
-// Authorization = `Kinvey ${user.token}`;
-function isAuth(headers, expectedToken) {
+const existentUserOne = fixtureUser.existentOne;
+
+function isAuthenthicated(headers, expectedToken) {
   if (!headers) {
     return false;
   }
 
   const expectedHeaderValue = `Kinvey ${expectedToken}`;
-  return headers.Authorization === expectedHeaderValue;
+  return headers.authorization === expectedHeaderValue;
 }
 
-function build({ schemaVersion = testsConfig.defaultSchemaVersion, port = testsConfig.port, existentUser = fixtureUser.existent, token = fixtureUser.token, nonExistentUser = fixtureUser.nonexistent }, done) {
+function build(
+  {
+    schemaVersion = testsConfig.defaultSchemaVersion,
+    port = testsConfig.port,
+    existentUser = fixtureUser.existent,
+    token = fixtureUser.token,
+    nonExistentUser = fixtureUser.nonexistent,
+    serviceStatus =  ServiceStatus.ONLINE
+  },
+  done
+) {
   const versionPart = `v${schemaVersion}`;
 
   const app = express();
@@ -48,9 +58,12 @@ function build({ schemaVersion = testsConfig.defaultSchemaVersion, port = testsC
   app.use(function handleAuth(req, res, next) {
     const requiresAuth = !(req.method === HTTPMethod.POST && req.url === '/session');
     if (requiresAuth) {
-      const isAuth = isAuth(req.headers, token);
+      const isAuth = isAuthenthicated(req.headers, token);
       if (!isAuth) {
-        return res.send(401);
+        return res.status(401).send({
+          "code": "Unauthorized",
+          "description": "You need to be logged in to execute this request."
+        });
       }
     }
 
@@ -67,6 +80,8 @@ function build({ schemaVersion = testsConfig.defaultSchemaVersion, port = testsC
     const pass = req.body.password;
     if (email === existentUser.email && pass === existentUser.password) {
       return res.send({ email: existentUser.email, token: fixtureUser.token });
+    } else if (email === existentUserOne.email && pass === existentUserOne.password) {
+      return res.send({ email: existentUserOne.email, token: fixtureUser.tokenOne });
     } else if (email === nonExistentUser.email && pass === nonExistentUser.password) {
       return res.send(401)
     }
@@ -87,6 +102,39 @@ function build({ schemaVersion = testsConfig.defaultSchemaVersion, port = testsC
     return res.sendStatus(204);
   });
 
+  // SERVICES
+  app.get(`/${versionPart}/data-links/:id/status`, (req, res) => {
+    const id = req.params.id;
+    if (id !== fixtureInternalDataLink.id) {
+      return res.status(404).send({
+        "code": "DataLinkNotFound",
+        "description": "The specified data link could not be found."
+      });
+    }
+
+    const result = {
+      status: serviceStatus,
+      requestedAt: '2017-11-01T08:42:31.970Z',
+      deployUserInfo:
+        { firstName: 'Davy',
+          lastName: 'Jones',
+          email: 'davy.jones@mail.com'
+        },
+      version: '1.4.2'
+    };
+
+    res.send(result);
+  });
+
+  app.get(`/${versionPart}/data-links/:id`, (req, res) => {
+    const id = req.params.id;
+    if (id) {
+      const wantedService = fixtureServices.find(x => x.id === id);
+      return res.send(wantedService);
+    } else {
+      res.send(fixtureServices);
+    }
+  });
 
   // APPS
   app.get(`/${versionPart}/apps`, (req, res) => {

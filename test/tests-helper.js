@@ -220,6 +220,32 @@ helper.env = {
 };
 
 helper.setup = {
+  createProfile(name, email, password, done) {
+    email = email || existentUser.email;
+    password = password || existentUser.password;
+
+    const cmd = `profile create ${name} --verbose --${AuthOptionsNames.EMAIL} ${email} --${AuthOptionsNames.PASSWORD} ${password}`;
+
+    helper.execCmdWithoutAssertion(cmd, null, (err) => {
+      if (err) {
+        return done(err);
+      }
+
+      readJSON(globalSetupPath, (err, actualSetup) => {
+        if (err) {
+          return done(err);
+        }
+
+        const isCreated = actualSetup && actualSetup.profiles && !isEmpty(actualSetup.profiles[name]);
+        if (!isCreated) {
+          return done(new Error(`Failed to create profile with name ${name}.`));
+        }
+
+        done(null);
+      });
+    });
+  },
+
   createProfiles(names, done) {
     if (!Array.isArray(names)) {
       names = [names];
@@ -228,26 +254,7 @@ helper.setup = {
     async.eachSeries(
       names,
       (name, next) => {
-        const cmd = `profile create ${name} --verbose --${AuthOptionsNames.EMAIL} ${existentUser.email} --${AuthOptionsNames.PASSWORD} ${existentUser.password}`;
-
-        helper.execCmdWithoutAssertion(cmd, null, (err) => {
-          if (err) {
-            return next(err);
-          }
-
-          readJSON(globalSetupPath, (err, actualSetup) => {
-            if (err) {
-              return next(err);
-            }
-
-            const isCreated = actualSetup && actualSetup.profiles && !isEmpty(actualSetup.profiles[name]);
-            if (!isCreated) {
-              return next(new Error(`Failed to create profile with name ${name}.`));
-            }
-
-            next(null);
-          });
-        });
+        this.createProfile(name, existentUser.email, existentUser.password, next);
       },
       done
     );
@@ -287,6 +294,43 @@ helper.setup = {
         });
       }
     ], done);
+  },
+
+  deleteProfileFromSetup(name, path, done) {
+    path = path || globalSetupPath;
+    let setup;
+
+    readJSON(path, (err, actualSetup) => {
+      if (err) {
+        return done(err);
+      }
+
+      setup = actualSetup;
+      if (!setup || !setup.profiles || !setup.profiles[name]) {
+        return done(new Error(`Profile not found - ${name}.`));
+      }
+
+      delete setup.profiles[name];
+      if (setup.active && setup.active.profile === name) {
+        delete setup.active.profile;
+      }
+
+      writeJSON(path, setup, done);
+    });
+  },
+
+  createProjectSetup(options, done) {
+    options = options || {
+      flex: {
+        domain: 'app',
+        domainEntityId: fixtureApp.id,
+        serviceId: fixtureInternalDataLink.id,
+        serviceName: fixtureInternalDataLink.name,
+        schemaVersion: 2
+      }
+    };
+
+    writeJSON(testsConfig.paths.project, options, done);
   },
 
   configureUserAndProject(sandbox, mockServer, cb) {
@@ -372,6 +416,11 @@ helper.setup = {
 
   clearGlobalSetup(path, done) {
     path = path || globalSetupPath;
+    writeJSON(path, '', done);
+  },
+
+  clearProjectSetup(path, done) {
+    path = path || testsConfig.paths.project;
     writeJSON(path, '', done);
   },
 
@@ -471,15 +520,20 @@ helper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshot
         // paths will be different for each machine so let's just remove them
         if (clearSetupPaths) {
           finalOutput = helper.getOutputWithoutSetupPaths(strippedOutput);
-        } else if (escapeSlashes && process.env.SNAPSHOT_UPDATE === "1") {
+        } else if (escapeSlashes && process.env.SNAPSHOT_UPDATE !== "1") {
           // if we save in a snapshot 'bin\cli.js', then when we compare, snap-shot-it retrieves the value as 'bincli.js' and the actual value is 'bin\cli.js', hence the test fails
-          finalOutput = strippedOutput.replace(/\\/g, '\\\\');
+          //finalOutput = strippedOutput.replace(/\\/g, '\\\\');
+          finalOutput = strippedOutput.replace(/\\/g, '');
         } else {
           finalOutput = strippedOutput;
         }
 
         if (snapshotIt) {
-          snapshot(finalOutput);
+          try {
+            snapshot(finalOutput);
+          } catch(ex) {
+            return next(ex, finalOutput);
+          }
         }
 
         next(null, finalOutput);

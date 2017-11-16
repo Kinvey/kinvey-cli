@@ -114,6 +114,12 @@ helper.assertions = {
     const expectedMsg = expectedErr.MESSAGE || expectedErr.message;
     expect(actualErr.message).to.equal(expectedMsg);
   },
+  /**
+   * Asserts that the global setup matches the expected.
+   * @param expected If null, assumes that setup must be empty - either blank or without profiles and active items.
+   * @param path If null, uses the path from the tests config.
+   * @param done
+   */
   assertGlobalSetup(expected, path, done) {
     path = path || globalSetupPath;
     readJSON(path, (err, actual) => {
@@ -249,7 +255,7 @@ helper.setup = {
 
   setActiveProfile(name, shouldCreate, done) {
     async.series([
-      function createProfile(next) {
+      (next) => {
         if (!shouldCreate) {
           setImmediate(() => {
             next(null);

@@ -51,6 +51,29 @@ describe('profile delete', () => {
     });
   });
 
+  it('by existent name when it is the active profile should succeed and clear active', (done) => {
+    const profileToBeDeleted = 'activeAndMustBeDeleted';
+
+    async.series([
+      function setAsActive(next) {
+        setup.setActiveProfile(profileToBeDeleted, true, next);
+      },
+      function deleteProfile(next) {
+        const cmd = `${baseCmd} ${profileToBeDeleted} --verbose`;
+
+        execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, () => {
+          const expectedProfile = assertions.buildExpectedProfile(defaultProfileName);
+          const expectedGlobalSetup = assertions.buildExpectedGlobalSetup({}, assertions.buildExpectedProfiles(expectedProfile));
+
+          assertions.assertGlobalSetup(expectedGlobalSetup, null, (err) => {
+            expect(err).to.not.exist;
+            next();
+          });
+        });
+      }
+    ], done);
+  });
+
   it('by existent name when there are several should delete only one', (done) => {
     const otherProfileNames = ['November', 'December', 'January'];
 

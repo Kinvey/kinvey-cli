@@ -66,7 +66,11 @@ describe(baseCmd, () => {
     testProfileUse(1, true, done);
   });
 
-  it('with non-existent name should not set as active', (done) => {
+  it('with non-existent name when several should not set as active', (done) => {
     testProfileUse(2, false, done);
+  });
+
+  it('with non-existent name when none should not throw', (done) => {
+    testProfileUse(0, false, done);
   });
 });

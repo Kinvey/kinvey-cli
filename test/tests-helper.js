@@ -34,6 +34,7 @@ const testsConfig = require('./tests-config');
 const mockServer = require('./mock-server');
 
 const existentUser = fixtureUser.existent;
+const globalSetupPath = testsConfig.paths.session;
 
 const helper = {};
 
@@ -114,28 +115,13 @@ helper.assertions = {
     expect(actualErr.message).to.equal(expectedMsg);
   },
   assertGlobalSetup(expected, path, done) {
-    path = path || testsConfig.paths.session;
+    path = path || globalSetupPath;
     readJSON(path, (err, actual) => {
       if (err) {
         return done(err);
       }
 
-      /*{
-       active: {},
-       profiles: {
-       [profileName]: expectedValidUser
-       }
-       };*/
-
-      /*console.log('--expected--');
-      console.log(expected);
-      console.log('--end of expected--');
-
-      console.log('--actual--');
-      console.log(actual);
-      console.log('--end of actual--');*/
-
-      if (!expected) {
+      if (!expected || (isEmpty(expected.active) && isEmpty(expected.profiles))) {
         const actualDoesNotContainData = isEmpty(actual) || (isEmpty(actual.active) && isEmpty(actual.profiles));
         expect(actualDoesNotContainData, `Setup at ${path} is empty.`).to.be.true;
         return done(null);
@@ -143,22 +129,6 @@ helper.assertions = {
 
       expect(actual).to.deep.equal(expected);
       done(null);
-
-
-      /*if (!expected) {
-        expect(actual).to.equal('');
-        return done();
-      }
-
-      const host = expectedUser.host;
-      expect(actualUser.host).to.equal(host);
-
-      if (expectedUser.tokens) {
-        expect(actualUser.tokens).to.exist;
-        expect(actualUser.tokens[host]).to.exist.and.to.equal(expectedUser.tokens[host]);
-      }
-
-      next();*/
     });
   },
   buildExpectedProject(appId, org, lastJobId, serviceName, service, schemaVersion = config.defaultSchemaVersion) {
@@ -259,15 +229,14 @@ helper.setup = {
             return next(err);
           }
 
-          const path = testsConfig.paths.session;
-          readJSON(path, (err, actualSetup) => {
+          readJSON(globalSetupPath, (err, actualSetup) => {
             if (err) {
               return next(err);
             }
 
             const isCreated = actualSetup && actualSetup.profiles && !isEmpty(actualSetup.profiles[name]);
             if (!isCreated) {
-              return next(new Error(`Failed to create profile with name ${names}.`));
+              return next(new Error(`Failed to create profile with name ${name}.`));
             }
 
             next(null);
@@ -276,6 +245,42 @@ helper.setup = {
       },
       done
     );
+  },
+
+  setActiveProfile(name, shouldCreate, done) {
+    async.series([
+      function createProfile(next) {
+        if (!shouldCreate) {
+          setImmediate(() => {
+            next(null);
+          });
+        } else {
+          this.createProfiles(name, next);
+        }
+      },
+      function setAsActiveProfile(next) {
+        const cmd = `profile use ${name} --verbose`;
+
+        helper.execCmdWithoutAssertion(cmd, null, (err) => {
+          if (err) {
+            return next(err);
+          }
+
+          readJSON(globalSetupPath, (err, actualSetup) => {
+            if (err) {
+              return next(err);
+            }
+
+            const isActive = actualSetup && actualSetup.active && actualSetup.active.profile === name;
+            if (!isActive) {
+              return next(new Error(`Failed to set as active profile with name ${name}.`));
+            }
+
+            next(null);
+          });
+        });
+      }
+    ], done);
   },
 
   configureUserAndProject(sandbox, mockServer, cb) {
@@ -360,7 +365,7 @@ helper.setup = {
   },
 
   clearGlobalSetup(path, done) {
-    path = path || testsConfig.paths.session;
+    path = path || globalSetupPath;
     writeJSON(path, '', done);
   },
 
@@ -415,7 +420,7 @@ helper.execCmdWithoutAssertion = function (cliCmd, options, done) {
 };
 
 helper.getOutputWithoutSetupPaths = function getOutputWithoutSetupPaths(output) {
-  const globalSetupWithoutEscapedSlashes = testsConfig.paths.session;
+  const globalSetupWithoutEscapedSlashes = globalSetupPath;
   const globalSetupWithEscapedSlashes = globalSetupWithoutEscapedSlashes.replace(/\\/g, '\\\\');
   const globalSetupReg = new RegExp(globalSetupWithEscapedSlashes, 'gi');
   const outputWithoutSetupPaths = output.replace(globalSetupReg, 'globalSetupPath');

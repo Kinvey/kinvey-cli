@@ -14,7 +14,13 @@ info:  Active profile is set to 'testProfileUse0'.
 
 `
 
-exports['profile use with non-existent name should not set as active 1'] = `
+exports['profile use with non-existent name when several should not set as active 1'] = `
+debug:  Checking for package updates
+error:  ProfileNotFound: Profile not found. Please verify profile name exists.
+
+`
+
+exports['profile use with non-existent name when none should not throw 1'] = `
 debug:  Checking for package updates
 error:  ProfileNotFound: Profile not found. Please verify profile name exists.
 

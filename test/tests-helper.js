@@ -35,6 +35,7 @@ const mockServer = require('./mock-server');
 
 const existentUser = fixtureUser.existent;
 const globalSetupPath = testsConfig.paths.session;
+const projectPath = testsConfig.paths.project;
 
 const helper = {};
 
@@ -137,6 +138,25 @@ helper.assertions = {
       done(null);
     });
   },
+
+  assertProjectSetup(expected, path, done) {
+    path = path || projectPath;
+    readJSON(path, (err, actual) => {
+      if (err) {
+        return done(err);
+      }
+
+      if (!expected || isEmpty(expected.flex)) {
+        const actualDoesNotContainData = isEmpty(actual) || isEmpty(actual.flex);
+        expect(actualDoesNotContainData, `Setup at ${path} is empty.`).to.be.true;
+        return done(null);
+      }
+
+      expect(actual).to.deep.equal(expected);
+      done(null);
+    });
+  },
+
   buildExpectedProject(appId, org, lastJobId, serviceName, service, schemaVersion = config.defaultSchemaVersion) {
     return {
       org,
@@ -420,7 +440,7 @@ helper.setup = {
   },
 
   clearProjectSetup(path, done) {
-    path = path || testsConfig.paths.project;
+    path = path || projectPath;
     writeJSON(path, '', done);
   },
 

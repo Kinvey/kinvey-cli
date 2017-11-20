@@ -22,6 +22,7 @@ const fixtureApps = require('./fixtures/apps.json');
 const fixtureApp = require('./fixtures/app.json');
 const fixtureServices = require('./fixtures/datalinks.json');
 const fixtureJob = require('./fixtures/job.json');
+const fixtureJobs = require('./fixtures/jobs.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureLogs = require('./fixtures/logs.json');
 
@@ -133,6 +134,24 @@ function build(
       return res.send(wantedService);
     } else {
       res.send(fixtureServices);
+    }
+  });
+
+  // JOBS
+  app.get(`/${versionPart}/jobs/:id`, (req, res) => {
+    const id = req.params.id;
+    if (!id) {
+      return res.send([]);
+    }
+
+    const wantedJob = fixtureJobs.find(x => x.jobId === id);
+    if (wantedJob) {
+      res.send(wantedJob);
+    } else {
+      res.status(404).send({
+        "code": "JobNotFound",
+        "description": "The specified job could not be found."
+      });
     }
   });
 

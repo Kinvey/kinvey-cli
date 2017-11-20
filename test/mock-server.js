@@ -46,7 +46,8 @@ function build(
     existentUser = fixtureUser.existent,
     token = fixtureUser.token,
     nonExistentUser = fixtureUser.nonexistent,
-    serviceStatus =  ServiceStatus.ONLINE
+    serviceStatus =  ServiceStatus.ONLINE,
+    jobType = 'recycleDataLink'
   },
   done
 ) {
@@ -153,6 +154,23 @@ function build(
         "description": "The specified job could not be found."
       });
     }
+  });
+
+  app.post(`/${versionPart}/jobs`, (req, res) => {
+    const body = req.body;
+    const isAsExpected = body && body.type === jobType && body.params && body.params.dataLinkId === fixtureInternalDataLink.id;
+    if (!isAsExpected) {
+      if (body.params.dataLinkId !== fixtureInternalDataLink.id) {
+        return res.status(404).send({
+          "code": "DataLinkNotFound",
+          "description": "The specified data link could not be found."
+        });
+      }
+
+      return res.status(400).send({ description: `CLI has constructed bad job: ${JSON.stringify(body)}` });
+    }
+
+    res.send({ job: 'idOfJobThatIsRecyclingTheService' });
   });
 
   // APPS

@@ -15,6 +15,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const isEqual = require('lodash.isequal');
 
 const { HTTPMethod, ServiceStatus } = require('./../lib/constants');
 const fixtureUser = require('./fixtures/user.json');
@@ -47,7 +48,8 @@ function build(
     token = fixtureUser.token,
     nonExistentUser = fixtureUser.nonexistent,
     serviceStatus =  ServiceStatus.ONLINE,
-    jobType = 'recycleDataLink'
+    jobType = 'recycleDataLink',
+    serviceLogsQuery = {}
   },
   done
 ) {
@@ -126,6 +128,23 @@ function build(
     };
 
     res.send(result);
+  });
+
+  app.get(`/${versionPart}/data-links/:id/logs`, (req, res) => {
+    const id = req.params.id;
+    if (id !== fixtureInternalDataLink.id) {
+      return res.status(404).send({
+        "code": "DataLinkNotFound",
+        "description": "The specified data link could not be found."
+      });
+    }
+
+    const query = req.query;
+    if (!isEqual(query, serviceLogsQuery)) {
+      return res.status(400).send({ description: `CLI sent bad query: ${JSON.stringify(query)}` });
+    }
+
+    res.send(fixtureLogs);
   });
 
   app.get(`/${versionPart}/data-links/:id`, (req, res) => {

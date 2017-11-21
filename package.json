@@ -37,6 +37,7 @@
     "isemail": "1.2.0",
     "lodash.clonedeep": "4.5.0",
     "lodash.isempty": "4.4.0",
+    "lodash.isequal": "4.5.0",
     "lodash.isnil": "4.0.0",
     "moment": "2.11.2",
     "request": "2.63.0",

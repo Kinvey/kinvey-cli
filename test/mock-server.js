@@ -49,7 +49,9 @@ function build(
     nonExistentUser = fixtureUser.nonexistent,
     serviceStatus =  ServiceStatus.ONLINE,
     jobType = 'recycleDataLink',
-    serviceLogsQuery = {}
+    serviceLogsQuery = {},
+    domainType = 'apps',
+    domainEntityId = fixtureApp.id
   },
   done
 ) {
@@ -190,6 +192,11 @@ function build(
     }
 
     res.send({ job: 'idOfJobThatIsRecyclingTheService' });
+  });
+
+  // SERVICES BY APP/ORG
+  app.get(`/${versionPart}/${domainType}/${domainEntityId}/data-links`, (req, res) => {
+    res.send(fixtureServices);
   });
 
   // APPS

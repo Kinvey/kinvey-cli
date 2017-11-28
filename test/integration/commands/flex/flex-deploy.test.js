@@ -14,11 +14,17 @@
  */
 
 const async = require('async');
+const yargs = require('yargs');
 
 const path = require('path');
 
 const { AuthOptionsNames } = require('./../../../../lib/constants');
-const { isEmpty, readJSON, writeJSON } = require('./../../../../lib/utils');
+const FlexController = require('./../../../../lib/controllers/flex-controller');
+const FlexService = require('./../../../../lib/services/flex-service');
+const CLIManager = require('./../../../../lib/cli-manager');
+const logger = require('./../../../../lib/logger');
+const Setup = require('./../../../../lib/setup');
+const { Endpoints, isEmpty, isNullOrUndefined, readJSON, writeJSON } = require('./../../../../lib/utils');
 const testsConfig = require('./../../../tests-config');
 const { execCmdWithAssertion, setup } = require('./../../../tests-helper');
 
@@ -117,9 +123,47 @@ describe(`${baseCmd}`, () => {
         setup.clearProjectSetup(null, done);
       });
 
-      describe.skip("and user's project is valid", () => {
-        it('should succeed', (done) => {
+      describe("and user's project is valid", () => {
+        /*it('should succeed', (done) => {
           testFlexDeploy(activeProfile, null, validUserOne, done);
+        });*/
+
+        it('should succeed', (done) => {
+          const setup = new Setup(testsConfig.paths.session);
+          const manager = new CLIManager({ setup, config: testsConfig, logger, commandsManager: yargs });
+          manager.sendRequest = function stubSendRequest(options, done) {
+            if (options.endpoint === Endpoints.session()) {
+              return done(null, { email: validUserOne.email, token: tokenOne });
+            } else if (options.endpoint === Endpoints.jobs(2)) {
+              const formData = options.formData;
+              const headers = options.headers;
+              if (isEmpty(headers) || headers['Transfer-Encoding'] !== 'chunked') {
+                return done(new Error('Bad headers.'));
+              }
+
+              if (isEmpty(formData) || formData.type !== 'deployDataLink' || isEmpty(formData.params) || formData.params.version === '0.6.2') {
+                return done(new Error('Bad form data type or params.'));
+              }
+
+              const isOK = !isEmpty(formData.file) && !isEmpty(formData.file.options) && formData.file.options.contentType === 'application/tar';
+              if (!isOK) {
+                return done(new Error('Bad form data file.'));
+              }
+
+
+              return done(null, {job: '123'});
+            }
+
+            done(new Error('CLI made a bad request.'));
+          };
+
+          const flexService = new FlexService(manager);
+          const ctrl = new FlexController({ cliManager: manager, flexService });
+
+          ctrl.deploy({}, (err) => {
+            expect(err).to.not.exist;
+            done();
+          })
         });
       });
 

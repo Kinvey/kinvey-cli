@@ -212,7 +212,6 @@ function build(
 
   return app.listen(port, (err) => {
     if (done) {
-      console.log(err);
       console.log(`Mock server running on ${port}`);
       return done(err);
     }

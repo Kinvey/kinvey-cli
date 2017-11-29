@@ -23,8 +23,9 @@ module.exports = {
   defaultSchemaVersion: 2,
   artifacts: ['.git', '.svn', 'node_modules', 'output.log'],
   timeout: 5 * 1000,
+  flexProjectUploadTimeout: 30 * 1000,
   paths: {
-    project: path.join(process.cwd(), '.kinvey0'),
+    project: path.join(process.cwd(), '.kinvey'),
     package: path.join(process.cwd()),
     session: path.join(os.homedir(), '.kinvey-cli')
   }

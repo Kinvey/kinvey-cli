@@ -142,7 +142,7 @@ describe(baseCmd, () => {
     });
 
     it('and existent serviceId should fail', (done) => {
-      let cmd = `${baseCmd} --${FlexOptionsNames.SERVICE_ID} ${defaultServiceId}`;
+      const cmd = `${baseCmd} --${FlexOptionsNames.SERVICE_ID} ${defaultServiceId}`;
       execCmdWithAssertion(cmd, null, null, true, false, true, (err) => {
         expect(err).to.not.exist;
         done();

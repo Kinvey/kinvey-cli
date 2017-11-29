@@ -24,7 +24,6 @@ const fixtureInternalDataLink = require('./../../../fixtures/kinvey-dlc.json');
 
 const existentUserOne = fixtureUser.existentOne;
 const tokenOne = fixtureUser.tokenOne;
-const nonExistentUser = fixtureUser.nonexistent;
 const defaultServiceId = fixtureInternalDataLink.id;
 
 const baseCmd = 'flex logs';
@@ -57,13 +56,13 @@ function testFlexLogs(profileName, optionsForCredentials, serviceId, query, vali
 
     if (query[FlexOptionsNames.PAGE]) {
       queryPart = `${queryPart} --${FlexOptionsNames.PAGE} ${query.page}`;
-      query[FlexOptionsNames.PAGE] += "";
+      query[FlexOptionsNames.PAGE] += '';
     }
 
     if (query[FlexOptionsNames.NUMBER]) {
       queryPart = `${queryPart} --${FlexOptionsNames.NUMBER} ${query.number}`;
       // server expects 'limit' instead of number, so this is how the CLI constructs the query
-      query.limit = query[FlexOptionsNames.NUMBER] + "";
+      query.limit = query[FlexOptionsNames.NUMBER] + '';
       delete query[FlexOptionsNames.NUMBER];
     }
 
@@ -156,7 +155,7 @@ describe(`${baseCmd}`, () => {
 
       describe('when valid project is set', () => {
         before((done) => {
-         setup.createProjectSetup(null, done);
+          setup.createProjectSetup(null, done);
         });
 
         it('without serviceId as an option should succeed', (done) => {
@@ -166,7 +165,7 @@ describe(`${baseCmd}`, () => {
         after((done) => {
           setup.clearProjectSetup(null, done);
         });
-       });
+      });
 
       describe('when invalid project is set', () => {
         before((done) => {
@@ -181,7 +180,7 @@ describe(`${baseCmd}`, () => {
         after((done) => {
           setup.clearProjectSetup(null, done);
         });
-       });
+      });
 
       describe('when project is not set', () => {
         before((done) => {
@@ -220,7 +219,7 @@ describe(`${baseCmd}`, () => {
       });
 
       it('and existent serviceId should fail', (done) => {
-        let cmd = `${baseCmd} --${FlexOptionsNames.SERVICE_ID} ${defaultServiceId}`;
+        const cmd = `${baseCmd} --${FlexOptionsNames.SERVICE_ID} ${defaultServiceId}`;
         execCmdWithAssertion(cmd, null, null, true, false, true, (err) => {
           expect(err).to.not.exist;
           done();

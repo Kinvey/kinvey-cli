@@ -21,7 +21,7 @@ const baseCmd = 'profile use';
 
 function testProfileUse(profilesCount, chooseExistent, done) {
   const profileNames = [];
-  for (let i = 0; i < profilesCount; i+=1) {
+  for (let i = 0; i < profilesCount; i += 1) {
     profileNames.push(`testProfileUse${i}`);
   }
 

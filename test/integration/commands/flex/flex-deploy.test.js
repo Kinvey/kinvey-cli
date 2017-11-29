@@ -124,9 +124,9 @@ describe(`${baseCmd}`, () => {
       });
 
       describe("and user's project is valid", () => {
-        /*it('should succeed', (done) => {
+        /* it('should succeed', (done) => {
           testFlexDeploy(activeProfile, null, validUserOne, done);
-        });*/
+        }); */
 
         it('should succeed', (done) => {
           const setup = new Setup(testsConfig.paths.session);
@@ -151,7 +151,7 @@ describe(`${baseCmd}`, () => {
               }
 
 
-              return done(null, {job: '123'});
+              return done(null, { job: '123' });
             }
 
             done(new Error('CLI made a bad request.'));
@@ -163,7 +163,7 @@ describe(`${baseCmd}`, () => {
           ctrl.deploy({}, (err) => {
             expect(err).to.not.exist;
             done();
-          })
+          });
         });
       });
 
@@ -208,9 +208,9 @@ describe(`${baseCmd}`, () => {
     describe("is not valid and user's project is valid", () => {
       before('setInvalidProjectSetup', (done) => {
         setup.createProjectSetup({
-            domainEntityId: fixtureApp.id,
-            serviceName: fixtureInternalDataLink.name,
-          }, done);
+          domainEntityId: fixtureApp.id,
+          serviceName: fixtureInternalDataLink.name,
+        }, done);
       });
 
       after('clearProjectSetup', (done) => {

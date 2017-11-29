@@ -21,7 +21,7 @@ const baseCmd = 'profile list';
 
 function testProfileList(profilesCount, done) {
   const profileNames = [];
-  for (let i = 0; i < profilesCount; i+=1) {
+  for (let i = 0; i < profilesCount; i += 1) {
     profileNames.push(`testProfileList${i}`);
   }
 

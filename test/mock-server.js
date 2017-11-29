@@ -47,7 +47,7 @@ function build(
     existentUser = fixtureUser.existent,
     token = fixtureUser.token,
     nonExistentUser = fixtureUser.nonexistent,
-    serviceStatus =  ServiceStatus.ONLINE,
+    serviceStatus = ServiceStatus.ONLINE,
     jobType = 'recycleDataLink',
     serviceLogsQuery = {},
     domainType = 'apps',
@@ -67,13 +67,13 @@ function build(
       const isAuth = isAuthenthicated(req.headers, token);
       if (!isAuth) {
         return res.status(401).send({
-          "code": "Unauthorized",
-          "description": "You need to be logged in to execute this request."
+          code: 'Unauthorized',
+          description: 'You need to be logged in to execute this request.'
         });
       }
     }
 
-    next()
+    next();
   });
 
   // LOGIN/LOGOUT
@@ -89,7 +89,7 @@ function build(
     } else if (email === existentUserOne.email && pass === existentUserOne.password) {
       return res.send({ email: existentUserOne.email, token: fixtureUser.tokenOne });
     } else if (email === nonExistentUser.email && pass === nonExistentUser.password) {
-      return res.send(401)
+      return res.send(401);
     }
 
     const errRes = {
@@ -113,8 +113,8 @@ function build(
     const id = req.params.id;
     if (id !== fixtureInternalDataLink.id) {
       return res.status(404).send({
-        "code": "DataLinkNotFound",
-        "description": "The specified data link could not be found."
+        code: 'DataLinkNotFound',
+        description: 'The specified data link could not be found.'
       });
     }
 
@@ -136,8 +136,8 @@ function build(
     const id = req.params.id;
     if (id !== fixtureInternalDataLink.id) {
       return res.status(404).send({
-        "code": "DataLinkNotFound",
-        "description": "The specified data link could not be found."
+        code: 'DataLinkNotFound',
+        description: 'The specified data link could not be found.'
       });
     }
 
@@ -154,9 +154,9 @@ function build(
     if (id) {
       const wantedService = fixtureServices.find(x => x.id === id);
       return res.send(wantedService);
-    } else {
-      res.send(fixtureServices);
     }
+
+    res.send(fixtureServices);
   });
 
   // JOBS
@@ -171,8 +171,8 @@ function build(
       res.send(wantedJob);
     } else {
       res.status(404).send({
-        "code": "JobNotFound",
-        "description": "The specified job could not be found."
+        code: 'JobNotFound',
+        description: 'The specified job could not be found.'
       });
     }
   });
@@ -183,8 +183,8 @@ function build(
     if (!isAsExpected) {
       if (body.params.dataLinkId !== fixtureInternalDataLink.id) {
         return res.status(404).send({
-          "code": "DataLinkNotFound",
-          "description": "The specified data link could not be found."
+          code: 'DataLinkNotFound',
+          description: 'The specified data link could not be found.'
         });
       }
 
@@ -201,8 +201,6 @@ function build(
 
   // APPS
   app.get(`/${versionPart}/apps`, (req, res) => {
-    console.log(req);
-    console.log('______---------_______');
     res.send(fixtureApps);
   });
 
@@ -212,7 +210,7 @@ function build(
 
   return app.listen(port, (err) => {
     if (done) {
-      console.log(`Mock server running on ${port}`);
+      // console.log(`Mock server running on ${port}`);
       return done(err);
     }
 
@@ -220,7 +218,7 @@ function build(
   });
 }
 
-//build({});
+// build({});
 
 
 module.exports = (options, done) => {
@@ -229,12 +227,7 @@ module.exports = (options, done) => {
 };
 
 
-
-
-
-
-
-/*const nock = require('nock');
+/* const nock = require('nock');
 
 const config = require('config');
 const constants = require('./../lib/constants');
@@ -404,4 +397,4 @@ class MockServer {
   }
 }
 
-module.exports = MockServer;*/
+module.exports = MockServer; */

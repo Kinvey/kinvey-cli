@@ -112,7 +112,7 @@ describe(baseCmd, () => {
     });
 
     it('and existent jobId should fail', (done) => {
-      let cmd = `${baseCmd} ${defaultJobId}`;
+      const cmd = `${baseCmd} ${defaultJobId}`;
       execCmdWithAssertion(cmd, null, null, true, false, true, (err) => {
         expect(err).to.not.exist;
         done();

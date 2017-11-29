@@ -21,10 +21,8 @@ const stripAnsi = require('strip-ansi');
 const childProcess = require('child_process');
 
 const { AuthOptionsNames, EnvironmentVariables } = require('./../lib/constants');
-//const config = require('config');
 const logger = require('../lib/logger');
-// const prompt = require('./../lib/prompt');
-const { isEmpty, isNullOrUndefined, readJSON, writeJSON } = require('../lib/utils');
+const { isEmpty, readJSON, writeJSON } = require('../lib/utils');
 
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApp = require('./fixtures/app.json');
@@ -52,62 +50,7 @@ helper.assertions = {
     expect(logger.error).to.be.calledWith('%s', expectedErr);
     expect(actualErr).to.equal(expectedErr);
   },
-  // Asserts that the saved session(user) and the saved project are as expected.
-  assertUserProjectSetup(expectedUser, expectedProject, cb) {
-    async.series(
-      [
-        function verifyUser(next) {
-          util.readJSON(config.paths.session, (err, actualUser) => {
-            if (err) {
-              return next(err);
-            }
 
-            if (!expectedUser) {
-              expect(actualUser).to.equal('');
-              return next();
-            }
-
-            const host = expectedUser.host;
-            expect(actualUser.host).to.equal(host);
-
-            if (expectedUser.tokens) {
-              expect(actualUser.tokens).to.exist;
-              expect(actualUser.tokens[host]).to.exist.and.to.equal(expectedUser.tokens[host]);
-            }
-
-            next();
-          });
-        },
-        function verifyProject(next) {
-          util.readJSON(config.paths.project, (err, actualProject) => {
-            if (err) {
-              return next(err);
-            }
-
-            if (!expectedProject) {
-              expect(actualProject).to.equal('');
-              return next();
-            }
-
-            let discrepancy;
-            for (const prop in expectedProject) {
-              const actualValue = actualProject[prop];
-              const expectedValue = expectedProject[prop];
-              if (actualValue !== expectedValue) {
-                discrepancy = `Expected: ${expectedValue}. Actual: ${actualValue}.`;
-                break;
-              }
-            }
-
-            expect(discrepancy).to.not.exist;
-
-            next();
-          });
-        }
-      ],
-      cb
-    );
-  },
   assertError(actualErr, expectedErr) {
     expect(actualErr).to.exist;
     const expectedName = expectedErr.NAME || expectedErr.name;
@@ -179,7 +122,7 @@ helper.assertions = {
   },
   buildExpectedProfile(profileName, host, email, token) {
     const profile = {
-      [profileName] : {
+      [profileName]: {
         email: email || existentUser.email,
         token: token || fixtureUser.token,
         host: host || testsConfig.host
@@ -205,13 +148,13 @@ helper.assertions = {
   buildExpectedActiveItems(profileName) {
     return {
       profile: profileName
-    }
+    };
   },
   buildExpectedGlobalSetup(activeItems, profiles) {
     return {
       active: activeItems,
-      profiles: profiles
-    }
+      profiles
+    };
   }
 };
 
@@ -467,10 +410,10 @@ helper.setup = {
 
 helper.execCmd = function execCmd(cliCmd, options, done) {
   options = options || {
-      env: {
-        NODE_CONFIG: JSON.stringify(testsConfig)
-      }
-    };
+    env: {
+      NODE_CONFIG: JSON.stringify(testsConfig)
+    }
+  };
 
   const fullCmd = `node .\\bin\\cli.js ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
@@ -517,14 +460,6 @@ helper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshot
     },
     (next) => {
       helper.execCmd(cliCmd, cmdOptions, (err, stdout, stderr) => {
-        // I don't think I'll need it, will remove probably
-        /*const errIsExpected = !isNullOrUndefined(expectedErr);
-        if (errIsExpected) {
-          helper.assertions.assertError(err, expectedErr);
-        } else {
-          expect(err).to.not.exist;
-        }*/
-
         let output;
         if (stdout) {
           output = stdout;
@@ -536,13 +471,11 @@ helper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshot
 
         const strippedOutput = stripAnsi(output) || '';
         let finalOutput;
-        
         // paths will be different for each machine so let's just remove them
         if (clearSetupPaths) {
           finalOutput = helper.getOutputWithoutSetupPaths(strippedOutput);
-        } else if (escapeSlashes && process.env.SNAPSHOT_UPDATE !== "1") {
+        } else if (escapeSlashes && process.env.SNAPSHOT_UPDATE !== '1') {
           // if we save in a snapshot 'bin\cli.js', then when we compare, snap-shot-it retrieves the value as 'bincli.js' and the actual value is 'bin\cli.js', hence the test fails
-          //finalOutput = strippedOutput.replace(/\\/g, '\\\\');
           finalOutput = strippedOutput.replace(/\\/g, '');
         } else {
           finalOutput = strippedOutput;
@@ -551,7 +484,7 @@ helper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshot
         if (snapshotIt) {
           try {
             snapshot(finalOutput);
-          } catch(ex) {
+          } catch (ex) {
             return next(ex, finalOutput);
           }
         }

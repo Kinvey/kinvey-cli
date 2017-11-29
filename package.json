@@ -14,7 +14,7 @@
     "Sam Levin <sam@kinvey.com>"
   ],
   "bin": {
-    "kinvey": "./bin/cli.js"
+    "kinvey": "./bin/kinvey"
   },
   "repository": {
     "type": "git",

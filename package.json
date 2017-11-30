@@ -14,7 +14,7 @@
     "Sam Levin <sam@kinvey.com>"
   ],
   "bin": {
-    "kinvey": "./bin/cli.js"
+    "kinvey": "./bin/kinvey"
   },
   "repository": {
     "type": "git",
@@ -44,7 +44,7 @@
     "update-notifier": "0.5.0",
     "uuid": "2.0.3",
     "valid-url": "1.0.9",
-    "yargs": "9.0.1"
+    "yargs": "10.0.3"
   },
   "devDependencies": {
     "body-parser": "1.18.2",

@@ -31,7 +31,9 @@ describe(`${baseCmd}`, () => {
     it('should fail', (done) => {
       const cmd = `${baseCmd} --verbose`;
 
-      execCmdWithAssertion(cmd, null, null, true, true, false, () => {
+      execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
+        expect(err).to.not.exist;
+
         assertions.assertProjectSetup(null, null, (err) => {
           expect(err).to.not.exist;
           done();
@@ -52,7 +54,9 @@ describe(`${baseCmd}`, () => {
     it('should succeed', (done) => {
       const cmd = `${baseCmd} --verbose`;
 
-      execCmdWithAssertion(cmd, null, null, true, true, false, () => {
+      execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
+        expect(err).to.not.exist;
+
         assertions.assertProjectSetup(null, null, (err) => {
           expect(err).to.not.exist;
           done();

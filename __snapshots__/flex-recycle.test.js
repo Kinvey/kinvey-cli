@@ -39,7 +39,9 @@ info:  Recycle initiated, received job idOfJobThatIsRecyclingTheService
 `
 
 exports['flex recycle by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
-bincli.js flex recycle
+kinvey flex recycle
+
+Recycle the Service
 
 Options:
   --version                 Show version number                        [boolean]
@@ -53,7 +55,7 @@ Options:
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
 
-You must be authenticated. (CHANGE ERR MSG)
+You must be authenticated.
 
 `
 

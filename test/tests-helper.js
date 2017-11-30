@@ -415,7 +415,7 @@ helper.execCmd = function execCmd(cliCmd, options, done) {
     }
   };
 
-  const fullCmd = `node .\\bin\\cli.js ${cliCmd}`;
+  const fullCmd = `node .\\bin\\kinvey ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
     done(err, stdout, stderr);
   });

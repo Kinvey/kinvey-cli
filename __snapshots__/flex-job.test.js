@@ -26,7 +26,12 @@ info:  Job status: COMPLETE
 `
 
 exports['flex job by not specifying profile nor credentials when several profiles and existent jobId should fail 1'] = `
-bincli.js flex job [id]
+kinvey flex job [id]
+
+Get the job status of a deploy/recycle command
+
+Positionals:
+  id  Job ID
 
 Options:
   --version                 Show version number                        [boolean]
@@ -39,7 +44,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   -h, --help                Show help                                  [boolean]
 
-You must be authenticated. (CHANGE ERR MSG)
+You must be authenticated.
 
 `
 

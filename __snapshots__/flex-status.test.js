@@ -63,7 +63,9 @@ Status of FSR service 12378kdl2 (Service name is not available.)
 `
 
 exports['flex status by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
-bincli.js flex status
+kinvey flex status
+
+Return the health of a Flex Service cluster
 
 Options:
   --version                 Show version number                        [boolean]
@@ -77,7 +79,7 @@ Options:
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
 
-You must be authenticated. (CHANGE ERR MSG)
+You must be authenticated.
 
 `
 

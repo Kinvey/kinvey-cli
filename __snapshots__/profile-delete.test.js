@@ -35,7 +35,12 @@ info:  Could not find profile with name 'nonExistentProfileName'.
 `
 
 exports['profile delete without a name should fail 1'] = `
-bin\cli.js profile delete <name>
+kinvey profile delete <name>
+
+Delete profile by name
+
+Positionals:
+  name  Profile name                                                  [required]
 
 Options:
   --version                 Show version number                        [boolean]

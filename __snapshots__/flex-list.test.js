@@ -19,7 +19,9 @@ info:  The service used in this project is marked with *
 `
 
 exports['flex list by specifying a profile and invalid domain with valid id should fail 1'] = `
-bincli.js flex list
+kinvey flex list
+
+List Internal Flex Services for an app or org
 
 Options:
   --version                 Show version number                        [boolean]
@@ -59,7 +61,9 @@ info:  The service used in this project is marked with *
 `
 
 exports['flex list by not specifying profile nor credentials when several profiles should fail 1'] = `
-bincli.js flex list
+kinvey flex list
+
+List Internal Flex Services for an app or org
 
 Options:
   --version                 Show version number                        [boolean]
@@ -74,7 +78,7 @@ Options:
   --domain                  Specify domain: 'app' or 'org'              [string]
   --id                      ID of app or org                            [string]
 
-You must be authenticated. (CHANGE ERR MSG)
+You must be authenticated.
 
 `
 

@@ -1,5 +1,7 @@
 exports['flex deploy when project setup is non-existent by not specifying profile nor credentials when one profile should use it and fail 1'] = `
-bincli.js flex deploy
+kinvey flex deploy
+
+Deploy the current project to the Kinvey FlexService Runtime
 
 Options:
   --version                 Show version number                        [boolean]
@@ -22,7 +24,9 @@ error:  InvalidProject: This project is not valid. Please implement the kinvey-f
 `
 
 exports['flex deploy when project setup exists is not valid and user\'s project is valid should fail 1'] = `
-bincli.js flex deploy
+kinvey flex deploy
+
+Deploy the current project to the Kinvey FlexService Runtime
 
 Options:
   --version                 Show version number                        [boolean]

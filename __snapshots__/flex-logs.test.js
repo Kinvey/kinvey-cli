@@ -106,7 +106,7 @@ Options:
   --number                  Number of entries to fetch, i.e. page size (non-zero
                             integer, default=100, max=2000)             [number]
 
-You must be authenticated. (CHANGE ERR MSG)
+You must be authenticated.
 
 `
 

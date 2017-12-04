@@ -21,8 +21,8 @@
     "url": "Kinvey/kinvey-cli"
   },
   "scripts": {
-    "start": "./bin/cli.js",
-    "pretest": "./node_modules/.bin/eslint bin cmd config lib test",
+    "start": "./bin/kinvey",
+    "pretest": "./node_modules/.bin/eslint bin config lib test",
     "test": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test/ --NODE_CONFIG_DIR=./test/config",
     "test-unit": "./node_modules/.bin/mocha test/unit --NODE_CONFIG_DIR=./test/config",
     "test-integration": "./node_modules/.bin/mocha test/integration --NODE_CONFIG_DIR=./test/config"

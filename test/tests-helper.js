@@ -19,6 +19,7 @@ const snapshot = require('snap-shot-it');
 const stripAnsi = require('strip-ansi');
 
 const childProcess = require('child_process');
+const path = require('path');
 
 const { AuthOptionsNames, EnvironmentVariables } = require('./../lib/constants');
 const logger = require('../lib/logger');
@@ -415,7 +416,7 @@ helper.execCmd = function execCmd(cliCmd, options, done) {
     }
   };
 
-  const fullCmd = `node .\\bin\\kinvey ${cliCmd}`;
+  const fullCmd = `node ${path.join('bin', 'kinvey')} ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
     done(err, stdout, stderr);
   });
@@ -425,15 +426,26 @@ helper.execCmdWithoutAssertion = function (cliCmd, options, done) {
   let ms = {};
   async.series([
     (next) => {
-      ms = mockServer(null, next);
+      mockServer(null, (err, server) => {
+        if (err) {
+          return next(err);
+        }
+
+        ms = server;
+        next(null);
+      });
     },
     (next) => {
       helper.execCmd(cliCmd, options, next);
     }
   ], (err) => {
-    ms.close(() => {
+    if (ms.listening) {
+      ms.close(() => {
+        done(err);
+      });
+    } else {
       done(err);
-    });
+    }
   });
 };
 
@@ -456,7 +468,14 @@ helper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshot
 
   async.series([
     (next) => {
-      ms = mockServer(apiOptions, next);
+      mockServer(apiOptions, (err, server) => {
+        if (err) {
+          return next(err);
+        }
+
+        ms = server;
+        next(null);
+      });
     },
     (next) => {
       helper.execCmd(cliCmd, cmdOptions, (err, stdout, stderr) => {
@@ -493,13 +512,21 @@ helper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshot
       });
     }
   ], (err, results) => {
-    ms.close(() => {
+    if (ms.listening) {
+      ms.close(() => {
+        if (err) {
+          return done(err);
+        }
+
+        done(null, results.pop());
+      });
+    } else {
       if (err) {
         return done(err);
       }
 
       done(null, results.pop());
-    });
+    }
   });
 };
 

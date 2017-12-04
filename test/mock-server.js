@@ -31,6 +31,19 @@ const testsConfig = require('./tests-config');
 
 const existentUserOne = fixtureUser.existentOne;
 
+let server;
+
+function runServer(app, port, done) {
+  server = app.listen(port, (err) => {
+    if (done) {
+      // console.log(`Mock server running on ${port}`);
+      return done(err, server);
+    }
+
+    console.log(`Mock server running on ${port}`);
+  });
+}
+
 function isAuthenthicated(headers, expectedToken) {
   if (!headers) {
     return false;
@@ -208,14 +221,13 @@ function build(
     res.send(404);
   });
 
-  return app.listen(port, (err) => {
-    if (done) {
-      // console.log(`Mock server running on ${port}`);
-      return done(err);
-    }
-
-    console.log(`Mock server running on ${port}`);
-  });
+  if (server && server.listening === true) {
+    server.close(() => {
+      runServer(app, port, done);
+    });
+  } else {
+    runServer(app, port, done);
+  }
 }
 
 // build({});

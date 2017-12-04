@@ -6,7 +6,7 @@ Status of FSR service 12378kdl2 (Service name is not available.)
 
   Status:   ONLINE [v1.4.2]
 
-  Requested on:   Wed Nov 01 2017 10:42:31 GMT+0200 (FLE Standard Time)
+  Requested on:   Wednesday, November 1st 2017, 10:42:31 AM
   Deployed by:   davy.jones@mail.com (Davy Jones)
 
 
@@ -28,7 +28,7 @@ Status of FSR service 12378kdl2 (TestKinveyDatalink)
 
   Status:   ONLINE [v1.4.2]
 
-  Requested on:   Wed Nov 01 2017 10:42:31 GMT+0200 (FLE Standard Time)
+  Requested on:   Wednesday, November 1st 2017, 10:42:31 AM
   Deployed by:   davy.jones@mail.com (Davy Jones)
 
 
@@ -42,7 +42,7 @@ Status of FSR service 12378kdl2 (Service name is not available.)
 
   Status:   ONLINE [v1.4.2]
 
-  Requested on:   Wed Nov 01 2017 10:42:31 GMT+0200 (FLE Standard Time)
+  Requested on:   Wednesday, November 1st 2017, 10:42:31 AM
   Deployed by:   davy.jones@mail.com (Davy Jones)
 
 
@@ -56,7 +56,7 @@ Status of FSR service 12378kdl2 (Service name is not available.)
 
   Status:   ONLINE [v1.4.2]
 
-  Requested on:   Wed Nov 01 2017 10:42:31 GMT+0200 (FLE Standard Time)
+  Requested on:   Wednesday, November 1st 2017, 10:42:31 AM
   Deployed by:   davy.jones@mail.com (Davy Jones)
 
 
@@ -93,7 +93,7 @@ Status of FSR service 12378kdl2 (Service name is not available.)
 
   Status:   ONLINE [v1.4.2]
 
-  Requested on:   Wed Nov 01 2017 10:42:31 GMT+0200 (FLE Standard Time)
+  Requested on:   Wednesday, November 1st 2017, 10:42:31 AM
   Deployed by:   davy.jones@mail.com (Davy Jones)
 
 debug:  Request:  DELETE http://localhost:3234/session

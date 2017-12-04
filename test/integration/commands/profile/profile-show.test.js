@@ -67,7 +67,7 @@ describe(baseCmd, () => {
 
     it('with existent name when active profile is set should succeed', (done) => {
       const activeProfile = 20;
-      const profileToShow = '%!@)_';
+      const profileToShow = '1%!@_';
       const profiles = ['testProfileShow', activeProfile, profileToShow];
 
       async.series([
@@ -88,7 +88,7 @@ describe(baseCmd, () => {
   describe('without name parameter', () => {
     it('when active profile is set should succeed', (done) => {
       const activeProfile = 20;
-      const profiles = ['testProfileShow', activeProfile, '%!@)_'];
+      const profiles = ['testProfileShow', activeProfile, '1%!@_'];
 
       async.series([
         function createSeveral(next) {

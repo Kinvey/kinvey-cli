@@ -30,7 +30,7 @@ info:  Could not find profile with name 'nonExistentProfile'.
 
 exports['profile show with name parameter with existent name when active profile is set should succeed 1'] = `
 debug:  Checking for package updates
-%!@)_
+1%!@_
 E-mail: janeDoe@mail.com
 Host: http://localhost:3234/
 Token: userToken

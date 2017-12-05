@@ -13,25 +13,26 @@
  * contents is a violation of applicable laws.
  */
 
-const async = require('async');
-const init = require('../../init.js');
-const project = require('../../project.js');
-const user = require('../../user.js');
-const handleActionFailure = require('../../util').handleCommandFailure;
+const yargs = require('yargs');
 
-function list(argv, cb) {
-  init(argv);
-  return async.series([
-    (next) => user.setup(argv, next),
-    (next) => project.restore(next),
-    (next) => project.list(next)
-  ], (err) => {
-    handleActionFailure(err, cb);
-  });
-}
+const path = require('path');
+// advisable to happen before any other require
+process.env.NODE_CONFIG_DIR = path.join(__dirname, 'config');
 
-module.exports = {
-  command: 'list',
-  desc: 'list Internal Flex Services for the current app',
-  handler: list
-};
+const updateNotifier = require('update-notifier');
+
+const config = require('config');
+const CLIManager = require('./lib/CLIManager');
+const logger = require('./lib/logger.js');
+const pkg = require('./package.json');
+const Setup = require('./lib/Setup');
+
+const setup = new Setup(config.paths.session);
+const notifier = updateNotifier({
+  pkg,
+  updateCheckInterval: 1000 * 60 * 60
+});
+const Prompter = require('./lib/Prompter');
+
+const kinveyCLIManager = new CLIManager({ setup, config, logger, notifier, prompter: Prompter, commandsManager: yargs });
+kinveyCLIManager.init();

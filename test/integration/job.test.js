@@ -20,7 +20,7 @@ const chalk = require('chalk');
 const config = require('config');
 const constants = require('./../../lib/constants');
 const logger = require('./../../lib/logger');
-const util = require('./../../lib/util');
+const util = require('../../lib/utils');
 
 const MockServer = require('./../mock-server');
 const fixtureJob = require('./../fixtures/job.json');

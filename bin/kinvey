@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
  *
@@ -13,28 +14,4 @@
  * contents is a violation of applicable laws.
  */
 
-const updateNotifier = require('update-notifier');
-const logger = require('./logger.js');
-const pkg = require('../package.json');
-
-function init(options) {
-  if (options.silent) {
-    logger.config({ level: 3 });
-  }
-
-  if (options.verbose) {
-    logger.config({ level: 0 });
-  }
-
-  if (!options.suppressVersionCheck) {
-    logger.debug('Checking for package updates');
-    updateNotifier({
-      pkg,
-      updateCheckInterval: 1000 * 60 * 60
-    }).notify({
-      defer: false
-    });
-  }
-}
-
-module.exports = init;
+require('../index');

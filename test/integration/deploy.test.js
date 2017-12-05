@@ -19,7 +19,7 @@ const sinon = require('sinon');
 const config = require('config');
 
 const Errors = require('./../../lib/constants').Errors;
-const util = require('./../../lib/util');
+const util = require('../../lib/utils');
 
 const MockServer = require('./../mock-server');
 const fixtureApp = require('./../fixtures/app.json');

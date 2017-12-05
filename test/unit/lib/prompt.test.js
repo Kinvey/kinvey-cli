@@ -18,8 +18,8 @@ const inquirer = require('inquirer');
 
 const prompt = require('./../../../lib/prompt');
 const logger = require('./../../../lib/logger');
-const PromptMessages = require('./../../../lib/constants').PromptMessages;
-const InfoMessages = require('./../../../lib/constants').InfoMessages;
+const PromptMessages = require('../../../lib/Constants').PromptMessages;
+const InfoMessages = require('../../../lib/Constants').InfoMessages;
 const helperMocks = require('../../tests-helper').mocks;
 const helper = require('../../tests-helper');
 

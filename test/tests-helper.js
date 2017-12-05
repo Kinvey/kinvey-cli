@@ -20,7 +20,7 @@ const EnvironmentVariables = require('./../lib/constants').EnvironmentVariables;
 const config = require('config');
 const logger = require('../lib/logger');
 const prompt = require('./../lib/prompt');
-const util = require('../lib/util');
+const util = require('../lib/utils');
 
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApp = require('./fixtures/app.json');

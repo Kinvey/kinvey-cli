@@ -13,8 +13,8 @@
  * contents is a violation of applicable laws.
  */
 
-const KinveyError = require('./../../../lib/kinvey-error');
-const Errors = require('./../../../lib/constants').Errors;
+const KinveyError = require('../../../lib/KinveyError');
+const Errors = require('../../../lib/Constants').Errors;
 const helper = require('./../../tests-helper');
 
 function assertKinveyErr(actualErr, expectedErr) {

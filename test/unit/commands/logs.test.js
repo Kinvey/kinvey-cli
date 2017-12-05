@@ -21,7 +21,7 @@ const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');
 const helper = require('../../tests-helper');
-const LogErrorMessages = require('./../../../lib/constants').LogErrorMessages;
+const LogErrorMessages = require('../../../lib/Constants').LogErrorMessages;
 
 describe(`./${pkg.name} logs`, () => {
   const sandbox = sinon.sandbox.create();

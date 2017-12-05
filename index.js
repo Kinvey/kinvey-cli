@@ -22,17 +22,17 @@ process.env.NODE_CONFIG_DIR = path.join(__dirname, 'config');
 const updateNotifier = require('update-notifier');
 
 const config = require('config');
-const CLIManager = require('./lib/cli-manager');
+const CLIManager = require('./lib/CLIManager');
 const logger = require('./lib/logger.js');
 const pkg = require('./package.json');
-const Setup = require('./lib/setup');
+const Setup = require('./lib/Setup');
 
 const setup = new Setup(config.paths.session);
 const notifier = updateNotifier({
   pkg,
   updateCheckInterval: 1000 * 60 * 60
 });
-const Prompter = require('./lib/prompter');
+const Prompter = require('./lib/Prompter');
 
 const kinveyCLIManager = new CLIManager({ setup, config, logger, notifier, prompter: Prompter, commandsManager: yargs });
 kinveyCLIManager.init();

@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { writeJSON } = require('./../../../../lib/utils');
+const { writeJSON } = require('./../../../../lib/Utils');
 const testsConfig = require('./../../../tests-config');
 const { assertions, execCmdWithAssertion, setup } = require('./../../../tests-helper');
 

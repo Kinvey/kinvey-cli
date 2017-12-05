@@ -21,9 +21,9 @@ const stripAnsi = require('strip-ansi');
 const childProcess = require('child_process');
 const path = require('path');
 
-const { AuthOptionsNames, EnvironmentVariables } = require('./../lib/constants');
+const { AuthOptionsNames, EnvironmentVariables } = require('./../lib/Constants');
 const logger = require('../lib/logger');
-const { isEmpty, readJSON, writeJSON } = require('../lib/utils');
+const { isEmpty, readJSON, writeJSON } = require('../lib/Utils');
 
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApp = require('./fixtures/app.json');

@@ -18,13 +18,13 @@ const yargs = require('yargs');
 
 const path = require('path');
 
-const { AuthOptionsNames } = require('./../../../../lib/constants');
-const FlexController = require('./../../../../lib/controllers/flex-controller');
-const FlexService = require('./../../../../lib/services/flex-service');
-const CLIManager = require('./../../../../lib/cli-manager');
+const { AuthOptionsNames } = require('./../../../../lib/Constants');
+const FlexController = require('./../../../../lib/flex/FlexController');
+const FlexService = require('./../../../../lib/flex/FlexService');
+const CLIManager = require('./../../../../lib/CLIManager');
 const logger = require('./../../../../lib/logger');
-const Setup = require('./../../../../lib/setup');
-const { Endpoints, isEmpty, isNullOrUndefined, readJSON, writeJSON } = require('./../../../../lib/utils');
+const Setup = require('./../../../../lib/Setup');
+const { Endpoints, isEmpty, isNullOrUndefined, readJSON, writeJSON } = require('./../../../../lib/Utils');
 const testsConfig = require('./../../../tests-config');
 const { execCmdWithAssertion, setup } = require('./../../../tests-helper');
 
@@ -132,29 +132,36 @@ describe(`${baseCmd}`, () => {
           const setup = new Setup(testsConfig.paths.session);
           const manager = new CLIManager({ setup, config: testsConfig, logger, commandsManager: yargs });
           manager.sendRequest = function stubSendRequest(options, done) {
-            if (options.endpoint === Endpoints.session()) {
-              return done(null, { email: validUserOne.email, token: tokenOne });
-            } else if (options.endpoint === Endpoints.jobs(2)) {
-              const formData = options.formData;
-              const headers = options.headers;
-              if (isEmpty(headers) || headers['Transfer-Encoding'] !== 'chunked') {
-                return done(new Error('Bad headers.'));
+            const mockReq = {
+              once: () => {},
+              send: () => {
+                if (options.endpoint === Endpoints.session()) {
+                  return done(null, { email: validUserOne.email, token: tokenOne });
+                } else if (options.endpoint === Endpoints.jobs(2)) {
+                  const formData = options.formData;
+                  const headers = options.headers;
+                  if (isEmpty(headers) || headers['Transfer-Encoding'] !== 'chunked') {
+                    return done(new Error('Bad headers.'));
+                  }
+
+                  if (isEmpty(formData) || formData.type !== 'deployDataLink' || isEmpty(formData.params) || formData.params.version === '0.6.2') {
+                    return done(new Error('Bad form data type or params.'));
+                  }
+
+                  const isOK = !isEmpty(formData.file) && !isEmpty(formData.file.options) && formData.file.options.contentType === 'application/tar';
+                  if (!isOK) {
+                    return done(new Error('Bad form data file.'));
+                  }
+
+
+                  return done(null, { job: '123' });
+                }
+
+                done(new Error('CLI made a bad request.'));
               }
-
-              if (isEmpty(formData) || formData.type !== 'deployDataLink' || isEmpty(formData.params) || formData.params.version === '0.6.2') {
-                return done(new Error('Bad form data type or params.'));
-              }
-
-              const isOK = !isEmpty(formData.file) && !isEmpty(formData.file.options) && formData.file.options.contentType === 'application/tar';
-              if (!isOK) {
-                return done(new Error('Bad form data file.'));
-              }
-
-
-              return done(null, { job: '123' });
-            }
-
-            done(new Error('CLI made a bad request.'));
+            };
+            mockReq.send();
+            return mockReq;
           };
 
           const flexService = new FlexService(manager);

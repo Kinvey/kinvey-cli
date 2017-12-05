@@ -21,10 +21,10 @@ const stdout = require('test-console').stdout;
 const logger = require('./../../../lib/logger');
 const project = require('./../../../lib/project.js');
 const service = require('./../../../lib/service.js');
-const util = require('../../../lib/utils.js');
-const JobStatus = require('./../../../lib/constants').JobStatus;
-const Errors = require('./../../../lib/constants').Errors;
-const ServiceStatus = require('./../../../lib/constants').ServiceStatus;
+const util = require('../../../lib/Utils.js');
+const JobStatus = require('../../../lib/Constants').JobStatus;
+const Errors = require('../../../lib/Constants').Errors;
+const ServiceStatus = require('../../../lib/Constants').ServiceStatus;
 const helper = require('../../tests-helper');
 
 const fixtures = {

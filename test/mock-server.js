@@ -17,7 +17,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const isEqual = require('lodash.isequal');
 
-const { HTTPMethod, ServiceStatus } = require('./../lib/constants');
+const { HTTPMethod, ServiceStatus } = require('./../lib/Constants');
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApps = require('./fixtures/apps.json');
 const fixtureApp = require('./fixtures/app.json');

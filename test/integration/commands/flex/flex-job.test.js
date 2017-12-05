@@ -15,8 +15,8 @@
 
 const async = require('async');
 
-const { AuthOptionsNames } = require('./../../../../lib/constants');
-const { isEmpty } = require('./../../../../lib/utils');
+const { AuthOptionsNames } = require('./../../../../lib/Constants');
+const { isEmpty } = require('./../../../../lib/Utils');
 const { execCmdWithAssertion, setup } = require('./../../../tests-helper');
 
 const fixtureUser = require('./../../../fixtures/user.json');

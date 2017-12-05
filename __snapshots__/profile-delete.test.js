@@ -46,7 +46,7 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
-  --host                    Host of the Kinvey service                  [string]
+  --host                    Kinvey dedicated instance hostname          [string]
   --profile                 Profile to use                              [string]
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]

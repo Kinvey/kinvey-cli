@@ -21,7 +21,7 @@ const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const status = require('../../../lib/commands/flex/status.js').handler;
 const user = require('./../../../lib/user.js');
-const helper = require('../../tests-helper');
+const helper = require('../../TestsHelper');
 
 describe(`./${pkg.name} status`, () => {
   const sandbox = sinon.sandbox.create();

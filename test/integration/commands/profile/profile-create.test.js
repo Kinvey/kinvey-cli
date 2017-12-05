@@ -16,8 +16,8 @@
 const cloneDeep = require('lodash.clonedeep');
 
 const { AuthOptionsNames, EnvironmentVariables } = require('./../../../../lib/Constants');
-const testsConfig = require('./../../../tests-config');
-const { assertions, execCmdWithAssertion, setup } = require('./../../../tests-helper');
+const testsConfig = require('../../../TestsConfig');
+const { assertions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const fixtureUser = require('./../../../fixtures/user.json');
 

@@ -29,16 +29,16 @@ const fixtureUser = require('./fixtures/user.json');
 const fixtureApp = require('./fixtures/app.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureJob = require('./fixtures/job.json');
-const testsConfig = require('./tests-config');
-const mockServer = require('./mock-server');
+const testsConfig = require('./TestsConfig');
+const mockServer = require('./mockServer');
 
 const existentUser = fixtureUser.existent;
 const globalSetupPath = testsConfig.paths.session;
 const projectPath = testsConfig.paths.project;
 
-const helper = {};
+const TestsHelper = {};
 
-helper.assertions = {
+TestsHelper.assertions = {
   assertCmdCommandWithoutCallbackForError(expectedErr) {
     expect(process.exit).to.be.calledOnce;
     expect(process.exit).to.be.calledWith(-1);
@@ -159,7 +159,7 @@ helper.assertions = {
   }
 };
 
-helper.mocks = {
+TestsHelper.mocks = {
   getInquirerPrompt(sandbox, answers) {
     return sandbox.stub(inquirer, 'prompt', (questions, cb) => {
       setTimeout(() => {
@@ -172,7 +172,7 @@ helper.mocks = {
   }
 };
 
-helper.env = {
+TestsHelper.env = {
   setCredentials(user, password) {
     process.env[EnvironmentVariables.USER] = user;
     process.env[EnvironmentVariables.PASSWORD] = password;
@@ -183,14 +183,14 @@ helper.env = {
   }
 };
 
-helper.setup = {
+TestsHelper.setup = {
   createProfile(name, email, password, done) {
     email = email || existentUser.email;
     password = password || existentUser.password;
 
     const cmd = `profile create ${name} --verbose --${AuthOptionsNames.EMAIL} ${email} --${AuthOptionsNames.PASSWORD} ${password}`;
 
-    helper.execCmdWithoutAssertion(cmd, null, (err) => {
+    TestsHelper.execCmdWithoutAssertion(cmd, null, (err) => {
       if (err) {
         return done(err);
       }
@@ -238,7 +238,7 @@ helper.setup = {
       function setAsActiveProfile(next) {
         const cmd = `profile use ${name} --verbose`;
 
-        helper.execCmdWithoutAssertion(cmd, null, (err) => {
+        TestsHelper.execCmdWithoutAssertion(cmd, null, (err) => {
           if (err) {
             return next(err);
           }
@@ -315,15 +315,15 @@ helper.setup = {
         }
       };
 
-      const expectedProject = helper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
+      const expectedProject = TestsHelper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
 
-      helper.assertions.assertUserProjectSetup(expectedUser, expectedProject, cb);
+      TestsHelper.assertions.assertUserProjectSetup(expectedUser, expectedProject, cb);
     });
   },
 
   setInvalidProject(cb) {
     // setup for failure - service is null
-    const invalidProjectToRestore = helper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, null);
+    const invalidProjectToRestore = TestsHelper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, null);
     util.writeJSON(config.paths.project, invalidProjectToRestore, (err) => {
       cb(err, invalidProjectToRestore);
     });
@@ -358,8 +358,8 @@ helper.setup = {
           [config.host]: fixtureUser.token
         }
       };
-      const expectedProject = helper.assertions.buildExpectedProject(fixtureApp.id, null, fixtureJob.job, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
-      helper.assertions.assertUserProjectSetup(expectedUser, expectedProject, cb);
+      const expectedProject = TestsHelper.assertions.buildExpectedProject(fixtureApp.id, null, fixtureJob.job, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
+      TestsHelper.assertions.assertUserProjectSetup(expectedUser, expectedProject, cb);
     });
   },
 
@@ -403,13 +403,13 @@ helper.setup = {
 
   // Clears some cached modules, any unused nock interceptors, user/session info and project setup info.
   performGeneralCleanup(cb) {
-    helper.setup.clearRequireCache();
+    TestsHelper.setup.clearRequireCache();
     mockServer.clearAll();
-    helper.setup.clearUserProjectSetup(cb);
+    TestsHelper.setup.clearUserProjectSetup(cb);
   }
 };
 
-helper.execCmd = function execCmd(cliCmd, options, done) {
+TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
   options = options || {
     env: {
       NODE_CONFIG: JSON.stringify(testsConfig)
@@ -422,7 +422,7 @@ helper.execCmd = function execCmd(cliCmd, options, done) {
   });
 };
 
-helper.execCmdWithoutAssertion = function (cliCmd, options, done) {
+TestsHelper.execCmdWithoutAssertion = function (cliCmd, options, done) {
   let ms = {};
   async.series([
     (next) => {
@@ -436,7 +436,7 @@ helper.execCmdWithoutAssertion = function (cliCmd, options, done) {
       });
     },
     (next) => {
-      helper.execCmd(cliCmd, options, next);
+      TestsHelper.execCmd(cliCmd, options, next);
     }
   ], (err) => {
     if (ms.listening) {
@@ -449,7 +449,7 @@ helper.execCmdWithoutAssertion = function (cliCmd, options, done) {
   });
 };
 
-helper.getOutputWithoutSetupPaths = function getOutputWithoutSetupPaths(output) {
+TestsHelper.getOutputWithoutSetupPaths = function getOutputWithoutSetupPaths(output) {
   const globalSetupWithoutEscapedSlashes = globalSetupPath;
   const globalSetupWithEscapedSlashes = globalSetupWithoutEscapedSlashes.replace(/\\/g, '\\\\');
   const globalSetupReg = new RegExp(globalSetupWithEscapedSlashes, 'gi');
@@ -463,7 +463,7 @@ helper.getOutputWithoutSetupPaths = function getOutputWithoutSetupPaths(output) 
   return result;
 };
 
-helper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshotIt, clearSetupPaths, escapeSlashes, done) {
+TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshotIt, clearSetupPaths, escapeSlashes, done) {
   let ms = {};
 
   async.series([
@@ -478,7 +478,7 @@ helper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshot
       });
     },
     (next) => {
-      helper.execCmd(cliCmd, cmdOptions, (err, stdout, stderr) => {
+      TestsHelper.execCmd(cliCmd, cmdOptions, (err, stdout, stderr) => {
         let output;
         if (stdout) {
           output = stdout;
@@ -492,7 +492,7 @@ helper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshot
         let finalOutput;
         // paths will be different for each machine so let's just remove them
         if (clearSetupPaths) {
-          finalOutput = helper.getOutputWithoutSetupPaths(strippedOutput);
+          finalOutput = TestsHelper.getOutputWithoutSetupPaths(strippedOutput);
         } else if (escapeSlashes && process.env.SNAPSHOT_UPDATE !== '1') {
           // if we save in a snapshot 'bin\cli.js', then when we compare, snap-shot-it retrieves the value as 'bincli.js' and the actual value is 'bin\cli.js', hence the test fails
           finalOutput = strippedOutput.replace(/\\/g, '');
@@ -530,4 +530,4 @@ helper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshot
   });
 };
 
-module.exports = helper;
+module.exports = TestsHelper;

@@ -13,7 +13,7 @@
  * contents is a violation of applicable laws.
  */
 
-const { assertions, execCmdWithAssertion, setup } = require('./../../../tests-helper');
+const { assertions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const baseCmd = 'flex delete';
 

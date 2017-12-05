@@ -25,8 +25,8 @@ const CLIManager = require('./../../../../lib/CLIManager');
 const logger = require('./../../../../lib/logger');
 const Setup = require('./../../../../lib/Setup');
 const { Endpoints, isEmpty, isNullOrUndefined, readJSON, writeJSON } = require('./../../../../lib/Utils');
-const testsConfig = require('./../../../tests-config');
-const { execCmdWithAssertion, setup } = require('./../../../tests-helper');
+const testsConfig = require('../../../TestsConfig');
+const { execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureInternalDataLink = require('./../../../fixtures/kinvey-dlc.json');

@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { assertions, execCmdWithAssertion, setup } = require('./../../../tests-helper');
+const { assertions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const baseCmd = 'profile show';
 

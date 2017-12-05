@@ -20,7 +20,7 @@ const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const job = require('../../../lib/commands/flex/job.js').handler;
 const user = require('./../../../lib/user.js');
-const helper = require('../../tests-helper');
+const helper = require('../../TestsHelper');
 
 describe(`./${pkg.name} job`, () => {
   const sandbox = sinon.sandbox.create();

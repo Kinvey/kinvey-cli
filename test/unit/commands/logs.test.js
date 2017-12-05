@@ -20,7 +20,7 @@ const logs = require('../../../lib/commands/flex/logs.js').handler;
 const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');
-const helper = require('../../tests-helper');
+const helper = require('../../TestsHelper');
 const LogErrorMessages = require('../../../lib/Constants').LogErrorMessages;
 
 describe(`./${pkg.name} logs`, () => {

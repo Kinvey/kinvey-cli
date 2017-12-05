@@ -4,7 +4,7 @@ const os = require('os');
 const port = 3234;
 const host = `http://localhost:${port}/`;
 const globalSetupPath = path.join(os.homedir(), '.kinvey-cli-tests');
-const testsConfig = {
+const TestsConfig = {
   port,
   host,
   defaultSchemaVersion: 2,
@@ -15,4 +15,4 @@ const testsConfig = {
   }
 };
 
-module.exports = testsConfig;
+module.exports = TestsConfig;

@@ -27,7 +27,7 @@ const fixtureJobs = require('./fixtures/jobs.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureLogs = require('./fixtures/logs.json');
 
-const testsConfig = require('./tests-config');
+const testsConfig = require('./TestsConfig');
 
 const existentUserOne = fixtureUser.existentOne;
 

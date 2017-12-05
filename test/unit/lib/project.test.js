@@ -20,9 +20,9 @@ const logger = require('./../../../lib/logger.js');
 const project = require('./../../../lib/project.js');
 const prompt = require('./../../../lib/prompt.js');
 const user = require('./../../../lib/user.js');
-const util = require('../../../lib/utils.js');
+const util = require('../../../lib/Utils.js');
 const uuid = require('uuid');
-const Errors = require('./../../../lib/constants').Errors;
+const Errors = require('../../../lib/Constants').Errors;
 const helper = require('../../tests-helper');
 
 const fixtures = {

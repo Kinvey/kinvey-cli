@@ -21,7 +21,7 @@ const cli = require('./../../bin/kinveyCli.js');
 const init = require('./../../lib/init.js');
 const logger = require('./../../lib/logger.js');
 const pkg = require('./../../package.json');
-const request = require('./../../lib/request.js');
+const request = require('../../lib/Request.js');
 
 // TODO: Ensure global options are tested before #BACK-2775 is merged into master
 describe.skip(`./${pkg.name}`, () => {

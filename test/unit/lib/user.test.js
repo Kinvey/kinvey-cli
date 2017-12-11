@@ -19,8 +19,8 @@ const prompt = require('./../../../lib/prompt.js');
 const user = require('./../../../lib/user.js');
 const util = require('../../../lib/Utils.js');
 const constants = require('../../../lib/Constants');
-const helperEnv = require('../../tests-helper').env;
-const helper = require('../../tests-helper');
+const helperEnv = require('../../TestsHelper').env;
+const helper = require('../../TestsHelper');
 
 const loginTestsHelper = {
   assertLoginIsSuccessful(err, mock, token, cb) {

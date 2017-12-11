@@ -16,13 +16,8 @@
 const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const logger = require('../lib/logger.js');
 
 chai.use(sinonChai);
-
-logger.config({
-  level: 3
-});
 
 global.expect = chai.expect;
 global.sinon = sinon;

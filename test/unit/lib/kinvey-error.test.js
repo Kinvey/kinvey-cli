@@ -15,7 +15,7 @@
 
 const KinveyError = require('../../../lib/KinveyError');
 const Errors = require('../../../lib/Constants').Errors;
-const helper = require('./../../tests-helper');
+const helper = require('../../TestsHelper');
 
 function assertKinveyErr(actualErr, expectedErr) {
   helper.assertions.assertError(actualErr, expectedErr);

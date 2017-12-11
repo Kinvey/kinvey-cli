@@ -23,9 +23,9 @@
   "scripts": {
     "start": "./bin/kinvey",
     "pretest": "./node_modules/.bin/eslint bin config lib test",
-    "test": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test/ --NODE_CONFIG_DIR=./test/config",
+    "test": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test/integration --NODE_CONFIG_DIR=./test/config",
     "test-unit": "./node_modules/.bin/mocha test/unit --NODE_CONFIG_DIR=./test/config",
-    "test-integration": "./node_modules/.bin/mocha test/integration --NODE_CONFIG_DIR=./test/config"
+    "test-integration": "./node_modules/.bin/mocha test/integration"
   },
   "dependencies": {
     "archiver": "1.0.1",
@@ -38,6 +38,7 @@
     "lodash.clonedeep": "4.5.0",
     "lodash.isempty": "4.4.0",
     "lodash.merge": "4.6.0",
+    "lodash.isequal": "4.5.0",
     "moment": "2.11.2",
     "request": "2.63.0",
     "update-notifier": "0.5.0",
@@ -46,15 +47,19 @@
     "yargs": "10.0.3"
   },
   "devDependencies": {
+    "body-parser": "1.18.2",
     "chai": "3.3.0",
     "eslint": "2.11.1",
     "eslint-config-airbnb-base": "3.0.1",
     "eslint-plugin-import": "1.8.1",
+    "express": "4.16.2",
     "mocha": "2.3.3",
     "nock": "9.0.14",
     "nyc": "11.1.0",
     "sinon": "1.17.0",
     "sinon-chai": "2.8.0",
+    "snap-shot-it": "4.0.1",
+    "strip-ansi": "4.0.0",
     "test-console": "1.0.0"
   },
   "engines": {

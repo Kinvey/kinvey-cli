@@ -21,7 +21,7 @@ const pkg = require('./../../../package.json');
 const project = require('./../../../lib/project.js');
 const user = require('./../../../lib/user.js');
 const logger = require('./../../../lib/logger');
-const helper = require('../../tests-helper');
+const helper = require('../../TestsHelper');
 
 describe(`./${pkg.name} deploy`, () => {
   after('generalCleanup', (cb) => {

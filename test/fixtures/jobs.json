@@ -1,0 +1,42 @@
+[
+  {
+    "_id": "5b336c3bef4ec6780521358d",
+    "params":{
+      "requestedAt":"2017-11-20T08:03:07.916Z",
+      "datalinkId":"12378kdl2",
+      "backingServerId":"f55a8f522dab4aaa23662f06e466c3",
+      "serviceHostname":"k8s-9a184b9513334bf697a0",
+      "objectName":"kinveyus1/production/k8s-9a184b9513334bf697a0@1.4.2",
+      "requestId":"ef7037b85c3333ceaa63baf2c9e94b8a",
+      "deployUserInfo": {
+        "email": "davy.jones@mail.com",
+        "firstName": "Davy",
+        "lastName": "Jones"
+      }},
+    "status":"COMPLETE",
+    "updated":"2017-11-20T08:03:37.742Z",
+    "type":"deploy",
+    "progress":"Deploying service.",
+    "jobId":"6fa90d40d78c43f9a8a9a1838de41a37"
+  },
+  {
+    "_id": "5b336c3bef4ec67805210000",
+    "params":{
+      "requestedAt":"2017-11-20T08:03:07.916Z",
+      "datalinkId":"12378kdl2",
+      "backingServerId":"f55a8f522dab4aaa23662f06e46000",
+      "serviceHostname":"k8s-9a184b9513334bf697a0",
+      "objectName":"kinveyus1/production/k8s-9a184b9513334bf697a0@1.4.2",
+      "requestId":"ef7037b85c3333ceaa63baf2c9e94b8a",
+      "deployUserInfo": {
+        "email": "davy.jones@mail.com",
+        "firstName": "Davy",
+        "lastName": "Jones"
+      }},
+    "status":"FAILED",
+    "updated":"2017-11-20T08:03:37.742Z",
+    "type":"deploy",
+    "progress":"Version 1.4.2 of this service has already been deployed. Please bump the version in package.json and try again",
+    "jobId":"6fa90d40d78c43f9a8a9a1838de41a00"
+  }
+]

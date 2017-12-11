@@ -1,3 +1,9 @@
+exports['profile list when none should succeed 1'] = `
+debug:  Checking for package updates
+info:  You have 0 profiles.
+
+`
+
 exports['profile list when several should succeed 1'] = `
 debug:  Checking for package updates
 info:  You have 3 profiles.
@@ -14,8 +20,16 @@ testProfileList0 - http://localhost:3234/
 
 `
 
-exports['profile list when none should succeed 1'] = `
+exports['profile list when one with valid credentials as options should succeed 1'] = `
 debug:  Checking for package updates
-info:  You have 0 profiles.
+info:  You have 1 profile.
+testProfileList0 - http://localhost:3234/
+
+`
+
+exports['profile list when one with invalid credentials as options should succeed 1'] = `
+debug:  Checking for package updates
+info:  You have 1 profile.
+testProfileList0 - http://localhost:3234/
 
 `

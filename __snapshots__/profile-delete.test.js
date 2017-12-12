@@ -1,5 +1,8 @@
 exports['profile delete by existent name when there is only one should succeed 1'] = `
 debug:  Checking for package updates
+debug:  Request:  DELETE http://localhost:3234/session
+debug:  Response: DELETE http://localhost:3234/session 204
+debug:  Logged out current user.
 debug:  Writing JSON to file globalSetupPath
 debug:  Writing contents to file globalSetupPath
 info:  Successfully deleted profile with name 'testProfileDelete'.
@@ -8,6 +11,9 @@ info:  Successfully deleted profile with name 'testProfileDelete'.
 
 exports['profile delete by existent name when it is the active profile should succeed and clear active 1'] = `
 debug:  Checking for package updates
+debug:  Request:  DELETE http://localhost:3234/session
+debug:  Response: DELETE http://localhost:3234/session 204
+debug:  Logged out current user.
 debug:  Writing JSON to file globalSetupPath
 debug:  Writing contents to file globalSetupPath
 info:  Successfully deleted profile with name 'activeAndMustBeDeleted'.
@@ -16,6 +22,9 @@ info:  Successfully deleted profile with name 'activeAndMustBeDeleted'.
 
 exports['profile delete by existent name when there are several should delete only one 1'] = `
 debug:  Checking for package updates
+debug:  Request:  DELETE http://localhost:3234/session
+debug:  Response: DELETE http://localhost:3234/session 204
+debug:  Logged out current user.
 debug:  Writing JSON to file globalSetupPath
 debug:  Writing contents to file globalSetupPath
 info:  Successfully deleted profile with name 'testProfileDelete'.

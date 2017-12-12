@@ -11,6 +11,9 @@ info:  Successfully created profile with name 'testProfile'.
 exports['profile create with valid credentials set as options and existent profile name should override 1'] = `
 debug:  Checking for package updates
 debug:  Overriding profile with name 'testProfile'.
+debug:  Request:  DELETE http://localhost:3234/session
+debug:  Response: DELETE http://localhost:3234/session 204
+debug:  Logged out current user.
 debug:  Request:  POST http://localhost:3234/session
 debug:  Response: POST http://localhost:3234/session 200
 debug:  Writing JSON to file globalSetupPath

@@ -1,18 +1,24 @@
 exports['profile show with name parameter with existent name when several should succeed 1'] = `
 debug:  Checking for package updates
-testProfileShow0
-E-mail: janeDoe@mail.com
-Host: http://localhost:3234/
-Token: userToken
+key    value                 
+-----  ----------------------
+email  janeDoe@mail.com      
+token  userToken             
+host   http://localhost:3234/
+name   testProfileShow0      
+
 
 `
 
 exports['profile show with name parameter with existent name when one should succeed 1'] = `
 debug:  Checking for package updates
-testProfileShow0
-E-mail: janeDoe@mail.com
-Host: http://localhost:3234/
-Token: userToken
+key    value                 
+-----  ----------------------
+email  janeDoe@mail.com      
+token  userToken             
+host   http://localhost:3234/
+name   testProfileShow0      
+
 
 `
 
@@ -30,19 +36,25 @@ info:  Could not find profile with name 'nonExistentProfile'.
 
 exports['profile show with name parameter with existent name when active profile is set should succeed 1'] = `
 debug:  Checking for package updates
-1%!@_
-E-mail: janeDoe@mail.com
-Host: http://localhost:3234/
-Token: userToken
+key    value                 
+-----  ----------------------
+email  janeDoe@mail.com      
+token  userToken             
+host   http://localhost:3234/
+name   1%!@_                 
+
 
 `
 
 exports['profile show without name parameter when active profile is set should succeed 1'] = `
 debug:  Checking for package updates
-20
-E-mail: janeDoe@mail.com
-Host: http://localhost:3234/
-Token: userToken
+key    value                 
+-----  ----------------------
+email  janeDoe@mail.com      
+token  userToken             
+host   http://localhost:3234/
+name   20                    
+
 
 `
 

@@ -15,11 +15,14 @@
 
 const async = require('async');
 
+const { AuthOptionsNames } = require('./../../../../lib/Constants');
+const { isEmpty } = require('./../../../../lib/Utils');
 const { execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const fixtureUser = require('../../../fixtures/user.json');
 
 const baseCmd = 'profile list';
 
-function testProfileList(profilesCount, done) {
+function testProfileList(profilesCount, optionsForCredentials, done) {
   const profileNames = [];
   for (let i = 0; i < profilesCount; i += 1) {
     profileNames.push(`testProfileList${i}`);
@@ -30,7 +33,10 @@ function testProfileList(profilesCount, done) {
       setup.createProfiles(profileNames, next);
     },
     function listProfiles(next) {
-      const cmd = `${baseCmd} --verbose`;
+      let cmd = `${baseCmd} --verbose`;
+      if (!isEmpty(optionsForCredentials)) {
+        cmd = `${cmd} --${AuthOptionsNames.EMAIL} ${optionsForCredentials.email} --${AuthOptionsNames.PASSWORD} ${optionsForCredentials.password}`;
+      }
       execCmdWithAssertion(cmd, null, null, true, true, false, next);
     }
   ], done);
@@ -46,11 +52,23 @@ describe(baseCmd, () => {
   });
 
   it('when several should succeed', (done) => {
-    testProfileList(3, done);
+    testProfileList(3, null, done);
   });
 
   it('when one should succeed', (done) => {
-    testProfileList(1, done);
+    testProfileList(1, null, done);
+  });
+
+  it('when one with valid credentials as options should succeed', (done) => {
+    testProfileList(1, fixtureUser.existent, done);
+  });
+
+  it('when one with invalid credentials as options should succeed', (done) => {
+    const options = {
+      [AuthOptionsNames.EMAIL]: 'notValid',
+      [AuthOptionsNames.PASSWORD]: '12345678'
+    };
+    testProfileList(1, options, done);
   });
 
   it('when none should succeed', (done) => {

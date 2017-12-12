@@ -3,6 +3,9 @@ debug:  Checking for package updates
 debug:  Request:  POST http://localhost:3234/v2/jobs
 debug:  Response: POST http://localhost:3234/v2/jobs 200
 info:  Recycle initiated, received job idOfJobThatIsRecyclingTheService
+debug:  Writing JSON to file projectSetupPath
+debug:  Writing contents to file projectSetupPath
+info:  Saved job ID to project settings.
 
 `
 
@@ -11,6 +14,9 @@ debug:  Checking for package updates
 debug:  Request:  POST http://localhost:3234/v2/jobs
 debug:  Response: POST http://localhost:3234/v2/jobs 200
 info:  Recycle initiated, received job idOfJobThatIsRecyclingTheService
+debug:  Writing JSON to file projectSetupPath
+debug:  Writing contents to file projectSetupPath
+info:  Saved job ID to project settings.
 
 `
 
@@ -27,6 +33,9 @@ debug:  Checking for package updates
 debug:  Request:  POST http://localhost:3234/v2/jobs
 debug:  Response: POST http://localhost:3234/v2/jobs 200
 info:  Recycle initiated, received job idOfJobThatIsRecyclingTheService
+debug:  Writing JSON to file projectSetupPath
+debug:  Writing contents to file projectSetupPath
+info:  Saved job ID to project settings.
 
 `
 
@@ -35,6 +44,9 @@ debug:  Checking for package updates
 debug:  Request:  POST http://localhost:3234/v2/jobs
 debug:  Response: POST http://localhost:3234/v2/jobs 200
 info:  Recycle initiated, received job idOfJobThatIsRecyclingTheService
+debug:  Writing JSON to file projectSetupPath
+debug:  Writing contents to file projectSetupPath
+info:  Saved job ID to project settings.
 
 `
 
@@ -66,6 +78,9 @@ debug:  Response: POST http://localhost:3234/session 200
 debug:  Request:  POST http://localhost:3234/v2/jobs
 debug:  Response: POST http://localhost:3234/v2/jobs 200
 info:  Recycle initiated, received job idOfJobThatIsRecyclingTheService
+debug:  Writing JSON to file projectSetupPath
+debug:  Writing contents to file projectSetupPath
+info:  Saved job ID to project settings.
 debug:  Request:  DELETE http://localhost:3234/session
 debug:  Response: DELETE http://localhost:3234/session 204
 debug:  Logged out current user.

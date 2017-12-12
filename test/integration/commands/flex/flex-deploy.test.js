@@ -115,11 +115,11 @@ describe(`${baseCmd}`, () => {
     });
 
     describe('is valid', () => {
-      before('setValidProjectSetup', (done) => {
+      beforeEach('setValidProjectSetup', (done) => {
         setup.createProjectSetup(null, done);
       });
 
-      after('clearProjectSetup', (done) => {
+      afterEach('clearProjectSetup', (done) => {
         setup.clearProjectSetup(null, done);
       });
 
@@ -167,7 +167,11 @@ describe(`${baseCmd}`, () => {
           const flexService = new FlexService(manager);
           const ctrl = new FlexController({ cliManager: manager, flexService });
 
-          ctrl.deploy({}, (err) => {
+          const options = {
+            [AuthOptionsNames.EMAIL]: existentUserOne.email,
+            [AuthOptionsNames.PASSWORD]: existentUserOne.password
+          };
+          ctrl.deploy(options, (err) => {
             expect(err).to.not.exist;
             done();
           });

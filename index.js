@@ -32,7 +32,8 @@ const notifier = updateNotifier({
   pkg,
   updateCheckInterval: 1000 * 60 * 60
 });
+const cliVersion = pkg.version;
 const Prompter = require('./lib/Prompter');
 
-const kinveyCLIManager = new CLIManager({ setup, config, logger, notifier, prompter: Prompter, commandsManager: yargs });
+const kinveyCLIManager = new CLIManager({ setup, config, logger, notifier, cliVersion, prompter: Prompter, commandsManager: yargs });
 kinveyCLIManager.init();

@@ -17,25 +17,39 @@ const sinon = require('sinon');
 
 const { Errors, HTTPMethod } = require('../../../lib/Constants');
 const Request = require('../../../lib/Request');
-const { Endpoints } = require('../../../lib/Utils');
+const Utils = require('../../../lib/Utils');
 const { assertions } = require('../../TestsHelper');
 
 const defaultHost = 'https://defaultHost.com/';
+const cliVersion = '1.0.1';
+const deviceInfoHeader = 'X-Kinvey-Device-Information';
+const sandbox = sinon.createSandbox({});
 
 describe('Request', () => {
   describe('create', () => {
+    beforeEach(() => {
+      sandbox.stub(Utils, 'getDeviceInformation').returns(cliVersion);
+    });
+
+    afterEach(() => {
+      sandbox.restore();
+    });
+
     it('with endpoint, host and timeout without user should build correct options', () => {
       const user = null;
       const host = defaultHost;
-      const endpoint = Endpoints.session();
+      const endpoint = Utils.Endpoints.session();
       const options = {
         host,
-        endpoint
+        endpoint,
+        cliVersion
       };
 
       const expectedReqObj = {
         options: {
-          headers: {},
+          headers: {
+            [deviceInfoHeader]: cliVersion
+          },
           json: true,
           method: HTTPMethod.GET,
           url: `${host}${endpoint}`
@@ -51,7 +65,7 @@ describe('Request', () => {
         host: 'someOtherHost.manage.kinvey.com'
       };
       const host = defaultHost;
-      const endpoint = Endpoints.session();
+      const endpoint = Utils.Endpoints.session();
       const options = {
         host,
         endpoint
@@ -59,7 +73,10 @@ describe('Request', () => {
 
       const expectedReqObj = {
         options: {
-          headers: { Authorization: `Kinvey ${user.token}` },
+          headers: {
+            Authorization: `Kinvey ${user.token}`,
+            [deviceInfoHeader]: cliVersion
+          },
           json: true,
           method: HTTPMethod.GET,
           url: `${user.host}${endpoint}`
@@ -75,12 +92,12 @@ describe('Request', () => {
         host: 'someOtherHost.manage.kinvey.com'
       };
 
-      const endpoint = Endpoints.apps();
+      const endpoint = Utils.Endpoints.apps();
       const options = { endpoint, skipAuth: true };
 
       const expectedReqObj = {
         options: {
-          headers: {},
+          headers: { [deviceInfoHeader]: cliVersion },
           json: true,
           method: HTTPMethod.GET,
           url: `${user.host}${endpoint}`
@@ -96,7 +113,7 @@ describe('Request', () => {
         host: 'someOtherHost.manage.kinvey.com'
       };
 
-      const endpoint = Endpoints.apps();
+      const endpoint = Utils.Endpoints.apps();
       const data = {
         firstName: 'Anakin',
         lastName: 'Skywalker'
@@ -110,7 +127,10 @@ describe('Request', () => {
 
       const expectedReqObj = {
         options: {
-          headers: { Authorization: `Kinvey ${user.token}` },
+          headers: {
+            Authorization: `Kinvey ${user.token}`,
+            [deviceInfoHeader]: cliVersion
+          },
           json: true,
           method: HTTPMethod.POST,
           body: data,
@@ -126,7 +146,7 @@ describe('Request', () => {
   describe('send', () => {
     const reqObj = new Request(null, {
       host: defaultHost,
-      endpoint: Endpoints.apps(2)
+      endpoint: Utils.Endpoints.apps(2)
     });
     const sandbox = sinon.sandbox.create();
     const reqStub = sandbox.stub(reqObj, '_send');

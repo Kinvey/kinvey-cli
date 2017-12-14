@@ -52,7 +52,7 @@ describe('ProjectSetup', () => {
 
   it('when all properties and a few redundant should set correctly flex namespace', () => {
     const setup = new ProjectSetup(projectPath);
-    let flexNsWithRedundantProps = Object.assign({}, flexNs);
+    const flexNsWithRedundantProps = Object.assign({}, flexNs);
     flexNsWithRedundantProps.firstProp = 'hey';
     flexNsWithRedundantProps.secondProp = 0;
     setup.setFlexNamespace(flexNsWithRedundantProps);

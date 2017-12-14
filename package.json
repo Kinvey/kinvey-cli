@@ -23,7 +23,7 @@
   "scripts": {
     "start": "./bin/kinvey",
     "pretest": "./node_modules/.bin/eslint bin config lib test",
-    "test": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test/integration --NODE_CONFIG_DIR=./test/config",
+    "test": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test --NODE_CONFIG_DIR=./test/config",
     "test-unit": "./node_modules/.bin/mocha test/unit --NODE_CONFIG_DIR=./test/config",
     "test-integration": "./node_modules/.bin/mocha test/integration"
   },

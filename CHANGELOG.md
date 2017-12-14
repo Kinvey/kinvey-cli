@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.0.0-beta.0
+* Add profiles to support using multiple Kinvey accounts
+* Move all flex-related commands under the flex namespace (e.g. `status` -> `flex status`)
+* Add commands:
+	* `init` - prompts for credentials disregarding command line options and ENV variables
+	* `flex init` - prompts for project settings
+* Allow providing credentials to all commands (except `init`) as command line options or as ENV variables
+* Remove commands:
+	* `config`
+	* `logout`
+* Add some command line options to flex-related commands
+* Increase request timeout to 10s
+
 ## 2.1.0
 * `status` command now reports the email address (plus first/last name, if set) of deployer and the date/time at which service was deployed
 

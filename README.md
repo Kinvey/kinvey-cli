@@ -10,7 +10,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 ## Usage
 
-    kinvey `<command>` [args] [options]
+    kinvey <command> [args] [options]
 
 ## Commands
 
@@ -20,7 +20,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `profile create <name> [profile information]`
 
-   Creates a profile with the specified name. You can specify the profile information either on the command line as arguments or as environment variables. In the presence of command line argument, any values in the environment variables are ignored.
+   Creates a profile with the specified name. You can specify the profile information either at the command line as arguments or as environment variables. In the presence of command line argument, any values in the environment variables are ignored.
 
 * `profile list`
 
@@ -56,11 +56,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex list`
 
-  Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain option, the command lists the services inside the domain you've configured as part of running `flex init`.
+  Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services inside the domain you've configured as part of running `flex init`.
 
 * `flex logs`
 
-   Retrieves and displays Flex Services logs. Logs calls return 100 entries by default and can return up to 2,000 entries. Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`. Run `kinvey flex logs -h` for advanced `logs` command usage details, including returning more than the default number of entries, specifying a page number, or filtering by timestamp. Log for external Flex Services are not returned. You can specify a Flex Service to read logs from using the `--serviceId` option.
+   Retrieves and displays Flex Services logs. Logs calls return 100 entries by default and can return up to 2,000 entries. Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`. Run `kinvey flex logs -h` for advanced `logs` command usage details, including returning more than the default number of entries, specifying a page number, or filtering by timestamp. Logs for external Flex Services are not returned. You can specify a Flex Service to read logs from using the `--serviceId` option.
   
 * `flex recycle`
    
@@ -126,7 +126,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 ## Environment Variables
 
-Use these environment variables to specify profile information for the `profile create` command when you don't want to specify it on the command line. Keep in mind that any values specified at he command line take precedence over the environment variable values.
+Use these environment variables to specify profile information for the `profile create` command when you don't want to specify it at the command line. Keep in mind that any values specified at the command line take precedence over the environment variable values.
 
 * `KINVEY_CLI_EMAIL`
 
@@ -158,7 +158,7 @@ Kinvey CLI comes with a two-stage help system. You can either call the `help` co
 
 ## Getting Started
 
-Kinvey CLI requires you to authenticate and to have a working profile. The fastest way to get started is to run the `kinvey init` command. It prompts for credentials and hostname and creates a working profile for you.
+Kinvey CLI requires you to authenticate. The fastest way to get started is to run the `kinvey init` command. It prompts for credentials and hostname and creates a working profile for you, which stores the settings for you for future executions.
 
 Note that you only need to specify a host if you are on a dedicated Kinvey instance. Otherwise just press Enter to continue.
 
@@ -172,7 +172,7 @@ $ kinvey init
 ? Profile dev
 ```
 
-You can run `kinvey init` from any directory as it always writes you new profile in your home directory.
+You can run `kinvey init` from any directory as it always writes your new profile in your home directory.
 
 Next, you need to configure Kinvey CLI to connect to a Flex Service that you've already created using the Kinvey Console.
 
@@ -193,7 +193,7 @@ Finally, you are ready to deploy you node.js project as a Flex Service.
 
 ## Managing Profiles
 
-If you still haven't run `kinvey init` or if you want to create a second, third, and so on profile, you can do so by invoking `kinvey profile create <name>`. You can choose between providing the credentials at the command line or as preset [environment variables](#environment-variables).
+Another way to create working profiles, besides running `kinvey init`, is invoking `kinvey profile create <name>`. You can choose between providing the credentials at the command line or as preset [environment variables](#environment-variables).
 
     kinvey profile create dev --email john.doe@kinvey.com --password john'sPassword --host kvy-us2
 
@@ -206,7 +206,7 @@ If you don't want to specify a profile every time, you can set one as active and
     kinvey profile use dev
 
 
-**Note**: If you have a single profile, you can skip setting it as active or providing it as command line option. It will be used if no other credentials are provided.
+**Note**: If you have a single profile, you can skip setting it as active as well as providing it as a command line option. It will be used if no other credentials are provided.
 
 ### Authentication Token Expiration
 

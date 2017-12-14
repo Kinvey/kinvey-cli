@@ -22,7 +22,7 @@ module.exports = {
   logFetchLimit: 2000,
   defaultSchemaVersion: 2,
   artifacts: ['.git', '.svn', 'node_modules', 'output.log'],
-  timeout: 5 * 1000,
+  timeout: 10 * 1000,
   flexProjectUploadTimeout: 30 * 1000,
   paths: {
     project: path.join(process.cwd(), '.kinvey'),

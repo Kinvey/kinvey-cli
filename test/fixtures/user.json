@@ -3,6 +3,10 @@
     "email": "janeDoe@mail.com",
     "password": "superSecurePass"
   },
+  "existentOne": {
+    "email": "janeyDoe@mail.com",
+    "password": "anotherSecurePass"
+  },
   "existentWith2FA": {
     "email": "janeDoe@mail.com",
     "password": "superSecurePass",
@@ -13,6 +17,7 @@
     "password": "12345678"
   },
   "token": "userToken",
+  "tokenOne": "anotherUserToken",
   "validTwoFactorToken": 123456,
   "invalidTwoFactorToken": 135790
 }

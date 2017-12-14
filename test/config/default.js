@@ -14,10 +14,11 @@
 */
 
 const path = require('path');
-const osHomedir = require('os-homedir');
+const os = require('os');
 
 module.exports = {
-  host: 'https://manage.kinvey.com/',
+  port: 3234,
+  host: `http://localhost:${this.port}/`,
   logFetchDefault: 100,
   logFetchLimit: 2500,
   defaultSchemaVersion: 2,
@@ -28,6 +29,6 @@ module.exports = {
   paths: {
     project: path.join(process.cwd(), 'test/integration/project', '.kinvey'),
     package: path.join(process.cwd(), 'test/integration/project'),
-    session: path.join(osHomedir(), '.kinvey-cli-session-tests')
+    session: path.join(os.homedir(), '.kinvey-cli-session-tests')
   }
 };

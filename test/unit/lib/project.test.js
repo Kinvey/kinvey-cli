@@ -20,10 +20,10 @@ const logger = require('./../../../lib/logger.js');
 const project = require('./../../../lib/project.js');
 const prompt = require('./../../../lib/prompt.js');
 const user = require('./../../../lib/user.js');
-const util = require('./../../../lib/util.js');
+const util = require('../../../lib/Utils.js');
 const uuid = require('uuid');
-const Errors = require('./../../../lib/constants').Errors;
-const helper = require('../../tests-helper');
+const Errors = require('../../../lib/Constants').Errors;
+const helper = require('../../TestsHelper');
 
 const fixtures = {
   app: require('./../../fixtures/app.json'),
@@ -32,7 +32,7 @@ const fixtures = {
   org: require('./../../fixtures/org.json')
 };
 
-const getStubCallArg = require('../../tests-helper').mocks.getStubCallArg;
+const getStubCallArg = require('../../TestsHelper').mocks.getStubCallArg;
 
 describe('project', () => {
   after('generalCleanup', (cb) => {

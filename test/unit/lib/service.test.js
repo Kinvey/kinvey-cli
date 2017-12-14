@@ -21,15 +21,15 @@ const stdout = require('test-console').stdout;
 const logger = require('./../../../lib/logger');
 const project = require('./../../../lib/project.js');
 const service = require('./../../../lib/service.js');
-const util = require('./../../../lib/util.js');
-const JobStatus = require('./../../../lib/constants').JobStatus;
-const Errors = require('./../../../lib/constants').Errors;
-const ServiceStatus = require('./../../../lib/constants').ServiceStatus;
-const helper = require('../../tests-helper');
+const util = require('../../../lib/Utils.js');
+const JobStatus = require('../../../lib/Constants').JobStatus;
+const Errors = require('../../../lib/Constants').Errors;
+const ServiceStatus = require('../../../lib/Constants').ServiceStatus;
+const helper = require('../../TestsHelper');
 
 const fixtures = {
   invalid: path.resolve('./test/fixtures/deploy'),
-  valid: path.resolve('./test/cmd')
+  valid: path.resolve('./test/commands')
 };
 
 describe('service', () => {

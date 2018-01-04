@@ -2,7 +2,7 @@ exports['flex status by specifying a profile and existent serviceId should succe
 debug:  Checking for package updates
 debug:  Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
 debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-Status of FSR service 12378kdl2 (Service name is not available.)
+Status of FSR service 12378kdl2
 
   Status:   ONLINE [v1.4.2]
 
@@ -38,7 +38,7 @@ exports['flex status by specifying a profile when invalid project is set with ex
 debug:  Checking for package updates
 debug:  Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
 debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-Status of FSR service 12378kdl2 (Service name is not available.)
+Status of FSR service 12378kdl2
 
   Status:   ONLINE [v1.4.2]
 
@@ -52,7 +52,7 @@ exports['flex status by not specifying profile nor credentials when one profile 
 debug:  Checking for package updates
 debug:  Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
 debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-Status of FSR service 12378kdl2 (Service name is not available.)
+Status of FSR service 12378kdl2
 
   Status:   ONLINE [v1.4.2]
 
@@ -89,7 +89,7 @@ debug:  Request:  POST http://localhost:3234/session
 debug:  Response: POST http://localhost:3234/session 200
 debug:  Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
 debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-Status of FSR service 12378kdl2 (Service name is not available.)
+Status of FSR service 12378kdl2
 
   Status:   ONLINE [v1.4.2]
 

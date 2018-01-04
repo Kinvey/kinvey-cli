@@ -7,7 +7,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
@@ -41,7 +41,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
@@ -80,7 +80,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
@@ -121,7 +121,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 debug:  Request:  DELETE http://localhost:3234/session
 debug:  Response: DELETE http://localhost:3234/session 204
 debug:  Logged out current user.
@@ -158,7 +158,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=20
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
@@ -171,7 +171,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=20
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
@@ -190,7 +190,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=20
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
@@ -209,7 +209,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=5
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
@@ -222,6 +222,6 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=3
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `

@@ -190,10 +190,11 @@ describe('Request', () => {
     });
 
     it('when a connection error occurs should return empty response and error', (done) => {
-      const connErr = new Error('ETIMEDOUT');
+      const connErr = new Error(Errors.RequestTimedOut.NAME);
+      connErr.code = Errors.RequestTimedOut.NAME;
       reqStub.yields(connErr);
       reqObj.send((err, res) => {
-        assertions.assertError(err, Errors.ConnectionError);
+        assertions.assertError(err, Errors.RequestTimedOut);
         expect(res).to.be.an.empty.object;
         done();
       });
@@ -201,6 +202,7 @@ describe('Request', () => {
 
     it('when a NotFound error occurs should return empty response and error', (done) => {
       const err = new Error('ENOTFOUND');
+      err.code = 'ENOTFOUND';
       reqStub.yields(err);
       reqObj.send((err, res) => {
         assertions.assertError(err, Errors.InvalidConfigUrl);

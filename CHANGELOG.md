@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.0-beta.1
+* Fix line endings in bin directory
+
 ## 3.0.0-beta.0
 * Add profiles to support using multiple Kinvey accounts
 * Move all flex-related commands under the flex namespace (e.g. `status` -> `flex status`)

@@ -64,7 +64,7 @@ exports['profile create with insufficient info without password should fail 1'] 
 debug:  Checking for package updates
 debug:  Request:  POST http://localhost:3234/session
 debug:  Response: POST http://localhost:3234/session 422
-error:  ValidationError: Validation failed.
+error:  ValidationError: Validation failed. Missing required property: password
 
 `
 

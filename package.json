@@ -22,6 +22,7 @@
   },
   "scripts": {
     "start": "./bin/kinvey",
+    "prepublish": "./node_modules/.bin/dos2unix ./bin/kinvey",
     "pretest": "./node_modules/.bin/eslint bin config lib test",
     "test": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test/integration --NODE_CONFIG_DIR=./test/config",
     "test-unit": "./node_modules/.bin/mocha test/unit --NODE_CONFIG_DIR=./test/config",
@@ -50,6 +51,7 @@
   "devDependencies": {
     "body-parser": "1.18.2",
     "chai": "3.3.0",
+    "dos2unix-cli": "1.0.1",
     "eslint": "2.11.1",
     "eslint-config-airbnb-base": "3.0.1",
     "eslint-plugin-import": "1.8.1",

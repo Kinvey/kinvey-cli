@@ -227,3 +227,9 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=3
 Query returned 5 logs for FSR service 12378kdl2
 
 `
+
+exports['flex logs with query with invalid timestamps (\'from\' not before \'to\') and nothing else should fail 1'] = `
+debug:  Checking for package updates
+error:  InvalidParameter: 'from' timestamp must be before 'to' timestamp.
+
+`

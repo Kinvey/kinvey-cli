@@ -297,87 +297,6 @@ TestsHelper.setup = {
     writeJSON(testsConfig.paths.project, options, done);
   },
 
-  configureUserAndProject(sandbox, mockServer, cb) {
-    this.userProjectPromptStubsForSuccess(sandbox);
-
-    mockServer.loginWithSuccess();
-    mockServer.apps();
-    mockServer.dataLinks();
-
-    require('../lib/commands/flex/config').handler({}, (err) => {
-      expect(err).to.not.exist;
-      expect(mockServer.isDone()).to.be.true;
-
-      const expectedUser = {
-        host: config.host,
-        tokens: {
-          [config.host]: fixtureUser.token
-        }
-      };
-
-      const expectedProject = TestsHelper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
-
-      TestsHelper.assertions.assertUserProjectSetup(expectedUser, expectedProject, cb);
-    });
-  },
-
-  setInvalidProject(cb) {
-    // setup for failure - service is null
-    const invalidProjectToRestore = TestsHelper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, null);
-    util.writeJSON(config.paths.project, invalidProjectToRestore, (err) => {
-      cb(err, invalidProjectToRestore);
-    });
-  },
-
-  userProjectPromptStubsForSuccess(sandbox) {
-    this.userPromptStubsForSuccess(sandbox);
-    this.projectPromptStubsForSuccess(sandbox);
-  },
-
-  userPromptStubsForSuccess(sandbox) {
-    sandbox.stub(prompt, 'getEmailPassword').callsArgWith(2, null, fixtureUser.existent.email, fixtureUser.existent.password);
-  },
-
-  projectPromptStubsForSuccess(sandbox) {
-    sandbox.stub(prompt, 'getAppOrOrg').callsArgWith(1, null, { name: 'App' });
-    sandbox.stub(prompt, 'getApp').callsArgWith(1, null, fixtureApp);
-    sandbox.stub(prompt, 'getService').callsArgWith(1, null, fixtureInternalDataLink);
-  },
-
-  // Deploys a job. User must be already logged in and project must be set.
-  initiateJobDeploy(mockServer, cb) {
-    mockServer.deployJob();
-
-    require('../lib/commands/flex/deploy').handler({}, (err) => {
-      expect(err).to.not.exist;
-      expect(mockServer.isDone()).to.be.true;
-
-      const expectedUser = {
-        host: config.host,
-        tokens: {
-          [config.host]: fixtureUser.token
-        }
-      };
-      const expectedProject = TestsHelper.assertions.buildExpectedProject(fixtureApp.id, null, fixtureJob.job, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
-      TestsHelper.assertions.assertUserProjectSetup(expectedUser, expectedProject, cb);
-    });
-  },
-
-  // Clears content in session and project files.
-  clearUserProjectSetup(cb) {
-    async.series(
-      [
-        function clearUser(next) {
-          util.writeJSON(config.paths.session, '', next);
-        },
-        function clearProject(next) {
-          util.writeJSON(config.paths.project, '', next);
-        }
-      ],
-      cb
-    );
-  },
-
   clearGlobalSetup(path, done) {
     path = path || globalSetupPath;
     writeJSON(path, '', done);
@@ -386,26 +305,6 @@ TestsHelper.setup = {
   clearProjectSetup(path, done) {
     path = path || projectPath;
     writeJSON(path, '', done);
-  },
-
-  // Ensure modules are reloaded every time and tests are independent (e.g class User -> this.token will be cleared).
-  clearRequireCache() {
-    const modules = [
-      '/commands/flex/config', '/commands/flex/deploy', '/commands/flex/job', '/commands/flex/list', '/commands/flex/logout', '/commands/flex/logs', '/commands/flex/recycle', '/commands/flex/status',
-      '/project', '/service', '/user', '/util'
-    ];
-
-    modules.forEach(module => {
-      const pathToResolve = `./../lib${module}`;
-      delete require.cache[require.resolve(pathToResolve)];
-    });
-  },
-
-  // Clears some cached modules, any unused nock interceptors, user/session info and project setup info.
-  performGeneralCleanup(cb) {
-    TestsHelper.setup.clearRequireCache();
-    mockServer.clearAll();
-    TestsHelper.setup.clearUserProjectSetup(cb);
   }
 };
 

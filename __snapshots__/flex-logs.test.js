@@ -46,8 +46,9 @@ Query returned 5 logs for FSR service 12378kdl2
 `
 
 exports['flex logs without query by specifying a profile when project is not set without serviceId as an option should fail 1'] = `
-Note:  Version 1.x [from] and [to] params have been converted to options. Use
-'--from' and '--to' to filter by timestamp instead.
+kinvey flex logs
+
+Retrieve and display Internal Flex Service logs
 
 Options:
   --version                 Show version number                        [boolean]
@@ -85,8 +86,9 @@ Query returned 5 logs for FSR service 12378kdl2
 `
 
 exports['flex logs without query by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
-Note:  Version 1.x [from] and [to] params have been converted to options. Use
-'--from' and '--to' to filter by timestamp instead.
+kinvey flex logs
+
+Retrieve and display Internal Flex Service logs
 
 Options:
   --version                 Show version number                        [boolean]

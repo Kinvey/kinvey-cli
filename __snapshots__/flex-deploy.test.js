@@ -13,6 +13,7 @@ Options:
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
   -h, --help                Show help                                  [boolean]
+  --serviceId               Service ID                                  [string]
 
 This project is not configured. Use 'kinvey flex init' to get started.
 
@@ -38,6 +39,7 @@ Options:
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
   -h, --help                Show help                                  [boolean]
+  --serviceId               Service ID                                  [string]
 
 This project is not configured. Use 'kinvey flex init' to get started.
 

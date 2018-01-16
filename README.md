@@ -44,7 +44,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex deploy`
 
-   Deploys the current project to the Kinvey FlexService Runtime.
+   Deploys the current project to the Kinvey FlexService Runtime. You can specify a Flex Service using the `--serviceId` option.
 
 * `flex job [id]`
 

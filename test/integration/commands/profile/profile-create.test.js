@@ -148,6 +148,23 @@ describe('profile create', () => {
         });
       });
     });
+
+    it('set as options when trying to override should fail', (done) => {
+      setup.createProfiles(defaultProfileName, (err) => {
+        expect(err).to.not.exist;
+
+        const cmd = `${baseCmd} ${defaultProfileName} --verbose --${AuthOptionsNames.EMAIL} ${nonExistentUser.email} --${AuthOptionsNames.PASSWORD} ${nonExistentUser.password}`;
+
+        execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+          expect(err).to.not.exist;
+
+          assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+            expect(err).to.not.exist;
+            done();
+          });
+        });
+      });
+    });
   });
 
   describe('with insufficient info', () => {

@@ -7,7 +7,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
@@ -41,13 +41,14 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
 exports['flex logs without query by specifying a profile when project is not set without serviceId as an option should fail 1'] = `
-Note:  Version 1.x [from] and [to] params have been converted to options. Use
-'--from' and '--to' to filter by timestamp instead.
+kinvey flex logs
+
+Retrieve and display Internal Flex Service logs
 
 Options:
   --version                 Show version number                        [boolean]
@@ -80,13 +81,14 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
 exports['flex logs without query by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
-Note:  Version 1.x [from] and [to] params have been converted to options. Use
-'--from' and '--to' to filter by timestamp instead.
+kinvey flex logs
+
+Retrieve and display Internal Flex Service logs
 
 Options:
   --version                 Show version number                        [boolean]
@@ -121,7 +123,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 debug:  Request:  DELETE http://localhost:3234/session
 debug:  Response: DELETE http://localhost:3234/session 204
 debug:  Logged out current user.
@@ -158,7 +160,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=20
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
@@ -171,7 +173,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=20
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
@@ -190,7 +192,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=20
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
@@ -209,7 +211,7 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=5
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
 
 `
 
@@ -222,6 +224,12 @@ debug:  Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=3
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Runit started as PID 11"
 3864f1602739 2017-08-30T08:06:49.595Z - "*** Booting runit daemon..."
 3864f1602739 2017-08-30T08:06:49.595Z - "chown: changing ownership of '/dev/xconsole': Operation not permitted"
-Query returned 5 logs for FSR service 12378kdl2 (Service name is not available.)
+Query returned 5 logs for FSR service 12378kdl2
+
+`
+
+exports['flex logs with query with invalid timestamps (\'from\' not before \'to\') and nothing else should fail 1'] = `
+debug:  Checking for package updates
+error:  InvalidParameter: 'from' timestamp must be before 'to' timestamp.
 
 `

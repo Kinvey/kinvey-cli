@@ -296,6 +296,12 @@ describe(`${baseCmd}`, () => {
       testFlexLogs(noProfile, noCredentials, defaultServiceId, query, validUserOne, done);
     });
 
+    it(`with invalid timestamps ('${FlexOptionsNames.FROM}' not before '${FlexOptionsNames.TO}') and nothing else should fail`, (done) => {
+      const start = '2017-12-14T17:15:21.771Z';
+      const query = buildQueryObject(start, start);
+      testFlexLogs(noProfile, noCredentials, defaultServiceId, query, validUserOne, done);
+    });
+
     it('without timestamps and valid paging should succeed', (done) => {
       const pageSize = 5;
       const page = 3;

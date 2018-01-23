@@ -169,6 +169,12 @@ Use these environment variables to specify profile information for the `profile 
 * `KINVEY_CLI_PROFILE`
 
    Profile to use.
+   
+Kinvey CLI also supports these universal environment variables:
+
+* `HTTPS_PROXY`/`https_proxy`
+
+   Routes all Kinvey CLI requests through the specified proxy server.
 
 
 ## Getting Help

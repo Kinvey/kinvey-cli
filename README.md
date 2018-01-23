@@ -1,6 +1,6 @@
 # Kinvey CLI
 
-Kinvey CLI is an utility for deploying and managing FlexServices running on the Kinvey FlexService Runtime.
+Kinvey CLI is a utility for deploying and managing FlexServices running on the Kinvey FlexService Runtime.
 
 ## Installation
 
@@ -16,7 +16,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `init`
 
-   Prompts you to provide account credentials and host and creates a new working profile for you based on the information you provided.
+   Prompts you to provide account credentials and host and creates a new working profile for you based on the information you provided. Command-line options that specify the same data are ignored.
 
 * `profile create <name> [profile information]`
 
@@ -40,7 +40,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex init`
 
-   Configures Kinvey CLI to work with a specific Flex Service. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Each successive execution in the same directory overwrites the configuration file.
+   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Each successive execution in the same directory overwrites the configuration file. Command-line options that specify the same data as the prompted-for data are ignored.
 
 * `flex deploy`
 
@@ -52,19 +52,55 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex status`
 
-   Displays the health of the current (the one you initiated last) Flex Service. To get the status of a different service, specify its service ID using the `--serviceId` option.
+   Displays the health of the current (the one you initiated last) Flex Service. To get the status of a different service, specify its service ID using the `--serviceId` option. In addition to the global options, this command supports the following options:
+
+   * `--serviceId <Flex Service ID>`
+   
+      Specifies a Flex Service by its ID.
 
 * `flex list`
 
-  Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services inside the domain you've configured as part of running `flex init`.
+   Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services inside the domain you've configured as part of running `flex init`. In addition to the global options, this command supports the following options:
+
+   * `--domain <app|org>`
+   
+      Specifies the domain type as either `app` for application or `org` for organization.
+   
+   * `--id <app or organization ID>`
+   
+      App or organization ID for use with `--domain <app|org>`.
 
 * `flex logs`
 
-   Retrieves and displays Flex Services logs. Logs calls return 100 entries by default and can return up to 2,000 entries. Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`. Run `kinvey flex logs -h` for advanced `logs` command usage details, including returning more than the default number of entries, specifying a page number, or filtering by timestamp. Logs for external Flex Services are not returned. You can specify a Flex Service to read logs from using the `--serviceId` option.
-  
+   Retrieves and displays Flex Services logs. Logs calls return 100 entries by default and can return up to 2,000 entries. Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`. Combine with the paging and limiting options to narrow down your search. Logs for external Flex Services are not returned. You can specify a Flex Service to read logs from using the `--serviceId` option. In addition to the global options, this command supports the following options:
+
+   * `--from`
+
+      Timestamp specifying the beginning of a period for which you want to fetch log entries, in ISO 8601 format.
+
+   * `--number`
+
+      Number of entries to fetch, i.e. page size. The default is 100, the maximum allowed is 2000.
+
+   * `--page`
+
+      Page number to fetch. The first page is indexed 1.
+
+   * `--serviceId <Flex Service ID>`
+
+      Specifies a Flex Service by its ID.
+
+   * `--to`
+
+      Timestamp specifying the end of a period for which you want to fetch log entries, in ISO 8601 format.
+
 * `flex recycle`
    
-   Recycles the current (the one you initiated last) Flex Service. To recycle a different service, specify its service ID using the `--serviceId` option.
+   Recycles the current (the one you initiated last) Flex Service. To recycle a different service, specify its service ID using the `--serviceId` option. In addition to the global options, this command supports the following options:
+
+   * `--serviceId <Flex Service ID>`
+   
+      Specifies a Flex Service by its ID.
 
 * `flex delete`
 
@@ -74,23 +110,21 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    Prints general usage instructions. For detailed command usage instruction, use the `--help` option with the command.
 
-## Options
+## Global Options
 
-* `--domain <app|org>`
-
-   Specifies the domain type for commands like `flex list`.
+You can add a global option to every Kinvey CLI command to get the described behavior. The only exceptions are `--email`, `--password`, and `--host` which get ignored when added to a command that is designed to prompt for this information.
 
 * `--email <e-mail>`
 
    Email address of your Kinvey account.
 
+* `--help, -h`
+
+   When used after a `kinvey-cli` command, shows its usage instructions.
+
 * `--host <host>`
 
    Hostname of a Kinvey instance. It has a default value of `https://manage.kinvey.com/` which most customers should use. If you are a customer on a dedicated Kinvey instance, enter your dedicated host name as either an absolute URI (`https://kvy-us2-manage.kinvey.com/`) or an instance name only (`kvy-us2`).
-
-* `--id <app or organization ID>`
-
-   App or organization ID for use with `--domain <app|org>`.
 
 * `--password <password>`
 
@@ -100,9 +134,9 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    Profile to use.
 
-* `--serviceId <Flex Service ID>`
+* `--version`
 
-   Specifies a Flex Service, e.g. for use with the `flex status` command.
+   Prints the version number of `kinvey-cli`.
 
 * `--silent`
 
@@ -111,18 +145,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 * `--suppress-version-check`
 
    Prevents Kinvey CLI to check for new versions, which normally happens each execution.
-   
+
 * `--verbose`
 
    Prints additional debug messages.
-
-* `--version`
-
-   Prints the version number of `kinvey-cli`.
-
-* `--help, -h`
-
-   When used after a `kinvey-cli` command, shows its usage instructions.
 
 ## Environment Variables
 

@@ -184,7 +184,7 @@ Kinvey CLI comes with a two-stage help system. You can either call the `help` co
 
 ## Getting Started
 
-Kinvey CLI requires you to authenticate. The fastest way to get started is to run the `kinvey init` command. It prompts for credentials and hostname and creates a working profile for you, which stores the settings for you for future executions.
+Kinvey CLI requires you to authenticate. The fastest way to get started is to run the `kinvey init` command. It prompts for credentials and hostname and creates a working profile for you, which stores the provided settings for future executions.
 
 Note that you only need to specify a host if you are on a dedicated Kinvey instance. Otherwise just press Enter to continue.
 

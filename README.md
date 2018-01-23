@@ -281,9 +281,11 @@ Kinvey CLI supports the universal environment variables `HTTPS_PROXY` and `https
 
 Run any command with the `--verbose` flag to receive more detailed information about a command execution.
 
+Kinvey CLI has a 10-second request timeout when communicating with the backend for initialization which may cause a connection error in some rare cases. Retrying the command remedies the problem in many cases.
+
 If you are using a profile that has been configured a while ago, you can stumble upon the `InvalidCredentials` error. It may mean that the session token has expired. See [Authentication Token Expiration](#authentication-token-expiration) for details.
 
-If problems persist, please contact [Kinvey](http://support.kinvey.com).
+If problems persist, contact [Kinvey](http://support.kinvey.com).
 
 ## Changelog
 

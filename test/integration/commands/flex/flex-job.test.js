@@ -15,9 +15,9 @@
 
 const async = require('async');
 
-const { AuthOptionsNames } = require('./../../../../lib/Constants');
+const { AuthOptionsNames, CommonOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
 const { isEmpty } = require('./../../../../lib/Utils');
-const { execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { buildCmd, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureJob = require('./../../../fixtures/job.json');
@@ -28,18 +28,15 @@ const nonExistentUser = fixtureUser.nonexistent;
 
 const baseCmd = 'flex job';
 
-function testFlexJob(profileName, optionsForCredentials, jobId, validUser, done) {
-  let cmd = `${baseCmd} --verbose`;
+function testFlexJob(profileName, optionsForCredentials, jobId, validUser, otherOptions, done) {
+  const options = isEmpty(otherOptions) ? {} : otherOptions;
   if (profileName) {
-    cmd = `${cmd} --${AuthOptionsNames.PROFILE} ${profileName}`;
+    options[AuthOptionsNames.PROFILE] = profileName;
   }
 
   if (!isEmpty(optionsForCredentials)) {
-    cmd = `${cmd} --${AuthOptionsNames.EMAIL} ${optionsForCredentials.email} --${AuthOptionsNames.PASSWORD} ${optionsForCredentials.password}`;
-  }
-
-  if (jobId) {
-    cmd = `${cmd} ${jobId}`;
+    options[AuthOptionsNames.EMAIL] = optionsForCredentials[AuthOptionsNames.EMAIL];
+    options[AuthOptionsNames.PASSWORD] = optionsForCredentials[AuthOptionsNames.PASSWORD];
   }
 
   const apiOptions = {};
@@ -48,6 +45,12 @@ function testFlexJob(profileName, optionsForCredentials, jobId, validUser, done)
     apiOptions.existentUser = { email: validUser.email };
   }
 
+  const positionalArgs = [];
+  if (jobId) {
+    positionalArgs.push(jobId);
+  }
+
+  const cmd = buildCmd(baseCmd, positionalArgs, options, [CommonOptionsNames.VERBOSE]);
   execCmdWithAssertion(cmd, null, apiOptions, true, true, false, done);
 }
 
@@ -86,18 +89,22 @@ describe(baseCmd, () => {
       setup.deleteProfileFromSetup(profileToUse, null, done);
     });
 
-    it('and existent jobId should succeed', (done) => {
-      testFlexJob(profileToUse, null, defaultJobId, validUserForGettingStatus, done);
+    it('and existent jobId should succeed and output default format', (done) => {
+      testFlexJob(profileToUse, null, defaultJobId, validUserForGettingStatus, null, done);
+    });
+
+    it('and existent jobId should succeed and output JSON', (done) => {
+      testFlexJob(profileToUse, null, defaultJobId, validUserForGettingStatus, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, done);
     });
 
     it('and non-existent jobId should fail', (done) => {
-      testFlexJob(profileToUse, null, nonExistentJobId, validUserForGettingStatus, done);
+      testFlexJob(profileToUse, null, nonExistentJobId, validUserForGettingStatus, null, done);
     });
   });
 
   describe('by not specifying profile nor credentials', () => {
     it('when one profile and existent jobId should succeed', (done) => {
-      testFlexJob(null, null, defaultJobId, null, done);
+      testFlexJob(null, null, defaultJobId, null, null, done);
     });
   });
 
@@ -122,15 +129,15 @@ describe(baseCmd, () => {
 
   describe('by specifying credentials as options', () => {
     it('when valid and existent jobId should succeed', (done) => {
-      testFlexJob(null, existentUserOne, defaultJobId, validUserForGettingStatus, done);
+      testFlexJob(null, existentUserOne, defaultJobId, validUserForGettingStatus, null, done);
     });
 
     it('when valid and non-existent jobId should fail', (done) => {
-      testFlexJob(null, existentUserOne, nonExistentJobId, validUserForGettingStatus, done);
+      testFlexJob(null, existentUserOne, nonExistentJobId, validUserForGettingStatus, null, done);
     });
 
     it('when invalid and existent jobId should fail', (done) => {
-      testFlexJob(null, nonExistentUser, defaultJobId, validUserForGettingStatus, done);
+      testFlexJob(null, nonExistentUser, defaultJobId, validUserForGettingStatus, null, done);
     });
   });
 });

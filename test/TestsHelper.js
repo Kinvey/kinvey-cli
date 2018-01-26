@@ -15,6 +15,7 @@
 
 const async = require('async');
 const inquirer = require('inquirer');
+const merge = require('lodash.merge');
 const snapshot = require('snap-shot-it');
 const stripAnsi = require('strip-ansi');
 
@@ -308,6 +309,48 @@ TestsHelper.setup = {
   }
 };
 
+TestsHelper.buildOptions = function buildOptions(profileName, optionsForCredentials, otherOptions) {
+  let options = isEmpty(optionsForCredentials) ? {} : Object.assign({}, optionsForCredentials);
+  if (profileName) {
+    options[AuthOptionsNames.PROFILE] = profileName;
+  }
+
+  if (!isEmpty(otherOptions)) {
+    options = Object.assign(options, otherOptions);
+  }
+
+  return options;
+};
+
+TestsHelper.buildCmd = function buildCmd(baseCmd, positionalArgs, options, flags) {
+  let result = baseCmd;
+
+  // append positional arguments
+  if (Array.isArray(positionalArgs)) {
+    positionalArgs.forEach((x) => {
+      result += ` ${x}`;
+    });
+  }
+
+  // append options
+  if (!isEmpty(options)) {
+    const optionsNames = Object.keys(options);
+    optionsNames.forEach((optionName) => {
+      const optionValue = options[optionName];
+      result += ` --${optionName} ${optionValue}`;
+    });
+  }
+
+  // append flags
+  if (Array.isArray(flags)) {
+    flags.forEach(f => {
+      result += ` --${f}`;
+    });
+  }
+
+  return result;
+};
+
 TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
   options = options || {
     env: {
@@ -378,14 +421,8 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
     },
     (next) => {
       TestsHelper.execCmd(cliCmd, cmdOptions, (err, stdout, stderr) => {
-        let output;
-        if (stdout) {
-          output = stdout;
-        } else if (stderr) {
-          output = stderr;
-        } else {
-          output = err;
-        }
+        // Data output from successful command execution goes to stdout; everything else - stderr
+        const output = `${stderr}${stdout}`;
 
         const strippedOutput = stripAnsi(output) || '';
         let finalOutput;
@@ -398,6 +435,9 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
         } else {
           finalOutput = strippedOutput;
         }
+
+        // ensure line separators are always the same
+        finalOutput = finalOutput.replace(/\r\n/g, '\n');
 
         if (snapshotIt) {
           try {

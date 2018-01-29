@@ -78,7 +78,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `--color <true|false>`
 
-   Enable/disable colors.
+   Enable/disable colors. To disable use `--no-color` or `--color false`.
 
 * `--domain <app|org>`
 
@@ -95,6 +95,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 * `--id <app or organization ID>`
 
    App or organization ID for use with `--domain <app|org>`.
+   
+* `--output <json>`
+   
+   Output format. Aside from the default format, JSON is also supported.
 
 * `--password <password>`
 

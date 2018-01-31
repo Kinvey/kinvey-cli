@@ -1,14 +1,3 @@
-exports['flex recycle by not specifying profile nor credentials when one profile and existent serviceId should succeed 1'] = `
-debug:  Checking for package updates
-debug:  Request:  POST http://localhost:3234/v2/jobs
-debug:  Response: POST http://localhost:3234/v2/jobs 200
-info:  Recycle initiated, received job idOfJobThatIsRecyclingTheService
-debug:  Writing JSON to file projectSetupPath
-debug:  Writing contents to file projectSetupPath
-info:  Saved job ID to project settings.
-
-`
-
 exports['flex recycle by specifying a profile and existent serviceId should succeed 1'] = `
 debug:  Checking for package updates
 debug:  Request:  POST http://localhost:3234/v2/jobs
@@ -50,6 +39,17 @@ info:  Saved job ID to project settings.
 
 `
 
+exports['flex recycle by not specifying profile nor credentials when one profile and existent serviceId should succeed 1'] = `
+debug:  Checking for package updates
+debug:  Request:  POST http://localhost:3234/v2/jobs
+debug:  Response: POST http://localhost:3234/v2/jobs 200
+info:  Recycle initiated, received job idOfJobThatIsRecyclingTheService
+debug:  Writing JSON to file projectSetupPath
+debug:  Writing contents to file projectSetupPath
+info:  Saved job ID to project settings.
+
+`
+
 exports['flex recycle by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
 kinvey flex recycle
 
@@ -59,7 +59,7 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
-  --host                    Kinvey dedicated instance hostname          [string]
+  --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]

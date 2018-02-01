@@ -17,7 +17,7 @@ const cloneDeep = require('lodash.clonedeep');
 
 const { AuthOptionsNames, CommonOptionsNames, EnvironmentVariables, OutputFormat } = require('./../../../../lib/Constants');
 const testsConfig = require('../../../TestsConfig');
-const { assertions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { assertions, execCmdWithAssertion, setup, testTooManyArgs } = require('../../../TestsHelper');
 
 const fixtureUser = require('./../../../fixtures/user.json');
 
@@ -192,6 +192,10 @@ describe('profile create', () => {
           done();
         });
       });
+    });
+
+    it('with too many args should fail', (done) => {
+      testTooManyArgs(baseCmd, 2, done);
     });
   });
 });

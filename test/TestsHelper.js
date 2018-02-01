@@ -351,6 +351,15 @@ TestsHelper.buildCmd = function buildCmd(baseCmd, positionalArgs, options, flags
   return result;
 };
 
+TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCount, done) {
+  const additionalArgs = Array(additionalArgsCount).fill('redundantArg');
+  const cmd = TestsHelper.buildCmd(baseCmd, additionalArgs);
+  TestsHelper.execCmdWithAssertion(cmd, null, null, true, false, false, (err) => {
+    expect(err).to.not.exist;
+    done();
+  });
+};
+
 TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
   options = options || {
     env: {

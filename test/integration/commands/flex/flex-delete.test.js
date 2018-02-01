@@ -14,7 +14,7 @@
  */
 
 const { CommonOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
-const { assertions, buildCmd, execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { assertions, buildCmd, execCmdWithAssertion, setup, testTooManyArgs } = require('../../../TestsHelper');
 
 const baseCmd = 'flex delete';
 
@@ -75,6 +75,10 @@ describe(`${baseCmd}`, () => {
           done();
         });
       });
+    });
+
+    it('with too many args should fail', (done) => {
+      testTooManyArgs(baseCmd, 1, done);
     });
   });
 });

@@ -105,3 +105,28 @@ Options:
 Not enough non-option arguments: got 0, need at least 1
 
 `
+
+exports['profile create with insufficient info with too many args should fail 1'] = `
+kinvey profile create <name>
+
+Create profile
+
+Positionals:
+  name  Profile name                                                  [required]
+
+Options:
+  --version                 Show version number                        [boolean]
+  --email                   E-mail address of your Kinvey account       [string]
+  --password                Password of your Kinvey account             [string]
+  --host                    Kinvey dedicated instance hostname          [string]
+  --profile                 Profile to use                              [string]
+  --output                  Output format             [string] [choices: "json"]
+  --silent                  Do not output anything                     [boolean]
+  --suppress-version-check  Do not check for package updates           [boolean]
+  --verbose                 Output debug messages                      [boolean]
+  --color                   Enable/disable colors      [boolean] [default: true]
+  -h, --help                Show help                                  [boolean]
+
+Too many non-option arguments: got 1, maximum of 0
+
+`

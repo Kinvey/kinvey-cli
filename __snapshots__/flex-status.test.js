@@ -1,5 +1,6 @@
 exports['flex status by specifying a profile and existent serviceId should succeed and output default format 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToGetServiceStatus'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
 key            value                                    
@@ -16,6 +17,7 @@ deployerName   Davy Jones
 
 exports['flex status by specifying a profile and existent serviceId should succeed and output JSON 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToGetServiceStatus'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
 {
@@ -35,6 +37,7 @@ exports['flex status by specifying a profile and existent serviceId should succe
 
 exports['flex status by specifying a profile and non-existent serviceId should fail 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToGetServiceStatus'
 [debug] Request:  GET http://localhost:3234/v2/data-links/z793f26c8I_DONT_EXIST/status
 [debug] Response: GET http://localhost:3234/v2/data-links/z793f26c8I_DONT_EXIST/status 404
 DataLinkNotFound: The specified data link could not be found.
@@ -43,6 +46,7 @@ DataLinkNotFound: The specified data link could not be found.
 
 exports['flex status by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToGetServiceStatus'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
 key            value                                    
@@ -60,6 +64,7 @@ deployerName   Davy Jones
 
 exports['flex status by specifying a profile when invalid project is set with existent serviceId as an option should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToGetServiceStatus'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
 key            value                                    
@@ -76,6 +81,7 @@ deployerName   Davy Jones
 
 exports['flex status by not specifying profile nor credentials when one profile and existent serviceId should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'flexStatusProfile'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
 key            value                                    

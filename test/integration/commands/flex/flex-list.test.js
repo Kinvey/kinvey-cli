@@ -108,7 +108,7 @@ describe(baseCmd, () => {
 
     describe('when valid project is set', () => {
       before((done) => {
-        setup.createProjectSetup(null, done);
+        setup.createProjectSetup(profileToUse, null, done);
       });
 
       it('without options should succeed', (done) => {
@@ -122,7 +122,7 @@ describe(baseCmd, () => {
 
     describe('when invalid project is set', () => {
       before((done) => {
-        setup.createProjectSetup({ domain: 'app', domainEntityId: nonExistentEntityId }, done);
+        setup.createProjectSetup(profileToUse, { domain: 'app', domainEntityId: nonExistentEntityId }, done);
       });
 
       it('with valid options should succeed', (done) => {

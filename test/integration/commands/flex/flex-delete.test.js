@@ -57,7 +57,7 @@ describe(`${baseCmd}`, () => {
 
   describe('when project is set', () => {
     before((done) => {
-      setup.createProjectSetup(null, done);
+      setup.createProjectSetup('testName', null, done);
     });
 
     after((done) => {

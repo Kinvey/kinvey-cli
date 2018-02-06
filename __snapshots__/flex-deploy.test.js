@@ -17,7 +17,7 @@ Options:
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
 
-This project is not configured. Use 'kinvey flex init' to get started.
+This project is not configured. Use 'kinvey flex init' to get started or set additional options: serviceId.
 
 `
 
@@ -45,6 +45,6 @@ Options:
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
 
-This project is not configured. Use 'kinvey flex init' to get started.
+This project is not configured. Use 'kinvey flex init' to get started or set additional options: serviceId.
 
 `

@@ -116,7 +116,7 @@ describe(`${baseCmd}`, () => {
 
     describe('is valid', () => {
       beforeEach('setValidProjectSetup', (done) => {
-        setup.createProjectSetup(null, done);
+        setup.createProjectSetup(activeProfile, null, done);
       });
 
       afterEach('clearProjectSetup', (done) => {
@@ -218,7 +218,7 @@ describe(`${baseCmd}`, () => {
 
     describe("is not valid and user's project is valid", () => {
       before('setInvalidProjectSetup', (done) => {
-        setup.createProjectSetup({
+        setup.createProjectSetup(activeProfile, {
           domainEntityId: fixtureApp.id,
           serviceName: fixtureInternalDataLink.name,
         }, done);

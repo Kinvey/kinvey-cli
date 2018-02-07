@@ -36,7 +36,7 @@ Options:
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
 
 Too many non-option arguments: got 1, maximum of 0

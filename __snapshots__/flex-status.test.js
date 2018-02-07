@@ -37,7 +37,7 @@ exports['flex status by specifying a profile and non-existent serviceId should f
 [debug] Checking for package updates
 [debug] Request:  GET http://localhost:3234/v2/data-links/z793f26c8I_DONT_EXIST/status
 [debug] Response: GET http://localhost:3234/v2/data-links/z793f26c8I_DONT_EXIST/status 404
-DataLinkNotFound: The specified data link could not be found.
+[error] DataLinkNotFound: The specified data link could not be found.
 
 `
 
@@ -143,7 +143,7 @@ exports['flex status by specifying credentials as options when valid and non-exi
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-DataLinkNotFound: The specified data link could not be found.
+[error] DataLinkNotFound: The specified data link could not be found.
 
 `
 
@@ -151,6 +151,6 @@ exports['flex status by specifying credentials as options when invalid and exist
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Credentials are invalid. Please authenticate.
 
 `

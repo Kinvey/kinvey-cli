@@ -3,7 +3,6 @@ exports['profile delete by existent name when there is only one should succeed 1
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-[debug] Writing JSON to file globalSetupPath
 [debug] Writing contents to file globalSetupPath
 {
   "result": {
@@ -18,7 +17,6 @@ exports['profile delete by existent name when it is the active profile should su
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-[debug] Writing JSON to file globalSetupPath
 [debug] Writing contents to file globalSetupPath
 Deleted profile: activeAndMustBeDeleted
 
@@ -29,7 +27,6 @@ exports['profile delete by existent name when there are several should delete on
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-[debug] Writing JSON to file globalSetupPath
 [debug] Writing contents to file globalSetupPath
 Deleted profile: testProfileDelete
 
@@ -37,13 +34,13 @@ Deleted profile: testProfileDelete
 
 exports['profile delete by non-existent name when there is one should not alter it 1'] = `
 [debug] Checking for package updates
-ProfileNotFound: Profile not found. Please verify profile name exists.
+[error] ProfileNotFound: Profile not found. Please verify profile name exists.
 
 `
 
 exports['profile delete by non-existent name when none should return error 1'] = `
 [debug] Checking for package updates
-ProfileNotFound: Profile not found. Please verify profile name exists.
+[error] ProfileNotFound: Profile not found. Please verify profile name exists.
 
 `
 

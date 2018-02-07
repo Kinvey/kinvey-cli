@@ -131,7 +131,7 @@ exports['flex list by specifying credentials as options when valid and non-exist
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-GeneralError: 
+[error] GeneralError: 
 
 `
 
@@ -139,6 +139,6 @@ exports['flex list by specifying credentials as options when invalid and valid o
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Credentials are invalid. Please authenticate.
 
 `

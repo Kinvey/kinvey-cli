@@ -22,7 +22,7 @@ This project is not configured. Use 'kinvey flex init' to get started.
 `
 
 exports['flex deploy when project setup exists is valid and user\'s project is invalid should fail 1'] = `
-InvalidProject: This project is not valid. Please implement the kinvey-flex-sdk node module.
+[error] InvalidProject: This project is not valid. Please implement the kinvey-flex-sdk node module.
 
 `
 

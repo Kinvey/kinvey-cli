@@ -24,7 +24,7 @@ exports['flex job by specifying a profile and non-existent jobId should fail 1']
 [debug] Checking for package updates
 [debug] Request:  GET http://localhost:3234/v2/jobs/123jobDoesntExist
 [debug] Response: GET http://localhost:3234/v2/jobs/123jobDoesntExist 404
-JobNotFound: The specified job could not be found.
+[error] JobNotFound: The specified job could not be found.
 
 `
 
@@ -54,7 +54,7 @@ Options:
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
 
 You must be authenticated.
@@ -83,7 +83,7 @@ exports['flex job by specifying credentials as options when valid and non-existe
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-JobNotFound: The specified job could not be found.
+[error] JobNotFound: The specified job could not be found.
 
 `
 
@@ -91,6 +91,6 @@ exports['flex job by specifying credentials as options when invalid and existent
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Credentials are invalid. Please authenticate.
 
 `

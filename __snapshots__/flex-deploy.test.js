@@ -13,7 +13,7 @@ Options:
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
 
@@ -22,7 +22,7 @@ This project is not configured. Use 'kinvey flex init' to get started.
 `
 
 exports['flex deploy when project setup exists is valid and user\'s project is invalid should fail 1'] = `
-InvalidProject: This project is not valid. Please implement the kinvey-flex-sdk node module.
+[error] InvalidProject: This project is not valid. Please implement the kinvey-flex-sdk node module.
 
 `
 
@@ -41,7 +41,7 @@ Options:
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
 

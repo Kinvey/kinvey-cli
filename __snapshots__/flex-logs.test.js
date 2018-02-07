@@ -20,7 +20,7 @@ exports['flex logs without query by specifying a profile and non-existent servic
 [debug] Checking for package updates
 [debug] Request:  GET http://localhost:3234/v2/data-links/12serviceIdThatDoesntExist/logs
 [debug] Response: GET http://localhost:3234/v2/data-links/12serviceIdThatDoesntExist/logs 404
-DataLinkNotFound: The specified data link could not be found.
+[error] DataLinkNotFound: The specified data link could not be found.
 
 `
 
@@ -75,7 +75,7 @@ Options:
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
   --from                    Fetch log entries starting from provided timestamp
@@ -165,7 +165,7 @@ Options:
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
   --from                    Fetch log entries starting from provided timestamp
@@ -211,7 +211,7 @@ exports['flex logs without query by specifying credentials as options when valid
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-DataLinkNotFound: The specified data link could not be found.
+[error] DataLinkNotFound: The specified data link could not be found.
 
 `
 
@@ -219,7 +219,7 @@ exports['flex logs without query by specifying credentials as options when inval
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Credentials are invalid. Please authenticate.
 
 `
 
@@ -261,7 +261,7 @@ containerId   message                                                           
 
 exports['flex logs with query with valid timestamps and invalid paging should fail 1'] = `
 [debug] Checking for package updates
-InvalidParameter: Logs 'page' flag invalid (non-zero integer expected)
+[error] InvalidParameter: Logs 'page' flag invalid (non-zero integer expected)
 
 `
 
@@ -285,13 +285,13 @@ containerId   message                                                           
 
 exports['flex logs with query with invalid start timestamp and nothing else should fail 1'] = `
 [debug] Checking for package updates
-InvalidParameter: Logs 'from' flag invalid (ISO-8601 timestamp expected)
+[error] InvalidParameter: Logs 'from' flag invalid (ISO-8601 timestamp expected)
 
 `
 
 exports['flex logs with query with invalid timestamps (\'from\' not before \'to\') and nothing else should fail 1'] = `
 [debug] Checking for package updates
-InvalidParameter: 'from' timestamp must be before 'to' timestamp.
+[error] InvalidParameter: 'from' timestamp must be before 'to' timestamp.
 
 `
 

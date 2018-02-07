@@ -2,7 +2,6 @@ exports['profile create with valid credentials set as options should create 1'] 
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Writing JSON to file globalSetupPath
 [debug] Writing contents to file globalSetupPath
 Created profile: testProfile
 
@@ -16,7 +15,6 @@ exports['profile create with valid credentials set as options and existent profi
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-[debug] Writing JSON to file globalSetupPath
 [debug] Writing contents to file globalSetupPath
 Created profile: testProfile
 
@@ -26,7 +24,6 @@ exports['profile create with valid credentials set as environment variables shou
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Writing JSON to file globalSetupPath
 [debug] Writing contents to file globalSetupPath
 {
   "result": {
@@ -40,7 +37,6 @@ exports['profile create with valid credentials set as options and as environment
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Writing JSON to file globalSetupPath
 [debug] Writing contents to file globalSetupPath
 Created profile: testProfile
 
@@ -50,7 +46,6 @@ exports['profile create with valid credentials set as options + host should crea
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:6080/session
 [debug] Response: POST http://localhost:6080/session 200
-[debug] Writing JSON to file globalSetupPath
 [debug] Writing contents to file globalSetupPath
 Created profile: testProfile
 
@@ -60,7 +55,7 @@ exports['profile create with invalid credentials set as options should fail 1'] 
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Credentials are invalid. Please authenticate.
 
 `
 
@@ -69,7 +64,7 @@ exports['profile create with invalid credentials set as options when trying to o
 [debug] Overriding profile with name 'testProfile'.
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Credentials are invalid. Please authenticate.
 
 `
 
@@ -77,7 +72,7 @@ exports['profile create with insufficient info without password should fail 1'] 
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 422
-ValidationError: Validation failed. Missing required property: password
+[error] ValidationError: Validation failed. Missing required property: password
 
 `
 
@@ -99,7 +94,7 @@ Options:
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
 
 Not enough non-option arguments: got 0, need at least 1

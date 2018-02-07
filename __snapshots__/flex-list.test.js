@@ -42,7 +42,7 @@ Options:
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --domain                  Specify domain: 'app' or 'org'              [string]
   --id                      ID of app or org                            [string]
@@ -94,7 +94,7 @@ Options:
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --domain                  Specify domain: 'app' or 'org'              [string]
   --id                      ID of app or org                            [string]
@@ -131,7 +131,7 @@ exports['flex list by specifying credentials as options when valid and non-exist
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-GeneralError: 
+[error] GeneralError: 
 
 `
 
@@ -139,6 +139,6 @@ exports['flex list by specifying credentials as options when invalid and valid o
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Credentials are invalid. Please authenticate.
 
 `

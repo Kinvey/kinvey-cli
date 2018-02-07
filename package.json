@@ -72,5 +72,8 @@
     "linux",
     "win32"
   ],
-  "preferGlobal": true
+  "preferGlobal": true,
+  "yargs": {
+    "boolean-negation": false
+  }
 }

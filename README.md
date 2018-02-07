@@ -76,10 +76,6 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 ## Options
 
-* `--color <true|false>`
-
-   Enable/disable colors. To disable use `--no-color` or `--color false`.
-
 * `--domain <app|org>`
 
    Specifies the domain type for commands like `flex list`.
@@ -107,6 +103,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 * `--profile <profile>`
 
    Profile to use.
+   
+* `--no-color`
+
+    Disable colors
 
 * `--serviceId <Flex Service ID>`
 

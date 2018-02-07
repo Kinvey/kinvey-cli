@@ -15,9 +15,9 @@
 
 const async = require('async');
 
-const { AuthOptionsNames, FlexOptionsNames } = require('./../../../../lib/Constants');
+const { CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
 const { isEmpty } = require('./../../../../lib/Utils');
-const { execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { buildCmd, buildOptions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureInternalDataLink = require('./../../../fixtures/kinvey-dlc.json');
@@ -29,26 +29,20 @@ const defaultServiceId = fixtureInternalDataLink.id;
 
 const baseCmd = 'flex recycle';
 
-function testFlexRecycle(profileName, optionsForCredentials, serviceId, validUser, done) {
-  let cmd = `${baseCmd} --verbose`;
-  if (profileName) {
-    cmd = `${cmd} --${AuthOptionsNames.PROFILE} ${profileName}`;
-  }
-
-  if (!isEmpty(optionsForCredentials)) {
-    cmd = `${cmd} --${AuthOptionsNames.EMAIL} ${optionsForCredentials.email} --${AuthOptionsNames.PASSWORD} ${optionsForCredentials.password}`;
-  }
-
-  if (serviceId) {
-    cmd = `${cmd} --${FlexOptionsNames.SERVICE_ID} ${serviceId}`;
-  }
-
+function testFlexRecycle(profileName, options, serviceId, validUser, done) {
   const apiOptions = {};
   if (!isEmpty(validUser)) {
     apiOptions.token = validUser.token;
     apiOptions.existentUser = { email: validUser.email };
   }
 
+  const allOptions = buildOptions(profileName, options);
+  if (serviceId) {
+    allOptions[FlexOptionsNames.SERVICE_ID] = serviceId;
+  }
+
+  const positionalArgs = null;
+  const cmd = buildCmd(baseCmd, positionalArgs, allOptions, [CommonOptionsNames.VERBOSE]);
   execCmdWithAssertion(cmd, null, apiOptions, true, true, false, done);
 }
 
@@ -86,8 +80,12 @@ describe(baseCmd, () => {
       setup.deleteProfileFromSetup(profileToUse, null, done);
     });
 
-    it('and existent serviceId should succeed', (done) => {
+    it('and existent serviceId should succeed and output default format', (done) => {
       testFlexRecycle(profileToUse, null, defaultServiceId, validUserOne, done);
+    });
+
+    it('and existent serviceId should succeed and output JSON', (done) => {
+      testFlexRecycle(profileToUse, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, defaultServiceId, validUserOne, done);
     });
 
     it('and non-existent serviceId should fail', (done) => {

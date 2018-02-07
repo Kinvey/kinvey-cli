@@ -91,6 +91,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 * `--id <app or organization ID>`
 
    App or organization ID for use with `--domain <app|org>`.
+   
+* `--output <json>`
+   
+   Output format. Aside from the default format, JSON is also supported.
 
 * `--password <password>`
 
@@ -99,6 +103,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 * `--profile <profile>`
 
    Profile to use.
+   
+* `--no-color`
+
+    Disable colors
 
 * `--serviceId <Flex Service ID>`
 

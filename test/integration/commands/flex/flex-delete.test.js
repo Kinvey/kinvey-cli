@@ -13,7 +13,8 @@
  * contents is a violation of applicable laws.
  */
 
-const { assertions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { CommonOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
+const { assertions, buildCmd, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const baseCmd = 'flex delete';
 
@@ -27,9 +28,21 @@ describe(`${baseCmd}`, () => {
   });
 
   describe('when project is not set', () => {
-    // TODO: should it really?
-    it('should fail', (done) => {
-      const cmd = `${baseCmd} --verbose`;
+    it('should succeed and output default format', (done) => {
+      const cmd = buildCmd(baseCmd, null, null, [CommonOptionsNames.VERBOSE]);
+
+      execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
+        expect(err).to.not.exist;
+
+        assertions.assertProjectSetup(null, null, (err) => {
+          expect(err).to.not.exist;
+          done();
+        });
+      });
+    });
+
+    it('should succeed and output JSON', (done) => {
+      const cmd = buildCmd(baseCmd, null, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, [CommonOptionsNames.VERBOSE]);
 
       execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
         expect(err).to.not.exist;
@@ -52,7 +65,7 @@ describe(`${baseCmd}`, () => {
     });
 
     it('should succeed', (done) => {
-      const cmd = `${baseCmd} --verbose`;
+      const cmd = buildCmd(baseCmd, null, null, [CommonOptionsNames.VERBOSE]);
 
       execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
         expect(err).to.not.exist;

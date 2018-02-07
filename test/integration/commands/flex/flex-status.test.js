@@ -15,9 +15,9 @@
 
 const async = require('async');
 
-const { AuthOptionsNames, FlexOptionsNames } = require('./../../../../lib/Constants');
+const { AuthOptionsNames, CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
 const { isEmpty } = require('./../../../../lib/Utils');
-const { execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { buildCmd, buildOptions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureInternalDataLink = require('./../../../fixtures/kinvey-dlc.json');
@@ -29,19 +29,11 @@ const defaultServiceId = fixtureInternalDataLink.id;
 
 const baseCmd = 'flex status';
 
-function testFlexStatus(profileName, optionsForCredentials, useServiceId, serviceId, validUser, done) {
-  let cmd = `${baseCmd} --verbose`;
-  if (profileName) {
-    cmd = `${cmd} --${AuthOptionsNames.PROFILE} ${profileName}`;
-  }
-
-  if (!isEmpty(optionsForCredentials)) {
-    cmd = `${cmd} --${AuthOptionsNames.EMAIL} ${optionsForCredentials.email} --${AuthOptionsNames.PASSWORD} ${optionsForCredentials.password}`;
-  }
-
+function testFlexStatus(profileName, options, useServiceId, serviceId, validUser, done) {
+  const allOptions = buildOptions(profileName, options);
   if (useServiceId) {
     const id = serviceId || defaultServiceId;
-    cmd = `${cmd} --${FlexOptionsNames.SERVICE_ID} ${id}`;
+    allOptions[FlexOptionsNames.SERVICE_ID] = id;
   }
 
   const apiOptions = {};
@@ -50,6 +42,7 @@ function testFlexStatus(profileName, optionsForCredentials, useServiceId, servic
     apiOptions.existentUser = { email: validUser.email };
   }
 
+  const cmd = buildCmd(baseCmd, null, allOptions, [CommonOptionsNames.VERBOSE]);
   execCmdWithAssertion(cmd, null, apiOptions, true, true, false, done);
 }
 
@@ -87,8 +80,12 @@ describe(baseCmd, () => {
       setup.deleteProfileFromSetup(profileToUse, null, done);
     });
 
-    it('and existent serviceId should succeed', (done) => {
+    it('and existent serviceId should succeed and output default format', (done) => {
       testFlexStatus(profileToUse, null, true, null, validUserForGettingStatus, done);
+    });
+
+    it('and existent serviceId should succeed and output JSON', (done) => {
+      testFlexStatus(profileToUse, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, true, null, validUserForGettingStatus, done);
     });
 
     it('and non-existent serviceId should fail', (done) => {

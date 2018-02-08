@@ -174,9 +174,9 @@ Use these environment variables to specify profile information for the `profile 
 
    Password for your Kinvey account.
 
-* `KINVEY_CLI_HOST`
+* `KINVEY_CLI_INSTANCE_ID`
 
-   Hostname of a Kinvey instance. It has a default value of `https://manage.kinvey.com/` which most customers should use. If you are a customer on a dedicated Kinvey instance, enter your dedicated host name as either an absolute URI (`https://kvy-us2-manage.kinvey.com/`) or an instance name only (`kvy-us2`).
+   ID (e.g., `kvy-us2`) or full hostname (e.g., `https://kvy-us2-manage.kinvey.com/`) of a Kinvey instance. It has a default value of `kvy-us1` (or `https://manage.kinvey.com/`) which most customers should use. If you are a customer on a dedicated Kinvey instance, enter your dedicated instance ID.
 
 * `KINVEY_CLI_PROFILE`
 
@@ -268,14 +268,14 @@ You can also provide the same information through environment variables before r
 ```
 export KINVEY_CLI_EMAIL=<email>
 export KINVEY_CLI_PASSWORD=<password>
-export KINVEY_CLI_HOST=<host>
+export KINVEY_CLI_INSTANCE_ID=<instance ID>
 ```
 
 **Windows**
 ```
 set KINVEY_CLI_EMAIL=<email>
 set KINVEY_CLI_PASSWORD=<password>
-set KINVEY_CLI_HOST=<host>
+set KINVEY_CLI_INSTANCE_ID=<instance ID>
 ```
 
 ## Precedence of Configuration Options

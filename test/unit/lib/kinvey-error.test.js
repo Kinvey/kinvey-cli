@@ -53,7 +53,7 @@ describe('kinvey error', () => {
   it('from null should create general error', () => {
     const expectedErr = {
       name: 'GeneralError',
-      message: undefined
+      message: ''
     };
 
     const actualErr = new KinveyError();
@@ -63,7 +63,7 @@ describe('kinvey error', () => {
   it('from undefined should create general error', () => {
     const expectedErr = {
       name: 'GeneralError',
-      message: undefined
+      message: ''
     };
 
     let errName;

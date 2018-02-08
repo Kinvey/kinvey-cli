@@ -24,7 +24,7 @@
     "start": "./bin/kinvey",
     "prepublish": "./node_modules/.bin/dos2unix ./bin/kinvey",
     "pretest": "./node_modules/.bin/eslint bin config lib test",
-    "test": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test/integration --NODE_CONFIG_DIR=./test/config",
+    "test": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test --NODE_CONFIG_DIR=./test/config",
     "test-unit": "./node_modules/.bin/mocha test/unit --NODE_CONFIG_DIR=./test/config",
     "test-integration": "./node_modules/.bin/mocha test/integration"
   },
@@ -33,8 +33,7 @@
     "async": "1.4.2",
     "chalk": "2.1.0",
     "config": "1.16.0",
-    "console.table": "0.9.1",
-    "custom-logger": "0.3.1",
+    "console.table": "0.10.0",
     "inquirer": "0.10.0",
     "isemail": "1.2.0",
     "lodash.clonedeep": "4.5.0",
@@ -46,6 +45,7 @@
     "update-notifier": "0.5.0",
     "uuid": "2.0.3",
     "valid-url": "1.0.9",
+    "winston": "2.4.0",
     "yargs": "10.0.3"
   },
   "devDependencies": {
@@ -57,10 +57,9 @@
     "eslint-plugin-import": "1.8.1",
     "express": "4.16.2",
     "mocha": "2.3.3",
-    "nock": "9.0.14",
     "nyc": "11.1.0",
-    "sinon": "1.17.0",
-    "sinon-chai": "2.8.0",
+    "sinon": "4.1.3",
+    "sinon-chai": "2.14.0",
     "snap-shot-it": "4.0.1",
     "strip-ansi": "4.0.0",
     "test-console": "1.0.0"
@@ -73,5 +72,8 @@
     "linux",
     "win32"
   ],
-  "preferGlobal": true
+  "preferGlobal": true,
+  "yargs": {
+    "boolean-negation": false
+  }
 }

@@ -164,6 +164,11 @@ describe(`${baseCmd}`, () => {
             return mockReq;
           };
 
+          manager.processCommandResult = function stub(err) {
+            expect(err).to.not.exist;
+            done();
+          };
+
           const flexService = new FlexService(manager);
           const ctrl = new FlexController({ cliManager: manager, flexService });
 
@@ -171,10 +176,7 @@ describe(`${baseCmd}`, () => {
             [AuthOptionsNames.EMAIL]: existentUserOne.email,
             [AuthOptionsNames.PASSWORD]: existentUserOne.password
           };
-          ctrl.deploy(options, (err) => {
-            expect(err).to.not.exist;
-            done();
-          });
+          ctrl.deploy(options);
         });
       });
 

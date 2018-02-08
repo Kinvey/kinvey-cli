@@ -15,11 +15,12 @@
 
 const async = require('async');
 
-const { assertions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { CommonOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
+const { assertions, buildCmd, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const baseCmd = 'profile use';
 
-function testProfileUse(profilesCount, chooseExistent, done) {
+function testProfileUse(profilesCount, chooseExistent, options, done) {
   const profileNames = [];
   for (let i = 0; i < profilesCount; i += 1) {
     profileNames.push(`testProfileUse${i}`);
@@ -32,7 +33,7 @@ function testProfileUse(profilesCount, chooseExistent, done) {
       setup.createProfiles(profileNames, next);
     },
     function setActiveProfile(next) {
-      const cmd = `${baseCmd} ${activeProfileName} --verbose`;
+      const cmd = buildCmd(baseCmd, [activeProfileName], options, [CommonOptionsNames.VERBOSE]);
       execCmdWithAssertion(cmd, null, null, true, true, false, next);
     },
     function verifyGlobalSetupContainsActive(next) {
@@ -58,19 +59,19 @@ describe(baseCmd, () => {
     setup.clearGlobalSetup(null, done);
   });
 
-  it('with existent name when several should succeed', (done) => {
-    testProfileUse(3, true, done);
+  it('with existent name when several should succeed and output default format', (done) => {
+    testProfileUse(3, true, null, done);
   });
 
-  it('with existent name when one should succeed', (done) => {
-    testProfileUse(1, true, done);
+  it('with existent name when one should succeed and output JSON', (done) => {
+    testProfileUse(1, true, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, done);
   });
 
-  it('with non-existent name when several should not set as active', (done) => {
-    testProfileUse(2, false, done);
+  it('with non-existent name when several should return error', (done) => {
+    testProfileUse(2, false, null, done);
   });
 
-  it('with non-existent name when none should not throw', (done) => {
-    testProfileUse(0, false, done);
+  it('with non-existent name when none should return error', (done) => {
+    testProfileUse(0, false, null, done);
   });
 });

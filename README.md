@@ -44,7 +44,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex deploy`
 
-   Deploys the current project to the Kinvey FlexService Runtime.
+   Deploys the current project to the Kinvey FlexService Runtime. To use a different service than the one initiated last, specify its service ID.
+   
+   * `--serviceId <Flex Service ID>`
+      
+         Specifies a Flex Service by its ID.
 
 * `flex job [id]`
 
@@ -125,6 +129,14 @@ You can add a global option to every Kinvey CLI command to get the described beh
 * `--host <host>`
 
    Hostname of a Kinvey instance. It has a default value of `https://manage.kinvey.com/` which most customers should use. If you are a customer on a dedicated Kinvey instance, enter your dedicated host name as either an absolute URI (`https://kvy-us2-manage.kinvey.com/`) or an instance name only (`kvy-us2`).
+
+* `--no-color`
+
+    Disable colors.
+    
+* `--output <json>`
+   
+   Output format. Aside from the default format, JSON is also supported.
 
 * `--password <password>`
 

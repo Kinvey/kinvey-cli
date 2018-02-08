@@ -40,7 +40,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex init`
 
-   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Information inside the file is saved per profile. Each successive execution in the same directory overwrites the respective profile section in the configuration file. Command-line options that specify the same data as the prompted-for data are ignored.
+   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Information inside the file is saved per profile. Each successive execution in the same directory overwrites the respective profile section in the configuration file. This command requires that either an active profile is set or a profile is specified using the `--profile` option. Profile data options such as `--email`, `--password`, and `--instanceId` are ignored if specified. 
 
 * `flex deploy`
 

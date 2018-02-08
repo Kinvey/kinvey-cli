@@ -213,7 +213,7 @@ $ kinvey init
 ? E-mail john.doe@kinvey.com
 ? Password ***********
 ? Host https://manage.kinvey.com/
-? Profile dev
+? Profile name dev
 ```
 
 You can run `kinvey init` from any directory as it always writes your new profile in your home directory.
@@ -286,6 +286,20 @@ For the Kinvey CLI commands that require passing configuration values, the follo
 * Environment variables&mdash;the first choice when command line arguments are missing
 * Profile data&mdash;values saved as part of the applicable working profile are used if neither command line arguments nor environment variables are set
 
+
+## Output Format
+
+Kinvey CLI supports two output formats: plain text and JSON. Both are printed on the screen unless you redirect the output using shell syntax.
+
+Plain text is printed by default. Depending on the command, it produces tabular data or a simple message stating that the action has completed successfully.
+
+The JSON output format is suitable for cases where the output must be handled programmatically. You can run any command with `--output json`. The output will then have the following format:
+
+```
+{
+    "result": [result]
+}
+```
 
 ## Proxy Settings
 

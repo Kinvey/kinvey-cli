@@ -40,7 +40,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex init`
 
-   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Each successive execution in the same directory overwrites the configuration file. Command-line options that specify the same data as the prompted-for data are ignored.
+   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Information inside the file is saved per profile. Each successive execution in the same directory overwrites the respective profile section in the configuration file. Command-line options that specify the same data as the prompted-for data are ignored.
 
 * `flex deploy`
 
@@ -126,9 +126,9 @@ You can add a global option to every Kinvey CLI command to get the described beh
 
    When used after a `kinvey-cli` command, shows its usage instructions.
 
-* `--host <host>`
+* `--instanceId <instance ID>`
 
-   Hostname of a Kinvey instance. It has a default value of `https://manage.kinvey.com/` which most customers should use. If you are a customer on a dedicated Kinvey instance, enter your dedicated host name as either an absolute URI (`https://kvy-us2-manage.kinvey.com/`) or an instance name only (`kvy-us2`).
+   ID (e.g., `kvy-us2`) or full hostname (e.g., `https://kvy-us2-manage.kinvey.com/`) of a Kinvey instance. It has a default value of `kvy-us1` (or `https://manage.kinvey.com/`) which most customers should use. If you are a customer on a dedicated Kinvey instance, enter your dedicated instance ID.
 
 * `--no-color`
 
@@ -136,7 +136,7 @@ You can add a global option to every Kinvey CLI command to get the described beh
     
 * `--output <json>`
    
-   Output format. Aside from the default format, JSON is also supported.
+   Output format. Aside from the default plain-text format, JSON is also supported.
 
 * `--password <password>`
 
@@ -212,8 +212,8 @@ When prompted for `Profile`, enter a name for your new working profile that Kinv
 $ kinvey init
 ? E-mail john.doe@kinvey.com
 ? Password ***********
-? Host https://manage.kinvey.com/
-? Profile dev
+? Instance ID (optional) kvy-us1
+? Profile name dev
 ```
 
 You can run `kinvey init` from any directory as it always writes your new profile in your home directory.

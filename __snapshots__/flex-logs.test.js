@@ -89,7 +89,7 @@ Options:
   --number                  Number of entries to fetch, i.e. page size (non-zero
                             integer, default=100, max=2000)             [number]
 
-This project is not configured. Use 'kinvey flex init' to get started or set additional options: serviceId.
+This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: serviceId.
 
 `
 

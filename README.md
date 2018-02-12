@@ -1,6 +1,6 @@
 # Kinvey CLI
 
-Kinvey CLI is an utility for deploying and managing FlexServices running on the Kinvey FlexService Runtime.
+Kinvey CLI is a utility for deploying and managing FlexServices running on the Kinvey FlexService Runtime.
 
 ## Installation
 
@@ -16,7 +16,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `init`
 
-   Prompts you to provide account credentials and host and creates a new working profile for you based on the information you provided.
+   Prompts you to provide account credentials and host and creates a new working profile for you based on the information you provided. Command-line options that specify the same data are ignored.
 
 * `profile create <name> [profile information]`
 
@@ -40,11 +40,15 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex init`
 
-   Configures Kinvey CLI to work with a specific Flex Service. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Each successive execution in the same directory overwrites the configuration file.
+   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Each successive execution in the same directory overwrites the configuration file. Command-line options that specify the same data as the prompted-for data are ignored.
 
 * `flex deploy`
 
-   Deploys the current project to the Kinvey FlexService Runtime. You can specify a Flex Service using the `--serviceId` option.
+   Deploys the current project to the Kinvey FlexService Runtime. To use a different service than the one initiated last, specify its service ID.
+   
+   * `--serviceId <Flex Service ID>`
+      
+         Specifies a Flex Service by its ID.
 
 * `flex job [id]`
 
@@ -52,19 +56,55 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex status`
 
-   Displays the health of the current (the one you initiated last) Flex Service. To get the status of a different service, specify its service ID using the `--serviceId` option.
+   Displays the health of the current (the one you initiated last) Flex Service. To get the status of a different service, specify its service ID using the `--serviceId` option. In addition to the global options, this command supports the following options:
+
+   * `--serviceId <Flex Service ID>`
+   
+      Specifies a Flex Service by its ID.
 
 * `flex list`
 
-  Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services inside the domain you've configured as part of running `flex init`.
+   Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services inside the domain you've configured as part of running `flex init`. In addition to the global options, this command supports the following options:
+
+   * `--domain <app|org>`
+   
+      Specifies the domain type as either `app` for application or `org` for organization.
+   
+   * `--id <app or organization ID>`
+   
+      App or organization ID for use with `--domain <app|org>`.
 
 * `flex logs`
 
-   Retrieves and displays Flex Services logs. Logs calls return 100 entries by default and can return up to 2,000 entries. Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`. Run `kinvey flex logs -h` for advanced `logs` command usage details, including returning more than the default number of entries, specifying a page number, or filtering by timestamp. Logs for external Flex Services are not returned. You can specify a Flex Service to read logs from using the `--serviceId` option.
-  
+   Retrieves and displays Flex Services logs. Logs calls return 100 entries by default and can return up to 2,000 entries. Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`. Combine with the paging and limiting options to narrow down your search. Logs for external Flex Services are not returned. You can specify a Flex Service to read logs from using the `--serviceId` option. In addition to the global options, this command supports the following options:
+
+   * `--from`
+
+      Timestamp specifying the beginning of a period for which you want to fetch log entries, in ISO 8601 format.
+
+   * `--number`
+
+      Number of entries to fetch, i.e. page size. The default is 100, the maximum allowed is 2000.
+
+   * `--page`
+
+      Page number to fetch. The first page is indexed 1.
+
+   * `--serviceId <Flex Service ID>`
+
+      Specifies a Flex Service by its ID.
+
+   * `--to`
+
+      Timestamp specifying the end of a period for which you want to fetch log entries, in ISO 8601 format.
+
 * `flex recycle`
    
-   Recycles the current (the one you initiated last) Flex Service. To recycle a different service, specify its service ID using the `--serviceId` option.
+   Recycles the current (the one you initiated last) Flex Service. To recycle a different service, specify its service ID using the `--serviceId` option. In addition to the global options, this command supports the following options:
+
+   * `--serviceId <Flex Service ID>`
+   
+      Specifies a Flex Service by its ID.
 
 * `flex delete`
 
@@ -74,24 +114,26 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    Prints general usage instructions. For detailed command usage instruction, use the `--help` option with the command.
 
-## Options
+## Global Options
 
-* `--domain <app|org>`
-
-   Specifies the domain type for commands like `flex list`.
+You can add a global option to every Kinvey CLI command to get the described behavior. The only exceptions are `--email`, `--password`, and `--host` which get ignored when added to a command that is designed to prompt for this information.
 
 * `--email <e-mail>`
 
    Email address of your Kinvey account.
 
+* `--help, -h`
+
+   When used after a `kinvey-cli` command, shows its usage instructions.
+
 * `--host <host>`
 
    Hostname of a Kinvey instance. It has a default value of `https://manage.kinvey.com/` which most customers should use. If you are a customer on a dedicated Kinvey instance, enter your dedicated host name as either an absolute URI (`https://kvy-us2-manage.kinvey.com/`) or an instance name only (`kvy-us2`).
 
-* `--id <app or organization ID>`
+* `--no-color`
 
-   App or organization ID for use with `--domain <app|org>`.
-   
+    Disable colors.
+    
 * `--output <json>`
    
    Output format. Aside from the default format, JSON is also supported.
@@ -103,14 +145,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 * `--profile <profile>`
 
    Profile to use.
-   
-* `--no-color`
 
-    Disable colors
+* `--version`
 
-* `--serviceId <Flex Service ID>`
-
-   Specifies a Flex Service, e.g. for use with the `flex status` command.
+   Prints the version number of `kinvey-cli`.
 
 * `--silent`
 
@@ -119,18 +157,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 * `--suppress-version-check`
 
    Prevents Kinvey CLI to check for new versions, which normally happens each execution.
-   
+
 * `--verbose`
 
    Prints additional debug messages.
-
-* `--version`
-
-   Prints the version number of `kinvey-cli`.
-
-* `--help, -h`
-
-   When used after a `kinvey-cli` command, shows its usage instructions.
 
 ## Environment Variables
 
@@ -151,6 +181,12 @@ Use these environment variables to specify profile information for the `profile 
 * `KINVEY_CLI_PROFILE`
 
    Profile to use.
+   
+Kinvey CLI also supports these universal environment variables:
+
+* `HTTPS_PROXY`/`https_proxy`
+
+   Routes all Kinvey CLI requests through the specified proxy server.
 
 
 ## Getting Help
@@ -166,7 +202,7 @@ Kinvey CLI comes with a two-stage help system. You can either call the `help` co
 
 ## Getting Started
 
-Kinvey CLI requires you to authenticate. The fastest way to get started is to run the `kinvey init` command. It prompts for credentials and hostname and creates a working profile for you, which stores the settings for you for future executions.
+Kinvey CLI requires you to authenticate. The fastest way to get started is to run the `kinvey init` command. It prompts for credentials and hostname and creates a working profile for you, which stores the provided settings for future executions.
 
 Note that you only need to specify a host if you are on a dedicated Kinvey instance. Otherwise just press Enter to continue.
 
@@ -177,7 +213,7 @@ $ kinvey init
 ? E-mail john.doe@kinvey.com
 ? Password ***********
 ? Host https://manage.kinvey.com/
-? Profile dev
+? Profile name dev
 ```
 
 You can run `kinvey init` from any directory as it always writes your new profile in your home directory.
@@ -251,6 +287,20 @@ For the Kinvey CLI commands that require passing configuration values, the follo
 * Profile data&mdash;values saved as part of the applicable working profile are used if neither command line arguments nor environment variables are set
 
 
+## Output Format
+
+Kinvey CLI supports two output formats: plain text and JSON. Both are printed on the screen unless you redirect the output using shell syntax.
+
+Plain text is printed by default. Depending on the command, it produces tabular data or a simple message stating that the action has completed successfully.
+
+The JSON output format is suitable for cases where the output must be handled programmatically. You can run any command with `--output json`. The output will then have the following format:
+
+```
+{
+    "result": [result]
+}
+```
+
 ## Proxy Settings
 
 Kinvey CLI supports the universal environment variables `HTTPS_PROXY` and `https_proxy` for routing commands through a proxy server. Set it if you are using a proxy.
@@ -263,9 +313,11 @@ Kinvey CLI supports the universal environment variables `HTTPS_PROXY` and `https
 
 Run any command with the `--verbose` flag to receive more detailed information about a command execution.
 
+Kinvey CLI has a 10-second request timeout when communicating with the backend for initialization which may cause a connection error in some rare cases. Retrying the command remedies the problem in many cases.
+
 If you are using a profile that has been configured a while ago, you can stumble upon the `InvalidCredentials` error. It may mean that the session token has expired. See [Authentication Token Expiration](#authentication-token-expiration) for details.
 
-If problems persist, please contact [Kinvey](http://support.kinvey.com).
+If problems persist, contact [Kinvey](http://support.kinvey.com).
 
 ## Changelog
 

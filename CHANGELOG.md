@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.0.0-beta.2
+### Bugfixes and improvements:
+* Show connection errors details
+* Show validation errors details
+* Validate 'from' is before 'to' when retrieving logs
+* Prompt for app/org if token is valid
+* Accept '--serviceId' option for 'flex deploy'
+* Enable JSON output format
+* Enable '--no-color' flag
+* Don't show flex service name when '--serviceId'
+* Don't invalidate profile token if it can't be overwritten
+* Don't output anything if '--silent'
+
 ## 3.0.0-beta.1
 * Fix line endings in bin directory
 

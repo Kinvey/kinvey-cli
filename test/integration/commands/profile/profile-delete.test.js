@@ -15,6 +15,7 @@
 
 const async = require('async');
 
+const { CommonOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
 const { writeJSON } = require('./../../../../lib/Utils');
 const testsConfig = require('../../../TestsConfig');
 const { assertions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
@@ -41,7 +42,7 @@ describe('profile delete', () => {
   });
 
   it('by existent name when there is only one should succeed', (done) => {
-    const cmd = `${baseCmd} ${defaultProfileName} --verbose`;
+    const cmd = `${baseCmd} ${defaultProfileName} --${CommonOptionsNames.VERBOSE} --${CommonOptionsNames.OUTPUT} ${OutputFormat.JSON}`;
 
     execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
       expect(err).to.not.exist;
@@ -124,7 +125,7 @@ describe('profile delete', () => {
     });
   });
 
-  it('by non-existent name when none should not throw', (done) => {
+  it('by non-existent name when none should return error', (done) => {
     async.series([
       function clearProfiles(next) {
         const globalSetup = {

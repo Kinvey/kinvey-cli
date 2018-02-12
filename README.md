@@ -44,7 +44,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex deploy`
 
-   Deploys the current project to the Kinvey FlexService Runtime.
+   Deploys the current project to the Kinvey FlexService Runtime. To use a different service than the one initiated last, specify its service ID.
+   
+   * `--serviceId <Flex Service ID>`
+      
+         Specifies a Flex Service by its ID.
 
 * `flex job [id]`
 
@@ -126,6 +130,14 @@ You can add a global option to every Kinvey CLI command to get the described beh
 
    Hostname of a Kinvey instance. It has a default value of `https://manage.kinvey.com/` which most customers should use. If you are a customer on a dedicated Kinvey instance, enter your dedicated host name as either an absolute URI (`https://kvy-us2-manage.kinvey.com/`) or an instance name only (`kvy-us2`).
 
+* `--no-color`
+
+    Disable colors.
+    
+* `--output <json>`
+   
+   Output format. Aside from the default format, JSON is also supported.
+
 * `--password <password>`
 
    Password for your Kinvey account.
@@ -201,7 +213,7 @@ $ kinvey init
 ? E-mail john.doe@kinvey.com
 ? Password ***********
 ? Host https://manage.kinvey.com/
-? Profile dev
+? Profile name dev
 ```
 
 You can run `kinvey init` from any directory as it always writes your new profile in your home directory.
@@ -274,6 +286,20 @@ For the Kinvey CLI commands that require passing configuration values, the follo
 * Environment variables&mdash;the first choice when command line arguments are missing
 * Profile data&mdash;values saved as part of the applicable working profile are used if neither command line arguments nor environment variables are set
 
+
+## Output Format
+
+Kinvey CLI supports two output formats: plain text and JSON. Both are printed on the screen unless you redirect the output using shell syntax.
+
+Plain text is printed by default. Depending on the command, it produces tabular data or a simple message stating that the action has completed successfully.
+
+The JSON output format is suitable for cases where the output must be handled programmatically. You can run any command with `--output json`. The output will then have the following format:
+
+```
+{
+    "result": [result]
+}
+```
 
 ## Proxy Settings
 

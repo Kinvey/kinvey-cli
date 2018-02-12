@@ -15,6 +15,7 @@
 
 const async = require('async');
 const inquirer = require('inquirer');
+const merge = require('lodash.merge');
 const snapshot = require('snap-shot-it');
 const stripAnsi = require('strip-ansi');
 
@@ -297,87 +298,6 @@ TestsHelper.setup = {
     writeJSON(testsConfig.paths.project, options, done);
   },
 
-  configureUserAndProject(sandbox, mockServer, cb) {
-    this.userProjectPromptStubsForSuccess(sandbox);
-
-    mockServer.loginWithSuccess();
-    mockServer.apps();
-    mockServer.dataLinks();
-
-    require('../lib/commands/flex/config').handler({}, (err) => {
-      expect(err).to.not.exist;
-      expect(mockServer.isDone()).to.be.true;
-
-      const expectedUser = {
-        host: config.host,
-        tokens: {
-          [config.host]: fixtureUser.token
-        }
-      };
-
-      const expectedProject = TestsHelper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
-
-      TestsHelper.assertions.assertUserProjectSetup(expectedUser, expectedProject, cb);
-    });
-  },
-
-  setInvalidProject(cb) {
-    // setup for failure - service is null
-    const invalidProjectToRestore = TestsHelper.assertions.buildExpectedProject(fixtureApp.id, null, null, fixtureInternalDataLink.name, null);
-    util.writeJSON(config.paths.project, invalidProjectToRestore, (err) => {
-      cb(err, invalidProjectToRestore);
-    });
-  },
-
-  userProjectPromptStubsForSuccess(sandbox) {
-    this.userPromptStubsForSuccess(sandbox);
-    this.projectPromptStubsForSuccess(sandbox);
-  },
-
-  userPromptStubsForSuccess(sandbox) {
-    sandbox.stub(prompt, 'getEmailPassword').callsArgWith(2, null, fixtureUser.existent.email, fixtureUser.existent.password);
-  },
-
-  projectPromptStubsForSuccess(sandbox) {
-    sandbox.stub(prompt, 'getAppOrOrg').callsArgWith(1, null, { name: 'App' });
-    sandbox.stub(prompt, 'getApp').callsArgWith(1, null, fixtureApp);
-    sandbox.stub(prompt, 'getService').callsArgWith(1, null, fixtureInternalDataLink);
-  },
-
-  // Deploys a job. User must be already logged in and project must be set.
-  initiateJobDeploy(mockServer, cb) {
-    mockServer.deployJob();
-
-    require('../lib/commands/flex/deploy').handler({}, (err) => {
-      expect(err).to.not.exist;
-      expect(mockServer.isDone()).to.be.true;
-
-      const expectedUser = {
-        host: config.host,
-        tokens: {
-          [config.host]: fixtureUser.token
-        }
-      };
-      const expectedProject = TestsHelper.assertions.buildExpectedProject(fixtureApp.id, null, fixtureJob.job, fixtureInternalDataLink.name, fixtureInternalDataLink.id);
-      TestsHelper.assertions.assertUserProjectSetup(expectedUser, expectedProject, cb);
-    });
-  },
-
-  // Clears content in session and project files.
-  clearUserProjectSetup(cb) {
-    async.series(
-      [
-        function clearUser(next) {
-          util.writeJSON(config.paths.session, '', next);
-        },
-        function clearProject(next) {
-          util.writeJSON(config.paths.project, '', next);
-        }
-      ],
-      cb
-    );
-  },
-
   clearGlobalSetup(path, done) {
     path = path || globalSetupPath;
     writeJSON(path, '', done);
@@ -386,27 +306,58 @@ TestsHelper.setup = {
   clearProjectSetup(path, done) {
     path = path || projectPath;
     writeJSON(path, '', done);
-  },
-
-  // Ensure modules are reloaded every time and tests are independent (e.g class User -> this.token will be cleared).
-  clearRequireCache() {
-    const modules = [
-      '/commands/flex/config', '/commands/flex/deploy', '/commands/flex/job', '/commands/flex/list', '/commands/flex/logout', '/commands/flex/logs', '/commands/flex/recycle', '/commands/flex/status',
-      '/project', '/service', '/user', '/util'
-    ];
-
-    modules.forEach(module => {
-      const pathToResolve = `./../lib${module}`;
-      delete require.cache[require.resolve(pathToResolve)];
-    });
-  },
-
-  // Clears some cached modules, any unused nock interceptors, user/session info and project setup info.
-  performGeneralCleanup(cb) {
-    TestsHelper.setup.clearRequireCache();
-    mockServer.clearAll();
-    TestsHelper.setup.clearUserProjectSetup(cb);
   }
+};
+
+TestsHelper.buildOptions = function buildOptions(profileName, optionsForCredentials, otherOptions) {
+  let options = isEmpty(optionsForCredentials) ? {} : Object.assign({}, optionsForCredentials);
+  if (profileName) {
+    options[AuthOptionsNames.PROFILE] = profileName;
+  }
+
+  if (!isEmpty(otherOptions)) {
+    options = Object.assign(options, otherOptions);
+  }
+
+  return options;
+};
+
+TestsHelper.buildCmd = function buildCmd(baseCmd, positionalArgs, options, flags) {
+  let result = baseCmd;
+
+  // append positional arguments
+  if (Array.isArray(positionalArgs)) {
+    positionalArgs.forEach((x) => {
+      result += ` ${x}`;
+    });
+  }
+
+  // append options
+  if (!isEmpty(options)) {
+    const optionsNames = Object.keys(options);
+    optionsNames.forEach((optionName) => {
+      const optionValue = options[optionName];
+      result += ` --${optionName} ${optionValue}`;
+    });
+  }
+
+  // append flags
+  if (Array.isArray(flags)) {
+    flags.forEach(f => {
+      result += ` --${f}`;
+    });
+  }
+
+  return result;
+};
+
+TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCount, done) {
+  const additionalArgs = Array(additionalArgsCount).fill('redundantArg');
+  const cmd = TestsHelper.buildCmd(baseCmd, additionalArgs);
+  TestsHelper.execCmdWithAssertion(cmd, null, null, true, false, false, (err) => {
+    expect(err).to.not.exist;
+    done();
+  });
 };
 
 TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
@@ -479,14 +430,8 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
     },
     (next) => {
       TestsHelper.execCmd(cliCmd, cmdOptions, (err, stdout, stderr) => {
-        let output;
-        if (stdout) {
-          output = stdout;
-        } else if (stderr) {
-          output = stderr;
-        } else {
-          output = err;
-        }
+        // Data output from successful command execution goes to stdout; everything else - stderr
+        const output = `${stderr}${stdout}`;
 
         const strippedOutput = stripAnsi(output) || '';
         let finalOutput;
@@ -499,6 +444,9 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
         } else {
           finalOutput = strippedOutput;
         }
+
+        // ensure line separators are always the same
+        finalOutput = finalOutput.replace(/\r\n/g, '\n');
 
         if (snapshotIt) {
           try {

@@ -14,15 +14,16 @@
  */
 
 const async = require('async');
+const merge = require('lodash.merge');
 
-const { AuthOptionsNames } = require('./../../../../lib/Constants');
+const { AuthOptionsNames, CommonOptionsNames, LogLevel, OutputFormat } = require('./../../../../lib/Constants');
 const { isEmpty } = require('./../../../../lib/Utils');
-const { execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { buildCmd, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 const fixtureUser = require('../../../fixtures/user.json');
 
 const baseCmd = 'profile list';
 
-function testProfileList(profilesCount, optionsForCredentials, done) {
+function testProfileList(profilesCount, optionsForCredentials, otherOptions, done) {
   const profileNames = [];
   for (let i = 0; i < profilesCount; i += 1) {
     profileNames.push(`testProfileList${i}`);
@@ -33,10 +34,22 @@ function testProfileList(profilesCount, optionsForCredentials, done) {
       setup.createProfiles(profileNames, next);
     },
     function listProfiles(next) {
-      let cmd = `${baseCmd} --verbose`;
-      if (!isEmpty(optionsForCredentials)) {
-        cmd = `${cmd} --${AuthOptionsNames.EMAIL} ${optionsForCredentials.email} --${AuthOptionsNames.PASSWORD} ${optionsForCredentials.password}`;
+      let options = {};
+
+      if (!isEmpty(optionsForCredentials) && !isEmpty(otherOptions)) {
+        merge(options, [optionsForCredentials, otherOptions]);
+      } else {
+        if (!isEmpty(optionsForCredentials)) {
+          options = optionsForCredentials;
+        }
+
+        if (!isEmpty(otherOptions)) {
+          options = otherOptions;
+        }
       }
+
+      const positionalArgs = null;
+      const cmd = buildCmd(baseCmd, positionalArgs, options, [CommonOptionsNames.VERBOSE]);
       execCmdWithAssertion(cmd, null, null, true, true, false, next);
     }
   ], done);
@@ -51,16 +64,20 @@ describe(baseCmd, () => {
     setup.clearGlobalSetup(null, done);
   });
 
-  it('when several should succeed', (done) => {
-    testProfileList(3, null, done);
+  it('when several should succeed and print default format', (done) => {
+    testProfileList(3, null, null, done);
+  });
+
+  it(`when several should succeed and print ${OutputFormat.JSON}`, (done) => {
+    testProfileList(3, null, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, done);
   });
 
   it('when one should succeed', (done) => {
-    testProfileList(1, null, done);
+    testProfileList(1, null, null, done);
   });
 
   it('when one with valid credentials as options should succeed', (done) => {
-    testProfileList(1, fixtureUser.existent, done);
+    testProfileList(1, fixtureUser.existent, null, done);
   });
 
   it('when one with invalid credentials as options should succeed', (done) => {
@@ -68,7 +85,7 @@ describe(baseCmd, () => {
       [AuthOptionsNames.EMAIL]: 'notValid',
       [AuthOptionsNames.PASSWORD]: '12345678'
     };
-    testProfileList(1, options, done);
+    testProfileList(1, options, null, done);
   });
 
   it('when none should succeed', (done) => {

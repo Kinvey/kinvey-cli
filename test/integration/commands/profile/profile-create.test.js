@@ -15,9 +15,9 @@
 
 const cloneDeep = require('lodash.clonedeep');
 
-const { AuthOptionsNames, EnvironmentVariables } = require('./../../../../lib/Constants');
+const { AuthOptionsNames, CommonOptionsNames, EnvironmentVariables, OutputFormat } = require('./../../../../lib/Constants');
 const testsConfig = require('../../../TestsConfig');
-const { assertions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { assertions, execCmdWithAssertion, setup, testTooManyArgs } = require('../../../TestsHelper');
 
 const fixtureUser = require('./../../../fixtures/user.json');
 
@@ -82,7 +82,7 @@ describe('profile create', () => {
     });
 
     it('set as environment variables should create', (done) => {
-      const cmd = `${baseCmd} ${defaultProfileName} --verbose`;
+      const cmd = `${baseCmd} ${defaultProfileName} --${CommonOptionsNames.VERBOSE} --${CommonOptionsNames.OUTPUT} ${OutputFormat.JSON}`;
       const env = cloneDeep(defaultEnv);
       env[EnvironmentVariables.USER] = existentUser.email;
       env[EnvironmentVariables.PASSWORD] = existentUser.password;
@@ -148,6 +148,23 @@ describe('profile create', () => {
         });
       });
     });
+
+    it('set as options when trying to override should fail', (done) => {
+      setup.createProfiles(defaultProfileName, (err) => {
+        expect(err).to.not.exist;
+
+        const cmd = `${baseCmd} ${defaultProfileName} --verbose --${AuthOptionsNames.EMAIL} ${nonExistentUser.email} --${AuthOptionsNames.PASSWORD} ${nonExistentUser.password}`;
+
+        execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+          expect(err).to.not.exist;
+
+          assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+            expect(err).to.not.exist;
+            done();
+          });
+        });
+      });
+    });
   });
 
   describe('with insufficient info', () => {
@@ -175,6 +192,10 @@ describe('profile create', () => {
           done();
         });
       });
+    });
+
+    it('with too many args should fail', (done) => {
+      testTooManyArgs(baseCmd, 2, done);
     });
   });
 });

@@ -15,9 +15,9 @@
 
 const async = require('async');
 
-const { AuthOptionsNames, FlexOptionsNames } = require('./../../../../lib/Constants');
+const { AuthOptionsNames, CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
 const { isEmpty } = require('./../../../../lib/Utils');
-const { execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { buildCmd, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureInternalDataLink = require('./../../../fixtures/kinvey-dlc.json');
@@ -203,8 +203,20 @@ describe(`${baseCmd}`, () => {
     });
 
     describe('by not specifying profile nor credentials', () => {
-      it('when one profile and existent serviceId should succeed', (done) => {
+      it('when one profile and existent serviceId should succeed and output default format', (done) => {
         testFlexLogs(null, null, defaultServiceId, noQuery, null, done);
+      });
+
+      it('when one profile and existent serviceId should succeed and output JSON', (done) => {
+        const options = {
+          [FlexOptionsNames.SERVICE_ID]: defaultServiceId,
+          [CommonOptionsNames.OUTPUT]: OutputFormat.JSON
+        };
+        const cmd = buildCmd(baseCmd, null, options);
+        execCmdWithAssertion(cmd, null, null, true, false, true, (err) => {
+          expect(err).to.not.exist;
+          done();
+        });
       });
     });
 
@@ -293,6 +305,12 @@ describe(`${baseCmd}`, () => {
     it('with invalid start timestamp and nothing else should fail', (done) => {
       const start = '2017-30-08';
       const query = buildQueryObject(start);
+      testFlexLogs(noProfile, noCredentials, defaultServiceId, query, validUserOne, done);
+    });
+
+    it(`with invalid timestamps ('${FlexOptionsNames.FROM}' not before '${FlexOptionsNames.TO}') and nothing else should fail`, (done) => {
+      const start = '2017-12-14T17:15:21.771Z';
+      const query = buildQueryObject(start, start);
       testFlexLogs(noProfile, noCredentials, defaultServiceId, query, validUserOne, done);
     });
 

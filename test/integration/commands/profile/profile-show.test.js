@@ -15,11 +15,12 @@
 
 const async = require('async');
 
-const { assertions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { CommonOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
+const { buildCmd, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const baseCmd = 'profile show';
 
-function testProfileShow(profilesCount, chooseExistent, useName, done) {
+function testProfileShow(profilesCount, chooseExistent, useName, options, done) {
   const profileNames = [];
   for (let i = 0; i < profilesCount; i += 1) {
     profileNames.push(`testProfileShow${i}`);
@@ -33,7 +34,7 @@ function testProfileShow(profilesCount, chooseExistent, useName, done) {
     },
     function showProfile(next) {
       const nameParam = useName ? chosenProfile : '';
-      const cmd = `${baseCmd} ${nameParam} --verbose`;
+      const cmd = buildCmd(baseCmd, [nameParam], options, [CommonOptionsNames.VERBOSE]);
       execCmdWithAssertion(cmd, null, null, true, true, false, next);
     }
   ], done);
@@ -49,20 +50,28 @@ describe(baseCmd, () => {
   });
 
   describe('with name parameter', () => {
-    it('with existent name when several should succeed', (done) => {
-      testProfileShow(3, true, true, done);
+    it('with existent name when several should succeed and output default format', (done) => {
+      testProfileShow(3, true, true, null, done);
     });
 
-    it('with existent name when one should succeed', (done) => {
-      testProfileShow(1, true, true, done);
+    it('with existent name when several should succeed and output JSON', (done) => {
+      testProfileShow(2, true, true, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, done);
     });
 
-    it('with non-existent name when several should not throw', (done) => {
-      testProfileShow(2, false, true, done);
+    it('with existent name when one should succeed and output default format', (done) => {
+      testProfileShow(1, true, true, null, done);
     });
 
-    it('with non-existent name when none should not throw', (done) => {
-      testProfileShow(0, false, true, done);
+    it('with existent name when one should succeed and output JSON', (done) => {
+      testProfileShow(1, true, true, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, done);
+    });
+
+    it('with non-existent name when several should return error', (done) => {
+      testProfileShow(2, false, true, null, done);
+    });
+
+    it('with non-existent name when none should return error', (done) => {
+      testProfileShow(0, false, true, null, done);
     });
 
     it('with existent name when active profile is set should succeed', (done) => {
@@ -78,7 +87,7 @@ describe(baseCmd, () => {
           setup.setActiveProfile(activeProfile, false, next);
         },
         function showProfileDifferentThanActive(next) {
-          const cmd = `${baseCmd} ${profileToShow} --verbose`;
+          const cmd = buildCmd(baseCmd, [profileToShow], null, [CommonOptionsNames.VERBOSE]);
           execCmdWithAssertion(cmd, null, null, true, true, false, next);
         }
       ], done);
@@ -104,12 +113,12 @@ describe(baseCmd, () => {
       ], done);
     });
 
-    it('when active profile is not set should not throw', (done) => {
-      testProfileShow(2, false, false, done);
+    it('when active profile is not set should return error', (done) => {
+      testProfileShow(2, false, false, null, done);
     });
 
     it('when active profile is not set and only one profile should not succeed', (done) => {
-      testProfileShow(1, false, false, done);
+      testProfileShow(1, false, false, null, done);
     });
   });
 });

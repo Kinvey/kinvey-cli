@@ -50,13 +50,13 @@ exports['profile show with name parameter with existent name when one should suc
 
 exports['profile show with name parameter with non-existent name when several should return error 1'] = `
 [debug] Checking for package updates
-ProfileNotFound: Profile not found. Please verify profile name exists.
+[error] ProfileNotFound: Profile not found. Please verify profile name exists.
 
 `
 
 exports['profile show with name parameter with non-existent name when none should return error 1'] = `
 [debug] Checking for package updates
-ProfileNotFound: Profile not found. Please verify profile name exists.
+[error] ProfileNotFound: Profile not found. Please verify profile name exists.
 
 `
 
@@ -86,12 +86,12 @@ host   http://localhost:3234/
 
 exports['profile show without name parameter when active profile is not set should return error 1'] = `
 [debug] Checking for package updates
-ProfileNotFound: Active profile is not set.
+[error] ProfileNotFound: Active profile is not set.
 
 `
 
 exports['profile show without name parameter when active profile is not set and only one profile should not succeed 1'] = `
 [debug] Checking for package updates
-ProfileNotFound: Active profile is not set.
+[error] ProfileNotFound: Active profile is not set.
 
 `

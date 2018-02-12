@@ -38,13 +38,13 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
-  --host                    Kinvey dedicated instance hostname          [string]
+  --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --domain                  Specify domain: 'app' or 'org'
                                                 [string] [choices: "app", "org"]
@@ -94,13 +94,13 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
-  --host                    Kinvey dedicated instance hostname          [string]
+  --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --domain                  Specify domain: 'app' or 'org'
                                                 [string] [choices: "app", "org"]
@@ -138,7 +138,7 @@ exports['flex list by specifying credentials as options when valid and non-exist
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-GeneralError: 
+[error] GeneralError: 
 
 `
 
@@ -146,6 +146,6 @@ exports['flex list by specifying credentials as options when invalid and valid o
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Credentials are invalid. Please authenticate.
 
 `

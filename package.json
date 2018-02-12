@@ -1,6 +1,6 @@
 {
   "name": "kinvey-cli",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "description": "Utility for deploying and managing FlexServices on Kinvey's FlexService Runtime",
   "keywords": [
     "Kinvey"
@@ -72,5 +72,8 @@
     "linux",
     "win32"
   ],
-  "preferGlobal": true
+  "preferGlobal": true,
+  "yargs": {
+    "boolean-negation": false
+  }
 }

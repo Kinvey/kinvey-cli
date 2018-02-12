@@ -3,7 +3,6 @@ exports['profile delete by existent name when there is only one should succeed 1
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-[debug] Writing JSON to file globalSetupPath
 [debug] Writing contents to file globalSetupPath
 {
   "result": {
@@ -18,7 +17,6 @@ exports['profile delete by existent name when it is the active profile should su
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-[debug] Writing JSON to file globalSetupPath
 [debug] Writing contents to file globalSetupPath
 Deleted profile: activeAndMustBeDeleted
 
@@ -29,7 +27,6 @@ exports['profile delete by existent name when there are several should delete on
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-[debug] Writing JSON to file globalSetupPath
 [debug] Writing contents to file globalSetupPath
 Deleted profile: testProfileDelete
 
@@ -37,13 +34,13 @@ Deleted profile: testProfileDelete
 
 exports['profile delete by non-existent name when there is one should not alter it 1'] = `
 [debug] Checking for package updates
-ProfileNotFound: Profile not found. Please verify profile name exists.
+[error] ProfileNotFound: Profile not found. Please verify profile name exists.
 
 `
 
 exports['profile delete by non-existent name when none should return error 1'] = `
 [debug] Checking for package updates
-ProfileNotFound: Profile not found. Please verify profile name exists.
+[error] ProfileNotFound: Profile not found. Please verify profile name exists.
 
 `
 
@@ -59,13 +56,13 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
-  --host                    Kinvey dedicated instance hostname          [string]
+  --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
 
 Not enough non-option arguments: got 0, need at least 1

@@ -3,7 +3,6 @@ exports['flex recycle by specifying a profile and existent serviceId should succ
 [debug] Using profile 'profileToRecycleService'
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
-[debug] Writing JSON to file projectSetupPath
 [debug] Writing contents to file projectSetupPath
 [debug] Saved job ID to project settings.
 Recycle initiated. Job: idOfJobThatIsRecyclingTheService
@@ -15,7 +14,6 @@ exports['flex recycle by specifying a profile and existent serviceId should succ
 [debug] Using profile 'profileToRecycleService'
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
-[debug] Writing JSON to file projectSetupPath
 [debug] Writing contents to file projectSetupPath
 [debug] Saved job ID to project settings.
 {
@@ -31,7 +29,7 @@ exports['flex recycle by specifying a profile and non-existent serviceId should 
 [debug] Using profile 'profileToRecycleService'
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 404
-DataLinkNotFound: The specified data link could not be found.
+[error] DataLinkNotFound: The specified data link could not be found.
 
 `
 
@@ -40,7 +38,6 @@ exports['flex recycle by specifying a profile when valid project is set without 
 [debug] Using profile 'profileToRecycleService'
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
-[debug] Writing JSON to file projectSetupPath
 [debug] Writing contents to file projectSetupPath
 [debug] Saved job ID to project settings.
 Recycle initiated. Job: idOfJobThatIsRecyclingTheService
@@ -52,7 +49,6 @@ exports['flex recycle by specifying a profile when invalid project is set with e
 [debug] Using profile 'profileToRecycleService'
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
-[debug] Writing JSON to file projectSetupPath
 [debug] Writing contents to file projectSetupPath
 [debug] Saved job ID to project settings.
 Recycle initiated. Job: idOfJobThatIsRecyclingTheService
@@ -64,7 +60,6 @@ exports['flex recycle by not specifying profile nor credentials when one profile
 [debug] Using profile 'flexStatusProfile'
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
-[debug] Writing JSON to file projectSetupPath
 [debug] Writing contents to file projectSetupPath
 [debug] Saved job ID to project settings.
 Recycle initiated. Job: idOfJobThatIsRecyclingTheService
@@ -80,13 +75,13 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
-  --host                    Kinvey dedicated instance hostname          [string]
+  --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
   --silent                  Do not output anything                     [boolean]
   --suppress-version-check  Do not check for package updates           [boolean]
   --verbose                 Output debug messages                      [boolean]
-  --color                   Enable/disable colors      [boolean] [default: true]
+  --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
 
@@ -116,7 +111,7 @@ exports['flex recycle by specifying credentials as options when valid and non-ex
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-DataLinkNotFound: The specified data link could not be found.
+[error] DataLinkNotFound: The specified data link could not be found.
 
 `
 
@@ -124,6 +119,6 @@ exports['flex recycle by specifying credentials as options when invalid and exis
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Credentials are invalid. Please authenticate.
 
 `

@@ -284,18 +284,28 @@ TestsHelper.setup = {
     });
   },
 
-  createProjectSetup(options, done) {
-    options = options || {
-      flex: {
-        domain: 'app',
-        domainEntityId: fixtureApp.id,
-        serviceId: fixtureInternalDataLink.id,
-        serviceName: fixtureInternalDataLink.name,
-        schemaVersion: 2
-      }
-    };
+  createProjectSetup(key, options, done) {
+    const filePath = testsConfig.paths.project;
 
-    writeJSON(testsConfig.paths.project, options, done);
+    readJSON(filePath, (err, data) => {
+      if (err) {
+        return done(err);
+      }
+
+      data = data || {};
+      const flex = {
+        flex: options || {
+          domain: 'app',
+          domainEntityId: fixtureApp.id,
+          serviceId: fixtureInternalDataLink.id,
+          serviceName: fixtureInternalDataLink.name,
+          schemaVersion: 2
+        }
+      };
+      data[key] = flex;
+
+      writeJSON(filePath, data, done);
+    });
   },
 
   clearGlobalSetup(path, done) {

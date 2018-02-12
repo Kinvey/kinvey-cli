@@ -1,5 +1,6 @@
 exports['flex list by specifying a profile and valid options (app and id) should succeed  and output default format 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToGetServices'
 [debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
 [debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
 Count: 1
@@ -14,6 +15,7 @@ id         name
 
 exports['flex list by specifying a profile and valid options (org and id) should succeed and output JSON 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToGetServices'
 [debug] Request:  GET http://localhost:3234/v2/organizations/123/data-links
 [debug] Response: GET http://localhost:3234/v2/organizations/123/data-links 200
 {
@@ -44,15 +46,18 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
-  --domain                  Specify domain: 'app' or 'org'              [string]
+  --domain                  Specify domain: 'app' or 'org'
+                                                [string] [choices: "app", "org"]
   --id                      ID of app or org                            [string]
 
-Domain must be either 'app' or 'org'.
+Invalid values:
+  Argument: domain, Given: "invalidDomain", Choices: "app", "org"
 
 `
 
 exports['flex list by specifying a profile when valid project is set without options should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToGetServices'
 [debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
 [debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
 Count: 1
@@ -67,6 +72,7 @@ id         name
 
 exports['flex list by specifying a profile when invalid project is set with valid options should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToGetServices'
 [debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
 [debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
 Count: 1
@@ -96,7 +102,8 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
-  --domain                  Specify domain: 'app' or 'org'              [string]
+  --domain                  Specify domain: 'app' or 'org'
+                                                [string] [choices: "app", "org"]
   --id                      ID of app or org                            [string]
 
 You must be authenticated.

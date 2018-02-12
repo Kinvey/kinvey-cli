@@ -1,5 +1,6 @@
 exports['flex recycle by specifying a profile and existent serviceId should succeed and output default format 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToRecycleService'
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
 [debug] Writing contents to file projectSetupPath
@@ -10,6 +11,7 @@ Recycle initiated. Job: idOfJobThatIsRecyclingTheService
 
 exports['flex recycle by specifying a profile and existent serviceId should succeed and output JSON 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToRecycleService'
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
 [debug] Writing contents to file projectSetupPath
@@ -24,6 +26,7 @@ exports['flex recycle by specifying a profile and existent serviceId should succ
 
 exports['flex recycle by specifying a profile and non-existent serviceId should fail 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToRecycleService'
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 404
 [error] DataLinkNotFound: The specified data link could not be found.
@@ -32,6 +35,7 @@ exports['flex recycle by specifying a profile and non-existent serviceId should 
 
 exports['flex recycle by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToRecycleService'
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
 [debug] Writing contents to file projectSetupPath
@@ -42,6 +46,7 @@ Recycle initiated. Job: idOfJobThatIsRecyclingTheService
 
 exports['flex recycle by specifying a profile when invalid project is set with existent serviceId as an option should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToRecycleService'
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
 [debug] Writing contents to file projectSetupPath
@@ -52,6 +57,7 @@ Recycle initiated. Job: idOfJobThatIsRecyclingTheService
 
 exports['flex recycle by not specifying profile nor credentials when one profile and existent serviceId should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'flexStatusProfile'
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
 [debug] Writing contents to file projectSetupPath
@@ -89,8 +95,6 @@ exports['flex recycle by specifying credentials as options when valid and existe
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
-[debug] Writing contents to file projectSetupPath
-[debug] Saved job ID to project settings.
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

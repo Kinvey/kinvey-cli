@@ -2,10 +2,10 @@ exports['profile show with name parameter with existent name when several should
 [debug] Checking for package updates
 key    value                 
 -----  ----------------------
+name   testProfileShow0      
 email  janeDoe@mail.com      
 token  userToken             
 host   http://localhost:3234/
-name   testProfileShow0      
 
 
 `
@@ -14,10 +14,10 @@ exports['profile show with name parameter with existent name when several should
 [debug] Checking for package updates
 {
   "result": {
+    "name": "testProfileShow0",
     "email": "janeDoe@mail.com",
     "token": "userToken",
-    "host": "http://localhost:3234/",
-    "name": "testProfileShow0"
+    "host": "http://localhost:3234/"
   }
 }
 
@@ -27,10 +27,10 @@ exports['profile show with name parameter with existent name when one should suc
 [debug] Checking for package updates
 key    value                 
 -----  ----------------------
+name   testProfileShow0      
 email  janeDoe@mail.com      
 token  userToken             
 host   http://localhost:3234/
-name   testProfileShow0      
 
 
 `
@@ -39,10 +39,10 @@ exports['profile show with name parameter with existent name when one should suc
 [debug] Checking for package updates
 {
   "result": {
+    "name": "testProfileShow0",
     "email": "janeDoe@mail.com",
     "token": "userToken",
-    "host": "http://localhost:3234/",
-    "name": "testProfileShow0"
+    "host": "http://localhost:3234/"
   }
 }
 
@@ -64,10 +64,10 @@ exports['profile show with name parameter with existent name when active profile
 [debug] Checking for package updates
 key    value                 
 -----  ----------------------
+name   1%!@_                 
 email  janeDoe@mail.com      
 token  userToken             
 host   http://localhost:3234/
-name   1%!@_                 
 
 
 `
@@ -76,10 +76,10 @@ exports['profile show without name parameter when active profile is set should s
 [debug] Checking for package updates
 key    value                 
 -----  ----------------------
+name   20                    
 email  janeDoe@mail.com      
 token  userToken             
 host   http://localhost:3234/
-name   20                    
 
 
 `

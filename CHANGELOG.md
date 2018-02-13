@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.0-beta.3
+* Refactor command handlers
+* Fail on too many args
+* Replace host with instanceId
+* Configure flex project for many instances
+* Provide shorthand option for number
+
 ## 3.0.0-beta.2
 ### Bugfixes and improvements:
 * Show connection errors details

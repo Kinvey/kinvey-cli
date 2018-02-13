@@ -287,6 +287,20 @@ For the Kinvey CLI commands that require passing configuration values, the follo
 * Profile data&mdash;values saved as part of the applicable working profile are used if neither command line arguments nor environment variables are set
 
 
+## Output Format
+
+Kinvey CLI supports two output formats: plain text and JSON. Both are printed on the screen unless you redirect the output using shell syntax.
+
+Plain text is printed by default. Depending on the command, it produces tabular data or a simple message stating that the action has completed successfully.
+
+The JSON output format is suitable for cases where the output must be handled programmatically. You can run any command with `--output json`. The output will then have the following format:
+
+```
+{
+    "result": [result]
+}
+```
+
 ## Proxy Settings
 
 Kinvey CLI supports the universal environment variables `HTTPS_PROXY` and `https_proxy` for routing commands through a proxy server. Set it if you are using a proxy.

@@ -29,23 +29,12 @@ const flexNs = {
 };
 
 describe('ProjectSetup', () => {
-  it('when not configured isFlexConfigured should return false', () => {
-    const setup = new ProjectSetup(projectPath);
-    const actual = setup.isFlexConfigured();
-    expect(actual).to.be.false;
-  });
-
-  it('when configured isFlexConfigured should return true', () => {
-    const setup = new ProjectSetup(projectPath);
-    setup.setFlexNamespace(flexNs);
-    const actual = setup.isFlexConfigured();
-    expect(actual).to.be.true;
-  });
+  const key = 'testUser';
 
   it('when only serviceId should set correctly flex namespace', () => {
     const setup = new ProjectSetup(projectPath);
-    setup.setFlexNamespace({ serviceId });
-    const actual = setup.getFlexNamespace();
+    setup.setFlexNamespace(key, { serviceId });
+    const actual = setup.getFlexNamespace(key);
     expect(actual).to.be.an('object');
     expect(actual.serviceId).to.equal(serviceId);
   });
@@ -55,8 +44,8 @@ describe('ProjectSetup', () => {
     const flexNsWithRedundantProps = Object.assign({}, flexNs);
     flexNsWithRedundantProps.firstProp = 'hey';
     flexNsWithRedundantProps.secondProp = 0;
-    setup.setFlexNamespace(flexNsWithRedundantProps);
-    const actual = setup.getFlexNamespace();
+    setup.setFlexNamespace(key, flexNsWithRedundantProps);
+    const actual = setup.getFlexNamespace(key);
     expect(actual).to.be.an('object');
     expect(actual).to.deep.equal(flexNs);
   });

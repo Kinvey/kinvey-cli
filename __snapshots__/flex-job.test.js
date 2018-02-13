@@ -1,5 +1,6 @@
 exports['flex job by specifying a profile and existent jobId should succeed and output default format 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToGetJobStatus'
 [debug] Request:  GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37
 [debug] Response: GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
 Job status: COMPLETE
@@ -8,6 +9,7 @@ Job status: COMPLETE
 
 exports['flex job by specifying a profile and existent jobId should succeed and output JSON 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToGetJobStatus'
 [debug] Request:  GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37
 [debug] Response: GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
 {
@@ -22,6 +24,7 @@ exports['flex job by specifying a profile and existent jobId should succeed and 
 
 exports['flex job by specifying a profile and non-existent jobId should fail 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'profileToGetJobStatus'
 [debug] Request:  GET http://localhost:3234/v2/jobs/123jobDoesntExist
 [debug] Response: GET http://localhost:3234/v2/jobs/123jobDoesntExist 404
 [error] JobNotFound: The specified job could not be found.
@@ -30,6 +33,7 @@ exports['flex job by specifying a profile and non-existent jobId should fail 1']
 
 exports['flex job by not specifying profile nor credentials when one profile and existent jobId should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'flexJobProfile'
 [debug] Request:  GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37
 [debug] Response: GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
 Job status: COMPLETE
@@ -48,7 +52,7 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
-  --host                    Kinvey dedicated instance hostname          [string]
+  --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
   --silent                  Do not output anything                     [boolean]
@@ -92,5 +96,14 @@ exports['flex job by specifying credentials as options when invalid and existent
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
 [error] InvalidCredentials: Credentials are invalid. Please authenticate.
+
+`
+
+exports['flex job without additional args and options when active profile is set should suceed 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'willBeActive'
+[debug] Request:  GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37
+[debug] Response: GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
+Job status: COMPLETE
 
 `

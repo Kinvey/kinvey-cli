@@ -7,7 +7,7 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
-  --host                    Kinvey dedicated instance hostname          [string]
+  --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
   --silent                  Do not output anything                     [boolean]
@@ -17,7 +17,7 @@ Options:
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
 
-This project is not configured. Use 'kinvey flex init' to get started.
+This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: serviceId.
 
 `
 
@@ -35,7 +35,7 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
-  --host                    Kinvey dedicated instance hostname          [string]
+  --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
   --silent                  Do not output anything                     [boolean]
@@ -45,6 +45,6 @@ Options:
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
 
-This project is not configured. Use 'kinvey flex init' to get started.
+This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: serviceId.
 
 `

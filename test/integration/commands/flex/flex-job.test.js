@@ -140,4 +140,40 @@ describe(baseCmd, () => {
       testFlexJob(null, nonExistentUser, defaultJobId, validUserForGettingStatus, null, done);
     });
   });
+
+  describe('without additional args and options when active profile is set', () => {
+    const activeProfile = 'willBeActive';
+    before('setActiveProfile', (done) => {
+      setup.setActiveProfile(activeProfile, true, done);
+    });
+
+    before('setProjectSetup', (done) => {
+      const projectSetupKeyValues = [
+        {
+          key: activeProfile,
+          value: {
+            jobId: defaultJobId
+          }
+        },
+        {
+          key: 'shallNotBeUsed',
+          value: {
+            jobId: nonExistentJobId
+          }
+        }
+      ];
+
+      async.eachSeries(
+        projectSetupKeyValues,
+        (item, next) => {
+          setup.createProjectSetup(item.key, item.value, next);
+        },
+        done
+      );
+    });
+
+    it('should suceed', (done) => {
+      testFlexJob(null, null, null, null, null, done);
+    });
+  });
 });

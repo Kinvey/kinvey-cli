@@ -116,7 +116,7 @@ describe(`${baseCmd}`, () => {
 
     describe('is valid', () => {
       beforeEach('setValidProjectSetup', (done) => {
-        setup.createProjectSetup(null, done);
+        setup.createProjectSetup(activeProfile, null, done);
       });
 
       afterEach('clearProjectSetup', (done) => {
@@ -164,11 +164,6 @@ describe(`${baseCmd}`, () => {
             return mockReq;
           };
 
-          manager.processCommandResult = function stub(err) {
-            expect(err).to.not.exist;
-            done();
-          };
-
           const flexService = new FlexService(manager);
           const ctrl = new FlexController({ cliManager: manager, flexService });
 
@@ -176,7 +171,10 @@ describe(`${baseCmd}`, () => {
             [AuthOptionsNames.EMAIL]: existentUserOne.email,
             [AuthOptionsNames.PASSWORD]: existentUserOne.password
           };
-          ctrl.deploy(options);
+          ctrl.deploy(options, (err) => {
+            expect(err).to.not.exist;
+            done();
+          });
         });
       });
 
@@ -220,7 +218,7 @@ describe(`${baseCmd}`, () => {
 
     describe("is not valid and user's project is valid", () => {
       before('setInvalidProjectSetup', (done) => {
-        setup.createProjectSetup({
+        setup.createProjectSetup(activeProfile, {
           domainEntityId: fixtureApp.id,
           serviceName: fixtureInternalDataLink.name,
         }, done);

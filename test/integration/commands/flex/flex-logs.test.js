@@ -155,7 +155,7 @@ describe(`${baseCmd}`, () => {
 
       describe('when valid project is set', () => {
         before((done) => {
-          setup.createProjectSetup(null, done);
+          setup.createProjectSetup(profileToUse, null, done);
         });
 
         it('without serviceId as an option should succeed', (done) => {
@@ -169,7 +169,7 @@ describe(`${baseCmd}`, () => {
 
       describe('when invalid project is set', () => {
         before((done) => {
-          setup.createProjectSetup({ serviceId: nonExistentServiceId }, done);
+          setup.createProjectSetup(profileToUse, { serviceId: nonExistentServiceId }, done);
         });
 
         it('with existent serviceId as an option should succeed', (done) => {
@@ -184,12 +184,12 @@ describe(`${baseCmd}`, () => {
 
       describe('when project is not set', () => {
         before((done) => {
-          setup.createProjectSetup({ serviceId: nonExistentServiceId }, done);
+          setup.createProjectSetup('profileNotInUse', { serviceId: defaultServiceId }, done);
         });
 
         it('without serviceId as an option should fail', (done) => {
           const cmd = `${baseCmd} --${AuthOptionsNames.PROFILE} ${profileToUse}`;
-          const apiOptions = { existentUser: existentUserOne };
+          const apiOptions = { existentUser: existentUserOne, token: tokenOne };
           execCmdWithAssertion(cmd, null, apiOptions, true, false, true, (err) => {
             expect(err).to.not.exist;
             done();

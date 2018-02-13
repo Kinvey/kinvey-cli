@@ -284,18 +284,28 @@ TestsHelper.setup = {
     });
   },
 
-  createProjectSetup(options, done) {
-    options = options || {
-      flex: {
-        domain: 'app',
-        domainEntityId: fixtureApp.id,
-        serviceId: fixtureInternalDataLink.id,
-        serviceName: fixtureInternalDataLink.name,
-        schemaVersion: 2
-      }
-    };
+  createProjectSetup(key, options, done) {
+    const filePath = testsConfig.paths.project;
 
-    writeJSON(testsConfig.paths.project, options, done);
+    readJSON(filePath, (err, data) => {
+      if (err) {
+        return done(err);
+      }
+
+      data = data || {};
+      const flex = {
+        flex: options || {
+          domain: 'app',
+          domainEntityId: fixtureApp.id,
+          serviceId: fixtureInternalDataLink.id,
+          serviceName: fixtureInternalDataLink.name,
+          schemaVersion: 2
+        }
+      };
+      data[key] = flex;
+
+      writeJSON(filePath, data, done);
+    });
   },
 
   clearGlobalSetup(path, done) {
@@ -349,6 +359,15 @@ TestsHelper.buildCmd = function buildCmd(baseCmd, positionalArgs, options, flags
   }
 
   return result;
+};
+
+TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCount, done) {
+  const additionalArgs = Array(additionalArgsCount).fill('redundantArg');
+  const cmd = TestsHelper.buildCmd(baseCmd, additionalArgs);
+  TestsHelper.execCmdWithAssertion(cmd, null, null, true, false, false, (err) => {
+    expect(err).to.not.exist;
+    done();
+  });
 };
 
 TestsHelper.execCmd = function execCmd(cliCmd, options, done) {

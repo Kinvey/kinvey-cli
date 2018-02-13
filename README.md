@@ -134,9 +134,9 @@ You can add a global option to every Kinvey CLI command to get the described beh
 
     Disable colors.
     
-* `--output <json>`
+* `--output <format>`
    
-   Output format. Aside from the default plain-text format, JSON is also supported.
+   Output format. Valid choices: json.
 
 * `--password <password>`
 

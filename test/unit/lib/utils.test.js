@@ -13,7 +13,6 @@
  * contents is a violation of applicable laws.
  */
 
-const Request = require('../../../lib/Request');
 const Utils = require('../../../lib/Utils');
 
 const fixtureServices = require('./../../fixtures/datalinks.json');

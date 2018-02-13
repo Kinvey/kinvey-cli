@@ -1,30 +1,13 @@
 {
-  "extends": "airbnb-base",
+  "extends": "eslint-config-kinvey-platform",
   "env": {
-    "node": true,
-    "mocha": true
+    "mocha": true,
+    "node": true
   },
-  "rules": {
-    "arrow-body-style": "warn",
-    "comma-dangle": 0,
-    "global-require": "warn",
-    "import/no-unresolved": "off",
-    "no-param-reassign": 0,
-    "no-restricted-syntax": "off",
-    "no-return-assign": "warn",
-    "no-shadow": "off",
-    "no-undef": "warn",
-    "no-underscore-dangle": "off",
-    "no-unused-expressions": "off",
-    "no-unused-vars": "warn",
-    "no-useless-escape": "off",
-    "max-len": ["warn", 120, 4],
-    "consistent-return": "warn",
-    "prefer-template": "warn",
-    "radix": "off",
-    "guard-for-in": "warn",
-    "new-cap": "off",
-    "prefer-arrow-callback": "off",
-    "space-before-function-paren": "off"
+  "globals": {
+    "expect": true
+  },
+  "rules":{
+    "no-param-reassign": 0
   }
 }

@@ -16,7 +16,7 @@
 const async = require('async');
 const merge = require('lodash.merge');
 
-const { AuthOptionsNames, CommonOptionsNames, LogLevel, OutputFormat } = require('./../../../../lib/Constants');
+const { AuthOptionsNames, CommonOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
 const { isEmpty } = require('./../../../../lib/Utils');
 const { buildCmd, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 const fixtureUser = require('../../../fixtures/user.json');

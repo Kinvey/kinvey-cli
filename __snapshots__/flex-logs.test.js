@@ -86,7 +86,7 @@ Options:
                                                                         [string]
   --to                      Fetch log entries up to provided timestamp  [string]
   --page                    Page (non-zero integer, default=1)          [number]
-  --number                  Number of entries to fetch, i.e. page size (non-zero
+  --number, -n              Number of entries to fetch, i.e. page size (non-zero
                             integer, default=100, max=2000)             [number]
 
 This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: serviceId.
@@ -177,7 +177,7 @@ Options:
                                                                         [string]
   --to                      Fetch log entries up to provided timestamp  [string]
   --page                    Page (non-zero integer, default=1)          [number]
-  --number                  Number of entries to fetch, i.e. page size (non-zero
+  --number, -n              Number of entries to fetch, i.e. page size (non-zero
                             integer, default=100, max=2000)             [number]
 
 You must be authenticated.

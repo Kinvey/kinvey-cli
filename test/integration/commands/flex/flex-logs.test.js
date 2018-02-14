@@ -62,7 +62,7 @@ function testFlexLogs(profileName, optionsForCredentials, serviceId, query, vali
     if (query[FlexOptionsNames.NUMBER]) {
       queryPart = `${queryPart} --${FlexOptionsNames.NUMBER} ${query.number}`;
       // server expects 'limit' instead of number, so this is how the CLI constructs the query
-      query.limit = query[FlexOptionsNames.NUMBER] + '';
+      query.limit = `${query[FlexOptionsNames.NUMBER]}`;
       delete query[FlexOptionsNames.NUMBER];
     }
 

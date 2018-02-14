@@ -15,7 +15,6 @@
 
 const async = require('async');
 const inquirer = require('inquirer');
-const merge = require('lodash.merge');
 const snapshot = require('snap-shot-it');
 const stripAnsi = require('strip-ansi');
 
@@ -29,7 +28,6 @@ const { isEmpty, readJSON, writeJSON } = require('../lib/Utils');
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApp = require('./fixtures/app.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
-const fixtureJob = require('./fixtures/job.json');
 const testsConfig = require('./TestsConfig');
 const mockServer = require('./mockServer');
 
@@ -102,7 +100,7 @@ TestsHelper.assertions = {
     });
   },
 
-  buildExpectedProject(appId, org, lastJobId, serviceName, service, schemaVersion = config.defaultSchemaVersion) {
+  buildExpectedProject(appId, org, lastJobId, serviceName, service, schemaVersion = testsConfig.defaultSchemaVersion) {
     return {
       org,
       lastJobId,
@@ -112,7 +110,7 @@ TestsHelper.assertions = {
       app: appId
     };
   },
-  buildExpectedUser(host = config.host, token = fixtureUser.token) {
+  buildExpectedUser(host = testsConfig.host, token = fixtureUser.token) {
     const user = {
       host,
       tokens: {
@@ -353,7 +351,7 @@ TestsHelper.buildCmd = function buildCmd(baseCmd, positionalArgs, options, flags
 
   // append flags
   if (Array.isArray(flags)) {
-    flags.forEach(f => {
+    flags.forEach((f) => {
       result += ` --${f}`;
     });
   }
@@ -383,7 +381,7 @@ TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
   });
 };
 
-TestsHelper.execCmdWithoutAssertion = function (cliCmd, options, done) {
+TestsHelper.execCmdWithoutAssertion = function execCmdWithoutAssertion(cliCmd, options, done) {
   let ms = {};
   async.series([
     (next) => {

@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { AuthOptionsNames, CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
+const { CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
 const { isEmpty } = require('./../../../../lib/Utils');
 const { buildCmd, buildOptions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 

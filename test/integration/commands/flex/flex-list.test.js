@@ -15,13 +15,12 @@
 
 const async = require('async');
 
-const { AuthOptionsNames, CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
+const { CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
 const { isEmpty } = require('./../../../../lib/Utils');
 const { buildCmd, buildOptions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureUser = require('./../../../fixtures/user.json');
-const fixtureInternalDataLink = require('./../../../fixtures/kinvey-dlc.json');
 
 const existentUserOne = fixtureUser.existentOne;
 const tokenOne = fixtureUser.tokenOne;

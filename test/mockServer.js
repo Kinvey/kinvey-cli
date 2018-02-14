@@ -74,7 +74,7 @@ function build(
 
   app.use(bodyParser.json());
 
-  app.use(function handleAuth(req, res, next) {
+  app.use((req, res, next) => {
     const requiresAuth = !(req.method === HTTPMethod.POST && req.url === '/session');
     if (requiresAuth) {
       const isAuth = isAuthenthicated(req.headers, token);
@@ -117,9 +117,7 @@ function build(
     res.status(422).send(errRes);
   });
 
-  app.delete('/session', (req, res) => {
-    return res.sendStatus(204);
-  });
+  app.delete('/session', (req, res) => res.sendStatus(204));
 
   // SERVICES
   app.get(`/${versionPart}/data-links/:id/status`, (req, res) => {

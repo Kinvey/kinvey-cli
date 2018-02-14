@@ -24,7 +24,7 @@ const FlexService = require('./../../../../lib/flex/FlexService');
 const CLIManager = require('./../../../../lib/CLIManager');
 const logger = require('./../../../../lib/logger');
 const Setup = require('./../../../../lib/Setup');
-const { Endpoints, isEmpty, isNullOrUndefined, readJSON, writeJSON } = require('./../../../../lib/Utils');
+const { Endpoints, isEmpty, readJSON, writeJSON } = require('./../../../../lib/Utils');
 const testsConfig = require('../../../TestsConfig');
 const { execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
@@ -34,8 +34,6 @@ const fixtureApp = require('./../../../fixtures/app.json');
 
 const existentUserOne = fixtureUser.existentOne;
 const tokenOne = fixtureUser.tokenOne;
-const nonExistentUser = fixtureUser.nonexistent;
-const defaultServiceId = fixtureInternalDataLink.id;
 
 const baseCmd = 'flex deploy';
 

@@ -79,11 +79,7 @@ describe(`${baseCmd}`, () => {
   });
 
   after((done) => {
-    setup.clearProjectSetup(null, done);
-  });
-
-  after((done) => {
-    setup.clearGlobalSetup(null, done);
+    setup.clearAllSetup(done);
   });
 
   describe('when project setup is non-existent', () => {

@@ -66,7 +66,7 @@ describe(baseCmd, () => {
   });
 
   after((done) => {
-    setup.clearGlobalSetup(null, done);
+    setup.clearAllSetup(done);
   });
 
   describe('by specifying a profile', () => {

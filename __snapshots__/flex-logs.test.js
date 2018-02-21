@@ -1,6 +1,7 @@
 exports['flex logs without query by specifying a profile and existent serviceId without query should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetLogs'
+[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 Count: 5
@@ -20,6 +21,7 @@ containerId   message                                                           
 exports['flex logs without query by specifying a profile and non-existent serviceId should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetLogs'
+[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12serviceIdThatDoesntExist/logs
 [debug] Response: GET http://localhost:3234/v2/data-links/12serviceIdThatDoesntExist/logs 404
 [error] DataLinkNotFound: The specified data link could not be found.
@@ -96,6 +98,7 @@ This project is not configured. Use 'kinvey flex init' to get started. Alternati
 exports['flex logs without query by not specifying profile nor credentials when one profile and existent serviceId should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'flexLogsProfile'
+[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 Count: 5
@@ -231,6 +234,7 @@ exports['flex logs without query by specifying credentials as options when inval
 exports['flex logs with query with valid timestamps and valid paging should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
+[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49&limit=5&page=3
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49&limit=5&page=3 200
 Count: 5
@@ -250,6 +254,7 @@ containerId   message                                                           
 exports['flex logs with query with valid timestamps and without paging should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
+[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49.000Z
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49.000Z 200
 Count: 5
@@ -269,6 +274,7 @@ containerId   message                                                           
 exports['flex logs with query with valid timestamps and invalid paging should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
+[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
 [error] InvalidParameter: Logs 'page' flag invalid (non-zero integer expected)
 
 `
@@ -276,6 +282,7 @@ exports['flex logs with query with valid timestamps and invalid paging should fa
 exports['flex logs with query with valid start timestamp and nothing else should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
+[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z 200
 Count: 5
@@ -295,6 +302,7 @@ containerId   message                                                           
 exports['flex logs with query with invalid start timestamp and nothing else should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
+[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
 [error] InvalidParameter: Logs 'from' flag invalid (ISO-8601 timestamp expected)
 
 `
@@ -302,6 +310,7 @@ exports['flex logs with query with invalid start timestamp and nothing else shou
 exports['flex logs with query with invalid timestamps (\'from\' not before \'to\') and nothing else should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
+[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
 [error] InvalidParameter: 'from' timestamp must be before 'to' timestamp.
 
 `
@@ -309,6 +318,7 @@ exports['flex logs with query with invalid timestamps (\'from\' not before \'to\
 exports['flex logs with query without timestamps and valid paging should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
+[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=5&page=3
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=5&page=3 200
 Count: 5
@@ -328,6 +338,7 @@ containerId   message                                                           
 exports['flex logs with query without timestamps and page but with valid size should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
+[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=35
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=35 200
 Count: 5

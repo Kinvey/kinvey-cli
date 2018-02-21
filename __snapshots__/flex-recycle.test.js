@@ -1,6 +1,7 @@
 exports['flex recycle by specifying a profile and existent serviceId should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToRecycleService'
+[debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
 [debug] Writing contents to file projectSetupPath
@@ -58,6 +59,7 @@ Recycle initiated. Job: idOfJobThatIsRecyclingTheService
 exports['flex recycle by not specifying profile nor credentials when one profile and existent serviceId should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'flexStatusProfile'
+[debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  POST http://localhost:3234/v2/jobs
 [debug] Response: POST http://localhost:3234/v2/jobs 200
 [debug] Writing contents to file projectSetupPath

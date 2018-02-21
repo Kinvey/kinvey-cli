@@ -48,7 +48,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
    
    * `--serviceId <Flex Service ID>`
       
-         Specifies a Flex Service by its ID.
+      Specifies a Flex Service by its ID.
 
 * `flex job [id]`
 

@@ -1,1 +1,5 @@
+.idea/
+.nyc_output/
+__snapshots__/
+coverage/
 test/

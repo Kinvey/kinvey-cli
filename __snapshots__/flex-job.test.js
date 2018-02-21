@@ -1,7 +1,7 @@
 exports['flex job by specifying a profile and existent jobId should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetJobStatus'
-[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
+[debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37
 [debug] Response: GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
 Job status: COMPLETE
@@ -11,7 +11,7 @@ Job status: COMPLETE
 exports['flex job by specifying a profile and existent jobId should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetJobStatus'
-[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
+[debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37
 [debug] Response: GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
 {
@@ -27,7 +27,7 @@ exports['flex job by specifying a profile and existent jobId should succeed and 
 exports['flex job by specifying a profile and non-existent jobId should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetJobStatus'
-[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
+[debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  GET http://localhost:3234/v2/jobs/123jobDoesntExist
 [debug] Response: GET http://localhost:3234/v2/jobs/123jobDoesntExist 404
 [error] JobNotFound: The specified job could not be found.
@@ -37,7 +37,7 @@ exports['flex job by specifying a profile and non-existent jobId should fail 1']
 exports['flex job by not specifying profile nor credentials when one profile and existent jobId should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'flexJobProfile'
-[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
+[debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37
 [debug] Response: GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
 Job status: COMPLETE

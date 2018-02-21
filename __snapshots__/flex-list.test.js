@@ -20,7 +20,7 @@ id         name
 exports['flex list by specifying a profile and valid options (app and id) should succeed  and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
-[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
+[debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
 [debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
 Count: 1
@@ -36,7 +36,7 @@ id         name
 exports['flex list by specifying a profile and valid options (org and id) should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
-[debug] Error: ENOENT: no such file or directory, open 'projectSetupPath'
+[debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  GET http://localhost:3234/v2/organizations/123/data-links
 [debug] Response: GET http://localhost:3234/v2/organizations/123/data-links 200
 {

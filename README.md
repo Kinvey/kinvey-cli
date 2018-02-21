@@ -48,7 +48,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
    
    * `--serviceId <Flex Service ID>`
       
-         Specifies a Flex Service by its ID.
+      Specifies a Flex Service by its ID.
 
 * `flex job [id]`
 
@@ -206,7 +206,7 @@ Kinvey CLI requires you to authenticate. The fastest way to get started is to ru
 
 Note that you only need to specify a host if you are on a dedicated Kinvey instance. Otherwise just press Enter to continue.
 
-When prompted for `Profile`, enter a name for your new working profile that Kinvey CLI will create for you. Kinvey CLI will use this profile automatically for future executions as long as it is the only profile on the system. You can create new profiles and select an active account if you need to.
+When prompted for `Profile name`, enter a name for your new working profile that Kinvey CLI will create for you. Kinvey CLI will use this profile automatically for future executions as long as it is the only profile on the system. You can create new profiles and select an active profile if you need to.
 
 ```
 $ kinvey init

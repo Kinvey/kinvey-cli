@@ -33,6 +33,8 @@ const nonExistentUser = fixtureUser.nonexistent;
 
 const baseCmd = 'profile create';
 const initCommand = 'init';
+const invalidCredentialsMessage = 'Invalid credentials, please authenticate.';
+const shouldNotHappenMessage = 'Should not happen!';
 
 
 describe('init', () => {
@@ -137,6 +139,24 @@ describe('init', () => {
                             done();
                         });
                     });
+                });
+        });
+    });
+
+    describe('with invalid credentials', () => {
+        it('with a not existing user should return a validation error message', (done) => {
+            suppose(cliPath, [initCommand], defaultEnvWithDebug)
+                .when(/\? E-mail \(email\) /).respond(`${nonExistentUser.email}\n`)
+                .when(/\? Password /).respond(`${nonExistentUser.password}\n`)
+                .when(/\? Instance ID \(optional\) /).respond('\n')
+                .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
+                .on('error', (error) =>{
+                    expect(error.message).to.contain(invalidCredentialsMessage);
+                    done();
+                })
+                .end(() => {
+                    done(new Error(shouldNotHappenMessage))
+
                 });
         });
     });

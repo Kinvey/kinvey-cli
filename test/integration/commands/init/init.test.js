@@ -144,7 +144,7 @@ describe('init', () => {
     });
 
     describe('with invalid credentials', () => {
-        it('with a not existing user should return a validation error message', (done) => {
+        it('with a not existing user should return a warning message', (done) => {
             suppose(cliPath, [initCommand], defaultEnvWithDebug)
                 .when(/\? E-mail \(email\) /).respond(`${nonExistentUser.email}\n`)
                 .when(/\? Password /).respond(`${nonExistentUser.password}\n`)
@@ -157,6 +157,83 @@ describe('init', () => {
                 .end(() => {
                     done(new Error(shouldNotHappenMessage))
 
+                });
+        });
+    });
+
+    describe('with insufficient info', () => {
+        it('without an email should prompt again for a valid one and complete the init with a valid input', (done) => {
+            suppose(cliPath, [initCommand], defaultEnvWithDebug)
+                .when(/\? E-mail \(email\) /).respond('\n')
+                .when(/Please enter a valid e-mail address/).respond(`${existentUser.email}\n`)
+                .when(/\? Password /).respond(`${existentUser.password}\n`)
+                .when(/\? Instance ID \(optional\) /).respond('\n')
+                .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
+                .on('error', done)
+                .end((exitCode) => {
+                    expect(exitCode).to.equal(0);
+                    fs.readFile(outputFile, (err, data) => {
+
+                        if (err) {
+                            return done(err);
+                        }
+                        const fileContent = String.fromCharCode.apply(null, data);
+                        expect(fileContent).to.contain(`Created profile: ${defaultProfileName}`);
+                        assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+                            expect(err).to.not.exist;
+                            done();
+                        });
+                    });
+                });
+        });
+
+        it('without a password should prompt again for a valid one and complete the init with a valid input', (done) => {
+            suppose(cliPath, [initCommand], defaultEnvWithDebug)
+                .when(/\? E-mail \(email\) /).respond(`${existentUser.email}\n`)
+                .when(/\? Password /).respond('\n')
+                .when(/Please provide a non-empty string./).respond(`${existentUser.password}\n`)
+                .when(/\? Instance ID \(optional\) /).respond('\n')
+                .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
+                .on('error', done)
+                .end((exitCode) => {
+                    expect(exitCode).to.equal(0);
+                    fs.readFile(outputFile, (err, data) => {
+
+                        if (err) {
+                            return done(err);
+                        }
+                        const fileContent = String.fromCharCode.apply(null, data);
+                        expect(fileContent).to.contain(`Created profile: ${defaultProfileName}`);
+                        assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+                            expect(err).to.not.exist;
+                            done();
+                        });
+                    });
+                });
+        });
+
+        it('without a profile name should prompt again for a valid one and complete the init with a valid input', (done) => {
+            suppose(cliPath, [initCommand], defaultEnvWithDebug)
+                .when(/\? E-mail \(email\) /).respond(`${existentUser.email}\n`)
+                .when(/\? Password /).respond(`${existentUser.password}\n`)
+                .when(/\? Instance ID \(optional\) /).respond('\n')
+                .when(/\? Profile name /).respond('\n')
+                .when(/Please provide a non-empty string./).respond(`${defaultProfileName}\n`)
+                .on('error', done)
+                .end((exitCode) => {
+                    expect(exitCode).to.equal(0);
+                    fs.readFile(outputFile, (err, data) => {
+
+                        if (err) {
+                            return done(err);
+                        }
+                        const fileContent = String.fromCharCode.apply(null, data);
+                        expect(fileContent).to.contain(`Created profile: ${defaultProfileName}`);
+                        assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+                            expect(err).to.not.exist;
+                            done();
+                        });
+                    });
                 });
         });
     });

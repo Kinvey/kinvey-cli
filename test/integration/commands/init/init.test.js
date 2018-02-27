@@ -233,5 +233,30 @@ describe('init', () => {
                 })
                 .end(() => done(new Error(shouldNotHappenMessage)));
         });
+
+        it('with an invalid email format should prompt again for a valid one and complete the init with a valid input', (done) => {
+            suppose(cliPath, [initCommand], defaultEnvWithDebug)
+                .when(/\? E-mail \(email\) /).respond('@test\n')
+                .when(/Please enter a valid e-mail address/).respond(`${existentUser.email}\n`)
+                .when(/\? Password /).respond(`${existentUser.password}\n`)
+                .when(/\? Instance ID \(optional\) /).respond('\n')
+                .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
+                .on('error', done)
+                .end((exitCode) => {
+                    expect(exitCode).to.equal(0);
+                    fs.readFile(outputFile, (err, data) => {
+
+                        if (err) {
+                            return done(err);
+                        }
+                        const fileContent = String.fromCharCode.apply(null, data);
+                        expect(fileContent).to.contain(`Created profile: ${defaultProfileName}`);
+                        assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+                            expect(err).to.not.exist;
+                            done();
+                        });
+                    });
+                });
+        });
     });
 });

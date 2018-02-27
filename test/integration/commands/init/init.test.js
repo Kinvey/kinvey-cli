@@ -17,7 +17,7 @@ const cloneDeep = require('lodash.clonedeep');
 
 const { AuthOptionsNames, CommonOptionsNames, EnvironmentVariables, OutputFormat } = require('./../../../../lib/Constants');
 const testsConfig = require('../../../TestsConfig');
-const { assertions, execCmdWithAssertion, setup, testTooManyArgs } = require('../../../TestsHelper');
+const { assertions, execCmdWithAssertion, setup, testTooManyArgs, runSupposeSequence } = require('../../../TestsHelper');
 
 const fixtureUser = require('./../../../fixtures/user.json');
 const mockServer = require('../../../mockServer');
@@ -34,17 +34,6 @@ const nonExistentUser = fixtureUser.nonexistent;
 const baseCmd = 'profile create';
 const initCommand = 'init';
 const invalidCredentialsMessage = 'Invalid credentials, please authenticate.';
-
-function runSupposeAssertions(buildAssertion, callback) {
-    let error;
-    buildAssertion
-        .on('error', (err) => {
-            error = err;
-        })
-        .end((exitCode) => {
-            callback(error, exitCode);
-        });
-}
 
 
 describe('init', () => {
@@ -232,13 +221,13 @@ describe('init', () => {
 
     describe('with invalid credentials', () => {
         it('with a not existing user should return a warning message', (done) => {
-            const assertionObject = suppose(cliPath, [initCommand], defaultEnvWithDebug)
+            const sequence = suppose(cliPath, [initCommand], defaultEnvWithDebug)
                 .when(/\? E-mail \(email\) /).respond(`${nonExistentUser.email}\n`)
                 .when(/\? Password /).respond(`${nonExistentUser.password}\n`)
                 .when(/\? Instance ID \(optional\) /).respond('\n')
                 .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
 
-            runSupposeAssertions(assertionObject, (error, exitCode) => {
+            runSupposeSequence(sequence, (error, exitCode) => {
                 expect(error.message).to.contain(invalidCredentialsMessage);
                 expect(exitCode).to.equal(0);
                 done();

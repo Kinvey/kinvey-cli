@@ -508,4 +508,15 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
   });
 };
 
+TestsHelper.runSupposeSequence = (sequenceObject, callback) => {
+  let error;
+  sequenceObject
+    .on('error', (err) => {
+      error = err;
+    })
+    .end((exitCode) => {
+      callback(error, exitCode);
+    });
+};
+
 module.exports = TestsHelper;

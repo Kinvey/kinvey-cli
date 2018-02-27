@@ -156,6 +156,17 @@ TestsHelper.assertions = {
       active: activeItems,
       profiles
     };
+  },
+  assertFileContainsString (filePath, expectedString, done)  {
+      fs.readFile(filePath, (err, data) => {
+
+          if (err) {
+              return done(err);
+          }
+          const fileContent = String.fromCharCode.apply(null, data);
+          expect(fileContent).to.contain(expectedString);
+          done(null);
+      });
   }
 };
 

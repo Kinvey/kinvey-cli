@@ -56,6 +56,16 @@ describe('init', () => {
         debug: fs.createWriteStream(outputFile)
     };
 
+    const invalidURLConfig = cloneDeep(testsConfig);
+    invalidURLConfig.host = 'http://somehost:1234/';
+    const invalidEnv = {
+        NODE_CONFIG: JSON.stringify(invalidURLConfig)
+    };
+    const invalidEnvWithDebug = {
+        env: invalidEnv,
+        debug: fs.createWriteStream(outputFile)
+    };
+
 
     let ms = {};
     const cliPath = path.join('bin', 'kinvey');
@@ -82,11 +92,35 @@ describe('init', () => {
     });
 
     describe('with valid credentials', () => {
-        it('should create a valid profile', (done) => {
+        it('without Instance ID should create a valid profile, using the default Instance', (done) => {
             suppose(cliPath, [initCommand], defaultEnvWithDebug)
                 .when(/\? E-mail \(email\) /).respond(`${existentUser.email}\n`)
                 .when(/\? Password /).respond(`${existentUser.password}\n`)
                 .when(/\? Instance ID \(optional\) /).respond('\n')
+                .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
+                .on('error', done)
+                .end((exitCode) => {
+                    expect(exitCode).to.equal(0);
+                    fs.readFile(outputFile, (err, data) => {
+
+                        if (err) {
+                            return done(err);
+                        }
+                        const fileContent = String.fromCharCode.apply(null, data);
+                        expect(fileContent).to.contain(`Created profile: ${defaultProfileName}`);
+                        assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+                            expect(err).to.not.exist;
+                            done();
+                        });
+                    });
+                });
+        });
+
+        it('with supplied Instance Url should create a valid profile, using the supplied Url', (done) => {
+            suppose(cliPath, [initCommand], invalidEnvWithDebug)
+                .when(/\? E-mail \(email\) /).respond(`${existentUser.email}\n`)
+                .when(/\? Password /).respond(`${existentUser.password}\n`)
+                .when(/\? Instance ID \(optional\) /).respond(`${testsConfig.host}\n`)
                 .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
                 .on('error', done)
                 .end((exitCode) => {

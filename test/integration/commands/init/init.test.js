@@ -143,24 +143,6 @@ describe('init', () => {
         });
     });
 
-    describe('with invalid credentials', () => {
-        it('with a not existing user should return a warning message', (done) => {
-            suppose(cliPath, [initCommand], defaultEnvWithDebug)
-                .when(/\? E-mail \(email\) /).respond(`${nonExistentUser.email}\n`)
-                .when(/\? Password /).respond(`${nonExistentUser.password}\n`)
-                .when(/\? Instance ID \(optional\) /).respond('\n')
-                .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
-                .on('error', (error) =>{
-                    expect(error.message).to.contain(invalidCredentialsMessage);
-                    done();
-                })
-                .end(() => {
-                    done(new Error(shouldNotHappenMessage))
-
-                });
-        });
-    });
-
     describe('with insufficient info', () => {
         it('without an email should prompt again for a valid one and complete the init with a valid input', (done) => {
             suppose(cliPath, [initCommand], defaultEnvWithDebug)
@@ -235,6 +217,21 @@ describe('init', () => {
                         });
                     });
                 });
+        });
+    });
+
+    describe('with invalid credentials', () => {
+        it('with a not existing user should return a warning message', (done) => {
+            suppose(cliPath, [initCommand], defaultEnvWithDebug)
+                .when(/\? E-mail \(email\) /).respond(`${nonExistentUser.email}\n`)
+                .when(/\? Password /).respond(`${nonExistentUser.password}\n`)
+                .when(/\? Instance ID \(optional\) /).respond('\n')
+                .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
+                .on('error', (error) =>{
+                    expect(error.message).to.contain(invalidCredentialsMessage);
+                    done();
+                })
+                .end(() => done(new Error(shouldNotHappenMessage)));
         });
     });
 });

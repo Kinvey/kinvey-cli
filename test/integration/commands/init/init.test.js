@@ -65,6 +65,15 @@ describe('init', () => {
     debug: fs.createWriteStream(outputFile)
   };
 
+  const Prompt = {
+    email: /\? E-mail \(email\) /,
+    password: /\? Password /,
+    instanceId: /\? Instance ID \(optional\) /,
+    profileName: /\? Profile name /
+  };
+
+  const invalidEmailMessageRegex = /Please enter a valid e-mail address/;
+  const provideNotEmptyStringRegex = /Please provide a non-empty string./;
 
   let ms = {};
   const cliPath = path.join('bin', 'kinvey');
@@ -93,22 +102,22 @@ describe('init', () => {
   describe('with valid credentials', () => {
     it('without Instance ID should create a valid profile, using the default Instance', (done) => {
       const sequence = suppose(cliPath, [initCommand], defaultEnvWithDebug)
-        .when(/\? E-mail \(email\) /).respond(`${existentUser.email}\n`)
-        .when(/\? Password /).respond(`${existentUser.password}\n`)
-        .when(/\? Instance ID \(optional\) /).respond('\n')
-        .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
+        .when(Prompt.email).respond(`${existentUser.email}\n`)
+        .when(Prompt.password).respond(`${existentUser.password}\n`)
+        .when(Prompt.instanceId).respond('\n')
+        .when(Prompt.profileName).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
         assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
 
-    it('with supplied Instance Url should create a valid profile, using the supplied Url', (done) => {
+    it('with supplied Instance ID should create a valid profile, using the supplied Url', (done) => {
       const sequence = suppose(cliPath, [initCommand], invalidEnvWithDebug)
-        .when(/\? E-mail \(email\) /).respond(`${existentUser.email}\n`)
-        .when(/\? Password /).respond(`${existentUser.password}\n`)
-        .when(/\? Instance ID \(optional\) /).respond(`${testsConfig.host}\n`)
-        .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
+        .when(Prompt.email).respond(`${existentUser.email}\n`)
+        .when(Prompt.password).respond(`${existentUser.password}\n`)
+        .when(Prompt.instanceId).respond(`${testsConfig.host}\n`)
+        .when(Prompt.profileName).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
         assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
@@ -119,11 +128,11 @@ describe('init', () => {
   describe('with insufficient info', () => {
     it('without an email should prompt again for a valid one and complete the init with a valid input', (done) => {
       const sequence = suppose(cliPath, [initCommand], defaultEnvWithDebug)
-        .when(/\? E-mail \(email\) /).respond('\n')
-        .when(/Please enter a valid e-mail address/).respond(`${existentUser.email}\n`)
-        .when(/\? Password /).respond(`${existentUser.password}\n`)
-        .when(/\? Instance ID \(optional\) /).respond('\n')
-        .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
+        .when(Prompt.email).respond('\n')
+        .when(invalidEmailMessageRegex).respond(`${existentUser.email}\n`)
+        .when(Prompt.password).respond(`${existentUser.password}\n`)
+        .when(Prompt.instanceId).respond('\n')
+        .when(Prompt.profileName).respond(`${defaultProfileName}\n`)
 
       runSupposeSequence(sequence, (error, exitCode) => {
         assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
@@ -132,11 +141,11 @@ describe('init', () => {
 
     it('without a password should prompt again for a valid one and complete the init with a valid input', (done) => {
       const sequence = suppose(cliPath, [initCommand], defaultEnvWithDebug)
-        .when(/\? E-mail \(email\) /).respond(`${existentUser.email}\n`)
-        .when(/\? Password /).respond('\n')
-        .when(/Please provide a non-empty string./).respond(`${existentUser.password}\n`)
-        .when(/\? Instance ID \(optional\) /).respond('\n')
-        .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
+        .when(Prompt.email).respond(`${existentUser.email}\n`)
+        .when(Prompt.password).respond('\n')
+        .when(provideNotEmptyStringRegex).respond(`${existentUser.password}\n`)
+        .when(Prompt.instanceId).respond('\n')
+        .when(Prompt.profileName).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
         assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
@@ -145,11 +154,11 @@ describe('init', () => {
 
     it('without a profile name should prompt again for a valid one and complete the init with a valid input', (done) => {
       const sequence = suppose(cliPath, [initCommand], defaultEnvWithDebug)
-        .when(/\? E-mail \(email\) /).respond(`${existentUser.email}\n`)
-        .when(/\? Password /).respond(`${existentUser.password}\n`)
-        .when(/\? Instance ID \(optional\) /).respond('\n')
-        .when(/\? Profile name /).respond('\n')
-        .when(/Please provide a non-empty string./).respond(`${defaultProfileName}\n`);
+        .when(Prompt.email).respond(`${existentUser.email}\n`)
+        .when(Prompt.password).respond(`${existentUser.password}\n`)
+        .when(Prompt.instanceId).respond('\n')
+        .when(Prompt.profileName).respond('\n')
+        .when(provideNotEmptyStringRegex).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
         assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
@@ -160,10 +169,10 @@ describe('init', () => {
   describe('with invalid credentials', () => {
     it('with a not existing user should return a warning message', (done) => {
       const sequence = suppose(cliPath, [initCommand], defaultEnvWithDebug)
-        .when(/\? E-mail \(email\) /).respond(`${nonExistentUser.email}\n`)
-        .when(/\? Password /).respond(`${nonExistentUser.password}\n`)
-        .when(/\? Instance ID \(optional\) /).respond('\n')
-        .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
+        .when(Prompt.email).respond(`${nonExistentUser.email}\n`)
+        .when(Prompt.password).respond(`${nonExistentUser.password}\n`)
+        .when(Prompt.instanceId).respond('\n')
+        .when(Prompt.profileName).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
         expect(error.message).to.contain(invalidCredentialsMessage);
@@ -174,11 +183,11 @@ describe('init', () => {
 
     it('with an invalid email format should prompt again for a valid one and complete the init with a valid input', (done) => {
       const sequence = suppose(cliPath, [initCommand], defaultEnvWithDebug)
-        .when(/\? E-mail \(email\) /).respond('@test\n')
-        .when(/Please enter a valid e-mail address/).respond(`${existentUser.email}\n`)
-        .when(/\? Password /).respond(`${existentUser.password}\n`)
-        .when(/\? Instance ID \(optional\) /).respond('\n')
-        .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
+        .when(Prompt.email).respond('@test\n')
+        .when(invalidEmailMessageRegex).respond(`${existentUser.email}\n`)
+        .when(Prompt.password).respond(`${existentUser.password}\n`)
+        .when(Prompt.instanceId).respond('\n')
+        .when(Prompt.profileName).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
         assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);

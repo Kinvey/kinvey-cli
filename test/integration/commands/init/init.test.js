@@ -57,6 +57,7 @@ describe('init', () => {
 
   const invalidURLConfig = cloneDeep(testsConfig);
   invalidURLConfig.host = 'http://somehost:1234/';
+
   const invalidEnv = {
     NODE_CONFIG: JSON.stringify(invalidURLConfig)
   };
@@ -96,7 +97,15 @@ describe('init', () => {
   });
 
   after((done) => {
-    setup.clearGlobalSetup(null, done);
+    setup.clearGlobalSetup(null, () => {
+      if (ms.listening) {
+        ms.close(() => {
+          done();
+        });
+      } else {
+        done();
+      }
+    });
   });
 
   describe('with valid credentials', () => {

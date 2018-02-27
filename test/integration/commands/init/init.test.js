@@ -94,121 +94,68 @@ describe('init', () => {
 
     describe('with valid credentials', () => {
         it('without Instance ID should create a valid profile, using the default Instance', (done) => {
-            suppose(cliPath, [initCommand], defaultEnvWithDebug)
+            const sequence = suppose(cliPath, [initCommand], defaultEnvWithDebug)
                 .when(/\? E-mail \(email\) /).respond(`${existentUser.email}\n`)
                 .when(/\? Password /).respond(`${existentUser.password}\n`)
                 .when(/\? Instance ID \(optional\) /).respond('\n')
-                .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
-                .on('error', done)
-                .end((exitCode) => {
-                    expect(exitCode).to.equal(0);
-                    fs.readFile(outputFile, (err, data) => {
+                .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
 
-                        if (err) {
-                            return done(err);
-                        }
-                        const fileContent = String.fromCharCode.apply(null, data);
-                        expect(fileContent).to.contain(`Created profile: ${defaultProfileName}`);
-                        assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
-                            expect(err).to.not.exist;
-                            done();
-                        });
-                    });
-                });
+            runSupposeSequence(sequence, (error, exitCode) => {
+                assertions.assertSuccessfulSupposeSequence (error, exitCode, defaultExpectedSetup, outputFile, `Created profile: ${defaultProfileName}`, done);
+            });
         });
 
         it('with supplied Instance Url should create a valid profile, using the supplied Url', (done) => {
-            suppose(cliPath, [initCommand], invalidEnvWithDebug)
+            const sequence = suppose(cliPath, [initCommand], invalidEnvWithDebug)
                 .when(/\? E-mail \(email\) /).respond(`${existentUser.email}\n`)
                 .when(/\? Password /).respond(`${existentUser.password}\n`)
                 .when(/\? Instance ID \(optional\) /).respond(`${testsConfig.host}\n`)
-                .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
-                .on('error', done)
-                .end((exitCode) => {
-                    expect(exitCode).to.equal(0);
-                    fs.readFile(outputFile, (err, data) => {
+                .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
 
-                        if (err) {
-                            return done(err);
-                        }
-                        const fileContent = String.fromCharCode.apply(null, data);
-                        expect(fileContent).to.contain(`Created profile: ${defaultProfileName}`);
-                        assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
-                            expect(err).to.not.exist;
-                            done();
-                        });
-                    });
-                });
+            runSupposeSequence(sequence, (error, exitCode) => {
+                assertions.assertSuccessfulSupposeSequence (error, exitCode, defaultExpectedSetup, outputFile, `Created profile: ${defaultProfileName}`, done);
+            });
         });
     });
 
     describe('with insufficient info', () => {
         it('without an email should prompt again for a valid one and complete the init with a valid input', (done) => {
-            suppose(cliPath, [initCommand], defaultEnvWithDebug)
+            const sequence = suppose(cliPath, [initCommand], defaultEnvWithDebug)
                 .when(/\? E-mail \(email\) /).respond('\n')
                 .when(/Please enter a valid e-mail address/).respond(`${existentUser.email}\n`)
                 .when(/\? Password /).respond(`${existentUser.password}\n`)
                 .when(/\? Instance ID \(optional\) /).respond('\n')
                 .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
-                .on('error', done)
-                .end((exitCode) => {
-                    expect(exitCode).to.equal(0);
-                    fs.readFile(outputFile, (err, data) => {
 
-                        if (err) {
-                            return done(err);
-                        }
-                        const fileContent = String.fromCharCode.apply(null, data);
-                        expect(fileContent).to.contain(`Created profile: ${defaultProfileName}`);
-                        assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
-                            expect(err).to.not.exist;
-                            done();
-                        });
-                    });
-                });
+            runSupposeSequence(sequence, (error, exitCode) => {
+                assertions.assertSuccessfulSupposeSequence (error, exitCode, defaultExpectedSetup, outputFile, `Created profile: ${defaultProfileName}`, done);
+            });
         });
 
         it('without a password should prompt again for a valid one and complete the init with a valid input', (done) => {
-            suppose(cliPath, [initCommand], defaultEnvWithDebug)
+            const sequence = suppose(cliPath, [initCommand], defaultEnvWithDebug)
                 .when(/\? E-mail \(email\) /).respond(`${existentUser.email}\n`)
                 .when(/\? Password /).respond('\n')
                 .when(/Please provide a non-empty string./).respond(`${existentUser.password}\n`)
                 .when(/\? Instance ID \(optional\) /).respond('\n')
-                .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
-                .on('error', done)
-                .end((exitCode) => {
-                    expect(exitCode).to.equal(0);
-                    assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
-                        expect(err).to.not.exist;
-                        assertions.assertFileContainsString(outputFile, `Created profile: ${defaultProfileName}`, done)
-                    });
+                .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
 
-                });
+            runSupposeSequence(sequence, (error, exitCode) => {
+                assertions.assertSuccessfulSupposeSequence (error, exitCode, defaultExpectedSetup, outputFile, `Created profile: ${defaultProfileName}`, done);
+            });
         });
 
         it('without a profile name should prompt again for a valid one and complete the init with a valid input', (done) => {
-            suppose(cliPath, [initCommand], defaultEnvWithDebug)
+            const sequence = suppose(cliPath, [initCommand], defaultEnvWithDebug)
                 .when(/\? E-mail \(email\) /).respond(`${existentUser.email}\n`)
                 .when(/\? Password /).respond(`${existentUser.password}\n`)
                 .when(/\? Instance ID \(optional\) /).respond('\n')
                 .when(/\? Profile name /).respond('\n')
-                .when(/Please provide a non-empty string./).respond(`${defaultProfileName}\n`)
-                .on('error', done)
-                .end((exitCode) => {
-                    expect(exitCode).to.equal(0);
-                    fs.readFile(outputFile, (err, data) => {
+                .when(/Please provide a non-empty string./).respond(`${defaultProfileName}\n`);
 
-                        if (err) {
-                            return done(err);
-                        }
-                        const fileContent = String.fromCharCode.apply(null, data);
-                        expect(fileContent).to.contain(`Created profile: ${defaultProfileName}`);
-                        assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
-                            expect(err).to.not.exist;
-                            done();
-                        });
-                    });
-                });
+            runSupposeSequence(sequence, (error, exitCode) => {
+                assertions.assertSuccessfulSupposeSequence (error, exitCode, defaultExpectedSetup, outputFile, `Created profile: ${defaultProfileName}`, done);
+            });
         });
     });
 
@@ -236,9 +183,7 @@ describe('init', () => {
                 .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
 
             runSupposeSequence(sequence, (error, exitCode) => {
-                expect(error).to.not.exist;
-                expect(exitCode).to.equal(0);
-                assertions.assertFileContainsString(outputFile, `Created profile: ${defaultProfileName}`, done)
+                assertions.assertSuccessfulSupposeSequence (error, exitCode, defaultExpectedSetup, outputFile, `Created profile: ${defaultProfileName}`, done);
             });
         });
     });

@@ -158,15 +158,23 @@ TestsHelper.assertions = {
     };
   },
   assertFileContainsString (filePath, expectedString, done)  {
-      fs.readFile(filePath, (err, data) => {
+    fs.readFile(filePath, (err, data) => {
 
-          if (err) {
-              return done(err);
-          }
-          const fileContent = String.fromCharCode.apply(null, data);
-          expect(fileContent).to.contain(expectedString);
-          done(null);
-      });
+      if (err) {
+        return done(err);
+      }
+      const fileContent = String.fromCharCode.apply(null, data);
+      expect(fileContent).to.contain(expectedString);
+      done(null);
+    });
+  },
+  assertSuccessfulSupposeSequence (error, exitCode, defaultExpectedSetup, outputFile, expectedResult, done) {
+    expect(error).to.not.exist;
+    expect(exitCode).to.equal(0);
+    this.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+      expect(err).to.not.exist;
+      this.assertFileContainsString(outputFile, expectedResult, done);
+    });
   }
 };
 
@@ -403,10 +411,10 @@ TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCo
 
 TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
   options = options || {
-    env: {
-      NODE_CONFIG: JSON.stringify(testsConfig)
-    }
-  };
+      env: {
+        NODE_CONFIG: JSON.stringify(testsConfig)
+      }
+    };
 
   const fullCmd = `node ${path.join('bin', 'kinvey')} ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {

@@ -538,4 +538,8 @@ TestsHelper.runSupposeSequence = (sequenceObject, callback) => {
     });
 };
 
+TestsHelper.getCreatedProfileMessage = (profileName) => {
+  return `Created profile: ${profileName}`;
+};
+
 module.exports = TestsHelper;

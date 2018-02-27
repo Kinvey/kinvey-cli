@@ -15,9 +15,8 @@
 
 const cloneDeep = require('lodash.clonedeep');
 
-const { AuthOptionsNames, CommonOptionsNames, EnvironmentVariables, OutputFormat } = require('./../../../../lib/Constants');
 const testsConfig = require('../../../TestsConfig');
-const { assertions, execCmdWithAssertion, setup, testTooManyArgs, runSupposeSequence } = require('../../../TestsHelper');
+const { assertions, setup, getCreatedProfileMessage, runSupposeSequence } = require('../../../TestsHelper');
 
 const fixtureUser = require('./../../../fixtures/user.json');
 const mockServer = require('../../../mockServer');
@@ -31,7 +30,6 @@ const outputFile = './output.txt';
 const existentUser = fixtureUser.existent;
 const nonExistentUser = fixtureUser.nonexistent;
 
-const baseCmd = 'profile create';
 const initCommand = 'init';
 const invalidCredentialsMessage = 'Invalid credentials, please authenticate.';
 
@@ -101,7 +99,7 @@ describe('init', () => {
         .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, `Created profile: ${defaultProfileName}`, done);
+        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
 
@@ -113,7 +111,7 @@ describe('init', () => {
         .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, `Created profile: ${defaultProfileName}`, done);
+        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
   });
@@ -128,7 +126,7 @@ describe('init', () => {
         .when(/\? Profile name /).respond(`${defaultProfileName}\n`)
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, `Created profile: ${defaultProfileName}`, done);
+        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
 
@@ -141,7 +139,7 @@ describe('init', () => {
         .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, `Created profile: ${defaultProfileName}`, done);
+        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
 
@@ -154,7 +152,7 @@ describe('init', () => {
         .when(/Please provide a non-empty string./).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, `Created profile: ${defaultProfileName}`, done);
+        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
   });
@@ -183,7 +181,7 @@ describe('init', () => {
         .when(/\? Profile name /).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, `Created profile: ${defaultProfileName}`, done);
+        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
   });

@@ -77,7 +77,7 @@ describe('init', () => {
   const provideNotEmptyStringRegex = /Please provide a non-empty string./;
 
   let ms = {};
-  const cliPath = path.join('bin', 'kinvey');
+  const cliPath = path.join(__dirname, '..', '..', '..', '..', 'bin', 'kinvey');
 
   before((done) => {
     setup.clearGlobalSetup(null, (err) => {

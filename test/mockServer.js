@@ -215,6 +215,11 @@ function build(
     res.send(fixtureApps);
   });
 
+  // ORGANIZATIONS
+  app.get(`/${versionPart}/organizations`, (req, res) => {
+    res.send(fixtureApps);
+  });
+
   app.all('/', (req, res) => {
     res.send(404);
   });

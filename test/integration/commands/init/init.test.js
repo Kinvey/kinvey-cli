@@ -32,7 +32,7 @@ const nonExistentUser = fixtureUser.nonexistent;
 
 const initCommand = 'init';
 const invalidCredentialsMessage = 'Invalid credentials, please authenticate.';
-
+const invalidConfigUrlMessage = 'InvalidConfigUrl: The configuration URL is invalid. Please use a valid Kinvey instance name or URL.';
 
 describe('init', () => {
   const expectedValidUser = {
@@ -176,7 +176,7 @@ describe('init', () => {
     });
   });
 
-  describe('with invalid credentials', () => {
+  describe('with invalid data', () => {
     it('with a not existing user should return an invalid credentials message, prompt again and complete the init with a valid input', (done) => {
       const sequence = suppose(nodeCommand, [cliPath, initCommand], defaultEnvWithDebug)
         .when(Prompt.email).respond(`${nonExistentUser.email}\n`)
@@ -206,6 +206,21 @@ describe('init', () => {
 
       runSupposeSequence(sequence, (error, exitCode) => {
         assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
+      });
+    });
+
+    it('with an invalid Instance Id should return an invalid configuration Url message', (done) => {
+      const invalidInstanceName = 'invalid_instance';
+      const sequence = suppose(nodeCommand, [cliPath, initCommand], defaultEnvWithDebug)
+        .when(Prompt.email).respond(`${existentUser.email}\n`)
+        .when(Prompt.password).respond(`${existentUser.password}\n`)
+        .when(Prompt.instanceId).respond(`${invalidInstanceName}\n`)
+        .when(Prompt.profileName).respond(`${defaultProfileName}\n`);
+
+      runSupposeSequence(sequence, (error, exitCode) => {
+        expect(error.message).to.contain(invalidConfigUrlMessage);
+        expect(exitCode).to.equal(1);
+        done();
       });
     });
   });

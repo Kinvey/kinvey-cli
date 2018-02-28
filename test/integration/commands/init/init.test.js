@@ -177,17 +177,22 @@ describe('init', () => {
   });
 
   describe('with invalid credentials', () => {
-    it('with a not existing user should return a warning message', (done) => {
+    it('with a not existing user should return an invalid credentials message, prompt again and complete the init with a valid input', (done) => {
       const sequence = suppose(nodeCommand, [cliPath, initCommand], defaultEnvWithDebug)
         .when(Prompt.email).respond(`${nonExistentUser.email}\n`)
         .when(Prompt.password).respond(`${nonExistentUser.password}\n`)
         .when(Prompt.instanceId).respond('\n')
-        .when(Prompt.profileName).respond(`${defaultProfileName}\n`);
+        .when(Prompt.profileName).respond(`${defaultProfileName}\n`)
+        .when(Prompt.email).respond(`${existentUser.email}\n`)
+        .when(Prompt.password).respond(`${existentUser.password}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
         expect(error.message).to.contain(invalidCredentialsMessage);
         expect(exitCode).to.equal(0);
-        done();
+        assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+          expect(err).to.not.exist;
+          assertions.assertFileContainsString(outputFile, getCreatedProfileMessage(defaultProfileName), done);
+        });
       });
     });
 

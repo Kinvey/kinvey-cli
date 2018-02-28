@@ -177,7 +177,7 @@ describe('init', () => {
   });
 
   describe('with invalid data', () => {
-    it('with a not existing user should return an invalid credentials message, prompt again and complete the init with a valid input', (done) => {
+    it('with a not existing user should return an invalid credentials message warning, prompt again and complete the init with a valid input', (done) => {
       const sequence = suppose(nodeCommand, [cliPath, initCommand], defaultEnvWithDebug)
         .when(Prompt.email).respond(`${nonExistentUser.email}\n`)
         .when(Prompt.password).respond(`${nonExistentUser.password}\n`)
@@ -209,7 +209,7 @@ describe('init', () => {
       });
     });
 
-    it('with an invalid Instance Id should return an invalid configuration Url message', (done) => {
+    it('with an invalid Instance Id should exit with an invalid configuration Url error message', (done) => {
       const invalidInstanceName = 'invalid_instance';
       const sequence = suppose(nodeCommand, [cliPath, initCommand], defaultEnvWithDebug)
         .when(Prompt.email).respond(`${existentUser.email}\n`)

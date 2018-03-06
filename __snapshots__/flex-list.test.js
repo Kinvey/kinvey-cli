@@ -1,8 +1,8 @@
 exports['flex list by specifying a profile and valid options (app and id) should succeed  and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
-[debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
+[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
+[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
 Count: 1
 
 id         name              
@@ -16,8 +16,8 @@ id         name
 exports['flex list by specifying a profile and valid options (org and id) should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
-[debug] Request:  GET http://localhost:3234/v2/organizations/123/data-links
-[debug] Response: GET http://localhost:3234/v2/organizations/123/data-links 200
+[debug] Request:  GET http://localhost:3234/v2/organizations/885f5d307afd4168bebca1a64f815c1e/data-links
+[debug] Response: GET http://localhost:3234/v2/organizations/885f5d307afd4168bebca1a64f815c1e/data-links 200
 {
   "result": [
     {
@@ -58,8 +58,8 @@ Invalid values:
 exports['flex list by specifying a profile when valid project is set without options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
-[debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
+[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
+[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
 Count: 1
 
 id         name              
@@ -73,8 +73,8 @@ id         name
 exports['flex list by specifying a profile when invalid project is set with valid options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
-[debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
+[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
+[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
 Count: 1
 
 id         name              
@@ -114,8 +114,8 @@ exports['flex list by specifying credentials as options when valid and valid opt
 [debug] Checking for package updates
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
+[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
+[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

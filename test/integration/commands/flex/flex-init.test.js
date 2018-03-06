@@ -36,7 +36,7 @@ const tokenOne = fixtureUser.tokenOne;
 const nonExistentUser = fixtureUser.nonexistent;
 
 const baseCmd = 'flex list';
-const outputFile = './output.txt';
+const outputFile = testsConfig.paths.supposeDebug;
 
 const defaultEnv = {
   NODE_CONFIG: JSON.stringify(testsConfig)
@@ -115,11 +115,7 @@ describe(baseCmd, () => {
   const cliPath = path.join('bin', 'kinvey');
 
   beforeEach((done) => {
-    async.series([
-      (next) => {
-        setup.clearGlobalSetup(null, next);
-      }
-    ], done);
+    setup.clearAllSetup(done);
   });
 
   afterEach((done) => {

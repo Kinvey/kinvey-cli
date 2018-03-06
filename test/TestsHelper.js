@@ -35,6 +35,7 @@ const mockServer = require('./mockServer');
 const existentUser = fixtureUser.existent;
 const globalSetupPath = testsConfig.paths.session;
 const projectPath = testsConfig.paths.project;
+const supposeDebugPath = testsConfig.paths.supposeDebug;
 
 const TestsHelper = {};
 
@@ -344,6 +345,11 @@ TestsHelper.setup = {
     writeJSON(path, '', done);
   },
 
+  clearSupposeDebugFile(path, done) {
+    path = path || supposeDebugPath;
+    writeJSON(path, '', done);
+  },
+
   clearProjectSetup(path, done) {
     path = path || projectPath;
     fs.unlink(path, (err) => {
@@ -366,6 +372,9 @@ TestsHelper.setup = {
       },
       (next) => {
         this.clearProjectSetup(null, next);
+      },
+      (next) => {
+        this.clearSupposeDebugFile(null, next);
       }
     ], done);
   },

@@ -26,7 +26,7 @@ const suppose = require('suppose');
 const fs = require('fs');
 const assert = require('assert');
 
-const outputFile = './output.txt';
+const outputFile = testsConfig.paths.supposeDebug;
 const existentUser = fixtureUser.existent;
 const nonExistentUser = fixtureUser.nonexistent;
 
@@ -81,11 +81,6 @@ describe('init', () => {
   const cliPath = path.join('bin', 'kinvey');
 
   before((done) => {
-    setup.clearGlobalSetup(null, (err) => {
-      if (err) {
-        return done(err);
-      }
-
       mockServer(null, (err, server) => {
         if (err) {
           return done(err);
@@ -94,11 +89,17 @@ describe('init', () => {
         ms = server;
         done();
       });
-    });
+  });
+
+  beforeEach((done) => {
+    setup.clearAllSetup(done);
+  });
+
+  afterEach((done) => {
+    setup.clearAllSetup(done);
   });
 
   after((done) => {
-    setup.clearGlobalSetup(null, () => {
       if (ms.listening) {
         ms.close(() => {
           done();
@@ -106,7 +107,6 @@ describe('init', () => {
       } else {
         done();
       }
-    });
   });
 
   describe('with valid credentials', () => {

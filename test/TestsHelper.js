@@ -90,8 +90,8 @@ TestsHelper.assertions = {
         return done(err);
       }
 
-      if (!expected || isEmpty(expected.flex)) {
-        const actualDoesNotContainData = isEmpty(actual) || isEmpty(actual.flex);
+      if (!expected) {
+        const actualDoesNotContainData = isEmpty(actual);
         expect(actualDoesNotContainData, `Setup at ${path} is empty.`).to.be.true;
         return done(null);
       }
@@ -101,14 +101,13 @@ TestsHelper.assertions = {
     });
   },
 
-  buildExpectedProject(appId, org, lastJobId, serviceName, service, schemaVersion = testsConfig.defaultSchemaVersion) {
+  buildExpectedProject(domain, domainEntityId, serviceId, serviceName, schemaVersion = testsConfig.defaultSchemaVersion) {
     return {
-      org,
-      lastJobId,
-      serviceName,
-      service,
-      schemaVersion,
-      app: appId
+      domain: domain,
+      domainEntityId: domainEntityId,
+      serviceId: serviceId,
+      serviceName: serviceName,
+      schemaVersion: schemaVersion
     };
   },
   buildExpectedUser(host = testsConfig.host, token = fixtureUser.token) {
@@ -157,6 +156,11 @@ TestsHelper.assertions = {
       profiles
     };
   },
+  buildExpectedProjectSetup(profileName, serviceInfo) {
+    let result = {};
+    result[profileName] = { flex: serviceInfo };
+    return result;
+  },
   assertFileContainsString (filePath, expectedString, done)  {
     fs.readFile(filePath, (err, data) => {
 
@@ -168,14 +172,23 @@ TestsHelper.assertions = {
       done(null);
     });
   },
-  assertSuccessfulSupposeSequence (error, exitCode, defaultExpectedSetup, outputFile, expectedResult, done) {
+  assertSuccessfulSupposeSequence (error, exitCode, expectedSetup, outputFile, expectedString, done) {
     expect(error).to.not.exist;
     expect(exitCode).to.equal(0);
-    this.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+    this.assertGlobalSetup(expectedSetup, testsConfig.paths.session, (err) => {
       expect(err).to.not.exist;
-      this.assertFileContainsString(outputFile, expectedResult, done);
+      this.assertFileContainsString(outputFile, expectedString, done);
+    });
+  },
+  assertSuccessfulFlexInitSequence (error, exitCode, expectedSetup, outputFile, expectedString, done) {
+    expect(error).to.not.exist;
+    expect(exitCode).to.equal(0);
+    this.assertProjectSetup(expectedSetup, null, (err) => {
+      expect(err).to.not.exist;
+      this.assertFileContainsString(outputFile, expectedString, done);
     });
   }
+
 };
 
 TestsHelper.mocks = {

@@ -368,6 +368,16 @@ TestsHelper.setup = {
         this.clearProjectSetup(null, next);
       }
     ], done);
+  },
+
+  startMockServer(cb, done) {
+    mockServer(null, (err, server) => {
+      if (err) {
+        return done(err);
+      }
+
+      cb(server);
+    });
   }
 };
 

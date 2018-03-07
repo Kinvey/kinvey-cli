@@ -29,6 +29,7 @@ const { isEmpty } = require('./../../../../lib/Utils');
 const { buildCmd, buildOptions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const fixtureApp = require('./../../../fixtures/app.json');
+const fixtureOrg = require('./../../../fixtures/org.json');
 
 
 const fixtureUser = require('./../../../fixtures/user.json');
@@ -72,11 +73,10 @@ const defaultDataLinkName = 'TestKinveyDatalink';
 const defaultService = fixtureServices.find(x => x.name === defaultDataLinkName);
 const secondDataLinkName = 'TestSecondKinveyDatalink';
 const secondService = fixtureServices.find(x => x.name === secondDataLinkName);
-const secondAppId = '124';
 
 const appProjectFlex = assertions.buildExpectedProject(validDomains.app, fixtureApp.id, defaultService.id, defaultService.name);
 const expectedAppProject = assertions.buildExpectedProjectSetup(defaultProfileName, appProjectFlex);
-const orgProjectFlex = assertions.buildExpectedProject(validDomains.org, secondAppId, secondService.id, secondService.name);
+const orgProjectFlex = assertions.buildExpectedProject(validDomains.org, fixtureOrg.id, secondService.id, secondService.name);
 const expectedOrgProject = assertions.buildExpectedProjectSetup(defaultProfileName, orgProjectFlex);
 
 const secondValidProfileName = 'secondValidProfileName';
@@ -85,34 +85,6 @@ const notAuthenticatedMessage = 'You must be authenticated.';
 const notFoundProfileErrorMessage = 'Profile not found. Please verify profile name exists.';
 const notExistingProfileName = 'NotExistingProfile';
 
-function testFlexList(profileName, optionsForCredentials, domain, domainEntityId, isVerbose, validUser, otherOptions, done) {
-  const options = buildOptions(profileName, optionsForCredentials, otherOptions);
-
-  const apiOptions = {};
-
-  if (domain) {
-    options[FlexOptionsNames.DOMAIN_TYPE] = domain;
-    if (domain === 'org') {
-      apiOptions.domainType = 'organizations';
-    }
-  }
-
-  if (domainEntityId) {
-    options[FlexOptionsNames.DOMAIN_ID] = domainEntityId;
-  }
-
-  if (!isEmpty(validUser)) {
-    apiOptions.token = validUser.token;
-    apiOptions.existentUser = { email: validUser.email };
-  }
-
-  const clearSetupPaths = isVerbose;
-  const escapeSlashes = !isVerbose;
-  const flags = isVerbose ? [CommonOptionsNames.VERBOSE] : null;
-  const positionalArgs = null;
-  const cmd = buildCmd(baseCmd, positionalArgs, options, flags);
-  execCmdWithAssertion(cmd, null, apiOptions, true, clearSetupPaths, escapeSlashes, done);
-}
 
 describe(baseCmd, () => {
   const nonExistentEntityId = '123I_DONT_EXIST';
@@ -315,8 +287,7 @@ describe(baseCmd, () => {
   });
 
   describe('Organization Level Services', () => {
-
-    const orgOptions = { domainType: 'organizations', domainEntityId: '124' };
+    const orgOptions = { domainType: 'organizations'};
 
     it('with one not active valid profile should succeed', (done) => {
       setup.createProfiles(defaultProfileName, () => {

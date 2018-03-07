@@ -173,7 +173,7 @@ TestsHelper.assertions = {
       done(null);
     });
   },
-  assertSuccessfulSupposeSequence (error, exitCode, expectedSetup, outputFile, expectedString, done) {
+  assertSuccessfulInitSequence (error, exitCode, expectedSetup, outputFile, expectedString, done) {
     expect(error).to.not.exist;
     expect(exitCode).to.equal(0);
     this.assertGlobalSetup(expectedSetup, testsConfig.paths.session, (err) => {

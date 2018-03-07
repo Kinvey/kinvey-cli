@@ -34,7 +34,7 @@ const initCommand = 'init';
 const invalidCredentialsMessage = 'Invalid credentials, please authenticate.';
 const invalidConfigUrlMessage = 'InvalidConfigUrl: The configuration URL is invalid. Please use a valid Kinvey instance name or URL.';
 
-describe('init', () => {
+describe(initCommand, () => {
   const expectedValidUser = {
     host: testsConfig.host,
     email: existentUser.email,
@@ -118,7 +118,7 @@ describe('init', () => {
         .when(Prompt.profileName).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
+        assertions. assertSuccessfulInitSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
 
@@ -130,7 +130,7 @@ describe('init', () => {
         .when(Prompt.profileName).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
+        assertions. assertSuccessfulInitSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
   });
@@ -145,7 +145,7 @@ describe('init', () => {
         .when(Prompt.profileName).respond(`${defaultProfileName}\n`)
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
+        assertions. assertSuccessfulInitSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
 
@@ -158,7 +158,7 @@ describe('init', () => {
         .when(Prompt.profileName).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
+        assertions. assertSuccessfulInitSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
 
@@ -171,7 +171,7 @@ describe('init', () => {
         .when(provideNotEmptyStringRegex).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
+        assertions. assertSuccessfulInitSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
   });
@@ -205,7 +205,7 @@ describe('init', () => {
         .when(Prompt.profileName).respond(`${defaultProfileName}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        assertions.assertSuccessfulSupposeSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
+        assertions. assertSuccessfulInitSequence(error, exitCode, defaultExpectedSetup, outputFile, getCreatedProfileMessage(defaultProfileName), done);
       });
     });
 

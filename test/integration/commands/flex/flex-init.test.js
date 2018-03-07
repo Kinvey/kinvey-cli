@@ -23,7 +23,7 @@ const assert = require('assert');
 const testsConfig = require('../../../TestsConfig');
 const { assertions, getCreatedProfileMessage, runSupposeSequence } = require('../../../TestsHelper');
 
-const { CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
+const { EnvironmentVariables, CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
 const { isEmpty } = require('./../../../../lib/Utils');
 const { buildCmd, buildOptions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
@@ -134,7 +134,6 @@ describe(baseCmd, () => {
 
   describe('App Services', () => {
 
-    describe('without specifying a profile', () => {
       it('with one not active valid profile should succeed', (done) => {
         setup.createProfiles(defaultProfileName, () => {
           setup.startMockServer((server) => {
@@ -184,6 +183,46 @@ describe(baseCmd, () => {
           });
         });
       });
-    });
+
+      it('should use the submitted profile as an option', (done) => {
+        setup.createProfiles(defaultProfileName,  () => {
+          setup.setActiveProfile(secondValidProfileName, true, () => {
+            setup.startMockServer((server) => {
+              ms = server;
+              const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init', '--profile', defaultProfileName], defaultEnvWithDebug)
+                .when(Prompt.selectAppOrOrg).respond('\n')
+                .when(Prompt.selectApp).respond('\n')
+                .when(Prompt.selectService).respond('\n');
+
+              runSupposeSequence(sequence, (error, exitCode) => {
+                assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedProject, outputFile, flexInitSuccessMessage, done);
+              });
+            }, done);
+          });
+        });
+      });
+
+      it('should use the submitted profile as an environment variable', (done) => {
+        const envWithProfileVar = {
+          env: defaultEnv,
+          debug: fs.createWriteStream(outputFile)
+        };
+        envWithProfileVar.env[EnvironmentVariables.PROFILE] = defaultProfileName;
+        setup.createProfiles(defaultProfileName,  () => {
+          setup.setActiveProfile(secondValidProfileName, true, () => {
+            setup.startMockServer((server) => {
+              ms = server;
+              const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init'], envWithProfileVar)
+                .when(Prompt.selectAppOrOrg).respond('\n')
+                .when(Prompt.selectApp).respond('\n')
+                .when(Prompt.selectService).respond('\n');
+
+              runSupposeSequence(sequence, (error, exitCode) => {
+                assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedProject, outputFile, flexInitSuccessMessage, done);
+              });
+            }, done);
+          });
+        });
+      });
   });
 });

@@ -73,6 +73,8 @@ const expectedProject = assertions.buildExpectedProjectSetup(defaultProfileName,
 const secondValidProfileName = 'secondValidProfileName';
 const flexInitSuccessMessage = 'Saved configuration.';
 const notAuthenticatedMessage = 'You must be authenticated.';
+const notFoundProfileErrorMessage = 'Profile not found. Please verify profile name exists.';
+const notExistingProfileName = 'NotExistingProfile';
 
 function testFlexList(profileName, optionsForCredentials, domain, domainEntityId, isVerbose, validUser, otherOptions, done) {
   const options = buildOptions(profileName, optionsForCredentials, otherOptions);
@@ -250,7 +252,23 @@ describe(baseCmd, () => {
       });
     });
 
-    it('should return a not authenticated error message if there are two not active profiles', (done) => {
+    it('should return a not authenticated error message if there are no profiles', (done) => {
+      setup.startMockServer((server) => {
+        ms = server;
+        const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init'], defaultEnvWithDebug)
+          .when(Prompt.selectAppOrOrg).respond('\n')
+          .when(Prompt.selectApp).respond('\n')
+          .when(Prompt.selectService).respond('\n');
+
+        runSupposeSequence(sequence, (error, exitCode) => {
+          expect(error.message).to.contain(notAuthenticatedMessage);
+          expect(exitCode).to.equal(1);
+          done();
+        });
+      }, done);
+    });
+
+    it('should return a not authenticated error message if there are more than one not active profiles', (done) => {
       setup.createProfiles([secondValidProfileName, defaultProfileName], () => {
         setup.startMockServer((server) => {
           ms = server;
@@ -261,6 +279,24 @@ describe(baseCmd, () => {
 
           runSupposeSequence(sequence, (error, exitCode) => {
             expect(error.message).to.contain(notAuthenticatedMessage);
+            expect(exitCode).to.equal(1);
+            done();
+          });
+        }, done);
+      });
+    });
+
+    it('should return a not found error message if a not existing profile is submitted as an option', (done) => {
+      setup.createProfiles(defaultProfileName, () => {
+        setup.startMockServer((server) => {
+          ms = server;
+          const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init', '--profile', notExistingProfileName], defaultEnvWithDebug)
+            .when(Prompt.selectAppOrOrg).respond('\n')
+            .when(Prompt.selectApp).respond('\n')
+            .when(Prompt.selectService).respond('\n');
+
+          runSupposeSequence(sequence, (error, exitCode) => {
+            expect(error.message).to.contain(notFoundProfileErrorMessage);
             expect(exitCode).to.equal(1);
             done();
           });

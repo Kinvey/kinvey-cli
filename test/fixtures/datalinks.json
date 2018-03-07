@@ -10,6 +10,16 @@
     }]
   },
   {
+    "id"  : "12389kd89",
+    "type" : "internal",
+    "name" : "TestSecondKinveyDatalink",
+    "backingServers": [{
+      "_id"    : "456",
+      "host"   : "https://example.com",
+      "secret" : "789"
+    }]
+  },
+  {
     "id"  : "124",
     "type" : "custom",
     "name" : "TestDatalink",

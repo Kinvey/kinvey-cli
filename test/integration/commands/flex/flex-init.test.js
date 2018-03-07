@@ -22,22 +22,14 @@ const assert = require('assert');
 const cloneDeep = require('lodash.clonedeep');
 
 const testsConfig = require('../../../TestsConfig');
-const { assertions, getCreatedProfileMessage, runSupposeSequence } = require('../../../TestsHelper');
+const { assertions, runSupposeSequence } = require('../../../TestsHelper');
 
-const { EnvironmentVariables, CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
-const { isEmpty } = require('./../../../../lib/Utils');
-const { buildCmd, buildOptions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { EnvironmentVariables } = require('./../../../../lib/Constants');
+const { setup } = require('../../../TestsHelper');
 
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureOrg = require('./../../../fixtures/org.json');
-
-
-const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureServices = require('./../../../fixtures/datalinks.json');
-
-const existentUserOne = fixtureUser.existentOne;
-const tokenOne = fixtureUser.tokenOne;
-const nonExistentUser = fixtureUser.nonexistent;
 
 const baseCmd = 'flex init';
 const outputFile = testsConfig.paths.supposeDebug;
@@ -55,7 +47,7 @@ const Prompt = {
   selectAppOrOrg: /Would you like to select a service from a Kinvey app or org\? \(Use arrow keys\)/,
   selectApp: /Which app would you like to use\?/,
   selectService: /Which service would you like to use\?/,
-  selectOrganization: /Which organization/
+  selectOrganization: /Which organization would you like to use\? \(Use arrow keys\)/
 };
 
 const Keys = {
@@ -87,14 +79,6 @@ const notExistingProfileName = 'NotExistingProfile';
 
 
 describe(baseCmd, () => {
-  const nonExistentEntityId = '123I_DONT_EXIST';
-  const validDomainEntityId = fixtureApp.id;
-
-  const validUserForListing = {
-    email: existentUserOne.email,
-    token: tokenOne
-  };
-
   let ms = {};
   const nodeCommand = 'node';
   const cliPath = path.join('bin', 'kinvey');
@@ -287,7 +271,7 @@ describe(baseCmd, () => {
   });
 
   describe('Organization Level Services', () => {
-    const orgOptions = { domainType: 'organizations'};
+    const orgOptions = { domainType: 'organizations' };
 
     it('with one not active valid profile should succeed', (done) => {
       setup.createProfiles(defaultProfileName, () => {

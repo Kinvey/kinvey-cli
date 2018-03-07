@@ -29,6 +29,8 @@ const { isEmpty } = require('./../../../../lib/Utils');
 const { buildCmd, buildOptions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const fixtureApp = require('./../../../fixtures/app.json');
+
+
 const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureServices = require('./../../../fixtures/datalinks.json');
 
@@ -51,7 +53,8 @@ const defaultEnvWithDebug = {
 const Prompt = {
   selectAppOrOrg: /Would you like to select a service from a Kinvey app or org\? \(Use arrow keys\)/,
   selectApp: /Which app would you like to use\?/,
-  selectService: /Which service would you like to use\?/
+  selectService: /Which service would you like to use\?/,
+  selectOrganization: /Which organization/
 };
 
 const Keys = {
@@ -67,8 +70,14 @@ const validDomains = {
 const defaultProfileName = 'flexListProfile';
 const defaultDataLinkName = 'TestKinveyDatalink';
 const defaultService = fixtureServices.find(x => x.name === defaultDataLinkName);
-const projectFlex = assertions.buildExpectedProject(validDomains.app, fixtureApp.id, defaultService.id, defaultService.name);
-const expectedProject = assertions.buildExpectedProjectSetup(defaultProfileName, projectFlex);
+const secondDataLinkName = 'TestSecondKinveyDatalink';
+const secondService = fixtureServices.find(x => x.name === secondDataLinkName);
+const secondAppId = '124';
+
+const appProjectFlex = assertions.buildExpectedProject(validDomains.app, fixtureApp.id, defaultService.id, defaultService.name);
+const expectedAppProject = assertions.buildExpectedProjectSetup(defaultProfileName, appProjectFlex);
+const orgProjectFlex = assertions.buildExpectedProject(validDomains.org, secondAppId, secondService.id, secondService.name);
+const expectedOrgProject = assertions.buildExpectedProjectSetup(defaultProfileName, orgProjectFlex);
 
 const secondValidProfileName = 'secondValidProfileName';
 const flexInitSuccessMessage = 'Saved configuration.';
@@ -136,11 +145,11 @@ describe(baseCmd, () => {
     }
   });
 
-  describe('App Services', () => {
+  describe('App Level Services', () => {
 
     it('with one not active valid profile should succeed', (done) => {
       setup.createProfiles(defaultProfileName, () => {
-        setup.startMockServer((server) => {
+        setup.startMockServer(null, (server) => {
           ms = server;
           const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init'], defaultEnvWithDebug)
             .when(Prompt.selectAppOrOrg).respond('\n')
@@ -148,7 +157,7 @@ describe(baseCmd, () => {
             .when(Prompt.selectService).respond('\n');
 
           runSupposeSequence(sequence, (error, exitCode) => {
-            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedProject, outputFile, flexInitSuccessMessage, done);
+            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
           });
         }, done);
       });
@@ -156,7 +165,7 @@ describe(baseCmd, () => {
 
     it('with one active valid profile should succeed', (done) => {
       setup.setActiveProfile(defaultProfileName, true, () => {
-        setup.startMockServer((server) => {
+        setup.startMockServer(null, (server) => {
           ms = server;
           const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init'], defaultEnvWithDebug)
             .when(Prompt.selectAppOrOrg).respond('\n')
@@ -164,7 +173,7 @@ describe(baseCmd, () => {
             .when(Prompt.selectService).respond('\n');
 
           runSupposeSequence(sequence, (error, exitCode) => {
-            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedProject, outputFile, flexInitSuccessMessage, done);
+            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
           });
         }, done);
       });
@@ -173,7 +182,7 @@ describe(baseCmd, () => {
     it('from two profiles should use the active one', (done) => {
       setup.createProfiles(secondValidProfileName, () => {
         setup.setActiveProfile(defaultProfileName, true, () => {
-          setup.startMockServer((server) => {
+          setup.startMockServer(null, (server) => {
             ms = server;
             const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init'], defaultEnvWithDebug)
               .when(Prompt.selectAppOrOrg).respond('\n')
@@ -181,7 +190,7 @@ describe(baseCmd, () => {
               .when(Prompt.selectService).respond('\n');
 
             runSupposeSequence(sequence, (error, exitCode) => {
-              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedProject, outputFile, flexInitSuccessMessage, done);
+              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
             });
           }, done);
         });
@@ -191,7 +200,7 @@ describe(baseCmd, () => {
     it('should use the submitted profile as an option', (done) => {
       setup.createProfiles(defaultProfileName, () => {
         setup.setActiveProfile(secondValidProfileName, true, () => {
-          setup.startMockServer((server) => {
+          setup.startMockServer(null, (server) => {
             ms = server;
             const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init', '--profile', defaultProfileName], defaultEnvWithDebug)
               .when(Prompt.selectAppOrOrg).respond('\n')
@@ -199,7 +208,7 @@ describe(baseCmd, () => {
               .when(Prompt.selectService).respond('\n');
 
             runSupposeSequence(sequence, (error, exitCode) => {
-              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedProject, outputFile, flexInitSuccessMessage, done);
+              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
             });
           }, done);
         });
@@ -214,7 +223,7 @@ describe(baseCmd, () => {
       envWithProfileVar.env[EnvironmentVariables.PROFILE] = defaultProfileName;
       setup.createProfiles(defaultProfileName, () => {
         setup.setActiveProfile(secondValidProfileName, true, () => {
-          setup.startMockServer((server) => {
+          setup.startMockServer(null, (server) => {
             ms = server;
             const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init'], envWithProfileVar)
               .when(Prompt.selectAppOrOrg).respond('\n')
@@ -222,7 +231,7 @@ describe(baseCmd, () => {
               .when(Prompt.selectService).respond('\n');
 
             runSupposeSequence(sequence, (error, exitCode) => {
-              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedProject, outputFile, flexInitSuccessMessage, done);
+              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
             });
           }, done);
         });
@@ -237,7 +246,7 @@ describe(baseCmd, () => {
       envWithProfileVar.env[EnvironmentVariables.PROFILE] = secondValidProfileName;
       setup.createProfiles(defaultProfileName, () => {
         setup.setActiveProfile(secondValidProfileName, true, () => {
-          setup.startMockServer((server) => {
+          setup.startMockServer(null, (server) => {
             ms = server;
             const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init', '--profile', defaultProfileName], envWithProfileVar)
               .when(Prompt.selectAppOrOrg).respond('\n')
@@ -245,7 +254,7 @@ describe(baseCmd, () => {
               .when(Prompt.selectService).respond('\n');
 
             runSupposeSequence(sequence, (error, exitCode) => {
-              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedProject, outputFile, flexInitSuccessMessage, done);
+              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
             });
           }, done);
         });
@@ -253,7 +262,7 @@ describe(baseCmd, () => {
     });
 
     it('should return a not authenticated error message if there are no profiles', (done) => {
-      setup.startMockServer((server) => {
+      setup.startMockServer(null, (server) => {
         ms = server;
         const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init'], defaultEnvWithDebug)
           .when(Prompt.selectAppOrOrg).respond('\n')
@@ -270,7 +279,7 @@ describe(baseCmd, () => {
 
     it('should return a not authenticated error message if there are more than one not active profiles', (done) => {
       setup.createProfiles([secondValidProfileName, defaultProfileName], () => {
-        setup.startMockServer((server) => {
+        setup.startMockServer(null, (server) => {
           ms = server;
           const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init'], defaultEnvWithDebug)
             .when(Prompt.selectAppOrOrg).respond('\n')
@@ -288,7 +297,7 @@ describe(baseCmd, () => {
 
     it('should return a not found error message if a not existing profile is submitted as an option', (done) => {
       setup.createProfiles(defaultProfileName, () => {
-        setup.startMockServer((server) => {
+        setup.startMockServer(null, (server) => {
           ms = server;
           const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init', '--profile', notExistingProfileName], defaultEnvWithDebug)
             .when(Prompt.selectAppOrOrg).respond('\n')
@@ -299,6 +308,27 @@ describe(baseCmd, () => {
             expect(error.message).to.contain(notFoundProfileErrorMessage);
             expect(exitCode).to.equal(1);
             done();
+          });
+        }, done);
+      });
+    });
+  });
+
+  describe('Organization Level Services', () => {
+
+    const orgOptions = { domainType: 'organizations', domainEntityId: '124' };
+
+    it('with one not active valid profile should succeed', (done) => {
+      setup.createProfiles(defaultProfileName, () => {
+        setup.startMockServer(orgOptions, (server) => {
+          ms = server;
+          const sequence = suppose(nodeCommand, [cliPath, 'flex', 'init'], defaultEnvWithDebug)
+            .when(Prompt.selectAppOrOrg).respond(Keys.downArrow).respond('\n')
+            .when(Prompt.selectOrganization).respond(Keys.downArrow).respond('\n')
+            .when(Prompt.selectService).respond(Keys.downArrow).respond('\n');
+
+          runSupposeSequence(sequence, (error, exitCode) => {
+            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedOrgProject, outputFile, flexInitSuccessMessage, done);
           });
         }, done);
       });

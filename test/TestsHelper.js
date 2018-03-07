@@ -379,8 +379,8 @@ TestsHelper.setup = {
     ], done);
   },
 
-  startMockServer(cb, done) {
-    mockServer(null, (err, server) => {
+  startMockServer(options, cb, done) {
+    mockServer(options, (err, server) => {
       if (err) {
         return done(err);
       }

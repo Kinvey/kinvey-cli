@@ -24,7 +24,6 @@ const cloneDeep = require('lodash.clonedeep');
 const testsConfig = require('../../../TestsConfig');
 const { assertions, runSupposeSequence } = require('../../../TestsHelper');
 
-const { EnvironmentVariables } = require('./../../../../lib/Constants');
 const { setup } = require('../../../TestsHelper');
 
 const fixtureApp = require('./../../../fixtures/app.json');
@@ -80,6 +79,7 @@ const notExistingProfileName = 'NotExistingProfile';
 const nodeCommand = 'node';
 const cliPath = path.join('bin', 'kinvey');
 const defaultFlexInitOptions = [cliPath, 'flex', 'init'];
+const profileEnvVarName = 'KINVEY_CLI_PROFILE';
 
 const buildSupposeFlexInitSequence = (paramsArray, environment) => {
   const sequence = suppose(nodeCommand, paramsArray, environment)
@@ -180,7 +180,7 @@ describe(baseCmd, () => {
         env: cloneDeep(defaultEnv),
         debug: fs.createWriteStream(outputFile)
       };
-      envWithProfileVar.env[EnvironmentVariables.PROFILE] = defaultProfileName;
+      envWithProfileVar.env[profileEnvVarName] = defaultProfileName;
       setup.createProfiles(defaultProfileName, () => {
         setup.setActiveProfile(secondValidProfileName, true, () => {
           setup.startMockServer(null, (server) => {
@@ -200,7 +200,7 @@ describe(baseCmd, () => {
         env: cloneDeep(defaultEnv),
         debug: fs.createWriteStream(outputFile)
       };
-      envWithProfileVar.env[EnvironmentVariables.PROFILE] = secondValidProfileName;
+      envWithProfileVar.env[profileEnvVarName] = secondValidProfileName;
       setup.createProfiles(defaultProfileName, () => {
         setup.setActiveProfile(secondValidProfileName, true, () => {
           setup.startMockServer(null, (server) => {

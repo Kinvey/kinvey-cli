@@ -24,14 +24,14 @@ const cloneDeep = require('lodash.clonedeep');
 const testsConfig = require('../../../TestsConfig');
 const { assertions, runSupposeSequence } = require('../../../TestsHelper');
 
-const { Command, DomainTypes, AuthOptionsNames, EnvironmentVariables } = require('./../../../../lib/Constants');
+const { EnvironmentVariables } = require('./../../../../lib/Constants');
 const { setup } = require('../../../TestsHelper');
 
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureOrg = require('./../../../fixtures/org.json');
 const fixtureServices = require('./../../../fixtures/datalinks.json');
 
-const baseCmd = Command.FLEX_INIT;
+const baseCmd = 'flex init';
 const outputFile = testsConfig.paths.supposeDebug;
 
 const defaultEnv = {
@@ -55,15 +55,20 @@ const Keys = {
   upArrow: '\u001b[A'
 };
 
+const validDomains = {
+  app: 'app',
+  org: 'org'
+};
+
 const defaultProfileName = 'flexListProfile';
 const defaultDataLinkName = 'TestKinveyDatalink';
 const defaultService = fixtureServices.find(x => x.name === defaultDataLinkName);
 const secondDataLinkName = 'TestSecondKinveyDatalink';
 const secondService = fixtureServices.find(x => x.name === secondDataLinkName);
 
-const appProjectFlex = assertions.buildExpectedProject(DomainTypes.APP, fixtureApp.id, defaultService.id, defaultService.name);
+const appProjectFlex = assertions.buildExpectedProject(validDomains.app, fixtureApp.id, defaultService.id, defaultService.name);
 const expectedAppProject = assertions.buildExpectedProjectSetup(defaultProfileName, appProjectFlex);
-const orgProjectFlex = assertions.buildExpectedProject(DomainTypes.ORG, fixtureOrg.id, secondService.id, secondService.name);
+const orgProjectFlex = assertions.buildExpectedProject(validDomains.org, fixtureOrg.id, secondService.id, secondService.name);
 const expectedOrgProject = assertions.buildExpectedProjectSetup(defaultProfileName, orgProjectFlex);
 
 const secondValidProfileName = 'secondValidProfileName';

@@ -271,7 +271,8 @@ describe(baseCmd, () => {
         setup.startMockServer(orgOptions, (server) => {
           ms = server;
           const sequence = suppose(nodeCommand, defaultFlexInitOptions, defaultEnvWithDebug)
-            .when(Prompt.selectAppOrOrg).respond(Keys.downArrow).respond('\n')
+            .when(Prompt.selectAppOrOrg)
+            .respond(Keys.downArrow).respond('\n')
             .when(Prompt.selectOrganization)
             .respond(Keys.downArrow)
             .respond('\n')

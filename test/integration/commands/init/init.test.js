@@ -112,7 +112,8 @@ describe(initCommand, () => {
   describe('with valid credentials', () => {
     it('without Instance ID should create a valid profile, using the default Instance', (done) => {
       const sequence = suppose(nodeCommand, [cliPath, initCommand], defaultEnvWithDebug)
-        .when(Prompt.email).respond(`${existentUser.email}\n`)
+        .when(Prompt.email)
+        .respond(`${existentUser.email}\n`)
         .when(Prompt.password)
         .respond(`${existentUser.password}\n`)
         .when(Prompt.instanceId)
@@ -127,7 +128,8 @@ describe(initCommand, () => {
 
     it('with supplied Instance ID should create a valid profile, using the supplied Url', (done) => {
       const sequence = suppose(nodeCommand, [cliPath, initCommand], invalidEnvWithDebug)
-        .when(Prompt.email).respond(`${existentUser.email}\n`)
+        .when(Prompt.email)
+        .respond(`${existentUser.email}\n`)
         .when(Prompt.password)
         .respond(`${existentUser.password}\n`)
         .when(Prompt.instanceId)
@@ -144,7 +146,8 @@ describe(initCommand, () => {
   describe('with insufficient info', () => {
     it('without an email should prompt again for a valid one and complete the init with a valid input', (done) => {
       const sequence = suppose(nodeCommand, [cliPath, initCommand], defaultEnvWithDebug)
-        .when(Prompt.email).respond('\n')
+        .when(Prompt.email)
+        .respond('\n')
         .when(invalidEmailMessageRegex)
         .respond(`${existentUser.email}\n`)
         .when(Prompt.password)
@@ -161,7 +164,8 @@ describe(initCommand, () => {
 
     it('without a password should prompt again for a valid one and complete the init with a valid input', (done) => {
       const sequence = suppose(nodeCommand, [cliPath, initCommand], defaultEnvWithDebug)
-        .when(Prompt.email).respond(`${existentUser.email}\n`)
+        .when(Prompt.email)
+        .respond(`${existentUser.email}\n`)
         .when(Prompt.password)
         .respond('\n')
         .when(provideNotEmptyStringRegex)
@@ -178,7 +182,8 @@ describe(initCommand, () => {
 
     it('without a profile name should prompt again for a valid one and complete the init with a valid input', (done) => {
       const sequence = suppose(nodeCommand, [cliPath, initCommand], defaultEnvWithDebug)
-        .when(Prompt.email).respond(`${existentUser.email}\n`)
+        .when(Prompt.email)
+        .respond(`${existentUser.email}\n`)
         .when(Prompt.password)
         .respond(`${existentUser.password}\n`)
         .when(Prompt.instanceId)
@@ -197,7 +202,8 @@ describe(initCommand, () => {
   describe('with invalid data', () => {
     it('with a not existing user should return an invalid credentials message warning, prompt again and complete the init with a valid input', (done) => {
       const sequence = suppose(nodeCommand, [cliPath, initCommand], defaultEnvWithDebug)
-        .when(Prompt.email).respond(`${nonExistentUser.email}\n`)
+        .when(Prompt.email)
+        .respond(`${nonExistentUser.email}\n`)
         .when(Prompt.password)
         .respond(`${nonExistentUser.password}\n`)
         .when(Prompt.instanceId)
@@ -221,7 +227,8 @@ describe(initCommand, () => {
 
     it('with an invalid email format should prompt again for a valid one and complete the init with a valid input', (done) => {
       const sequence = suppose(nodeCommand, [cliPath, initCommand], defaultEnvWithDebug)
-        .when(Prompt.email).respond('@test\n')
+        .when(Prompt.email)
+        .respond('@test\n')
         .when(invalidEmailMessageRegex)
         .respond(`${existentUser.email}\n`)
         .when(Prompt.password)
@@ -239,7 +246,8 @@ describe(initCommand, () => {
     it('with an invalid Instance Id should exit with an invalid configuration Url error message', (done) => {
       const invalidInstanceName = 'invalid_instance';
       const sequence = suppose(nodeCommand, [cliPath, initCommand], defaultEnvWithDebug)
-        .when(Prompt.email).respond(`${existentUser.email}\n`)
+        .when(Prompt.email)
+        .respond(`${existentUser.email}\n`)
         .when(Prompt.password)
         .respond(`${existentUser.password}\n`)
         .when(Prompt.instanceId)

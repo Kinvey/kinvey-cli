@@ -44,27 +44,18 @@ exports['profile delete by non-existent name when none should return error 1'] =
 
 `
 
-exports['profile delete without a name should fail 1'] = `
-kinvey profile delete <name>
+exports['profile delete without a name when no active should fail 1'] = `
+[debug] Checking for package updates
+[error] ItemNotSpecified: No profile identifier is specified and/or active profile is not set.
 
-Delete profile by name
+`
 
-Positionals:
-  name  Profile name                                                  [required]
-
-Options:
-  --version                 Show version number                        [boolean]
-  --email                   E-mail address of your Kinvey account       [string]
-  --password                Password of your Kinvey account             [string]
-  --instanceId              Instance ID                                 [string]
-  --profile                 Profile to use                              [string]
-  --output                  Output format             [string] [choices: "json"]
-  --silent                  Do not output anything                     [boolean]
-  --suppress-version-check  Do not check for package updates           [boolean]
-  --verbose                 Output debug messages                      [boolean]
-  --no-color                Disable colors                             [boolean]
-  -h, --help                Show help                                  [boolean]
-
-Not enough non-option arguments: got 0, need at least 1
+exports['profile delete without a name when active is set should succeed and clear active 1'] = `
+[debug] Checking for package updates
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+[debug] Writing contents to file globalSetupPath
+Deleted profile: activeAndMustBeDeleted
 
 `

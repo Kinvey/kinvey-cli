@@ -104,11 +104,11 @@ TestsHelper.assertions = {
 
   buildExpectedProject(domain, domainEntityId, serviceId, serviceName, schemaVersion = testsConfig.defaultSchemaVersion) {
     return {
-      domain: domain,
-      domainEntityId: domainEntityId,
-      serviceId: serviceId,
-      serviceName: serviceName,
-      schemaVersion: schemaVersion
+      domain,
+      domainEntityId,
+      serviceId,
+      serviceName,
+      schemaVersion
     };
   },
   buildExpectedUser(host = testsConfig.host, token = fixtureUser.token) {
@@ -158,13 +158,12 @@ TestsHelper.assertions = {
     };
   },
   buildExpectedProjectSetup(profileName, serviceInfo) {
-    let result = {};
+    const result = {};
     result[profileName] = { flex: serviceInfo };
     return result;
   },
-  assertFileContainsString (filePath, expectedString, done)  {
+  assertFileContainsString(filePath, expectedString, done) {
     fs.readFile(filePath, (err, data) => {
-
       if (err) {
         return done(err);
       }
@@ -173,7 +172,7 @@ TestsHelper.assertions = {
       done(null);
     });
   },
-  assertSuccessfulInitSequence (error, exitCode, expectedSetup, outputFile, expectedString, done) {
+  assertSuccessfulInitSequence(error, exitCode, expectedSetup, outputFile, expectedString, done) {
     expect(error).to.not.exist;
     expect(exitCode).to.equal(0);
     this.assertGlobalSetup(expectedSetup, testsConfig.paths.session, (err) => {
@@ -181,7 +180,7 @@ TestsHelper.assertions = {
       this.assertFileContainsString(outputFile, expectedString, done);
     });
   },
-  assertSuccessfulFlexInitSequence (error, exitCode, expectedSetup, outputFile, expectedString, done) {
+  assertSuccessfulFlexInitSequence(error, exitCode, expectedSetup, outputFile, expectedString, done) {
     expect(error).to.not.exist;
     expect(exitCode).to.equal(0);
     this.assertProjectSetup(expectedSetup, null, (err) => {
@@ -443,10 +442,10 @@ TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCo
 
 TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
   options = options || {
-      env: {
-        NODE_CONFIG: JSON.stringify(testsConfig)
-      }
-    };
+    env: {
+      NODE_CONFIG: JSON.stringify(testsConfig)
+    }
+  };
 
   const fullCmd = `node ${path.join('bin', 'kinvey')} ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
@@ -570,8 +569,6 @@ TestsHelper.runSupposeSequence = (sequenceObject, callback) => {
     });
 };
 
-TestsHelper.getCreatedProfileMessage = (profileName) => {
-  return `Created profile: ${profileName}`;
-};
+TestsHelper.getCreatedProfileMessage = profileName => `Created profile: ${profileName}`;
 
 module.exports = TestsHelper;

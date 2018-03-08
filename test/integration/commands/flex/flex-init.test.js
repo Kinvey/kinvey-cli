@@ -84,8 +84,10 @@ const profileEnvVarName = 'KINVEY_CLI_PROFILE';
 const buildSupposeFlexInitSequence = (paramsArray, environment) => {
   const sequence = suppose(nodeCommand, paramsArray, environment)
     .when(Prompt.selectAppOrOrg).respond('\n')
-    .when(Prompt.selectApp).respond('\n')
-    .when(Prompt.selectService).respond('\n');
+    .when(Prompt.selectApp)
+    .respond('\n')
+    .when(Prompt.selectService)
+    .respond('\n');
 
   return sequence;
 };
@@ -118,7 +120,6 @@ describe(baseCmd, () => {
   });
 
   describe('App Level Services', () => {
-
     it('with one not active valid profile should succeed', (done) => {
       setup.createProfiles(defaultProfileName, () => {
         setup.startMockServer(null, (server) => {
@@ -271,8 +272,12 @@ describe(baseCmd, () => {
           ms = server;
           const sequence = suppose(nodeCommand, defaultFlexInitOptions, defaultEnvWithDebug)
             .when(Prompt.selectAppOrOrg).respond(Keys.downArrow).respond('\n')
-            .when(Prompt.selectOrganization).respond(Keys.downArrow).respond('\n')
-            .when(Prompt.selectService).respond(Keys.downArrow).respond('\n');
+            .when(Prompt.selectOrganization)
+            .respond(Keys.downArrow)
+            .respond('\n')
+            .when(Prompt.selectService)
+            .respond(Keys.downArrow)
+            .respond('\n');
 
           runSupposeSequence(sequence, (error, exitCode) => {
             assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedOrgProject, outputFile, flexInitSuccessMessage, done);

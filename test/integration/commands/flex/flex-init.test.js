@@ -13,12 +13,9 @@
  * contents is a violation of applicable laws.
  */
 
-const async = require('async');
-const mockServer = require('../../../mockServer');
 const path = require('path');
 const suppose = require('suppose');
 const fs = require('fs');
-const assert = require('assert');
 const cloneDeep = require('lodash.clonedeep');
 
 const testsConfig = require('../../../TestsConfig');

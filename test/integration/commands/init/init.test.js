@@ -24,7 +24,6 @@ const path = require('path');
 
 const suppose = require('suppose');
 const fs = require('fs');
-const assert = require('assert');
 
 const outputFile = testsConfig.paths.supposeDebug;
 const existentUser = fixtureUser.existent;
@@ -87,7 +86,7 @@ describe(initCommand, () => {
       }
 
       ms = server;
-      done();
+      return done();
     });
   });
 

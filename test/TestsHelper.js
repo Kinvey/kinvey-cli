@@ -19,6 +19,7 @@ const snapshot = require('snap-shot-it');
 const stripAnsi = require('strip-ansi');
 
 const childProcess = require('child_process');
+const fs = require('fs');
 const path = require('path');
 
 const { AuthOptionsNames, CommonOptionsNames, EnvironmentVariables, OutputFormat } = require('./../lib/Constants');
@@ -336,7 +337,7 @@ TestsHelper.setup = {
     const filePath = testsConfig.paths.project;
 
     readJSON(filePath, (err, data) => {
-      if (err) {
+      if (err && err.code !== 'ENOENT') {
         return done(err);
       }
 
@@ -389,7 +390,28 @@ TestsHelper.setup = {
 
   clearProjectSetup(path, done) {
     path = path || projectPath;
-    writeJSON(path, '', done);
+    fs.unlink(path, (err) => {
+      if (err) {
+        if (err.code === 'ENOENT') {
+          return done();
+        }
+
+        return done(err);
+      }
+
+      done();
+    });
+  },
+
+  clearAllSetup(done) {
+    async.series([
+      (next) => {
+        this.clearGlobalSetup(null, next);
+      },
+      (next) => {
+        this.clearProjectSetup(null, next);
+      }
+    ], done);
   }
 };
 

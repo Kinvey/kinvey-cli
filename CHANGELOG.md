@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0
+
+## 3.0.0-beta.4
+* Apply Kinvey es6 style guide
+* Fix 'flex init' when no config file
+
 ## 3.0.0-beta.3
 * Refactor command handlers
 * Fail on too many args

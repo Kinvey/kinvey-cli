@@ -48,7 +48,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
    
    * `--serviceId <Flex Service ID>`
       
-         Specifies a Flex Service by its ID.
+      Specifies a Flex Service by its ID.
 
 * `flex job [id]`
 
@@ -206,7 +206,7 @@ Kinvey CLI requires you to authenticate. The fastest way to get started is to ru
 
 Note that you only need to specify a host if you are on a dedicated Kinvey instance. Otherwise just press Enter to continue.
 
-When prompted for `Profile`, enter a name for your new working profile that Kinvey CLI will create for you. Kinvey CLI will use this profile automatically for future executions as long as it is the only profile on the system. You can create new profiles and select an active account if you need to.
+When prompted for `Profile name`, enter a name for your new working profile that Kinvey CLI will create for you. Kinvey CLI will use this profile automatically for future executions as long as it is the only profile on the system. You can create new profiles and select an active profile if you need to.
 
 ```
 $ kinvey init
@@ -313,9 +313,13 @@ Kinvey CLI supports the universal environment variables `HTTPS_PROXY` and `https
 
 Run any command with the `--verbose` flag to receive more detailed information about a command execution.
 
-Kinvey CLI has a 10-second request timeout when communicating with the backend for initialization which may cause a connection error in some rare cases. Retrying the command remedies the problem in many cases.
+Kinvey CLI is a subject to the following caveats:
 
-If you are using a profile that has been configured a while ago, you can stumble upon the `InvalidCredentials` error. It may mean that the session token has expired. See [Authentication Token Expiration](#authentication-token-expiration) for details.
+- It has a 10-second request timeout when communicating with the backend for initialization which may cause a connection error in some rare cases. Retrying the command remedies the problem in many cases.
+- If you are using a profile that has been configured a while ago, you may stumble upon the `InvalidCredentials` error. It may mean that the session token has expired. See [Authentication Token Expiration](#authentication-token-expiration) for details.
+- You cannot deploy the same service version to the FlexService Runtime more than once. You must increment the version in `package.json` before redeploying.
+- Kinvey CLI sends binary data (content type "multipart/form-data") during the deploy process. The deploy job will fail if traffic of this type is blocked within your network.
+- There is a limit of 100 MB to the size of the FlexService logs that are kept on the backend. When log entries exceed that size, the oldest ones are deleted.
 
 If problems persist, contact [Kinvey](http://support.kinvey.com).
 

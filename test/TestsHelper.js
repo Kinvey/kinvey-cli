@@ -384,7 +384,7 @@ TestsHelper.buildCmd = function buildCmd(baseCmd, positionalArgs, options, flags
 TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCount, done) {
   const additionalArgs = Array(additionalArgsCount).fill('redundantArg');
   const cmd = TestsHelper.buildCmd(baseCmd, additionalArgs);
-  TestsHelper.execCmdWithAssertion(cmd, null, null, true, false, false, (err) => {
+  TestsHelper.execCmdWithAssertion(cmd, null, null, true, false, false, null, (err) => {
     expect(err).to.not.exist;
     done();
   });
@@ -392,10 +392,10 @@ TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCo
 
 TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
   options = options || {
-    env: {
-      NODE_CONFIG: JSON.stringify(testsConfig)
-    }
-  };
+      env: {
+        NODE_CONFIG: JSON.stringify(testsConfig)
+      }
+    };
 
   const fullCmd = `node ${path.join('bin', 'kinvey')} ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
@@ -444,7 +444,7 @@ TestsHelper.getOutputWithoutSetupPaths = function getOutputWithoutSetupPaths(out
   return result;
 };
 
-TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshotIt, clearSetupPaths, escapeSlashes, done) {
+TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshotIt, clearSetupPaths, escapeSlashes, textToRemove, done) {
   let ms = {};
 
   async.series([
@@ -477,6 +477,13 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
 
         // ensure line separators are always the same
         finalOutput = finalOutput.replace(/\r\n/g, '\n');
+
+        // regex expression or text to remove from the output
+        if (textToRemove) {
+          const matchedText = finalOutput.match(textToRemove)[0];
+          expect(matchedText).to.exist;
+          finalOutput = finalOutput.replace(matchedText, '');
+        }
 
         if (snapshotIt) {
           try {

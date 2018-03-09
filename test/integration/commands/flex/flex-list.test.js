@@ -54,7 +54,7 @@ function testFlexList(profileName, optionsForCredentials, domain, domainEntityId
   const flags = isVerbose ? [CommonOptionsNames.VERBOSE] : null;
   const positionalArgs = null;
   const cmd = buildCmd(baseCmd, positionalArgs, options, flags);
-  execCmdWithAssertion(cmd, null, apiOptions, true, clearSetupPaths, escapeSlashes, done);
+  execCmdWithAssertion(cmd, null, apiOptions, true, clearSetupPaths, escapeSlashes, null, done);
 }
 
 describe(baseCmd, () => {
@@ -146,7 +146,7 @@ describe(baseCmd, () => {
     });
 
     it('should fail', (done) => {
-      execCmdWithAssertion(baseCmd, null, null, true, false, true, (err) => {
+      execCmdWithAssertion(baseCmd, null, null, true, false, true, null, (err) => {
         expect(err).to.not.exist;
         done();
       });

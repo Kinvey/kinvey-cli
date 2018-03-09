@@ -51,7 +51,7 @@ function testFlexJob(profileName, optionsForCredentials, jobId, validUser, other
   }
 
   const cmd = buildCmd(baseCmd, positionalArgs, options, [CommonOptionsNames.VERBOSE]);
-  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, done);
+  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, done);
 }
 
 describe(baseCmd, () => {
@@ -120,7 +120,7 @@ describe(baseCmd, () => {
 
     it('and existent jobId should fail', (done) => {
       const cmd = `${baseCmd} ${defaultJobId}`;
-      execCmdWithAssertion(cmd, null, null, true, false, true, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, false, true, null, (err) => {
         expect(err).to.not.exist;
         done();
       });

@@ -35,7 +35,7 @@ function testProfileShow(profilesCount, chooseExistent, useName, options, done) 
     function showProfile(next) {
       const nameParam = useName ? chosenProfile : '';
       const cmd = buildCmd(baseCmd, [nameParam], options, [CommonOptionsNames.VERBOSE]);
-      execCmdWithAssertion(cmd, null, null, true, true, false, next);
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, next);
     }
   ], done);
 }
@@ -88,7 +88,7 @@ describe(baseCmd, () => {
         },
         function showProfileDifferentThanActive(next) {
           const cmd = buildCmd(baseCmd, [profileToShow], null, [CommonOptionsNames.VERBOSE]);
-          execCmdWithAssertion(cmd, null, null, true, true, false, next);
+          execCmdWithAssertion(cmd, null, null, true, true, false, null, next);
         }
       ], done);
     });
@@ -108,7 +108,7 @@ describe(baseCmd, () => {
         },
         function showActive(next) {
           const cmd = `${baseCmd} --verbose`;
-          execCmdWithAssertion(cmd, null, null, true, true, false, next);
+          execCmdWithAssertion(cmd, null, null, true, true, false, null, next);
         }
       ], done);
     });

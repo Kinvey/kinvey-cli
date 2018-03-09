@@ -55,7 +55,7 @@ function testFlexDeploy(profileName, optionsForCredentials, validUser, done) {
     apiOptions.existentUser = { email: validUser.email };
   }
 
-  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, done);
+  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, done);
 }
 
 describe(`${baseCmd}`, () => {
@@ -86,7 +86,7 @@ describe(`${baseCmd}`, () => {
     it('by not specifying profile nor credentials when one profile should use it and fail', (done) => {
       // since it's just one profile, it should be used and a failure because of the missing project setup is expected
       const cmd = `${baseCmd}`;
-      execCmdWithAssertion(cmd, null, null, true, false, true, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, false, true, null, (err) => {
         expect(err).to.not.exist;
         done();
       });
@@ -202,7 +202,7 @@ describe(`${baseCmd}`, () => {
 
         it('should fail', (done) => {
           const cmd = `${baseCmd}`;
-          execCmdWithAssertion(cmd, null, null, true, false, true, (err) => {
+          execCmdWithAssertion(cmd, null, null, true, false, true, null, (err) => {
             expect(err).to.not.exist;
             done();
           });
@@ -224,7 +224,7 @@ describe(`${baseCmd}`, () => {
 
       it('should fail', (done) => {
         const cmd = `${baseCmd}`;
-        execCmdWithAssertion(cmd, null, null, true, false, true, (err) => {
+        execCmdWithAssertion(cmd, null, null, true, false, true, null, (err) => {
           expect(err).to.not.exist;
           done();
         });

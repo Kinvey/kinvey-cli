@@ -7,8 +7,10 @@ exports['env use without profile with credentials as options should fail 1'] = `
 exports['env use with profile when active app is set using existent env id should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: kid_Sy4yRNV_M
 [debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M
 [debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M 200
 [debug] Writing contents to file globalSetupPath
@@ -19,8 +21,10 @@ Active environment: kid_Sy4yRNV_M
 exports['env use with profile when active app is set using existent env id should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: kid_Sy4yRNV_M
 [debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M
 [debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M 200
 [debug] Writing contents to file globalSetupPath
@@ -35,8 +39,10 @@ exports['env use with profile when active app is set using existent env id shoul
 exports['env use with profile when active app is set using existent env name should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: Development
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [debug] Writing contents to file globalSetupPath
@@ -47,17 +53,20 @@ Active environment: kid_Sy4yRNV_M
 exports['env use with profile when active app is set using existent env name and non-existent app name should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: noSuchApp
 [debug] Request:  GET http://localhost:3234/v2/apps
 [debug] Response: GET http://localhost:3234/v2/apps 200
-[error] NotFound: Entity not found.
+[error] NotFound: Could not find application with identifier 'noSuchApp'.
 
 `
 
 exports['env use with profile when active app is set using non-existent env name should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: noSuchName
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [error] NotFound: Could not find environment with identifier 'noSuchName'.
@@ -67,8 +76,10 @@ exports['env use with profile when active app is set using non-existent env name
 exports['env use with profile when active app is set using non-existent env id should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: f1a003439ed940608a1c82895cc0ef1e
 [debug] Request:  GET http://localhost:3234/v2/environments/f1a003439ed940608a1c82895cc0ef1e
 [debug] Response: GET http://localhost:3234/v2/environments/f1a003439ed940608a1c82895cc0ef1e 404
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
@@ -80,8 +91,10 @@ exports['env use with profile when active app is set using non-existent env id s
 exports['env use with profile when active app is not set using existent env name and existent app name should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: TestApp
 [debug] Request:  GET http://localhost:3234/v2/apps
 [debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Using environment: Development
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [debug] Writing contents to file globalSetupPath
@@ -92,8 +105,10 @@ Active environment: kid_Sy4yRNV_M
 exports['env use with profile when active app is not set using existent env name and existent app id should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: Development
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [debug] Writing contents to file globalSetupPath

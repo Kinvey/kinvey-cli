@@ -1,6 +1,7 @@
 exports['env create when active app is set with a name should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
 [debug] Request:  POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
@@ -12,6 +13,7 @@ Created environment: kid_Sy4yRNV_M
 exports['env create when active app is set with a name should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
 [debug] Request:  POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
@@ -53,27 +55,31 @@ Not enough non-option arguments: got 0, need at least 1
 exports['env create when active app is set with non-existent app id should take precedence and return error 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 173783d46f3d4bffb1c581d5b203fc7c
 [debug] Request:  GET http://localhost:3234/v2/apps/173783d46f3d4bffb1c581d5b203fc7c
 [debug] Response: GET http://localhost:3234/v2/apps/173783d46f3d4bffb1c581d5b203fc7c 404
 [debug] Request:  GET http://localhost:3234/v2/apps
 [debug] Response: GET http://localhost:3234/v2/apps 200
-[error] NotFound: Entity not found.
+[error] NotFound: Could not find application with identifier '173783d46f3d4bffb1c581d5b203fc7c'.
 
 `
 
 exports['env create when active app is set with non-existent app name should take precedence and return error 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: iJustDoNotExist
 [debug] Request:  GET http://localhost:3234/v2/apps
 [debug] Response: GET http://localhost:3234/v2/apps 200
-[error] NotFound: Entity not found.
+[error] NotFound: Could not find application with identifier 'iJustDoNotExist'.
 
 `
 
 exports['env create when one-time session with existent app name should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
+[debug] Using application: TestApp
 [debug] Request:  GET http://localhost:3234/v2/apps
 [debug] Response: GET http://localhost:3234/v2/apps 200
 [debug] Request:  POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments

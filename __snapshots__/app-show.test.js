@@ -1,6 +1,7 @@
 exports['app show when no active app with existent app id as option should output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
 key             value                           
@@ -17,6 +18,7 @@ plan            development
 exports['app show when no active app with existent app id as option should output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
 {
@@ -77,6 +79,7 @@ exports['app show when no active app without id should return error 1'] = `
 exports['app show when active app without id should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
 key             value                           
@@ -93,6 +96,7 @@ plan            development
 exports['app show when active app with non-existent app name should disregard active and return error 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: noSuchName
 [debug] Request:  GET http://localhost:3234/v2/apps
 [debug] Response: GET http://localhost:3234/v2/apps 200
 [error] NotFound: Could not find application with identifier 'noSuchName'.
@@ -101,8 +105,10 @@ exports['app show when active app with non-existent app name should disregard ac
 
 exports['app show when active app with credentials as options and existent name should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
+[debug] Using application: TestApp
 [debug] Request:  GET http://localhost:3234/v2/apps
 [debug] Response: GET http://localhost:3234/v2/apps 200
 [debug] Request:  DELETE http://localhost:3234/session

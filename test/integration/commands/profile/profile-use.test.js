@@ -34,7 +34,7 @@ function testProfileUse(profilesCount, chooseExistent, options, done) {
     },
     function setActiveProfile(next) {
       const cmd = buildCmd(baseCmd, [activeProfileName], options, [CommonOptionsNames.VERBOSE]);
-      execCmdWithAssertion(cmd, null, null, true, true, false, next);
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, next);
     },
     function verifyGlobalSetupContainsActive(next) {
       const profiles = [];

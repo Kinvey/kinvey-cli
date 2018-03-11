@@ -392,10 +392,10 @@ TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCo
 
 TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
   options = options || {
-      env: {
-        NODE_CONFIG: JSON.stringify(testsConfig)
-      }
-    };
+    env: {
+      NODE_CONFIG: JSON.stringify(testsConfig)
+    }
+  };
 
   const fullCmd = `node ${path.join('bin', 'kinvey')} ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {

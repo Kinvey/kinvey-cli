@@ -26,6 +26,7 @@ describe('profile delete', () => {
   const defaultProfileName = 'testProfileDelete';
 
   const defaultEnv = {
+    PATH: process.env.PATH,
     NODE_CONFIG: JSON.stringify(testsConfig)
   };
 

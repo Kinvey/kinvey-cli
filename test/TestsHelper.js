@@ -393,6 +393,7 @@ TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCo
 TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
   options = options || {
     env: {
+      PATH: process.env.PATH,
       NODE_CONFIG: JSON.stringify(testsConfig)
     }
   };

@@ -4,7 +4,7 @@
 
 [1]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/1
 [2]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/2
-[5]: https://travis-ci.org/Kinvey/js-sdk
+[5]: https://travis-ci.org/Kinvey/kinvey-cli
 
 
 

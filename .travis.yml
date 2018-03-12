@@ -1,17 +1,24 @@
 
+env:
+  global:
+    - NODEJS_VERSION='6.9.1'
+
 matrix:
   include:
     - language: node_js
-      node_js: '6.9.1'
+      env: JOB='LINTING'
+      node_js: ${NODEJS_VERSION}
       script: npm run lint
       
     - language: node_js
-      node_js: '6.9.1'
+      node_js: ${NODEJS_VERSION}
+      env: JOB='UNIT'
       script: npm run test-unit
 
 
     - language: node_js
-      node_js: '6.9.1'
+      node_js: ${NODEJS_VERSION}
+      env: JOB='INTEGRATION'
       script: npm run test-integration
 
 

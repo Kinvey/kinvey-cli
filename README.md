@@ -2,8 +2,8 @@
 |-------------------|-------------------|-------------------|-------------------|
 | [![Build1][1]][5] | [![Build2][2]][5] | [![Build3][1]][5] | [![Build4][2]][5] |
 
-[1]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/1
-[2]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/2
+[1]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/QA-163-Set-Travis/1
+[2]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/QA-163-Set-Travis/2
 [5]: https://travis-ci.org/Kinvey/kinvey-cli
 
 

@@ -3,12 +3,17 @@ matrix:
   include:
     - language: node_js
       node_js: '6.9.1'
-      script: npm run test-integration
+      script: npm run lint
+      
+    - language: node_js
+      node_js: '6.9.1'
+      script: npm run test-unit
 
 
     - language: node_js
       node_js: '6.9.1'
-      script: npm run test-unit
+      script: npm run test-integration
+
 
 
 notifications:

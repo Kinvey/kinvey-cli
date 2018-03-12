@@ -1,10 +1,11 @@
-| Build1            | Build2            | Build3            | Build4            |
-|-------------------|-------------------|-------------------|-------------------|
-| [![Build1][1]][5] | [![Build2][2]][5] | [![Build3][1]][5] | [![Build4][2]][5] |
+| LINTING            | UNIT            | INTEGRATION            |
+|-------------------|-------------------|-------------------|
+| [![Build1][1]][4] | [![Build2][2]][4] | [![Build3][3]][4] |
 
 [1]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/QA-163-Set-Travis/1
 [2]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/QA-163-Set-Travis/2
-[5]: https://travis-ci.org/Kinvey/kinvey-cli
+[3]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/QA-163-Set-Travis/3
+[4]: https://travis-ci.org/Kinvey/kinvey-cli
 
 
 

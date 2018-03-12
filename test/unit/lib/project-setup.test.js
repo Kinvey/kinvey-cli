@@ -36,7 +36,7 @@ describe('ProjectSetup', () => {
     setup.setFlexNamespace(key, { serviceId });
     const actual = setup.getFlexNamespace(key);
     expect(actual).to.be.an('object');
-    expect(actual.serviceId).to.equal('fsdsad');
+    expect(actual.serviceId).to.equal(serviceId);
   });
 
   it('when all properties and a few redundant should set correctly flex namespace', () => {

@@ -22,6 +22,7 @@ const fixtureUser = require('./fixtures/user.json');
 const fixtureApps = require('./fixtures/apps.json');
 const fixtureApp = require('./fixtures/app.json');
 const fixtureServices = require('./fixtures/datalinks.json');
+const fixtureOrgs = require('./fixtures/orgs.json');
 const fixtureJob = require('./fixtures/job.json');
 const fixtureJobs = require('./fixtures/jobs.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
@@ -213,6 +214,11 @@ function build(
   // APPS
   app.get(`/${versionPart}/apps`, (req, res) => {
     res.send(fixtureApps);
+  });
+
+  // ORGANIZATIONS
+  app.get(`/${versionPart}/organizations`, (req, res) => {
+    res.send(fixtureOrgs);
   });
 
   app.all('/', (req, res) => {

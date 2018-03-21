@@ -1,9 +1,10 @@
 exports['flex list by specifying credentials as options when valid and valid options should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
+[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
+[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -21,8 +22,8 @@ exports['flex list by specifying a profile and valid options (app and id) should
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
+[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
+[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
 Count: 1
 
 id         name              
@@ -37,8 +38,8 @@ exports['flex list by specifying a profile and valid options (org and id) should
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/organizations/123/data-links
-[debug] Response: GET http://localhost:3234/v2/organizations/123/data-links 200
+[debug] Request:  GET http://localhost:3234/v2/organizations/885f5d307afd4168bebca1a64f815c1e/data-links
+[debug] Response: GET http://localhost:3234/v2/organizations/885f5d307afd4168bebca1a64f815c1e/data-links 200
 {
   "result": [
     {
@@ -79,8 +80,8 @@ Invalid values:
 exports['flex list by specifying a profile when valid project is set without options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
-[debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
+[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
+[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
 Count: 1
 
 id         name              
@@ -94,8 +95,8 @@ id         name
 exports['flex list by specifying a profile when invalid project is set with valid options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
-[debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
+[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
+[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
 Count: 1
 
 id         name              
@@ -133,6 +134,7 @@ You must be authenticated.
 
 exports['flex list by specifying credentials as options when valid and non-existent id as option should fail 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Request:  GET http://localhost:3234/v2/apps/123I_DONT_EXIST/data-links
@@ -146,6 +148,7 @@ exports['flex list by specifying credentials as options when valid and non-exist
 
 exports['flex list by specifying credentials as options when invalid and valid options should fail 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
 [error] InvalidCredentials: Credentials are invalid. Please authenticate.

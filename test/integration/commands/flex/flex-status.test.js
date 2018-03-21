@@ -30,8 +30,12 @@ const defaultServiceId = fixtureInternalDataLink.id;
 const baseCmd = 'flex status';
 // this value depends on the requestedAt date in mockServer.js and is different for different timezones, so it is checked and removed from the output
 const requestedAtDateRegex = /(Monday|Sunday),\sNovember\s\dth\s2017, \d{1,2}:\d2:31 [P|A]M/;
+const replacementObject = {
+  oldValue: requestedAtDateRegex,
+  newValue: 'replaced_value'
+};
 
-function testFlexStatus(profileName, options, useServiceId, serviceId, validUser, textToRemove, done) {
+function testFlexStatus(profileName, options, useServiceId, serviceId, validUser, replacementObject, done) {
   const allOptions = buildOptions(profileName, options);
   if (useServiceId) {
     const id = serviceId || defaultServiceId;
@@ -45,7 +49,7 @@ function testFlexStatus(profileName, options, useServiceId, serviceId, validUser
   }
 
   const cmd = buildCmd(baseCmd, null, allOptions, [CommonOptionsNames.VERBOSE]);
-  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, textToRemove, done);
+  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, replacementObject, done);
 }
 
 describe(baseCmd, () => {
@@ -83,7 +87,7 @@ describe(baseCmd, () => {
     });
 
     it('and existent serviceId should succeed and output default format', (done) => {
-      testFlexStatus(profileToUse, null, true, null, validUserForGettingStatus, requestedAtDateRegex, done);
+      testFlexStatus(profileToUse, null, true, null, validUserForGettingStatus, replacementObject, done);
     });
 
     it('and existent serviceId should succeed and output JSON', (done) => {
@@ -100,7 +104,7 @@ describe(baseCmd, () => {
       });
 
       it('without serviceId as an option should succeed', (done) => {
-        testFlexStatus(profileToUse, null, false, null, validUserForGettingStatus, requestedAtDateRegex, done);
+        testFlexStatus(profileToUse, null, false, null, validUserForGettingStatus, replacementObject, done);
       });
 
       after((done) => {
@@ -115,7 +119,7 @@ describe(baseCmd, () => {
 
       it('with existent serviceId as an option should succeed', (done) => {
         // project contains non-existent serviceId; an existent one is provided as an option and it must be used
-        testFlexStatus(profileToUse, null, true, null, validUserForGettingStatus, requestedAtDateRegex, done);
+        testFlexStatus(profileToUse, null, true, null, validUserForGettingStatus, replacementObject, done);
       });
 
       after((done) => {
@@ -126,7 +130,7 @@ describe(baseCmd, () => {
 
   describe('by not specifying profile nor credentials', () => {
     it('when one profile and existent serviceId should succeed', (done) => {
-      testFlexStatus(null, null, true, null, null, requestedAtDateRegex, done);
+      testFlexStatus(null, null, true, null, null, replacementObject, done);
     });
   });
 
@@ -151,7 +155,7 @@ describe(baseCmd, () => {
 
   describe('by specifying credentials as options', () => {
     it('when valid and existent serviceId should succeed', (done) => {
-      testFlexStatus(null, existentUserOne, true, null, validUserForGettingStatus, requestedAtDateRegex, done);
+      testFlexStatus(null, existentUserOne, true, null, validUserForGettingStatus, replacementObject, done);
     });
 
     it('when valid and non-existent serviceId should fail', (done) => {

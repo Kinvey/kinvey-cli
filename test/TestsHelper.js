@@ -445,7 +445,7 @@ TestsHelper.getOutputWithoutSetupPaths = function getOutputWithoutSetupPaths(out
   return result;
 };
 
-TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshotIt, clearSetupPaths, escapeSlashes, textToRemove, done) {
+TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshotIt, clearSetupPaths, escapeSlashes, replacementObject, done) {
   let ms = {};
 
   async.series([
@@ -479,11 +479,11 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
         // ensure line separators are always the same
         finalOutput = finalOutput.replace(/\r\n/g, '\n');
 
-        // regex expression or text to remove from the output
-        if (textToRemove) {
-          const matchedText = finalOutput.match(textToRemove)[0];
+        // replace a given text/regex if an object with 'oldValue' and 'newValue' fields is submitted.
+        if (replacementObject && typeof replacementObject === 'object') {
+          const matchedText = finalOutput.match(replacementObject.oldValue)[0];
           expect(matchedText).to.exist;
-          finalOutput = finalOutput.replace(matchedText, 'replaced_value');
+          finalOutput = finalOutput.replace(matchedText, replacementObject.newValue);
         }
 
         if (snapshotIt) {

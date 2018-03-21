@@ -84,7 +84,7 @@ key            value
 status         ONLINE                               
 version        1.4.2                                
 id             12378kdl2                            
-requestedAt    
+requestedAt    replaced_value
 deployerEmail  davy.jones@mail.com                  
 deployerName   Davy Jones                           
 
@@ -102,7 +102,7 @@ status         ONLINE
 version        1.4.2                                
 id             12378kdl2                            
 name           TestKinveyDatalink                   
-requestedAt    
+requestedAt    replaced_value
 deployerEmail  davy.jones@mail.com                  
 deployerName   Davy Jones                           
 
@@ -119,7 +119,7 @@ key            value
 status         ONLINE                               
 version        1.4.2                                
 id             12378kdl2                            
-requestedAt    
+requestedAt    replaced_value
 deployerEmail  davy.jones@mail.com                  
 deployerName   Davy Jones                           
 
@@ -137,7 +137,7 @@ key            value
 status         ONLINE                               
 version        1.4.2                                
 id             12378kdl2                            
-requestedAt    
+requestedAt    replaced_value
 deployerEmail  davy.jones@mail.com                  
 deployerName   Davy Jones                           
 
@@ -158,7 +158,7 @@ key            value
 status         ONLINE                               
 version        1.4.2                                
 id             12378kdl2                            
-requestedAt    
+requestedAt    replaced_value
 deployerEmail  davy.jones@mail.com                  
 deployerName   Davy Jones                           
 

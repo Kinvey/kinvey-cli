@@ -483,7 +483,7 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
         if (textToRemove) {
           const matchedText = finalOutput.match(textToRemove)[0];
           expect(matchedText).to.exist;
-          finalOutput = finalOutput.replace(matchedText, '');
+          finalOutput = finalOutput.replace(matchedText, 'replaced_value');
         }
 
         if (snapshotIt) {

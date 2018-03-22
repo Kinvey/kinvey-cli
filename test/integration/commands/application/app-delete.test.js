@@ -80,7 +80,7 @@ describe(baseCmd, () => {
         [AuthOptionsNames.PASSWORD]: existentUser.password
       };
       const cmd = buildCmd(baseCmd, [appId], credentials, defaultFlags);
-      execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
         done();
       });

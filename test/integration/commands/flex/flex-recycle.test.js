@@ -43,7 +43,7 @@ function testFlexRecycle(profileName, options, serviceId, validUser, done) {
 
   const positionalArgs = null;
   const cmd = buildCmd(baseCmd, positionalArgs, allOptions, [CommonOptionsNames.VERBOSE]);
-  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, done);
+  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, done);
 }
 
 describe(baseCmd, () => {
@@ -140,7 +140,7 @@ describe(baseCmd, () => {
 
     it('and existent serviceId should fail', (done) => {
       const cmd = `${baseCmd} --${FlexOptionsNames.SERVICE_ID} ${defaultServiceId}`;
-      execCmdWithAssertion(cmd, null, null, true, false, true, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, false, true, null, (err) => {
         expect(err).to.not.exist;
         done();
       });

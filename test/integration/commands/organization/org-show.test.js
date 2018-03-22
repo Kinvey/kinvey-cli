@@ -83,7 +83,7 @@ describe(baseCmd, () => {
         [AuthOptionsNames.PASSWORD]: existentUserOne.password
       };
       const cmd = buildCmd(baseCmd, [`"${fixtureOrg.name}"`], options, defaultFlags);
-      execCmdWithAssertion(cmd, null, { token: tokenOne, email: existentUserOne.email }, true, true, false, done);
+      execCmdWithAssertion(cmd, null, { token: tokenOne, email: existentUserOne.email }, true, true, false, null, done);
     });
   });
 });

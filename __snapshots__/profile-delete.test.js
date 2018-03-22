@@ -46,7 +46,7 @@ exports['profile delete by non-existent name when none should return error 1'] =
 
 exports['profile delete without a name when no active should fail 1'] = `
 [debug] Checking for package updates
-[error] ItemNotSpecified: No profile identifier is specified and/or active profile is not set.
+[error] ItemNotSpecified: No profile identifier is specified and active profile is not set.
 
 `
 

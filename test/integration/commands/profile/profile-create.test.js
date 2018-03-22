@@ -38,10 +38,6 @@ describe('profile create', () => {
   const expectedProfiles = assertions.buildExpectedProfiles(expectedProfile);
   const defaultExpectedSetup = assertions.buildExpectedGlobalSetup({}, expectedProfiles);
 
-  const defaultEnv = {
-    NODE_CONFIG: JSON.stringify(testsConfig)
-  };
-
   before((done) => {
     setup.clearGlobalSetup(null, done);
   });
@@ -54,7 +50,7 @@ describe('profile create', () => {
     it('set as options should create', (done) => {
       const cmd = `${baseCmd} ${defaultProfileName} --verbose --${AuthOptionsNames.EMAIL} ${existentUser.email} --${AuthOptionsNames.PASSWORD} ${existentUser.password}`;
 
-      execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
 
         assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
@@ -70,7 +66,7 @@ describe('profile create', () => {
 
         const cmd = `${baseCmd} ${defaultProfileName} --verbose --${AuthOptionsNames.EMAIL} ${existentUser.email} --${AuthOptionsNames.PASSWORD} ${existentUser.password}`;
 
-        execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+        execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
           expect(err).to.not.exist;
 
           assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
@@ -83,11 +79,13 @@ describe('profile create', () => {
 
     it('set as environment variables should create', (done) => {
       const cmd = `${baseCmd} ${defaultProfileName} --${CommonOptionsNames.VERBOSE} --${CommonOptionsNames.OUTPUT} ${OutputFormat.JSON}`;
-      const env = cloneDeep(defaultEnv);
-      env[EnvironmentVariables.USER] = existentUser.email;
-      env[EnvironmentVariables.PASSWORD] = existentUser.password;
+      const env = {
+        NODE_CONFIG: JSON.stringify(testsConfig),
+        [EnvironmentVariables.USER]: existentUser.email,
+        [EnvironmentVariables.PASSWORD]: existentUser.password
+      };
 
-      execCmdWithAssertion(cmd, { env }, null, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, { env }, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
 
         assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
@@ -99,12 +97,14 @@ describe('profile create', () => {
 
     it('set as options and as environment variables should create', (done) => {
       const cmd = `${baseCmd} ${defaultProfileName} --verbose --${AuthOptionsNames.EMAIL} ${existentUser.email}`;
-      const env = cloneDeep(defaultEnv);
       // should take user set as option and ignore one from env; should take password from env
-      env[EnvironmentVariables.USER] = fixtureUser.nonexistent.email;
-      env[EnvironmentVariables.PASSWORD] = existentUser.password;
+      const env = {
+        NODE_CONFIG: JSON.stringify(testsConfig),
+        [EnvironmentVariables.USER]: fixtureUser.nonexistent.email,
+        [EnvironmentVariables.PASSWORD]: existentUser.password
+      };
 
-      execCmdWithAssertion(cmd, { env }, null, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, { env }, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
 
         assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
@@ -120,7 +120,7 @@ describe('profile create', () => {
       const cmd = `${baseCmd} ${defaultProfileName} --verbose --${AuthOptionsNames.EMAIL} ${existentUser.email} --${AuthOptionsNames.PASSWORD} ${existentUser.password} --${AuthOptionsNames.HOST} ${customHost}`;
 
       const apiOptions = { port: customPort };
-      execCmdWithAssertion(cmd, { env: defaultEnv }, apiOptions, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, (err) => {
         expect(err).to.not.exist;
 
         const expectedProfile = assertions.buildExpectedProfile(defaultProfileName, customHost, expectedValidUser.email, expectedValidUser.token);
@@ -139,7 +139,7 @@ describe('profile create', () => {
     it('set as options should fail', (done) => {
       const cmd = `${baseCmd} ${defaultProfileName} --verbose --${AuthOptionsNames.EMAIL} ${nonExistentUser.email} --${AuthOptionsNames.PASSWORD} ${nonExistentUser.password}`;
 
-      execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
 
         assertions.assertGlobalSetup(null, testsConfig.paths.session, (err) => {
@@ -155,7 +155,7 @@ describe('profile create', () => {
 
         const cmd = `${baseCmd} ${defaultProfileName} --verbose --${AuthOptionsNames.EMAIL} ${nonExistentUser.email} --${AuthOptionsNames.PASSWORD} ${nonExistentUser.password}`;
 
-        execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+        execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
           expect(err).to.not.exist;
 
           assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
@@ -171,7 +171,7 @@ describe('profile create', () => {
     it('without password should fail', (done) => {
       const cmd = `${baseCmd} ${defaultProfileName} --verbose --${AuthOptionsNames.EMAIL} ${nonExistentUser.email}`;
 
-      execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
 
         assertions.assertGlobalSetup(null, testsConfig.paths.session, (err) => {
@@ -184,7 +184,7 @@ describe('profile create', () => {
     it('without profile name should fail', (done) => {
       const cmd = `${baseCmd} --verbose --${AuthOptionsNames.EMAIL} ${existentUser.email} --${AuthOptionsNames.PASSWORD} ${existentUser.password}`;
 
-      execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, false, true, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, false, true, null, (err) => {
         expect(err).to.not.exist;
 
         assertions.assertGlobalSetup(null, testsConfig.paths.session, (err) => {

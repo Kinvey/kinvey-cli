@@ -38,7 +38,7 @@ function testOrgList(options, flags, validUser, hasOrgs, done) {
   }
 
   const cmd = buildCmd(baseCmd, null, options, flags);
-  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, done);
+  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, done);
 }
 
 describe(baseCmd, () => {

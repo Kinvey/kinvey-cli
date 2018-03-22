@@ -31,7 +31,7 @@ describe(`${baseCmd}`, () => {
     it('should succeed and output default format', (done) => {
       const cmd = buildCmd(baseCmd, null, null, [CommonOptionsNames.VERBOSE]);
 
-      execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
 
         assertions.assertProjectSetup(null, null, (err) => {
@@ -44,7 +44,7 @@ describe(`${baseCmd}`, () => {
     it('should succeed and output JSON', (done) => {
       const cmd = buildCmd(baseCmd, null, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, [CommonOptionsNames.VERBOSE]);
 
-      execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
 
         assertions.assertProjectSetup(null, null, (err) => {
@@ -67,7 +67,7 @@ describe(`${baseCmd}`, () => {
     it('should succeed', (done) => {
       const cmd = buildCmd(baseCmd, null, null, [CommonOptionsNames.VERBOSE]);
 
-      execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
 
         assertions.assertProjectSetup(null, null, (err) => {

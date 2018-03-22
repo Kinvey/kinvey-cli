@@ -26,6 +26,8 @@ exports['env delete with profile when active app is set active env is set withou
 [debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M 200
 [debug] Request:  DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M
 [debug] Response: DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M 204
+[debug] Writing contents to file globalSetupPath
+[debug] Removed active env: kid_Sy4yRNV_M.
 Deleted environment: kid_Sy4yRNV_M
 
 `

@@ -613,7 +613,7 @@ TestsHelper.testers.execCmdWithIdentifier = function execCmdWithIdentifier(baseC
     positionalArgs.push(identifier);
   }
   const cmd = TestsHelper.buildCmd(baseCmd, positionalArgs, options, flags);
-  TestsHelper.execCmdWithAssertion(cmd, null, apiOptions, true, true, false, done);
+  TestsHelper.execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, done);
 };
 
 TestsHelper.testers.execCmdWithIdentifierAndActiveCheck = function execCmdWithIdentifierAndActiveCheck(baseCmd, options, flags, identifier, expectedActive, profileName, validUser, done) {

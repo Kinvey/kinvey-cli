@@ -1,0 +1,56 @@
+[
+  {
+    "name": "SimpleColl",
+    "permissions": "write",
+    "dataLink": null
+  },
+  {
+    "name": "filmsBackedByService",
+    "permissions": {
+      "create": [
+        {
+          "roleId": "all-users",
+          "type": "always"
+        }
+      ],
+      "read": [
+        {
+          "roleId": "all-users",
+          "type": "grant"
+        }
+      ],
+      "update": [
+        {
+          "roleId": "all-users",
+          "type": "entity"
+        }
+      ],
+      "delete": [
+        {
+          "roleId": "all-users",
+          "type": "entity"
+        }
+      ]
+    },
+    "dataLink": {
+      "id": "c4063dadfe834e2580e87507af270cb6",
+      "backingServerId": "77ff3fd387344fe9bbcdba4362b9c85d",
+      "serviceObjectName": "films"
+    }
+  },
+  {
+    "name": "BlueC",
+    "permissions": "append-read",
+    "dataLink": null
+  },
+  {
+    "name": "_blob",
+    "permissions": "append-read",
+    "dataLink": null
+  },
+  {
+    "name": "user",
+    "permissions": "append-read",
+    "dataLink": null
+  }
+]

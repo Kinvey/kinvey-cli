@@ -1,5 +1,6 @@
 exports['profile create with valid credentials set as options should create 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Writing contents to file globalSetupPath
@@ -10,6 +11,7 @@ Created profile: testProfile
 exports['profile create with valid credentials set as options and existent profile name should override 1'] = `
 [debug] Checking for package updates
 [debug] Overriding profile with name 'testProfile'.
+[debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Request:  DELETE http://localhost:3234/session
@@ -22,6 +24,7 @@ Created profile: testProfile
 
 exports['profile create with valid credentials set as environment variables should create 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Writing contents to file globalSetupPath
@@ -35,6 +38,7 @@ exports['profile create with valid credentials set as environment variables shou
 
 exports['profile create with valid credentials set as options and as environment variables should create 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Writing contents to file globalSetupPath
@@ -44,6 +48,7 @@ Created profile: testProfile
 
 exports['profile create with valid credentials set as options + host should create 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:6080/session
 [debug] Response: POST http://localhost:6080/session 200
 [debug] Writing contents to file globalSetupPath
@@ -53,6 +58,7 @@ Created profile: testProfile
 
 exports['profile create with invalid credentials set as options should fail 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
 [error] InvalidCredentials: Credentials are invalid. Please authenticate.
@@ -62,6 +68,7 @@ exports['profile create with invalid credentials set as options should fail 1'] 
 exports['profile create with invalid credentials set as options when trying to override should fail 1'] = `
 [debug] Checking for package updates
 [debug] Overriding profile with name 'testProfile'.
+[debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
 [error] InvalidCredentials: Credentials are invalid. Please authenticate.
@@ -70,6 +77,7 @@ exports['profile create with invalid credentials set as options when trying to o
 
 exports['profile create with insufficient info without password should fail 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 422
 [error] ValidationError: Validation failed. Missing required property: password

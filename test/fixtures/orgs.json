@@ -1,0 +1,30 @@
+[
+  {
+    "name": "My Team",
+    "creator": "39229488331a4af9046486a9bbfa5e8e",
+    "creationTime": "2017-06-21T19:49:15.784Z",
+    "restrictions": {
+      "defaultPlanLevel": "enterprise"
+    },
+    "security": {
+      "requireApprovals": true,
+      "requireEmailVerification": false,
+      "requireTwoFactorAuth": false
+    },
+    "id": "f71b0d5e60684b48b8265e7fa50302b9"
+  },
+  {
+    "name": "TestOrg",
+    "creator": "39229488331a4af9046486a9bbfa5e8e",
+    "creationTime": "2016-11-01T05:47:56.247Z",
+    "restrictions": {
+      "defaultPlanLevel": "development"
+    },
+    "security": {
+      "requireApprovals": false,
+      "requireEmailVerification": false,
+      "requireTwoFactorAuth": false
+    },
+    "id": "123"
+  }
+]

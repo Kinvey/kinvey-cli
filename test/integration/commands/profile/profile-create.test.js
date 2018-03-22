@@ -80,6 +80,7 @@ describe('profile create', () => {
     it('set as environment variables should create', (done) => {
       const cmd = `${baseCmd} ${defaultProfileName} --${CommonOptionsNames.VERBOSE} --${CommonOptionsNames.OUTPUT} ${OutputFormat.JSON}`;
       const env = {
+        NODE_CONFIG: JSON.stringify(testsConfig),
         [EnvironmentVariables.USER]: existentUser.email,
         [EnvironmentVariables.PASSWORD]: existentUser.password
       };
@@ -98,6 +99,7 @@ describe('profile create', () => {
       const cmd = `${baseCmd} ${defaultProfileName} --verbose --${AuthOptionsNames.EMAIL} ${existentUser.email}`;
       // should take user set as option and ignore one from env; should take password from env
       const env = {
+        NODE_CONFIG: JSON.stringify(testsConfig),
         [EnvironmentVariables.USER]: fixtureUser.nonexistent.email,
         [EnvironmentVariables.PASSWORD]: existentUser.password
       };

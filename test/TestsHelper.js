@@ -468,9 +468,9 @@ TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCo
 
 TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
   options = options || {};
+  // options.env.PATH should always be set in order to run the tests in Travis
   if (options.env) {
     options.env.PATH = options.env.PATH || process.env.PATH;
-    options.env.NODE_CONFIG = options.env.NODE_CONFIG || JSON.stringify(testsConfig);
   } else {
     options.env = {
       PATH: process.env.PATH,

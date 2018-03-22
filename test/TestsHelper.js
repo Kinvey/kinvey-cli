@@ -558,7 +558,6 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
         // replace a given text/regex if an object with 'oldValue' and 'newValue' fields is submitted.
         if (replacementObject && typeof replacementObject === 'object') {
           const matchedText = finalOutput.match(replacementObject.oldValue)[0];
-          expect(matchedText).to.exist;
           finalOutput = finalOutput.replace(matchedText, replacementObject.newValue);
         }
 

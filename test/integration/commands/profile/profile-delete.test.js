@@ -171,7 +171,7 @@ describe('profile delete', () => {
       function deleteProfile(next) {
         const cmd = `${baseCmd} --verbose`;
 
-        execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+        execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
           expect(err).to.not.exist;
 
           const expectedProfile = assertions.buildExpectedProfile(defaultProfileName);

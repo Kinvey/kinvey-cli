@@ -1,9 +1,10 @@
 exports['flex list by specifying credentials as options when valid and valid options should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/apps/123/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/123/data-links 200
+[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
+[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -131,27 +132,9 @@ You must be authenticated.
 
 `
 
-exports['flex list by specifying credentials as options when valid and valid options should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Request:  POST http://localhost:3234/session
-[debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
-[debug] Request:  DELETE http://localhost:3234/session
-[debug] Response: DELETE http://localhost:3234/session 204
-[debug] Logged out current user.
-Count: 1
-
-id         name              
----------  ------------------
-12378kdl2  TestKinveyDatalink
-
-
-
-`
-
 exports['flex list by specifying credentials as options when valid and non-existent id as option should fail 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Request:  GET http://localhost:3234/v2/apps/123I_DONT_EXIST/data-links
@@ -165,6 +148,7 @@ exports['flex list by specifying credentials as options when valid and non-exist
 
 exports['flex list by specifying credentials as options when invalid and valid options should fail 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
 [error] InvalidCredentials: Credentials are invalid. Please authenticate.

@@ -189,6 +189,7 @@ You must be authenticated.
 
 exports['flex logs without query by specifying credentials as options when valid and existent serviceId should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs
@@ -212,6 +213,7 @@ containerId   message                                                           
 
 exports['flex logs without query by specifying credentials as options when valid and non-existent serviceId should fail 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Request:  GET http://localhost:3234/v2/data-links/12serviceIdThatDoesntExist/logs
@@ -225,6 +227,7 @@ exports['flex logs without query by specifying credentials as options when valid
 
 exports['flex logs without query by specifying credentials as options when invalid and existent serviceId should fail 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
 [error] InvalidCredentials: Credentials are invalid. Please authenticate.

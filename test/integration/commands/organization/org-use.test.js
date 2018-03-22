@@ -107,7 +107,7 @@ describe(baseCmd, () => {
 
       it('and no profile option should use active and succeed', (done) => {
         const cmd = buildCmd(baseCmd, [fixtureOrg.id], null, defaultFlags);
-        execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
+        execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
           expect(err).to.not.exist;
           assertions.assertActiveItemsOnProfile(expectedActive, activeProfile, null, done);
         });
@@ -123,7 +123,7 @@ describe(baseCmd, () => {
           [AuthOptionsNames.PASSWORD]: existentUserOne.password
         };
         const cmd = buildCmd(baseCmd, [fixtureOrg.id], credentials, defaultFlags);
-        execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
+        execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
           expect(err).to.not.exist;
           done();
         });

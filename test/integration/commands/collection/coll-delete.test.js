@@ -65,7 +65,7 @@ describe(baseCmd, () => {
         [EnvOptionsName.ENV]: fixtureEnv.name
       };
       const cmd = buildCmd(baseCmd, [fixtureColl.name], options, defaultFlags);
-      execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
         done();
       });
@@ -79,7 +79,7 @@ describe(baseCmd, () => {
         [EnvOptionsName.ENV]: fixtureEnv.name
       };
       const cmd = buildCmd(baseCmd, null, options, defaultFlags);
-      execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
         done();
       });

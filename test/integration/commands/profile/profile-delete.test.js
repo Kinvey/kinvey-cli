@@ -145,7 +145,7 @@ describe('profile delete', () => {
     ], done);
   });
 
-  it('without a name should fail', (done) => {
+  it('without a name when no active should fail', (done) => {
     const cmd = `${baseCmd} --verbose`;
 
     execCmdWithAssertion(cmd, null, null, true, false, true, null, (err) => {
@@ -159,5 +159,30 @@ describe('profile delete', () => {
         done();
       });
     });
+  });
+
+  it('without a name when active is set should succeed and clear active', (done) => {
+    const profileToBeDeleted = 'activeAndMustBeDeleted';
+
+    async.series([
+      function setAsActive(next) {
+        setup.setActiveProfile(profileToBeDeleted, true, next);
+      },
+      function deleteProfile(next) {
+        const cmd = `${baseCmd} --verbose`;
+
+        execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
+          expect(err).to.not.exist;
+
+          const expectedProfile = assertions.buildExpectedProfile(defaultProfileName);
+          const expectedGlobalSetup = assertions.buildExpectedGlobalSetup({}, assertions.buildExpectedProfiles(expectedProfile));
+
+          assertions.assertGlobalSetup(expectedGlobalSetup, null, (err) => {
+            expect(err).to.not.exist;
+            next();
+          });
+        });
+      }
+    ], done);
   });
 });

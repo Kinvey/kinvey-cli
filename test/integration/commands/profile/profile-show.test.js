@@ -15,8 +15,9 @@
 
 const async = require('async');
 
-const { CommonOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
-const { buildCmd, execCmdWithAssertion, setup } = require('../../../TestsHelper');
+const { CommonOptionsNames, Namespace, OutputFormat } = require('./../../../../lib/Constants');
+const { buildCmd, execCmdWithAssertion, execCmdWithoutAssertion, setup } = require('../../../TestsHelper');
+const fixtureApp = require('./../../../fixtures/app.json');
 
 const baseCmd = 'profile show';
 
@@ -95,30 +96,51 @@ describe(baseCmd, () => {
   });
 
   describe('without name parameter', () => {
-    it('when active profile is set should succeed', (done) => {
+    describe('when active profile is set', () => {
       const activeProfile = 20;
       const profiles = ['testProfileShow', activeProfile, '1%!@_'];
 
-      async.series([
-        function createSeveral(next) {
-          setup.createProfiles(profiles, next);
-        },
-        function setOneAsActive(next) {
-          setup.setActiveProfile(activeProfile, false, next);
-        },
-        function showActive(next) {
-          const cmd = `${baseCmd} --verbose`;
-          execCmdWithAssertion(cmd, null, null, true, true, false, null, next);
-        }
-      ], done);
+      beforeEach((done) => {
+        async.series([
+          function createSeveral(next) {
+            setup.createProfiles(profiles, next);
+          },
+          function setOneAsActive(next) {
+            setup.setActiveProfile(activeProfile, false, next);
+          }
+        ], done);
+      });
+
+      it('without active items should succeed', (done) => {
+        const cmd = `${baseCmd} --verbose`;
+        execCmdWithAssertion(cmd, null, null, true, true, false, null, done);
+      });
+
+      it('with active items should succeed', (done) => {
+        async.series([
+          (next) => {
+            const cmd = `${Namespace.APP} use ${fixtureApp.id} --verbose`;
+            execCmdWithoutAssertion(cmd, null, (err) => {
+              expect(err).to.not.exist;
+              next();
+            });
+          },
+          (next) => {
+            const cmd = `${baseCmd} --verbose`;
+            execCmdWithAssertion(cmd, null, null, true, true, false, null, next);
+          }
+        ], done);
+      });
     });
 
-    it('when active profile is not set should return error', (done) => {
-      testProfileShow(2, false, false, null, done);
-    });
+    describe('when active profile is not set', () => {
+      it('when active profile is not set should return error', (done) => {
+        testProfileShow(2, false, false, null, done);
+      });
 
-    it('when active profile is not set and only one profile should not succeed', (done) => {
-      testProfileShow(1, false, false, null, done);
+      it('when active profile is not set and only one profile should not succeed', (done) => {
+        testProfileShow(1, false, false, null, done);
+      });
     });
   });
 });

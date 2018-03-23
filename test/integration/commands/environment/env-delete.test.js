@@ -16,7 +16,7 @@
 const async = require('async');
 
 const { ActiveItemType, AppOptionsName, AuthOptionsNames, Namespace } = require('./../../../../lib/Constants');
-const { buildCmd, execCmdWithAssertion, setup, testers } = require('../../../TestsHelper');
+const { assertions, buildCmd, execCmdWithAssertion, setup, testers } = require('../../../TestsHelper');
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureEnv = require('./../../../fixtures/env.json');
 const fixtureUser = require('./../../../fixtures/user.json');
@@ -79,8 +79,9 @@ describe(baseCmd, () => {
     });
 
     describe('when active app is set', () => {
+      const activeApp = { id: fixtureApp.id };
+
       before((done) => {
-        const activeApp = { id: fixtureApp.id };
         setup.setActiveItemOnProfile(activeProfile, ActiveItemType.APP, activeApp, null, done);
       });
 
@@ -89,17 +90,26 @@ describe(baseCmd, () => {
       });
 
       describe('active env is set', () => {
-        before((done) => {
+        beforeEach((done) => {
           const activeEnv = { id: fixtureEnv.id };
           setup.setActiveItemOnProfile(activeProfile, ActiveItemType.ENV, activeEnv, null, done);
         });
 
-        after((done) => {
+        afterEach((done) => {
           setup.clearSingleActiveItemOnProfile(activeProfile, ActiveItemType.ENV, null, done);
         });
 
         it('without env arg should succeed', (done) => {
-          testEnvDelete(null, defaultFlags, null, null, done);
+          async.series([
+            (next) => {
+              testEnvDelete(null, defaultFlags, null, null, next);
+            },
+            (next) => {
+              // ensure env removed from active items
+              const expectedActive = { [ActiveItemType.APP]: Object.assign({}, activeApp) };
+              assertions.assertActiveItemsOnProfile(expectedActive, activeProfile, null, next);
+            }
+          ], done);
         });
 
         it('with non-existent env id should take precedence and fail', (done) => {

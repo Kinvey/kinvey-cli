@@ -72,7 +72,7 @@ exports['app show when no active app with existent app id as option should outpu
 exports['app show when no active app without id should return error 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[error] ItemNotSpecified: No application identifier is specified and/or active application is not set.
+[error] ItemNotSpecified: No application identifier is specified and active application is not set.
 
 `
 

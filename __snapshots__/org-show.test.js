@@ -44,7 +44,7 @@ exports['org show when no active org with existent org id as option should outpu
 exports['org show when no active org without id should return error 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[error] ItemNotSpecified: No organization identifier is specified and/or active organization is not set.
+[error] ItemNotSpecified: No organization identifier is specified and active organization is not set.
 
 `
 

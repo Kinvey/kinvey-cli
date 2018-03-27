@@ -129,6 +129,7 @@ f71b0d5e60684b48b8265e7fa50302b9  My Team
 
 exports['org list by specifying credentials as options when valid should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Request:  GET http://localhost:3234/v2/organizations

@@ -25,10 +25,6 @@ const baseCmd = 'profile delete';
 describe('profile delete', () => {
   const defaultProfileName = 'testProfileDelete';
 
-  const defaultEnv = {
-    NODE_CONFIG: JSON.stringify(testsConfig)
-  };
-
   before((done) => {
     setup.clearGlobalSetup(null, done);
   });
@@ -44,7 +40,7 @@ describe('profile delete', () => {
   it('by existent name when there is only one should succeed', (done) => {
     const cmd = `${baseCmd} ${defaultProfileName} --${CommonOptionsNames.VERBOSE} --${CommonOptionsNames.OUTPUT} ${OutputFormat.JSON}`;
 
-    execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+    execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
       expect(err).to.not.exist;
 
       assertions.assertGlobalSetup(null, null, (err) => {
@@ -64,7 +60,7 @@ describe('profile delete', () => {
       function deleteProfile(next) {
         const cmd = `${baseCmd} ${profileToBeDeleted} --verbose`;
 
-        execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+        execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
           expect(err).to.not.exist;
 
           const expectedProfile = assertions.buildExpectedProfile(defaultProfileName);
@@ -89,7 +85,7 @@ describe('profile delete', () => {
       function deleteOneProfile(next) {
         const cmd = `${baseCmd} ${defaultProfileName} --verbose`;
 
-        execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+        execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
           expect(err).to.not.exist;
 
           const profiles = [];
@@ -112,7 +108,7 @@ describe('profile delete', () => {
   it('by non-existent name when there is one should not alter it', (done) => {
     const cmd = `${baseCmd} nonExistentProfileName --verbose`;
 
-    execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+    execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
       expect(err).to.not.exist;
 
       const expectedProfile = assertions.buildExpectedProfile(defaultProfileName);
@@ -137,7 +133,7 @@ describe('profile delete', () => {
       },
       function deleteProfile(next) {
         const cmd = `${baseCmd} nonExistentProfileName --verbose`;
-        execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, true, false, (err) => {
+        execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
           expect(err).to.not.exist;
 
           assertions.assertGlobalSetup(null, null, (err) => {
@@ -149,10 +145,10 @@ describe('profile delete', () => {
     ], done);
   });
 
-  it('without a name should fail', (done) => {
+  it('without a name when no active should fail', (done) => {
     const cmd = `${baseCmd} --verbose`;
 
-    execCmdWithAssertion(cmd, { env: defaultEnv }, null, true, false, true, (err) => {
+    execCmdWithAssertion(cmd, null, null, true, false, true, null, (err) => {
       expect(err).to.not.exist;
 
       const expectedProfile = assertions.buildExpectedProfile(defaultProfileName);
@@ -163,5 +159,30 @@ describe('profile delete', () => {
         done();
       });
     });
+  });
+
+  it('without a name when active is set should succeed and clear active', (done) => {
+    const profileToBeDeleted = 'activeAndMustBeDeleted';
+
+    async.series([
+      function setAsActive(next) {
+        setup.setActiveProfile(profileToBeDeleted, true, next);
+      },
+      function deleteProfile(next) {
+        const cmd = `${baseCmd} --verbose`;
+
+        execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
+          expect(err).to.not.exist;
+
+          const expectedProfile = assertions.buildExpectedProfile(defaultProfileName);
+          const expectedGlobalSetup = assertions.buildExpectedGlobalSetup({}, assertions.buildExpectedProfiles(expectedProfile));
+
+          assertions.assertGlobalSetup(expectedGlobalSetup, null, (err) => {
+            expect(err).to.not.exist;
+            next();
+          });
+        });
+      }
+    ], done);
   });
 });

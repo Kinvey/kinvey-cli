@@ -1,5 +1,6 @@
 exports['app list when there are apps should output default format 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Request:  GET http://localhost:3234/v2/apps
@@ -20,6 +21,7 @@ id                                name     organizationId  environments
 
 exports['app list when there are apps should output JSON 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Request:  GET http://localhost:3234/v2/apps
@@ -89,6 +91,7 @@ exports['app list when there are apps should output JSON 1'] = `
 
 exports['app list when no apps should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Request:  GET http://localhost:3234/v2/apps

@@ -1,9 +1,12 @@
 exports['env show without profile with credentials as options, existent app and env should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
+[debug] Using application: TestApp
 [debug] Request:  GET http://localhost:3234/v2/apps
 [debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Using environment: Development
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [debug] Request:  DELETE http://localhost:3234/session
@@ -21,6 +24,7 @@ appSecret  f006f2fda0fd4fc7b154e12a15ae81fe
 exports['env show with profile when active app is set active env is set without env arg should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using environment: kid_Sy4yRNV_M
 [debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M
 [debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M 200
 key        value                           
@@ -35,8 +39,10 @@ appSecret  f006f2fda0fd4fc7b154e12a15ae81fe
 exports['env show with profile when active app is set active env is set with non-existent env id should take precedence and fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: kid_JjJJjg2cN
 [debug] Request:  GET http://localhost:3234/v2/environments/kid_JjJJjg2cN
 [debug] Response: GET http://localhost:3234/v2/environments/kid_JjJJjg2cN 404
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
@@ -48,8 +54,10 @@ exports['env show with profile when active app is set active env is set with non
 exports['env show with profile when active app is set active env is not set using existent env id should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: kid_Sy4yRNV_M
 [debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M
 [debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M 200
 key        value                           
@@ -64,8 +72,10 @@ appSecret  f006f2fda0fd4fc7b154e12a15ae81fe
 exports['env show with profile when active app is set active env is not set using existent env id should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: kid_Sy4yRNV_M
 [debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M
 [debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M 200
 {
@@ -86,8 +96,10 @@ exports['env show with profile when active app is set active env is not set usin
 exports['env show with profile when active app is set active env is not set using existent env name should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: Development
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 key        value                           
@@ -102,17 +114,20 @@ appSecret  f006f2fda0fd4fc7b154e12a15ae81fe
 exports['env show with profile when active app is set active env is not set using existent env name and non-existent app name should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: noSuchApp
 [debug] Request:  GET http://localhost:3234/v2/apps
 [debug] Response: GET http://localhost:3234/v2/apps 200
-[error] NotFound: Entity not found.
+[error] NotFound: Could not find application with identifier 'noSuchApp'.
 
 `
 
 exports['env show with profile when active app is set active env is not set using non-existent env name should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: noSuchName
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [error] NotFound: Could not find environment with identifier 'noSuchName'.
@@ -122,8 +137,10 @@ exports['env show with profile when active app is set active env is not set usin
 exports['env show with profile when active app is set active env is not set using non-existent env id should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: kid_JjJJjg2cN
 [debug] Request:  GET http://localhost:3234/v2/environments/kid_JjJJjg2cN
 [debug] Response: GET http://localhost:3234/v2/environments/kid_JjJJjg2cN 404
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
@@ -135,8 +152,10 @@ exports['env show with profile when active app is set active env is not set usin
 exports['env show with profile when active app is not set using existent env name and existent app name should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: TestApp
 [debug] Request:  GET http://localhost:3234/v2/apps
 [debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Using environment: Development
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 key        value                           
@@ -151,8 +170,10 @@ appSecret  f006f2fda0fd4fc7b154e12a15ae81fe
 exports['env show with profile when active app is not set using existent env name and existent app id should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Using environment: Development
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 key        value                           

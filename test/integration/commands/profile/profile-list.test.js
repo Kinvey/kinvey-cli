@@ -50,7 +50,7 @@ function testProfileList(profilesCount, optionsForCredentials, otherOptions, don
 
       const positionalArgs = null;
       const cmd = buildCmd(baseCmd, positionalArgs, options, [CommonOptionsNames.VERBOSE]);
-      execCmdWithAssertion(cmd, null, null, true, true, false, next);
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, next);
     }
   ], done);
 }
@@ -90,6 +90,6 @@ describe(baseCmd, () => {
 
   it('when none should succeed', (done) => {
     const cmd = `${baseCmd} --verbose`;
-    execCmdWithAssertion(cmd, null, null, true, true, false, done);
+    execCmdWithAssertion(cmd, null, null, true, true, false, null, done);
   });
 });

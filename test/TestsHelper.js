@@ -460,18 +460,23 @@ TestsHelper.buildCmd = function buildCmd(baseCmd, positionalArgs, options, flags
 TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCount, done) {
   const additionalArgs = Array(additionalArgsCount).fill('redundantArg');
   const cmd = TestsHelper.buildCmd(baseCmd, additionalArgs);
-  TestsHelper.execCmdWithAssertion(cmd, null, null, true, false, false, (err) => {
+  TestsHelper.execCmdWithAssertion(cmd, null, null, true, false, false, null, (err) => {
     expect(err).to.not.exist;
     done();
   });
 };
 
 TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
-  options = options || {
-    env: {
+  options = options || {};
+  // options.env.PATH should always be set in order to run the tests in Travis
+  if (options.env) {
+    options.env.PATH = options.env.PATH || process.env.PATH;
+  } else {
+    options.env = {
+      PATH: process.env.PATH,
       NODE_CONFIG: JSON.stringify(testsConfig)
-    }
-  };
+    };
+  }
 
   const fullCmd = `node ${path.join('bin', 'kinvey')} ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
@@ -520,7 +525,7 @@ TestsHelper.getOutputWithoutSetupPaths = function getOutputWithoutSetupPaths(out
   return result;
 };
 
-TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshotIt, clearSetupPaths, escapeSlashes, done) {
+TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshotIt, clearSetupPaths, escapeSlashes, replacementObject, done) {
   let ms = {};
 
   async.series([
@@ -553,6 +558,12 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
 
         // ensure line separators are always the same
         finalOutput = finalOutput.replace(/\r\n/g, '\n');
+
+        // replace a given text/regex if an object with 'oldValue' and 'newValue' fields is submitted.
+        if (replacementObject && typeof replacementObject === 'object') {
+          const matchedText = finalOutput.match(replacementObject.oldValue)[0];
+          finalOutput = finalOutput.replace(matchedText, replacementObject.newValue);
+        }
 
         if (snapshotIt) {
           try {
@@ -605,7 +616,7 @@ TestsHelper.testers.execCmdWithIdentifier = function execCmdWithIdentifier(baseC
     positionalArgs.push(identifier);
   }
   const cmd = TestsHelper.buildCmd(baseCmd, positionalArgs, options, flags);
-  TestsHelper.execCmdWithAssertion(cmd, null, apiOptions, true, true, false, done);
+  TestsHelper.execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, done);
 };
 
 TestsHelper.testers.execCmdWithIdentifierAndActiveCheck = function execCmdWithIdentifierAndActiveCheck(baseCmd, options, flags, identifier, expectedActive, profileName, validUser, done) {

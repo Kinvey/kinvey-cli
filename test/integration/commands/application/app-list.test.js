@@ -32,13 +32,13 @@ describe(baseCmd, () => {
 
   it('when there are apps should output default format', (done) => {
     const cmd = buildCmd(baseCmd, null, credentialsOptions, defaultFlags);
-    execCmdWithAssertion(cmd, null, null, true, true, false, done);
+    execCmdWithAssertion(cmd, null, null, true, true, false, null, done);
   });
 
   it('when there are apps should output JSON', (done) => {
     const options = Object.assign({}, credentialsOptions, jsonOptions);
     const cmd = buildCmd(baseCmd, null, options, defaultFlags);
-    execCmdWithAssertion(cmd, null, null, true, true, false, done);
+    execCmdWithAssertion(cmd, null, null, true, true, false, null, done);
   });
 
   it('when no apps should succeed', (done) => {
@@ -46,6 +46,6 @@ describe(baseCmd, () => {
     const apiOptions = {
       apps: []
     };
-    execCmdWithAssertion(cmd, null, apiOptions, true, true, false, done);
+    execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, done);
   });
 });

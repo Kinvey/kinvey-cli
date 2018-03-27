@@ -56,7 +56,7 @@ describe(baseCmd, () => {
         [AppOptionsName.APP]: fixtureApp.name
       };
       const cmd = buildCmd(baseCmd, [existentEnvName], options, defaultFlags);
-      execCmdWithAssertion(cmd, null, null, true, true, false, (err) => {
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
         done();
       });

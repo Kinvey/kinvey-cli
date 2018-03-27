@@ -25,12 +25,13 @@ exports['env create when active app is set with a name should succeed and output
 `
 
 exports['env create when active app is set without a name should fail 1'] = `
-kinvey env create <name>
+kinvey env create <name> [file]
 
 Create an environment
 
 Positionals:
   name  Env name                                                      [required]
+  file  File path
 
 Options:
   --version                 Show version number                        [boolean]
@@ -87,12 +88,13 @@ Created environment: kid_Sy4yRNV_M
 
 exports['env create when one-time session without app identifier should fail 1'] = `
 [debug] Checking for package updates
-kinvey env create <name>
+kinvey env create <name> [file]
 
 Create an environment
 
 Positionals:
   name  Env name                                                      [required]
+  file  File path
 
 Options:
   --version                 Show version number                        [boolean]

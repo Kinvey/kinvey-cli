@@ -23,10 +23,13 @@
   "scripts": {
     "start": "./bin/kinvey",
     "prepublish": "./node_modules/.bin/dos2unix ./bin/kinvey",
-    "pretest": "./node_modules/.bin/eslint bin config lib test",
-    "test": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test --NODE_CONFIG_DIR=./test/config",
+    "pretest": "npm run eslint",
+    "lint": "npm run eslint",
+    "test": "npm run test-unit && npm run test-integration",
     "test-unit": "./node_modules/.bin/mocha test/unit --NODE_CONFIG_DIR=./test/config",
-    "test-integration": "./node_modules/.bin/mocha test/integration"
+    "test-integration": "./node_modules/.bin/mocha test/integration",
+    "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test --NODE_CONFIG_DIR=./test/config",
+    "eslint": "./node_modules/.bin/eslint bin config lib test"
   },
   "dependencies": {
     "archiver": "1.0.1",
@@ -37,13 +40,16 @@
     "inquirer": "0.10.0",
     "isemail": "1.2.0",
     "lodash.clonedeep": "4.5.0",
+    "lodash.get": "4.4.2",
     "lodash.isempty": "4.4.0",
     "lodash.isequal": "4.5.0",
     "lodash.merge": "4.6.0",
+    "lodash.sortby": "4.7.0",
     "moment": "2.11.2",
     "request": "2.63.0",
     "update-notifier": "0.5.0",
     "uuid": "2.0.3",
+    "uuid-v4": "0.1.0",
     "valid-url": "1.0.9",
     "winston": "2.4.0",
     "yargs": "10.0.3"
@@ -56,7 +62,7 @@
     "eslint-config-kinvey-platform": "kinvey/eslint-kinvey-platform#v0.1.1",
     "eslint-plugin-import": "2.8.0",
     "express": "4.16.2",
-    "mocha": "2.3.3",
+    "mocha": "5.0.4",
     "nyc": "11.1.0",
     "sinon": "4.1.3",
     "sinon-chai": "2.14.0",

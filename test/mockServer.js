@@ -21,6 +21,11 @@ const { HTTPMethod, ServiceStatus } = require('./../lib/Constants');
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApps = require('./fixtures/apps.json');
 const fixtureApp = require('./fixtures/app.json');
+const fixtureEnvs = require('./fixtures/envs.json');
+const fixtureEnv = require('./fixtures/env.json');
+const fixtureCollections = require('./fixtures/collections.json');
+const fixtureCollection = require('./fixtures/collection.json');
+const fixtureOrgs = require('./fixtures/orgs.json');
 const fixtureServices = require('./fixtures/datalinks.json');
 const fixtureJob = require('./fixtures/job.json');
 const fixtureJobs = require('./fixtures/jobs.json');
@@ -61,6 +66,10 @@ function build(
     token = fixtureUser.token,
     nonExistentUser = fixtureUser.nonexistent,
     serviceStatus = ServiceStatus.ONLINE,
+    orgs = fixtureOrgs,
+    apps = fixtureApps,
+    envs = fixtureEnvs,
+    colls = fixtureCollections,
     jobType = 'recycleDataLink',
     serviceLogsQuery = {},
     domainType = 'apps',
@@ -131,7 +140,7 @@ function build(
 
     const result = {
       status: serviceStatus,
-      requestedAt: '2017-11-01T08:42:31.970Z',
+      requestedAt: '2017-11-06T03:42:31.970Z',
       deployUserInfo:
         { firstName: 'Davy',
           lastName: 'Jones',
@@ -210,9 +219,168 @@ function build(
     res.send(fixtureServices);
   });
 
+  // ENVS BY APP
+  app.get(`/${versionPart}/apps/:id/environments`, (req, res) => {
+    const id = req.params.id;
+    const wantedApp = apps.find(x => x.id === id);
+    if (!wantedApp) {
+      return res.status(404).send({
+        code: 'AppNotFound',
+        description: 'The specified app could not be found.'
+      });
+    }
+
+    res.send(envs);
+  });
+
+  app.post(`/${versionPart}/apps/:id/environments`, (req, res) => {
+    const id = req.params.id;
+    const wantedApp = apps.find(x => x.id === id);
+    if (!wantedApp) {
+      return res.status(404).send({
+        code: 'AppNotFound',
+        description: 'The specified app could not be found.'
+      });
+    }
+
+    if (!req.body.name || req.body.name !== fixtureEnv.name) {
+      return res.sendStatus(400);
+    }
+
+    res.send(fixtureEnv);
+  });
+
+  // COLLECTIONS
+  app.get(`/${versionPart}/environments/:id/collections`, (req, res) => {
+    const id = req.params.id;
+    const wantedEnv = envs.find(x => x.id === id);
+    if (wantedEnv) {
+      return res.send(colls);
+    }
+
+    res.status(404).send({
+      code: 'EnvironmentNotFound',
+      description: 'The specified environment could not be found.'
+    });
+  });
+
+  app.post(`/${versionPart}/environments/:id/collections`, (req, res) => {
+    const id = req.params.id;
+    const wantedEnv = envs.find(x => x.id === id);
+    if (!wantedEnv) {
+      return res.status(404).send({
+        code: 'EnvironmentNotFound',
+        description: 'The specified environment could not be found.'
+      });
+    }
+
+    if (!req.body.name || req.body.name !== fixtureCollection.name) {
+      return res.sendStatus(400);
+    }
+
+    res.send(fixtureCollection);
+  });
+
+  app.delete(`/${versionPart}/environments/:id/collections/:name`, (req, res) => {
+    const id = req.params.id;
+    const wantedEnv = envs.find(x => x.id === id);
+    if (!wantedEnv) {
+      return res.status(404).send({
+        code: 'EnvironmentNotFound',
+        description: 'The specified environment could not be found.'
+      });
+    }
+
+    if (req.params.name !== fixtureCollection.name) {
+      return res.status(404).send({
+        code: 'CollectionNotFound',
+        description: 'The specified collection could not be found.'
+      });
+    }
+
+    res.sendStatus(204);
+  });
+
+  // ENVS
+  app.get(`/${versionPart}/environments/:id`, (req, res) => {
+    const id = req.params.id;
+    const wantedEnv = envs.find(x => x.id === id);
+    if (wantedEnv) {
+      return res.send(wantedEnv);
+    }
+
+    res.status(404).send({
+      code: 'EnvironmentNotFound',
+      description: 'The specified environment could not be found.'
+    });
+  });
+
+  app.delete(`/${versionPart}/environments/:id`, (req, res) => {
+    const id = req.params.id;
+    const wantedEnv = envs.find(x => x.id === id);
+    if (wantedEnv) {
+      return res.sendStatus(204);
+    }
+
+    res.status(404).send({
+      code: 'EnvironmentNotFound',
+      description: 'The specified environment could not be found.'
+    });
+  });
+
   // APPS
+  app.get(`/${versionPart}/apps/:id`, (req, res) => {
+    const id = req.params.id;
+    const wantedApp = apps.find(x => x.id === id);
+    if (wantedApp) {
+      return res.send(wantedApp);
+    }
+
+    res.status(404).send({
+      code: 'AppNotFound',
+      description: 'The specified app could not be found.'
+    });
+  });
+
+  app.delete(`/${versionPart}/apps/:id`, (req, res) => {
+    const id = req.params.id;
+    if (apps.find(x => x.id === id)) {
+      return res.sendStatus(204);
+    }
+
+    res.status(404).send({
+      code: 'AppNotFound',
+      description: 'The specified app could not be found.'
+    });
+  });
+
   app.get(`/${versionPart}/apps`, (req, res) => {
-    res.send(fixtureApps);
+    res.send(apps);
+  });
+
+  app.post(`/${versionPart}/apps`, (req, res) => {
+    if (!req.body.name || req.body.name !== fixtureApp.name) {
+      return res.sendStatus(400);
+    }
+
+    res.status(201).send(fixtureApp);
+  });
+
+  // ORGS
+  app.get(`/${versionPart}/organizations/:id`, (req, res) => {
+    const id = req.params.id;
+    if (id) {
+      return res.send(orgs.find(x => x.id === id));
+    }
+
+    res.status(404).send({
+      code: 'OrganizationNotFound',
+      description: 'The specified organization could not be found.'
+    });
+  });
+
+  app.get(`/${versionPart}/organizations`, (req, res) => {
+    res.send(orgs);
   });
 
   app.all('/', (req, res) => {

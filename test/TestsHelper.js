@@ -397,7 +397,7 @@ TestsHelper.setup = {
   clearSupposeDebugFile(path, done) {
     path = path || supposeDebugPath;
     writeJSON(path, '', done);
- },
+  },
 
   _clearActiveItemsOnProfile(profileName, activeItemType, path, done) {
     path = path || globalSetupPath;

@@ -31,7 +31,8 @@ const baseCmd = 'flex init';
 const outputFile = testsConfig.paths.supposeDebug;
 
 const defaultEnv = {
-  NODE_CONFIG: JSON.stringify(testsConfig)
+  NODE_CONFIG: JSON.stringify(testsConfig),
+  PATH: process.env.PATH
 };
 
 const defaultEnvWithDebug = {
@@ -82,7 +83,8 @@ const buildSupposeFlexInitSequence = (paramsArray, environment) => {
   const sequence = suppose(nodeCommand, paramsArray, environment)
     .when(Prompt.selectAppOrOrg).respond('\n')
     .when(Prompt.selectApp)
-    .respond(Keys.downArrow).respond('\n')
+    .respond(Keys.downArrow)
+    .respond('\n')
     .when(Prompt.selectService)
     .respond('\n');
 

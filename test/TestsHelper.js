@@ -22,9 +22,9 @@ const childProcess = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const { AuthOptionsNames, EnvironmentVariables } = require('./../lib/Constants');
+const { AuthOptionsNames, CommonOptionsNames, EnvironmentVariables, OutputFormat } = require('./../lib/Constants');
 const logger = require('../lib/logger');
-const { isEmpty, readJSON, writeJSON } = require('../lib/Utils');
+const { isEmpty, isNullOrUndefined, readJSON, writeJSON } = require('../lib/Utils');
 
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApp = require('./fixtures/app.json');
@@ -80,6 +80,33 @@ TestsHelper.assertions = {
       }
 
       expect(actual).to.deep.equal(expected);
+      done(null);
+    });
+  },
+
+  assertActiveItemsOnProfile(expected, profileName, path, done) {
+    path = path || globalSetupPath;
+    readJSON(path, (err, actual) => {
+      if (err) {
+        return done(err);
+      }
+
+      if (!actual || !actual.profiles || !actual.profiles[profileName]) {
+        return done(new Error(`Profile not found: ${profileName}.`));
+      }
+
+      const actualProfile = actual.profiles[profileName];
+      if (!expected) {
+        const noActualActiveItems = isEmpty(actualProfile.active) || isNullOrUndefined(actualProfile.active);
+        expect(noActualActiveItems).to.equal(true);
+        return done(null);
+      }
+
+      const expectedActiveItemTypes = Object.keys(expected);
+      expectedActiveItemTypes.forEach((expectedKey) => {
+        expect(actualProfile.active[expectedKey]).to.deep.equal(expected[expectedKey]);
+      });
+
       done(null);
     });
   },
@@ -292,7 +319,7 @@ TestsHelper.setup = {
     ], done);
   },
 
-  deleteProfileFromSetup(name, path, done) {
+  _readGlobalSetupForProfile(profileName, path, done) {
     path = path || globalSetupPath;
     let setup;
 
@@ -302,10 +329,33 @@ TestsHelper.setup = {
       }
 
       setup = actualSetup;
-      if (!setup || !setup.profiles || !setup.profiles[name]) {
-        return done(new Error(`Profile not found - ${name}.`));
+      if (!setup || !setup.profiles || !setup.profiles[profileName]) {
+        return done(new Error(`Profile not found - ${profileName}.`));
       }
 
+      done(null, setup);
+    });
+  },
+
+  setActiveItemOnProfile(profileName, entityType, activeItem, path, done) {
+    path = path || globalSetupPath;
+    TestsHelper.setup._readGlobalSetupForProfile(profileName, path, (err, setup) => {
+      if (err) {
+        return done(err);
+      }
+
+      if (!setup.profiles[profileName].active) {
+        setup.profiles[profileName].active = {};
+      }
+
+      setup.profiles[profileName].active[entityType] = activeItem;
+      writeJSON(path, setup, done);
+    });
+  },
+
+  deleteProfileFromSetup(name, path, done) {
+    path = path || globalSetupPath;
+    TestsHelper.setup._readGlobalSetupForProfile(name, path, (err, setup) => {
       delete setup.profiles[name];
       if (setup.active && setup.active.profile === name) {
         delete setup.active.profile;
@@ -347,6 +397,32 @@ TestsHelper.setup = {
   clearSupposeDebugFile(path, done) {
     path = path || supposeDebugPath;
     writeJSON(path, '', done);
+ },
+
+  _clearActiveItemsOnProfile(profileName, activeItemType, path, done) {
+    path = path || globalSetupPath;
+    TestsHelper.setup._readGlobalSetupForProfile(profileName, path, (err, setup) => {
+      const clearAll = isNullOrUndefined(activeItemType);
+      if (clearAll) {
+        delete setup.profiles[profileName].active;
+      } else {
+        if (!setup.profiles[profileName].active) {
+          return done(new Error(`No active items found for profile '${profileName}'.`));
+        }
+
+        delete setup.profiles[profileName].active[activeItemType];
+      }
+
+      writeJSON(path, setup, done);
+    });
+  },
+
+  clearActiveItemsOnProfile(profileName, path, done) {
+    TestsHelper.setup._clearActiveItemsOnProfile(profileName, null, path, done);
+  },
+
+  clearSingleActiveItemOnProfile(profileName, activeItemType, path, done) {
+    TestsHelper.setup._clearActiveItemsOnProfile(profileName, activeItemType, path, done);
   },
 
   clearProjectSetup(path, done) {
@@ -434,18 +510,23 @@ TestsHelper.buildCmd = function buildCmd(baseCmd, positionalArgs, options, flags
 TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCount, done) {
   const additionalArgs = Array(additionalArgsCount).fill('redundantArg');
   const cmd = TestsHelper.buildCmd(baseCmd, additionalArgs);
-  TestsHelper.execCmdWithAssertion(cmd, null, null, true, false, false, (err) => {
+  TestsHelper.execCmdWithAssertion(cmd, null, null, true, false, false, null, (err) => {
     expect(err).to.not.exist;
     done();
   });
 };
 
 TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
-  options = options || {
-    env: {
+  options = options || {};
+  // options.env.PATH should always be set in order to run the tests in Travis
+  if (options.env) {
+    options.env.PATH = options.env.PATH || process.env.PATH;
+  } else {
+    options.env = {
+      PATH: process.env.PATH,
       NODE_CONFIG: JSON.stringify(testsConfig)
-    }
-  };
+    };
+  }
 
   const fullCmd = `node ${path.join('bin', 'kinvey')} ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
@@ -494,7 +575,7 @@ TestsHelper.getOutputWithoutSetupPaths = function getOutputWithoutSetupPaths(out
   return result;
 };
 
-TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshotIt, clearSetupPaths, escapeSlashes, done) {
+TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, snapshotIt, clearSetupPaths, escapeSlashes, replacementObject, done) {
   let ms = {};
 
   async.series([
@@ -527,6 +608,12 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
 
         // ensure line separators are always the same
         finalOutput = finalOutput.replace(/\r\n/g, '\n');
+
+        // replace a given text/regex if an object with 'oldValue' and 'newValue' fields is submitted.
+        if (replacementObject && typeof replacementObject === 'object') {
+          const matchedText = finalOutput.match(replacementObject.oldValue)[0];
+          finalOutput = finalOutput.replace(matchedText, replacementObject.newValue);
+        }
 
         if (snapshotIt) {
           try {
@@ -570,5 +657,40 @@ TestsHelper.runSupposeSequence = (sequenceObject, callback) => {
 };
 
 TestsHelper.getCreatedProfileMessage = profileName => `Created profile: ${profileName}`;
+
+TestsHelper.testers = {};
+TestsHelper.testers.getJsonOptions = function getJsonOptions() {
+  return { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON };
+};
+
+TestsHelper.testers.getDefaultFlags = function getDefaultFlags() {
+  return [CommonOptionsNames.VERBOSE];
+};
+
+TestsHelper.testers.execCmdWithIdentifier = function execCmdWithIdentifier(baseCmd, options, flags, identifier, validUser, done) {
+  const apiOptions = {};
+  if (!isEmpty(validUser)) {
+    apiOptions.token = validUser.token;
+    apiOptions.existentUser = { email: validUser.email };
+  }
+
+  const positionalArgs = [];
+  if (identifier) {
+    positionalArgs.push(identifier);
+  }
+  const cmd = TestsHelper.buildCmd(baseCmd, positionalArgs, options, flags);
+  TestsHelper.execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, done);
+};
+
+TestsHelper.testers.execCmdWithIdentifierAndActiveCheck = function execCmdWithIdentifierAndActiveCheck(baseCmd, options, flags, identifier, expectedActive, profileName, validUser, done) {
+  TestsHelper.testers.execCmdWithIdentifier(baseCmd, options, flags, identifier, validUser, (err) => {
+    expect(err).to.not.exist;
+    if (isNullOrUndefined(expectedActive)) {
+      return setImmediate(done);
+    }
+
+    TestsHelper.assertions.assertActiveItemsOnProfile(expectedActive, profileName, null, done);
+  });
+};
 
 module.exports = TestsHelper;

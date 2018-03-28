@@ -1,3 +1,15 @@
+| LINTING            | UNIT            | INTEGRATION            |
+|-------------------|-------------------|-------------------|
+| [![Build1][1]][4] | [![Build2][2]][4] | [![Build3][3]][4] |
+
+[1]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/1
+[2]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/2
+[3]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/3
+[4]: https://travis-ci.org/Kinvey/kinvey-cli
+
+
+
+
 # Kinvey CLI
 
 Kinvey CLI is a utility for deploying and managing FlexServices running on the Kinvey FlexService Runtime.

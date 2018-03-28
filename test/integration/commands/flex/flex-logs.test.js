@@ -76,7 +76,7 @@ function testFlexLogs(profileName, optionsForCredentials, serviceId, query, vali
     apiOptions.existentUser = { email: validUser.email };
   }
 
-  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, done);
+  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, done);
 }
 
 function buildQueryObject(start, end, pageNum, pageSize) {
@@ -186,7 +186,7 @@ describe(`${baseCmd}`, () => {
         it('without serviceId as an option should fail', (done) => {
           const cmd = `${baseCmd} --${AuthOptionsNames.PROFILE} ${profileToUse}`;
           const apiOptions = { existentUser: existentUserOne, token: tokenOne };
-          execCmdWithAssertion(cmd, null, apiOptions, true, false, true, (err) => {
+          execCmdWithAssertion(cmd, null, apiOptions, true, false, true, null, (err) => {
             expect(err).to.not.exist;
             done();
           });
@@ -209,7 +209,7 @@ describe(`${baseCmd}`, () => {
           [CommonOptionsNames.OUTPUT]: OutputFormat.JSON
         };
         const cmd = buildCmd(baseCmd, null, options);
-        execCmdWithAssertion(cmd, null, null, true, false, true, (err) => {
+        execCmdWithAssertion(cmd, null, null, true, false, true, null, (err) => {
           expect(err).to.not.exist;
           done();
         });
@@ -228,7 +228,7 @@ describe(`${baseCmd}`, () => {
 
       it('and existent serviceId should fail', (done) => {
         const cmd = `${baseCmd} --${FlexOptionsNames.SERVICE_ID} ${defaultServiceId}`;
-        execCmdWithAssertion(cmd, null, null, true, false, true, (err) => {
+        execCmdWithAssertion(cmd, null, null, true, false, true, null, (err) => {
           expect(err).to.not.exist;
           done();
         });

@@ -72,7 +72,7 @@ host   http://localhost:3234/
 
 `
 
-exports['profile show without name parameter when active profile is set should succeed 1'] = `
+exports['profile show without name parameter when active profile is set without active items should succeed 1'] = `
 [debug] Checking for package updates
 key    value                 
 -----  ----------------------
@@ -84,13 +84,26 @@ host   http://localhost:3234/
 
 `
 
-exports['profile show without name parameter when active profile is not set should return error 1'] = `
+exports['profile show without name parameter when active profile is set with active items should succeed 1'] = `
+[debug] Checking for package updates
+key         value                           
+----------  --------------------------------
+name        20                              
+email       janeDoe@mail.com                
+token       userToken                       
+host        http://localhost:3234/          
+active app  885f5d307afd4168bebca1a64f815c1e
+
+
+`
+
+exports['profile show without name parameter when active profile is not set when active profile is not set should return error 1'] = `
 [debug] Checking for package updates
 [error] ProfileNotFound: Active profile is not set.
 
 `
 
-exports['profile show without name parameter when active profile is not set and only one profile should not succeed 1'] = `
+exports['profile show without name parameter when active profile is not set when active profile is not set and only one profile should not succeed 1'] = `
 [debug] Checking for package updates
 [error] ProfileNotFound: Active profile is not set.
 

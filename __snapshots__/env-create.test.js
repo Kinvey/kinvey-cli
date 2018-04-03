@@ -33,7 +33,7 @@ Create an environment
 
 Positionals:
   name  Env name                                                      [required]
-  file  File path
+  file  Path to an environment configuration file
 
 Options:
   --version                 Show version number                        [boolean]
@@ -100,7 +100,7 @@ Create an environment
 
 Positionals:
   name  Env name                                                      [required]
-  file  File path
+  file  Path to an environment configuration file
 
 Options:
   --version                 Show version number                        [boolean]

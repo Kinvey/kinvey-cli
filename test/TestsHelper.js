@@ -214,8 +214,12 @@ TestsHelper.assertions = {
       expect(err).to.not.exist;
       this.assertFileContainsString(outputFile, expectedString, done);
     });
+  },
+  assertSupposeError(error, exitCode, expectedErrorMessage, expectedExitCode) {
+    expect(error).to.exist;
+    expect(error.message).to.contain(expectedErrorMessage);
+    expect(exitCode).to.equal(expectedExitCode);
   }
-
 };
 
 TestsHelper.mocks = {
@@ -452,16 +456,6 @@ TestsHelper.setup = {
         this.clearSupposeDebugFile(null, next);
       }
     ], done);
-  },
-
-  startMockServer(options, cb, done) {
-    mockServer(options, (err, server) => {
-      if (err) {
-        return done(err);
-      }
-
-      cb(server);
-    });
   }
 };
 

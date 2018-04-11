@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
+ * Copyright (c) 2018, Kinvey, Inc. All rights reserved.
  *
  * This software is licensed to you under the Kinvey terms of service located at
  * http://www.kinvey.com/terms-of-use. By downloading, accessing and/or using this
@@ -14,20 +14,21 @@
  */
 
 const path = require('path');
-const suppose = require('suppose');
 const fs = require('fs');
+
+const suppose = require('suppose');
 const cloneDeep = require('lodash.clonedeep');
 
+const { Command, DomainTypes, PromptMessages, EntityType, OperationMessage, Errors, AuthOptionsNames, EnvironmentVariables, SubCommand, Namespace } = require('../../../../lib/Constants');
 const testsConfig = require('../../../TestsConfig');
-const { assertions, runSupposeSequence } = require('../../../TestsHelper');
-
-const { setup } = require('../../../TestsHelper');
+const { assertions, setup, runSupposeSequence } = require('../../../TestsHelper');
+const mockServer = require('../../../mockServer');
 
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureOrg = require('./../../../fixtures/org.json');
 const fixtureServices = require('./../../../fixtures/datalinks.json');
 
-const baseCmd = 'flex init';
+const baseCmd = Command.FLEX_INIT;
 const outputFile = testsConfig.paths.supposeDebug;
 
 const defaultEnv = {
@@ -41,20 +42,15 @@ const defaultEnvWithDebug = {
 };
 
 const Prompt = {
-  selectAppOrOrg: /Would you like to select a service from a Kinvey app or org\? \(Use arrow keys\)/,
-  selectApp: /Which app would you like to use\?/,
-  selectService: /Which service would you like to use\?/,
-  selectOrganization: /Which organization would you like to use\? \(Use arrow keys\)/
+  selectAppOrOrg: new RegExp(PromptMessages.INPUT_DOMAIN),
+  selectOrganization: new RegExp(PromptMessages.INPUT_ORG),
+  selectApp: new RegExp(PromptMessages.INPUT_APP),
+  selectService: new RegExp(PromptMessages.INPUT_SPECIFIC_SERVICE)
 };
 
 const Keys = {
   downArrow: '\u001b[B',
   upArrow: '\u001b[A'
-};
-
-const validDomains = {
-  app: 'app',
-  org: 'org'
 };
 
 const defaultProfileName = 'flexListProfile';
@@ -63,21 +59,22 @@ const defaultService = fixtureServices.find(x => x.name === defaultDataLinkName)
 const secondDataLinkName = 'TestSecondKinveyDatalink';
 const secondService = fixtureServices.find(x => x.name === secondDataLinkName);
 
-const appProjectFlex = assertions.buildExpectedProject(validDomains.app, fixtureApp.id, defaultService.id, defaultService.name);
+const appProjectFlex = assertions.buildExpectedProject(DomainTypes.APP, fixtureApp.id, defaultService.id, defaultService.name);
 const expectedAppProject = assertions.buildExpectedProjectSetup(defaultProfileName, appProjectFlex);
-const orgProjectFlex = assertions.buildExpectedProject(validDomains.org, fixtureOrg.id, secondService.id, secondService.name);
+const orgProjectFlex = assertions.buildExpectedProject(DomainTypes.ORG, fixtureOrg.id, secondService.id, secondService.name);
 const expectedOrgProject = assertions.buildExpectedProjectSetup(defaultProfileName, orgProjectFlex);
 
+
+const flexInitSuccessMessage = `${OperationMessage.save} ${EntityType.CONFIGURATION}.`;
+const notFoundProfileErrorMessage = Errors.ProfileNotFound.MESSAGE;
 const secondValidProfileName = 'secondValidProfileName';
-const flexInitSuccessMessage = 'Saved configuration.';
 const notAuthenticatedMessage = 'You must be authenticated.';
-const notFoundProfileErrorMessage = 'Profile not found. Please verify profile name exists.';
 const notExistingProfileName = 'NotExistingProfile';
 
 const nodeCommand = 'node';
 const cliPath = path.join('bin', 'kinvey');
-const defaultFlexInitOptions = [cliPath, 'flex', 'init'];
-const profileEnvVarName = 'KINVEY_CLI_PROFILE';
+const defaultFlexInitOptions = [cliPath, Namespace.FLEX, SubCommand[Namespace.FLEX].INIT];
+const profileEnvVarName = EnvironmentVariables.PROFILE;
 
 const buildSupposeFlexInitSequence = (paramsArray, environment) => {
   const sequence = suppose(nodeCommand, paramsArray, environment)
@@ -93,7 +90,7 @@ const buildSupposeFlexInitSequence = (paramsArray, environment) => {
 
 const buildProfileOptions = (baseOptions, profileName) => {
   const profileOptions = cloneDeep(baseOptions);
-  profileOptions.push('--profile', profileName);
+  profileOptions.push(`--${AuthOptionsNames.PROFILE}`, profileName);
   return profileOptions;
 };
 
@@ -120,49 +117,59 @@ describe(baseCmd, () => {
 
   describe('App Level Services', () => {
     it('with one not active valid profile should succeed', (done) => {
-      setup.createProfiles(defaultProfileName, () => {
-        setup.startMockServer(null, (server) => {
+      setup.createProfiles(defaultProfileName, (err) => {
+        expect(err).to.not.exist;
+        mockServer(null, (err, server) => {
+          expect(err).to.not.exist;
           ms = server;
           const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
           runSupposeSequence(sequence, (error, exitCode) => {
             assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
           });
-        }, done);
+        });
       });
     });
 
     it('with one active valid profile should succeed', (done) => {
-      setup.setActiveProfile(defaultProfileName, true, () => {
-        setup.startMockServer(null, (server) => {
+      setup.setActiveProfile(defaultProfileName, true, (err) => {
+        expect(err).to.not.exist;
+        mockServer(null, (err, server) => {
+          expect(err).to.not.exist;
           ms = server;
           const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
 
           runSupposeSequence(sequence, (error, exitCode) => {
             assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
           });
-        }, done);
+        });
       });
     });
 
     it('from two profiles should use the active one', (done) => {
-      setup.createProfiles(secondValidProfileName, () => {
-        setup.setActiveProfile(defaultProfileName, true, () => {
-          setup.startMockServer(null, (server) => {
+      setup.createProfiles(secondValidProfileName, (err) => {
+        expect(err).to.not.exist;
+        setup.setActiveProfile(defaultProfileName, true, (err) => {
+          expect(err).to.not.exist;
+          mockServer(null, (err, server) => {
+            expect(err).to.not.exist;
             ms = server;
             const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
 
             runSupposeSequence(sequence, (error, exitCode) => {
               assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
             });
-          }, done);
+          });
         });
       });
     });
 
     it('should use the submitted profile as an option', (done) => {
-      setup.createProfiles(defaultProfileName, () => {
-        setup.setActiveProfile(secondValidProfileName, true, () => {
-          setup.startMockServer(null, (server) => {
+      setup.createProfiles(defaultProfileName, (err) => {
+        expect(err).to.not.exist;
+        setup.setActiveProfile(secondValidProfileName, true, (err) => {
+          expect(err).to.not.exist;
+          mockServer(null, (err, server) => {
+            expect(err).to.not.exist;
             ms = server;
             const profileOptions = buildProfileOptions(defaultFlexInitOptions, defaultProfileName);
             const sequence = buildSupposeFlexInitSequence(profileOptions, defaultEnvWithDebug);
@@ -170,7 +177,7 @@ describe(baseCmd, () => {
             runSupposeSequence(sequence, (error, exitCode) => {
               assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
             });
-          }, done);
+          });
         });
       });
     });
@@ -181,16 +188,19 @@ describe(baseCmd, () => {
         debug: fs.createWriteStream(outputFile)
       };
       envWithProfileVar.env[profileEnvVarName] = defaultProfileName;
-      setup.createProfiles(defaultProfileName, () => {
-        setup.setActiveProfile(secondValidProfileName, true, () => {
-          setup.startMockServer(null, (server) => {
+      setup.createProfiles(defaultProfileName, (err) => {
+        expect(err).to.not.exist;
+        setup.setActiveProfile(secondValidProfileName, true, (err) => {
+          expect(err).to.not.exist;
+          mockServer(null, (err, server) => {
+            expect(err).to.not.exist;
             ms = server;
             const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, envWithProfileVar);
 
             runSupposeSequence(sequence, (error, exitCode) => {
               assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
             });
-          }, done);
+          });
         });
       });
     });
@@ -201,9 +211,12 @@ describe(baseCmd, () => {
         debug: fs.createWriteStream(outputFile)
       };
       envWithProfileVar.env[profileEnvVarName] = secondValidProfileName;
-      setup.createProfiles(defaultProfileName, () => {
-        setup.setActiveProfile(secondValidProfileName, true, () => {
-          setup.startMockServer(null, (server) => {
+      setup.createProfiles(defaultProfileName, (err) => {
+        expect(err).to.not.exist;
+        setup.setActiveProfile(secondValidProfileName, true, (err) => {
+          expect(err).to.not.exist;
+          mockServer(null, (err, server) => {
+            expect(err).to.not.exist;
             ms = server;
 
             const profileOptions = buildProfileOptions(defaultFlexInitOptions, defaultProfileName);
@@ -212,52 +225,54 @@ describe(baseCmd, () => {
             runSupposeSequence(sequence, (error, exitCode) => {
               assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
             });
-          }, done);
+          });
         });
       });
     });
 
     it('should return a not authenticated error message if there are no profiles', (done) => {
-      setup.startMockServer(null, (server) => {
+      mockServer(null, (err, server) => {
+        expect(err).to.not.exist;
         ms = server;
         const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
 
         runSupposeSequence(sequence, (error, exitCode) => {
-          expect(error.message).to.contain(notAuthenticatedMessage);
-          expect(exitCode).to.equal(1);
+          assertions.assertSupposeError(error, exitCode, notAuthenticatedMessage, 1);
           done();
         });
-      }, done);
+      });
     });
 
     it('should return a not authenticated error message if there are more than one not active profiles', (done) => {
-      setup.createProfiles([secondValidProfileName, defaultProfileName], () => {
-        setup.startMockServer(null, (server) => {
+      setup.createProfiles([secondValidProfileName, defaultProfileName], (err) => {
+        expect(err).to.not.exist;
+        mockServer(null, (err, server) => {
+          expect(err).to.not.exist;
           ms = server;
           const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
 
           runSupposeSequence(sequence, (error, exitCode) => {
-            expect(error.message).to.contain(notAuthenticatedMessage);
-            expect(exitCode).to.equal(1);
+            assertions.assertSupposeError(error, exitCode, notAuthenticatedMessage, 1);
             done();
           });
-        }, done);
+        });
       });
     });
 
     it('should return a not found error message if a not existing profile is submitted as an option', (done) => {
-      setup.createProfiles(defaultProfileName, () => {
-        setup.startMockServer(null, (server) => {
+      setup.createProfiles(defaultProfileName, (err) => {
+        expect(err).to.not.exist;
+        mockServer(null, (err, server) => {
+          expect(err).to.not.exist;
           ms = server;
           const profileOptions = buildProfileOptions(defaultFlexInitOptions, notExistingProfileName);
           const sequence = buildSupposeFlexInitSequence(profileOptions, defaultEnvWithDebug);
 
           runSupposeSequence(sequence, (error, exitCode) => {
-            expect(error.message).to.contain(notFoundProfileErrorMessage);
-            expect(exitCode).to.equal(1);
+            assertions.assertSupposeError(error, exitCode, notFoundProfileErrorMessage, 1);
             done();
           });
-        }, done);
+        });
       });
     });
   });
@@ -266,8 +281,10 @@ describe(baseCmd, () => {
     const orgOptions = { domainType: 'organizations', domainEntityId: fixtureOrg.id };
 
     it('with one not active valid profile should succeed', (done) => {
-      setup.createProfiles(defaultProfileName, () => {
-        setup.startMockServer(orgOptions, (server) => {
+      setup.createProfiles(defaultProfileName, (err) => {
+        expect(err).to.not.exist;
+        mockServer(orgOptions, (err, server) => {
+          expect(err).to.not.exist;
           ms = server;
           const sequence = suppose(nodeCommand, defaultFlexInitOptions, defaultEnvWithDebug)
             .when(Prompt.selectAppOrOrg)
@@ -281,7 +298,7 @@ describe(baseCmd, () => {
           runSupposeSequence(sequence, (error, exitCode) => {
             assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedOrgProject, outputFile, flexInitSuccessMessage, done);
           });
-        }, done);
+        });
       });
     });
   });

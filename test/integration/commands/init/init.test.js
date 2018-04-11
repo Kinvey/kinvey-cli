@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
+ * Copyright (c) 2018, Kinvey, Inc. All rights reserved.
  *
  * This software is licensed to you under the Kinvey terms of service located at
  * http://www.kinvey.com/terms-of-use. By downloading, accessing and/or using this
@@ -13,25 +13,25 @@
  * contents is a violation of applicable laws.
  */
 
-const cloneDeep = require('lodash.clonedeep');
-
-const testsConfig = require('../../../TestsConfig');
-const { assertions, setup, getCreatedProfileMessage, runSupposeSequence } = require('../../../TestsHelper');
-
-const fixtureUser = require('./../../../fixtures/user.json');
-const mockServer = require('../../../mockServer');
+const fs = require('fs');
 const path = require('path');
 
+const cloneDeep = require('lodash.clonedeep');
 const suppose = require('suppose');
-const fs = require('fs');
+
+const { PromptMessages, Errors, AuthOptionsNames, SubCommand, Namespace } = require('../../../../lib/Constants');
+const testsConfig = require('../../../TestsConfig');
+const { assertions, setup, getCreatedProfileMessage, runSupposeSequence } = require('../../../TestsHelper');
+const fixtureUser = require('./../../../fixtures/user.json');
+const mockServer = require('../../../mockServer');
 
 const outputFile = testsConfig.paths.supposeDebug;
 const existentUser = fixtureUser.existent;
 const nonExistentUser = fixtureUser.nonexistent;
 
-const initCommand = 'init';
+const initCommand = SubCommand[Namespace.FLEX].INIT;
+const invalidConfigUrlMessage = Errors.InvalidConfigUrl.MESSAGE;
 const invalidCredentialsMessage = 'Invalid credentials, please authenticate.';
-const invalidConfigUrlMessage = 'InvalidConfigUrl: The configuration URL is invalid. Please use a valid Kinvey instance name or URL.';
 const requiredTwoFactorAuthMessage = 'Two-factor authentication is required, but a token was missing from your request.';
 
 describe(initCommand, () => {
@@ -45,7 +45,7 @@ describe(initCommand, () => {
   const expectedProfile = assertions.buildExpectedProfile(defaultProfileName, expectedValidUser.host, expectedValidUser.email, expectedValidUser.token);
   const expectedProfiles = assertions.buildExpectedProfiles(expectedProfile);
   const defaultExpectedSetup = assertions.buildExpectedGlobalSetup({}, expectedProfiles);
-  const valid2FAToken = '666666';
+  const valid2FAToken = `${fixtureUser.existentWith2FA.twoFactorToken}`;
   const invalid2FAToken = '666';
 
   const defaultEnv = {
@@ -70,22 +70,25 @@ describe(initCommand, () => {
     debug: fs.createWriteStream(outputFile)
   };
 
+  const escapeParentheses = stringValue => stringValue.replace(')', '\\)').replace('(', '\\(');
+
+  const buildPromptString = stringValue => `\\? ${stringValue}`;
+
   const Prompt = {
-    email: /\? E-mail \(email\) /,
-    password: /\? Password /,
-    instanceId: /\? Instance ID \(optional\) /,
-    profileName: /\? Profile name /,
-    twoFactorAuthToken: /Two-factor authentication token/
+    email: new RegExp(buildPromptString(`${PromptMessages.INPUT_EMAIL} \\(${AuthOptionsNames.EMAIL}\\)`)),
+    password: new RegExp(buildPromptString(PromptMessages.INPUT_PASSWORD)),
+    instanceId: new RegExp(buildPromptString(escapeParentheses(PromptMessages.INPUT_HOST))),
+    profileName: new RegExp(buildPromptString(PromptMessages.INPUT_PROFILE)),
+    twoFactorAuthToken: new RegExp(buildPromptString(PromptMessages.INPUT_MFA_TOKEN)),
   };
 
-  const invalidEmailMessageRegex = /Please enter a valid e-mail address/;
-  const provideNotEmptyStringRegex = /Please provide a non-empty string./;
-  const invalid2FATokenRegex = /Please enter a valid 2FA token \(6 digits\)./;
+  const invalidEmailMessageRegex = new RegExp(PromptMessages.INVALID_EMAIL_ADDRESS);
+  const provideNotEmptyStringRegex = new RegExp(PromptMessages.INVALID_STRING);
+  const invalid2FATokenRegex = new RegExp(escapeParentheses(PromptMessages.INVALID_MFA_TOKEN));
 
   let ms = {};
   const nodeCommand = 'node';
   const cliPath = path.join('bin', 'kinvey');
-
 
   beforeEach((done) => {
     setup.clearAllSetup(done);
@@ -224,8 +227,7 @@ describe(initCommand, () => {
           .respond(`${existentUser.password}\n`);
 
         runSupposeSequence(sequence, (error, exitCode) => {
-          expect(error.message).to.contain(invalidCredentialsMessage);
-          expect(exitCode).to.equal(0);
+          assertions.assertSupposeError(error, exitCode, invalidCredentialsMessage, 0);
           assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
             expect(err).to.not.exist;
             assertions.assertFileContainsString(outputFile, getCreatedProfileMessage(defaultProfileName), done);
@@ -264,8 +266,7 @@ describe(initCommand, () => {
           .respond(`${defaultProfileName}\n`);
 
         runSupposeSequence(sequence, (error, exitCode) => {
-          expect(error.message).to.contain(invalidConfigUrlMessage);
-          expect(exitCode).to.equal(1);
+          assertions.assertSupposeError(error, exitCode, invalidConfigUrlMessage, 1);
           done();
         });
       });
@@ -308,8 +309,7 @@ describe(initCommand, () => {
         .respond(`${valid2FAToken}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        expect(error.message).to.contain(requiredTwoFactorAuthMessage);
-        expect(exitCode).to.equal(0);
+        assertions.assertSupposeError(error, exitCode, requiredTwoFactorAuthMessage, 0);
         assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
           expect(err).to.not.exist;
           assertions.assertFileContainsString(outputFile, getCreatedProfileMessage(defaultProfileName), done);
@@ -333,8 +333,7 @@ describe(initCommand, () => {
         .respond(`${valid2FAToken}\n`);
 
       runSupposeSequence(sequence, (error, exitCode) => {
-        expect(error.message).to.contain(requiredTwoFactorAuthMessage);
-        expect(exitCode).to.equal(0);
+        assertions.assertSupposeError(error, exitCode, requiredTwoFactorAuthMessage, 0);
         assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
           expect(err).to.not.exist;
           assertions.assertFileContainsString(outputFile, getCreatedProfileMessage(defaultProfileName), done);

@@ -8,6 +8,16 @@ Created profile: testProfile
 
 `
 
+exports['profile create with valid credentials set as options and valid 2fa token should create 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Writing contents to file globalSetupPath
+Created profile: testProfile
+
+`
+
 exports['profile create with valid credentials set as options and existent profile name should override 1'] = `
 [debug] Checking for package updates
 [debug] Overriding profile with name 'testProfile'.
@@ -22,7 +32,21 @@ Created profile: testProfile
 
 `
 
-exports['profile create with valid credentials set as environment variables should create 1'] = `
+exports['profile create with valid credentials set as environment variables when 2fa token is not required should create 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Writing contents to file globalSetupPath
+{
+  "result": {
+    "id": "testProfile"
+  }
+}
+
+`
+
+exports['profile create with valid credentials set as environment variables when 2fa token is required should create 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
@@ -96,6 +120,7 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
+  --2fa, --2Fa              Two-factor authentication token             [string]
   --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
@@ -106,6 +131,16 @@ Options:
   -h, --help                Show help                                  [boolean]
 
 Not enough non-option arguments: got 0, need at least 1
+
+`
+
+exports['profile create with insufficient info without 2fa token when required should fail 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 403
+[warn] Two-factor authentication token is required. Please specify '2fa' option or use 'kinvey init' to create a profile.
+[error] InvalidTwoFactorAuth: Two-factor authentication is required, but a token was missing from your request.
 
 `
 
@@ -121,6 +156,7 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
+  --2fa, --2Fa              Two-factor authentication token             [string]
   --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]

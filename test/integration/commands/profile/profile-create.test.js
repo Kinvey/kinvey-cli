@@ -38,6 +38,11 @@ describe('profile create', () => {
   const expectedProfiles = assertions.buildExpectedProfiles(expectedProfile);
   const defaultExpectedSetup = assertions.buildExpectedGlobalSetup({}, expectedProfiles);
 
+  const apiOptionsWith2faToken = {
+    require2FAToken: true,
+    twoFactorToken: fixtureUser.validTwoFactorToken
+  };
+
   before((done) => {
     setup.clearGlobalSetup(null, done);
   });
@@ -51,6 +56,18 @@ describe('profile create', () => {
       const cmd = `${baseCmd} ${defaultProfileName} --verbose --${AuthOptionsNames.EMAIL} ${existentUser.email} --${AuthOptionsNames.PASSWORD} ${existentUser.password}`;
 
       execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
+        expect(err).to.not.exist;
+
+        assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+          expect(err).to.not.exist;
+          done();
+        });
+      });
+    });
+
+    it('set as options and valid 2fa token should create', (done) => {
+      const cmd = `${baseCmd} ${defaultProfileName} --${CommonOptionsNames.VERBOSE} --${AuthOptionsNames.EMAIL} ${existentUser.email} --${AuthOptionsNames.PASSWORD} ${existentUser.password} --${AuthOptionsNames.TWO_FACTOR_AUTH_TOKEN} ${fixtureUser.validTwoFactorToken}`;
+      execCmdWithAssertion(cmd, null, apiOptionsWith2faToken, true, true, false, null, (err) => {
         expect(err).to.not.exist;
 
         assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
@@ -77,7 +94,7 @@ describe('profile create', () => {
       });
     });
 
-    it('set as environment variables should create', (done) => {
+    it('set as environment variables when 2fa token is not required should create', (done) => {
       const cmd = `${baseCmd} ${defaultProfileName} --${CommonOptionsNames.VERBOSE} --${CommonOptionsNames.OUTPUT} ${OutputFormat.JSON}`;
       const env = {
         NODE_CONFIG: JSON.stringify(testsConfig),
@@ -86,6 +103,25 @@ describe('profile create', () => {
       };
 
       execCmdWithAssertion(cmd, { env }, null, true, true, false, null, (err) => {
+        expect(err).to.not.exist;
+
+        assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
+          expect(err).to.not.exist;
+          done();
+        });
+      });
+    });
+
+    it('set as environment variables when 2fa token is required should create', (done) => {
+      const cmd = `${baseCmd} ${defaultProfileName} --${CommonOptionsNames.VERBOSE} --${CommonOptionsNames.OUTPUT} ${OutputFormat.JSON}`;
+      const env = {
+        NODE_CONFIG: JSON.stringify(testsConfig),
+        [EnvironmentVariables.USER]: existentUser.email,
+        [EnvironmentVariables.PASSWORD]: existentUser.password,
+        [`${EnvironmentVariables.PREFIX}2FA`]: fixtureUser.validTwoFactorToken
+      };
+
+      execCmdWithAssertion(cmd, { env }, apiOptionsWith2faToken, true, true, false, null, (err) => {
         expect(err).to.not.exist;
 
         assertions.assertGlobalSetup(defaultExpectedSetup, testsConfig.paths.session, (err) => {
@@ -185,6 +221,19 @@ describe('profile create', () => {
       const cmd = `${baseCmd} --verbose --${AuthOptionsNames.EMAIL} ${existentUser.email} --${AuthOptionsNames.PASSWORD} ${existentUser.password}`;
 
       execCmdWithAssertion(cmd, null, null, true, false, true, null, (err) => {
+        expect(err).to.not.exist;
+
+        assertions.assertGlobalSetup(null, testsConfig.paths.session, (err) => {
+          expect(err).to.not.exist;
+          done();
+        });
+      });
+    });
+
+    it('without 2fa token when required should fail', (done) => {
+      const cmd = `${baseCmd} ${defaultProfileName} --${CommonOptionsNames.VERBOSE} --${AuthOptionsNames.EMAIL} ${existentUser.email} --${AuthOptionsNames.PASSWORD} ${existentUser.password}`;
+
+      execCmdWithAssertion(cmd, null, apiOptionsWith2faToken, true, true, false, null, (err) => {
         expect(err).to.not.exist;
 
         assertions.assertGlobalSetup(null, testsConfig.paths.session, (err) => {

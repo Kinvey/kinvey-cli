@@ -111,7 +111,7 @@ function build(
       description: 'Two-factor authentication is required, but a token was missing from your request.'
     };
 
-    if (require2FAToken && req.body.twoFactorToken !== twoFactorToken) {
+    if (require2FAToken && req.body.twoFactorToken !== twoFactorToken.toString()) {
       return res.status(403).send(errTwoFactorToken);
     }
 

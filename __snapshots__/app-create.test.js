@@ -32,6 +32,7 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
+  --2fa, --2Fa              Two-factor authentication token             [string]
   --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]

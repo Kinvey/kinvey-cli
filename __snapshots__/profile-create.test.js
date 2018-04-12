@@ -139,7 +139,7 @@ exports['profile create with insufficient info without 2fa token when required s
 [debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 403
-[warn] Two-factor authentication token is required. Please specify '2fa' option or  use 'kinvey init' to create a profile.
+[warn] Two-factor authentication token is required. Please specify '2fa' option or use 'kinvey init' to create a profile.
 [error] InvalidTwoFactorAuth: Two-factor authentication is required, but a token was missing from your request.
 
 `

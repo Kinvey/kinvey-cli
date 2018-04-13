@@ -28,7 +28,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `init`
 
-   Prompts you to provide account credentials and host and creates a new working profile for you based on the information you provided. Command-line options that specify the same data are ignored.
+   Prompts you to provide account credentials and instance ID and creates a new working profile for you based on the information you provided. Command-line options that specify the same data are ignored.
 
 * `profile create <name> [profile information]`
 
@@ -37,6 +37,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 * `profile list`
 
    Lists all existing profiles. Profiles are saved under the user home.
+   
+* `profile login [name]`
+
+    Re-authenticates a specified profile. If you omit the profile name, the active profile is used. Prompts for password.
 
 * `profile show [name]`
 
@@ -46,9 +50,9 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    Sets an active profile.
     
-* `profile delete <name>`
+* `profile delete [name]`
 
-   Deletes the specified profile.
+   Deletes the specified profile or the active one if you don't specify a profile name.
 
 * `flex init`
 
@@ -128,7 +132,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 ## Global Options
 
-You can add a global option to every Kinvey CLI command to get the described behavior. The only exceptions are `--email`, `--password`, and `--host` which get ignored when added to a command that is designed to prompt for this information.
+You can add a global option to every Kinvey CLI command to get the described behavior. The only exceptions are `--email`, `--password`, `--instanceId` and `--2fa` which get ignored when added to a command that is designed to prompt for this information.
+
+* `--2fa <2fa-token>`
+
+    Two-factor authentication token. Applicable when two-factor authentication is enabled.
 
 * `--email <e-mail>`
 
@@ -190,6 +198,10 @@ Use these environment variables to specify profile information for the `profile 
 
    ID (e.g., `kvy-us2`) or full hostname (e.g., `https://kvy-us2-manage.kinvey.com/`) of a Kinvey instance. It has a default value of `kvy-us1` (or `https://manage.kinvey.com/`) which most customers should use. If you are a customer on a dedicated Kinvey instance, enter your dedicated instance ID.
 
+* `KINVEY_CLI_2FA`
+
+    Two-factor authentication token.
+
 * `KINVEY_CLI_PROFILE`
 
    Profile to use.
@@ -216,7 +228,7 @@ Kinvey CLI comes with a two-stage help system. You can either call the `help` co
 
 Kinvey CLI requires you to authenticate. The fastest way to get started is to run the `kinvey init` command. It prompts for credentials and hostname and creates a working profile for you, which stores the provided settings for future executions.
 
-Note that you only need to specify a host if you are on a dedicated Kinvey instance. Otherwise just press Enter to continue.
+Note that you only need to specify an instance ID if you are on a dedicated Kinvey instance. Otherwise just press Enter to continue.
 
 When prompted for `Profile name`, enter a name for your new working profile that Kinvey CLI will create for you. Kinvey CLI will use this profile automatically for future executions as long as it is the only profile on the system. You can create new profiles and select an active profile if you need to.
 
@@ -251,7 +263,7 @@ Finally, you are ready to deploy you node.js project as a Flex Service.
 
 Another way to create working profiles, besides running `kinvey init`, is invoking `kinvey profile create <name>`. You can choose between providing the credentials at the command line or as preset [environment variables](#environment-variables).
 
-    kinvey profile create dev --email john.doe@kinvey.com --password john'sPassword --host kvy-us2
+    kinvey profile create dev --email john.doe@kinvey.com --password john'sPassword --instanceId kvy-us2
 
 You can create multiple profiles and specify which one to use at the command line.
 
@@ -266,7 +278,7 @@ If you don't want to specify a profile every time, you can set one as active and
 
 ### Authentication Token Expiration
 
-As part of creating a working profile, the authentication token provided by Kinvey is stored locally. This token will be used to authenticate future command executions until it expires. At that point, you need to recreate the profile to keep working with Kinvey CLI. You can do that by providing the profile name to `kinvey init` or `kinvey profile create`.
+As part of creating a working profile, the authentication token provided by Kinvey is stored locally. This token will be used to authenticate future command executions until it expires. At that point, you need to reenter your password or recreate the profile to keep working with Kinvey CLI. Run `kinvey profile login` to reenter your password. You can recreate the profile by providing the profile name to `kinvey init` or `kinvey profile create`.
 
 ## Authenticating One-time Commands
 

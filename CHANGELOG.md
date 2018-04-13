@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.0
+* Ask for profile override if profile already exists on 'kinvey init'
+* Setup Travis
+* Use active profile if no other specified on 'profile delete'
+* Add 'profile login'
+* Add 2fa option
+
 ## 3.0.0
 
 ## 3.0.0-beta.4

@@ -114,7 +114,7 @@ TestsHelper.assertions = {
   assertProjectSetup(expected, path, done) {
     path = path || projectPath;
     readJSON(path, (err, actual) => {
-      if (err) {
+      if (err && err.code !== 'ENOENT') {
         return done(err);
       }
 
@@ -341,7 +341,7 @@ TestsHelper.setup = {
     });
   },
 
-  setActiveItemOnProfile(profileName, entityType, activeItem, path, done) {
+  setActiveItemOnProfile(profileName, activeItemType, activeItem, path, done) {
     path = path || globalSetupPath;
     TestsHelper.setup._readGlobalSetupForProfile(profileName, path, (err, setup) => {
       if (err) {
@@ -352,7 +352,7 @@ TestsHelper.setup = {
         setup.profiles[profileName].active = {};
       }
 
-      setup.profiles[profileName].active[entityType] = activeItem;
+      setup.profiles[profileName].active[activeItemType] = activeItem;
       writeJSON(path, setup, done);
     });
   },

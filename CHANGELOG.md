@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.0.0-beta.0
+* Add commands:
+    * organizations-related: `org list`, `org show`, `org use`
+    * applications-related: `app create`, `app list`, `app show`, `app use`, `app delete`
+    * environments-related: `env create`, `env list`, `env show`, `env use`, `env delete`
+    * collections-related: `coll create`, `coll list`, `coll delete`
+* Fix `profile login` to update only token
+
 ## 3.1.0
 * Ask for profile override if profile already exists on 'kinvey init'
 * Setup Travis

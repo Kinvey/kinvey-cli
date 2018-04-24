@@ -12,7 +12,12 @@
 
 # Kinvey CLI
 
-Kinvey CLI is a utility for deploying and managing FlexServices running on the Kinvey FlexService Runtime.
+Kinvey CLI is a utility for managing various aspects of your Kinvey account from the command line. Its features include:
+
+* Deploying and managing FlexServices running on the Kinvey FlexService Runtime
+* Creating, listing, and deleting applications
+* Creating, listing, and deleting environments
+* Creating, listing, and deleting collections
 
 ## Installation
 
@@ -32,7 +37,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `profile create <name> [profile information]`
 
-   Creates a profile with the specified name. You can specify the profile information either at the command line as arguments or as environment variables. In the presence of command line argument, any values in the environment variables are ignored.
+   Creates a profile with the specified name. You can specify the profile information either at the command line as arguments or as environment variables. In the presence of command line argument, any values specified through environment variables are ignored.
 
 * `profile list`
 
@@ -54,9 +59,109 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    Deletes the specified profile or the active one if you don't specify a profile name.
 
+* `org list`
+
+    Lists all existing organizations within your Kinvey account.
+    
+* `org show [org]`
+
+    Shows detailed information about the specified organization or about the active one if you don't specify an organization. You can specify an organization by ID or name.
+
+* `org use <org>`
+
+    Sets the specified organization as active. You can specify an organization by ID or name.
+    
+* `app create <name>`
+
+    Creates an application.
+    
+* `app list`
+
+    Lists all existing applications within your Kinvey account.
+    
+* `app show [app]`
+
+    Shows detailed information about the specified application or about the active one if you don't specify an application. You can specify an application by ID or name.
+
+* `app use <app>`
+
+    Sets the specified application as active. You can specify an application by ID or name.
+    
+* `app delete [app]`
+
+    Deletes the specified application or the active one if you don't specify an application. You can specify an application by ID or name.
+
+* `env create <name>`
+
+    Creates an environment within the active application. To use a different application, specify it using `--app`.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
+    
+* `env show [env]`
+
+    Shows detailed information about the specified environment or about the active one if you don't specify an environment. You can specify an environment by ID or name. By default, the command searches inside the active application but you can specify a different application using `--app`.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
+
+* `env use <env>`
+
+    Sets the specified environment as active. By default, the command searches inside the active application but you can specify a different application using `--app`.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
+    
+* `env delete [env]`
+
+    Deletes the specified environment or the active one if you don't specify an environment. You can specify an environment by ID or name. By default, the command searches inside the active application but you can specify a different application using `--app`.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
+
+* `coll create <name>`
+
+    Creates a collection within the active application and environment. You can specify another pair of application and environment using the `--app` and `--env` options.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name. Requires `--env`.
+    
+    * `--env <environment>`
+      
+      Specifies a Kinvey app environment by ID or name. Requires `--app`.
+    
+* `coll list`
+
+    Lists all existing collections within the active application and environment. You can specify another pair of application and environment using the `--app` and `--env` options.
+
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name. Requires `--env`.
+    
+    * `--env <environment>`
+      
+      Specifies a Kinvey app environment by ID or name. Requires `--app`.
+
+* `coll delete <coll>`
+    
+    Deletes a collection by name within the active application and environment. You can specify another pair of application and environment using the `--app` and `--env` options.
+
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name. Requires `--env`.
+    
+    * `--env <environment>`
+      
+      Specifies a Kinvey app environment by ID or name. Requires `--app`.
+
 * `flex init`
 
-   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Information inside the file is saved per profile. Each successive execution in the same directory overwrites the respective profile section in the configuration file. This command requires that either an active profile is set or a profile is specified using the `--profile` option. Profile data options such as `--email`, `--password`, and `--instanceId` are ignored if specified. 
+   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Information within the file is saved per profile. Each successive execution in the same directory overwrites the respective profile section in the configuration file. This command requires that either an active profile is set or a profile is specified using the `--profile` option. Profile data options such as `--email`, `--password`, and `--instanceId` are ignored if specified. 
 
 * `flex deploy`
 
@@ -80,7 +185,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex list`
 
-   Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services inside the domain you've configured as part of running `flex init`. In addition to the global options, this command supports the following options:
+   Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services within the domain you've configured as part of running `flex init`. In addition to the global options, this command supports the following options:
 
    * `--domain <app|org>`
    

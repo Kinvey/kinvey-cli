@@ -29,6 +29,8 @@ const appName = fixtureApp.name;
 const appId = fixtureApp.id;
 
 function testAppDelete(options, flags, identifier, done) {
+  flags = flags || [];
+  flags.push(CommonOptionsNames.NO_PROMPT);
   testers.execCmdWithIdentifier(baseCmd, options, flags, identifier, null, done);
 }
 

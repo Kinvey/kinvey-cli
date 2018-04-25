@@ -30,9 +30,12 @@ exports['flex status by specifying a profile and non-existent serviceId should f
 `
 
 exports['flex status by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
-kinvey flex status
+kinvey flex status [serviceId]
 
 Return the health of a Flex Service cluster
+
+Positionals:
+  serviceId  Service ID                                                 [string]
 
 Options:
   --version                 Show version number                        [boolean]
@@ -47,7 +50,6 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
-  --serviceId               Service ID                                  [string]
 
 You must be authenticated.
 
@@ -63,14 +65,14 @@ exports['flex status by specifying credentials as options when valid and existen
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-key            value                                    
--------------  -----------------------------------------
-status         ONLINE                                   
-version        1.4.2                                    
-id             12378kdl2                                
-requestedAt    Wednesday, November 1st 2017, 10:42:31 AM
-deployerEmail  davy.jones@mail.com                      
-deployerName   Davy Jones                               
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+id             12378kdl2                            
+requestedAt    replaced_value
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
 
 
 `
@@ -157,28 +159,6 @@ exports['flex status by not specifying profile nor credentials when one profile 
 [debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-key            value                                
--------------  -------------------------------------
-status         ONLINE                               
-version        1.4.2                                
-id             12378kdl2                            
-requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                  
-deployerName   Davy Jones                           
-
-
-`
-
-exports['flex status by specifying credentials as options when valid and existent serviceId should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Logging in user: janeyDoe@mail.com
-[debug] Request:  POST http://localhost:3234/session
-[debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-[debug] Request:  DELETE http://localhost:3234/session
-[debug] Response: DELETE http://localhost:3234/session 204
-[debug] Logged out current user.
 key            value                                
 -------------  -------------------------------------
 status         ONLINE                               

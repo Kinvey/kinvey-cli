@@ -11,7 +11,8 @@ const TestsConfig = {
   paths: {
     project: path.join(process.cwd(), 'test/integration/project', '.kinvey'),
     package: path.join(process.cwd(), 'test/integration/project'),
-    session: globalSetupPath
+    session: globalSetupPath,
+    supposeDebug: path.join(process.cwd(), 'test/integration', 'debug.txt')
   }
 };
 

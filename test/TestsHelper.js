@@ -35,6 +35,7 @@ const mockServer = require('./mockServer');
 const existentUser = fixtureUser.existent;
 const globalSetupPath = testsConfig.paths.session;
 const projectPath = testsConfig.paths.project;
+const supposeDebugPath = testsConfig.paths.supposeDebug;
 
 const TestsHelper = {};
 
@@ -117,8 +118,8 @@ TestsHelper.assertions = {
         return done(err);
       }
 
-      if (!expected || isEmpty(expected.flex)) {
-        const actualDoesNotContainData = isEmpty(actual) || isEmpty(actual.flex);
+      if (!expected) {
+        const actualDoesNotContainData = isEmpty(actual);
         expect(actualDoesNotContainData, `Setup at ${path} is empty.`).to.be.true;
         return done(null);
       }
@@ -128,14 +129,13 @@ TestsHelper.assertions = {
     });
   },
 
-  buildExpectedProject(appId, org, lastJobId, serviceName, service, schemaVersion = testsConfig.defaultSchemaVersion) {
+  buildExpectedProject(domain, domainEntityId, serviceId, serviceName, schemaVersion = testsConfig.defaultSchemaVersion) {
     return {
-      org,
-      lastJobId,
+      domain,
+      domainEntityId,
+      serviceId,
       serviceName,
-      service,
-      schemaVersion,
-      app: appId
+      schemaVersion
     };
   },
   buildExpectedUser(host = testsConfig.host, token = fixtureUser.token) {
@@ -183,6 +183,42 @@ TestsHelper.assertions = {
       active: activeItems,
       profiles
     };
+  },
+  buildExpectedProjectSetup(profileName, serviceInfo) {
+    const result = {};
+    result[profileName] = { flex: serviceInfo };
+    return result;
+  },
+  assertFileContainsString(filePath, expectedString, done) {
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        return done(err);
+      }
+      const fileContent = String.fromCharCode.apply(null, data);
+      expect(fileContent).to.contain(expectedString);
+      done(null);
+    });
+  },
+  assertSuccessfulInitSequence(error, exitCode, expectedSetup, outputFile, expectedString, done) {
+    expect(error).to.not.exist;
+    expect(exitCode).to.equal(0);
+    this.assertGlobalSetup(expectedSetup, testsConfig.paths.session, (err) => {
+      expect(err).to.not.exist;
+      this.assertFileContainsString(outputFile, expectedString, done);
+    });
+  },
+  assertSuccessfulFlexInitSequence(error, exitCode, expectedSetup, outputFile, expectedString, done) {
+    expect(error).to.not.exist;
+    expect(exitCode).to.equal(0);
+    this.assertProjectSetup(expectedSetup, null, (err) => {
+      expect(err).to.not.exist;
+      this.assertFileContainsString(outputFile, expectedString, done);
+    });
+  },
+  assertSupposeError(error, exitCode, expectedErrorMessage, expectedExitCode) {
+    expect(error).to.exist;
+    expect(error.message).to.contain(expectedErrorMessage);
+    expect(exitCode).to.equal(expectedExitCode);
   }
 };
 
@@ -305,7 +341,7 @@ TestsHelper.setup = {
     });
   },
 
-  setActiveItemOnProfile(profileName, entityType, activeItem, path, done) {
+  setActiveItemOnProfile(profileName, activeItemType, activeItem, path, done) {
     path = path || globalSetupPath;
     TestsHelper.setup._readGlobalSetupForProfile(profileName, path, (err, setup) => {
       if (err) {
@@ -316,7 +352,7 @@ TestsHelper.setup = {
         setup.profiles[profileName].active = {};
       }
 
-      setup.profiles[profileName].active[entityType] = activeItem;
+      setup.profiles[profileName].active[activeItemType] = activeItem;
       writeJSON(path, setup, done);
     });
   },
@@ -359,6 +395,11 @@ TestsHelper.setup = {
 
   clearGlobalSetup(path, done) {
     path = path || globalSetupPath;
+    writeJSON(path, '', done);
+  },
+
+  clearSupposeDebugFile(path, done) {
+    path = path || supposeDebugPath;
     writeJSON(path, '', done);
   },
 
@@ -410,6 +451,9 @@ TestsHelper.setup = {
       },
       (next) => {
         this.clearProjectSetup(null, next);
+      },
+      (next) => {
+        this.clearSupposeDebugFile(null, next);
       }
     ], done);
   }
@@ -594,6 +638,19 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
     }
   });
 };
+
+TestsHelper.runSupposeSequence = (sequenceObject, callback) => {
+  let error;
+  sequenceObject
+    .on('error', (err) => {
+      error = err;
+    })
+    .end((exitCode) => {
+      callback(error, exitCode);
+    });
+};
+
+TestsHelper.getCreatedProfileMessage = profileName => `Created profile: ${profileName}`;
 
 TestsHelper.testers = {};
 TestsHelper.testers.getJsonOptions = function getJsonOptions() {

@@ -73,7 +73,9 @@ function build(
     jobType = 'recycleDataLink',
     serviceLogsQuery = {},
     domainType = 'apps',
-    domainEntityId = fixtureApp.id
+    domainEntityId = fixtureApp.id,
+    require2FAToken = false,
+    twoFactorToken
   },
   done
 ) {
@@ -102,6 +104,15 @@ function build(
   app.post('/session', (req, res) => {
     if (!req.body) {
       return res.sendStatus(400);
+    }
+
+    const errTwoFactorToken = {
+      code: 'InvalidTwoFactorAuth',
+      description: 'Two-factor authentication is required, but a token was missing from your request.'
+    };
+
+    if (require2FAToken && req.body.twoFactorToken !== twoFactorToken.toString()) {
+      return res.status(403).send(errTwoFactorToken);
     }
 
     const email = req.body.email;

@@ -8,11 +8,12 @@ exports['flex list by specifying credentials as options when valid and valid opt
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-Count: 1
+Count: 2
 
-id         name              
----------  ------------------
-12378kdl2  TestKinveyDatalink
+id         name                    
+---------  ------------------------
+12378kdl2  TestKinveyDatalink      
+12389kd89  TestSecondKinveyDatalink
 
 
 
@@ -24,11 +25,12 @@ exports['flex list by specifying a profile and valid options (app and id) should
 [debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
-Count: 1
+Count: 2
 
-id         name              
----------  ------------------
-12378kdl2  TestKinveyDatalink
+id         name                    
+---------  ------------------------
+12378kdl2  TestKinveyDatalink      
+12389kd89  TestSecondKinveyDatalink
 
 
 
@@ -45,6 +47,10 @@ exports['flex list by specifying a profile and valid options (org and id) should
     {
       "id": "12378kdl2",
       "name": "TestKinveyDatalink"
+    },
+    {
+      "id": "12389kd89",
+      "name": "TestSecondKinveyDatalink"
     }
   ]
 }
@@ -60,6 +66,7 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
+  --2fa, --2Fa              Two-factor authentication token             [string]
   --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
@@ -82,11 +89,12 @@ exports['flex list by specifying a profile when valid project is set without opt
 [debug] Using profile 'profileToGetServices'
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
-Count: 1
+Count: 2
 
-id         name              
----------  ------------------
-12378kdl2  TestKinveyDatalink
+id         name                    
+---------  ------------------------
+12378kdl2  TestKinveyDatalink      
+12389kd89  TestSecondKinveyDatalink
 
 
 
@@ -97,11 +105,12 @@ exports['flex list by specifying a profile when invalid project is set with vali
 [debug] Using profile 'profileToGetServices'
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
-Count: 1
+Count: 2
 
-id         name              
----------  ------------------
-12378kdl2  TestKinveyDatalink
+id         name                    
+---------  ------------------------
+12378kdl2  TestKinveyDatalink      
+12389kd89  TestSecondKinveyDatalink
 
 
 
@@ -116,6 +125,7 @@ Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
+  --2fa, --2Fa              Two-factor authentication token             [string]
   --instanceId              Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]

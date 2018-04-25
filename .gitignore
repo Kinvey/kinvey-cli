@@ -4,3 +4,4 @@ npm-debug.log
 .kinvey
 .nyc_output
 coverage
+test/integration/debug.txt

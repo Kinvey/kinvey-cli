@@ -12,7 +12,12 @@
 
 # Kinvey CLI
 
-Kinvey CLI is a utility for deploying and managing FlexServices running on the Kinvey FlexService Runtime.
+Kinvey CLI is a utility for managing various aspects of your Kinvey account from the command line. Its features include:
+
+* Deploying and managing FlexServices running on the Kinvey FlexService Runtime
+* Creating, listing, and deleting applications
+* Creating, listing, and deleting environments
+* Creating, listing, and deleting collections
 
 ## Installation
 
@@ -28,15 +33,19 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `init`
 
-   Prompts you to provide account credentials and host and creates a new working profile for you based on the information you provided. Command-line options that specify the same data are ignored.
+   Prompts you to provide account credentials and instance ID and creates a new working profile for you based on the information you provided. Command-line options that specify the same data are ignored.
 
 * `profile create <name> [profile information]`
 
-   Creates a profile with the specified name. You can specify the profile information either at the command line as arguments or as environment variables. In the presence of command line argument, any values in the environment variables are ignored.
+   Creates a profile with the specified name. You can specify the profile information either at the command line as arguments or as environment variables. In the presence of command line argument, any values specified through environment variables are ignored.
 
 * `profile list`
 
    Lists all existing profiles. Profiles are saved under the user home.
+   
+* `profile login [name]`
+
+    Re-authenticates a specified profile. If you omit the profile name, the active profile is used. Prompts for password.
 
 * `profile show [name]`
 
@@ -46,13 +55,113 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    Sets an active profile.
     
-* `profile delete <name>`
+* `profile delete [name]`
 
-   Deletes the specified profile.
+   Deletes the specified profile or the active one if you don't specify a profile name.
+
+* `org list`
+
+    Lists all existing organizations within your Kinvey account.
+    
+* `org show [org]`
+
+    Shows detailed information about the specified organization or about the active one if you don't specify an organization. You can specify an organization by ID or name.
+
+* `org use <org>`
+
+    Sets the specified organization as active. You can specify an organization by ID or name.
+    
+* `app create <name>`
+
+    Creates an application.
+    
+* `app list`
+
+    Lists all existing applications within your Kinvey account.
+    
+* `app show [app]`
+
+    Shows detailed information about the specified application or about the active one if you don't specify an application. You can specify an application by ID or name.
+
+* `app use <app>`
+
+    Sets the specified application as active. You can specify an application by ID or name.
+    
+* `app delete [app]`
+
+    Deletes the specified application or the active one if you don't specify an application. You can specify an application by ID or name.
+
+* `env create <name>`
+
+    Creates an environment within the active application. To use a different application, specify it using `--app`.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
+    
+* `env show [env]`
+
+    Shows detailed information about the specified environment or about the active one if you don't specify an environment. You can specify an environment by ID or name. By default, the command searches inside the active application but you can specify a different application using `--app`.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
+
+* `env use <env>`
+
+    Sets the specified environment as active. By default, the command searches inside the active application but you can specify a different application using `--app`.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
+    
+* `env delete [env]`
+
+    Deletes the specified environment or the active one if you don't specify an environment. You can specify an environment by ID or name. By default, the command searches inside the active application but you can specify a different application using `--app`.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
+
+* `coll create <name>`
+
+    Creates a collection within the active application and environment. You can specify another pair of application and environment using the `--app` and `--env` options.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name. Requires `--env`.
+    
+    * `--env <environment>`
+      
+      Specifies a Kinvey app environment by ID or name. Requires `--app`.
+    
+* `coll list`
+
+    Lists all existing collections within the active application and environment. You can specify another pair of application and environment using the `--app` and `--env` options.
+
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name. Requires `--env`.
+    
+    * `--env <environment>`
+      
+      Specifies a Kinvey app environment by ID or name. Requires `--app`.
+
+* `coll delete <coll>`
+    
+    Deletes a collection by name within the active application and environment. You can specify another pair of application and environment using the `--app` and `--env` options.
+
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name. Requires `--env`.
+    
+    * `--env <environment>`
+      
+      Specifies a Kinvey app environment by ID or name. Requires `--app`.
 
 * `flex init`
 
-   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Information inside the file is saved per profile. Each successive execution in the same directory overwrites the respective profile section in the configuration file. This command requires that either an active profile is set or a profile is specified using the `--profile` option. Profile data options such as `--email`, `--password`, and `--instanceId` are ignored if specified. 
+   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Information within the file is saved per profile. Each successive execution in the same directory overwrites the respective profile section in the configuration file. This command requires that either an active profile is set or a profile is specified using the `--profile` option. Profile data options such as `--email`, `--password`, and `--instanceId` are ignored if specified. 
 
 * `flex deploy`
 
@@ -76,7 +185,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex list`
 
-   Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services inside the domain you've configured as part of running `flex init`. In addition to the global options, this command supports the following options:
+   Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services within the domain you've configured as part of running `flex init`. In addition to the global options, this command supports the following options:
 
    * `--domain <app|org>`
    
@@ -128,7 +237,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 ## Global Options
 
-You can add a global option to every Kinvey CLI command to get the described behavior. The only exceptions are `--email`, `--password`, and `--host` which get ignored when added to a command that is designed to prompt for this information.
+You can add a global option to every Kinvey CLI command to get the described behavior. The only exceptions are `--email`, `--password`, `--instanceId` and `--2fa` which get ignored when added to a command that is designed to prompt for this information.
+
+* `--2fa <2fa-token>`
+
+    Two-factor authentication token. Applicable when two-factor authentication is enabled.
 
 * `--email <e-mail>`
 
@@ -190,6 +303,10 @@ Use these environment variables to specify profile information for the `profile 
 
    ID (e.g., `kvy-us2`) or full hostname (e.g., `https://kvy-us2-manage.kinvey.com/`) of a Kinvey instance. It has a default value of `kvy-us1` (or `https://manage.kinvey.com/`) which most customers should use. If you are a customer on a dedicated Kinvey instance, enter your dedicated instance ID.
 
+* `KINVEY_CLI_2FA`
+
+    Two-factor authentication token.
+
 * `KINVEY_CLI_PROFILE`
 
    Profile to use.
@@ -216,7 +333,7 @@ Kinvey CLI comes with a two-stage help system. You can either call the `help` co
 
 Kinvey CLI requires you to authenticate. The fastest way to get started is to run the `kinvey init` command. It prompts for credentials and hostname and creates a working profile for you, which stores the provided settings for future executions.
 
-Note that you only need to specify a host if you are on a dedicated Kinvey instance. Otherwise just press Enter to continue.
+Note that you only need to specify an instance ID if you are on a dedicated Kinvey instance. Otherwise just press Enter to continue.
 
 When prompted for `Profile name`, enter a name for your new working profile that Kinvey CLI will create for you. Kinvey CLI will use this profile automatically for future executions as long as it is the only profile on the system. You can create new profiles and select an active profile if you need to.
 
@@ -251,7 +368,7 @@ Finally, you are ready to deploy you node.js project as a Flex Service.
 
 Another way to create working profiles, besides running `kinvey init`, is invoking `kinvey profile create <name>`. You can choose between providing the credentials at the command line or as preset [environment variables](#environment-variables).
 
-    kinvey profile create dev --email john.doe@kinvey.com --password john'sPassword --host kvy-us2
+    kinvey profile create dev --email john.doe@kinvey.com --password john'sPassword --instanceId kvy-us2
 
 You can create multiple profiles and specify which one to use at the command line.
 
@@ -266,7 +383,7 @@ If you don't want to specify a profile every time, you can set one as active and
 
 ### Authentication Token Expiration
 
-As part of creating a working profile, the authentication token provided by Kinvey is stored locally. This token will be used to authenticate future command executions until it expires. At that point, you need to recreate the profile to keep working with Kinvey CLI. You can do that by providing the profile name to `kinvey init` or `kinvey profile create`.
+As part of creating a working profile, the authentication token provided by Kinvey is stored locally. This token will be used to authenticate future command executions until it expires. At that point, you need to reenter your password or recreate the profile to keep working with Kinvey CLI. Run `kinvey profile login` to reenter your password. You can recreate the profile by providing the profile name to `kinvey init` or `kinvey profile create`.
 
 ## Authenticating One-time Commands
 
@@ -327,11 +444,12 @@ Run any command with the `--verbose` flag to receive more detailed information a
 
 Kinvey CLI is a subject to the following caveats:
 
-- It has a 10-second request timeout when communicating with the backend for initialization which may cause a connection error in some rare cases. Retrying the command remedies the problem in many cases.
+- The CLI has a 10-second request timeout when communicating with the backend for initialization which may cause a connection error in some rare cases. Retrying the command remedies the problem in many cases.
 - If you are using a profile that has been configured a while ago, you may stumble upon the `InvalidCredentials` error. It may mean that the session token has expired. See [Authentication Token Expiration](#authentication-token-expiration) for details.
 - You cannot deploy the same service version to the FlexService Runtime more than once. You must increment the version in `package.json` before redeploying.
 - Kinvey CLI sends binary data (content type "multipart/form-data") during the deploy process. The deploy job will fail if traffic of this type is blocked within your network.
 - There is a limit of 100 MB to the size of the FlexService logs that are kept on the backend. When log entries exceed that size, the oldest ones are deleted.
+- Running the CLI from Git Bash on Windows is known to cause issues ranging from failing commands to complete inability to start. Use Windows Command Prompt instead.
 
 If problems persist, contact [Kinvey](http://support.kinvey.com).
 

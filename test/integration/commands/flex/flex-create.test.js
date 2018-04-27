@@ -69,7 +69,7 @@ describe(baseCmd, () => {
       testServiceCreate(optionsForSecretAndApp, defaultFlags, null, done);
     });
 
-    it('without a secret should fail', (done) => {
+    it('without a secret should succeed', (done) => {
       testServiceCreate(optionsForApp, null, serviceName, done);
     });
 

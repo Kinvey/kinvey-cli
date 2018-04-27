@@ -6,14 +6,15 @@ exports['flex create with active profile with a name, secret and app should succ
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
 [debug] Request:  POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
 [debug] Response: POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 201
-Created service: 12378kdl2
+Created service: 12378kdl2. Secret: 789
 
 `
 
 exports['flex create with active profile with a name, secret and app should succeed and output JSON 1'] = `
 {
   "result": {
-    "id": "12378kdl2"
+    "id": "12378kdl2",
+    "secret": "789"
   }
 }
 
@@ -42,38 +43,9 @@ Options:
   -h, --help                Show help                                  [boolean]
   --app                     App ID/name                                 [string]
   --org                     Org ID/name                                 [string]
-  --secret                  Shared secret                    [string] [required]
+  --secret                  Shared secret                               [string]
 
 Not enough non-option arguments: got 0, need at least 1
-
-`
-
-exports['flex create with active profile without a secret should fail 1'] = `
-kinvey flex create <name>
-
-Create a Flex service
-
-Positionals:
-  name  Flex service name                                             [required]
-
-Options:
-  --version                 Show version number                        [boolean]
-  --email                   E-mail address of your Kinvey account       [string]
-  --password                Password of your Kinvey account             [string]
-  --2fa, --2Fa              Two-factor authentication token             [string]
-  --instanceId              Instance ID                                 [string]
-  --profile                 Profile to use                              [string]
-  --output                  Output format             [string] [choices: "json"]
-  --silent                  Do not output anything                     [boolean]
-  --suppress-version-check  Do not check for package updates           [boolean]
-  --verbose                 Output debug messages                      [boolean]
-  --no-color                Disable colors                             [boolean]
-  -h, --help                Show help                                  [boolean]
-  --app                     App ID/name                                 [string]
-  --org                     Org ID/name                                 [string]
-  --secret                  Shared secret                    [string] [required]
-
-Missing required argument: secret
 
 `
 
@@ -105,7 +77,7 @@ Options:
   -h, --help                Show help                                  [boolean]
   --app                     App ID/name                                 [string]
   --org                     Org ID/name                                 [string]
-  --secret                  Shared secret                    [string] [required]
+  --secret                  Shared secret                               [string]
 
 Arguments app and org are mutually exclusive
 
@@ -124,6 +96,11 @@ exports['flex create with one-time session with name, secret and org should succ
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-Created service: 12378kdl2
+Created service: 12378kdl2. Secret: 789
+
+`
+
+exports['flex create with active profile without a secret should succeed 1'] = `
+Created service: 12378kdl2. Secret: 789
 
 `

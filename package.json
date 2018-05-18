@@ -81,6 +81,7 @@
   ],
   "preferGlobal": true,
   "yargs": {
-    "boolean-negation": false
+    "boolean-negation": false,
+    "camel-case-expansion": false
   }
 }

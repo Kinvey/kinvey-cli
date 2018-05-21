@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "configType": "environment",
+  "collections": {
+    "colle0": {
+      "type": "external",
+      "permissions": "full",
+      "service": "serviceName",
+      "handlerName": "CoolCollection"
+    },
+    "collection2": {
+      "name": "colle2",
+      "type": "internal",
+      "permissions": "read-only"
+    }
+  }
+}

@@ -127,6 +127,7 @@ describe(`${baseCmd}`, () => {
           const manager = new CLIManager({ setup, config: testsConfig, logger, commandsManager: yargs });
           manager.sendRequest = function stubSendRequest(options, done) {
             const mockReq = {
+              on: () => {},
               once: () => {},
               send: () => {
                 if (options.endpoint === Endpoints.session()) {

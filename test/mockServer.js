@@ -27,6 +27,7 @@ const fixtureCollections = require('./fixtures/collections.json');
 const fixtureCollection = require('./fixtures/collection.json');
 const fixtureOrgs = require('./fixtures/orgs.json');
 const fixtureServices = require('./fixtures/datalinks.json');
+const fixtureInternalFlexService = require('./fixtures/internal-flex-service.json');
 const fixtureJob = require('./fixtures/job.json');
 const fixtureJobs = require('./fixtures/jobs.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
@@ -68,6 +69,7 @@ function build(
     serviceStatus = ServiceStatus.ONLINE,
     orgs = fixtureOrgs,
     apps = fixtureApps,
+    service = fixtureInternalFlexService,
     envs = fixtureEnvs,
     colls = fixtureCollections,
     jobType = 'recycleDataLink',
@@ -190,6 +192,18 @@ function build(
     res.send(fixtureServices);
   });
 
+  app.delete(`/${versionPart}/data-links/:id`, (req, res) => {
+    const id = req.params.id;
+    if (id === service.id) {
+      return res.sendStatus(204);
+    }
+
+    res.status(404).send({
+      code: 'DataLinkNotFound',
+      description: 'The specified data link could not be found.'
+    });
+  });
+
   // JOBS
   app.get(`/${versionPart}/jobs/:id`, (req, res) => {
     const id = req.params.id;
@@ -228,6 +242,16 @@ function build(
   // SERVICES BY APP/ORG
   app.get(`/${versionPart}/${domainType}/${domainEntityId}/data-links`, (req, res) => {
     res.send(fixtureServices);
+  });
+
+  app.post(`/${versionPart}/${domainType}/${domainEntityId}/data-links`, (req, res) => {
+    const body = req.body;
+    if (!body.name || body.name !== service.name || body.type !== service.type || !Array.isArray(body.backingServers)
+      || !body.backingServers[0] || !body.backingServers[0].secret) {
+      return res.sendStatus(400);
+    }
+
+    res.status(201).send(service);
   });
 
   // ENVS BY APP

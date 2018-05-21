@@ -114,7 +114,7 @@ TestsHelper.assertions = {
   assertProjectSetup(expected, path, done) {
     path = path || projectPath;
     readJSON(path, (err, actual) => {
-      if (err) {
+      if (err && err.code !== 'ENOENT') {
         return done(err);
       }
 

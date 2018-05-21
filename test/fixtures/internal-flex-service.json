@@ -1,0 +1,10 @@
+{
+  "id"  : "12378kdl2",
+  "type" : "internal",
+  "name" : "TestKinveyDatalink",
+  "backingServers": [{
+    "_id"    : "456",
+    "host"   : "k8s-d0f34091237849ac5253",
+    "secret" : "789"
+  }]
+}

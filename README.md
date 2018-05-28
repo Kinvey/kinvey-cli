@@ -175,9 +175,9 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Information within the file is saved per profile. Each successive execution in the same directory overwrites the respective profile section in the configuration file. This command requires that either an active profile is set or a profile is specified using the `--profile` option. Profile data options such as `--email`, `--password`, and `--instanceId` are ignored if specified. 
 
-* `flex create <name>`
+* `flex create <service_name>`
 
-    Creates an internal flex service. Application or organization must be specified using the `--app` or `--org` option.
+    Creates an internal flex service with the specified name. You need to specify a domain (application or organization) using the `--app` or `--org` option.
 
     * `--app <application>`
            
@@ -185,15 +185,15 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
           
     * `--org <organization>`
             
-          Specifies a Kinvey org by ID or name.
+          Specifies a Kinvey organization by ID or name.
            
     * `--secret <secret>`
      
-          Specifies shared secret. If option is not provided, secret will be auto generated.
+          Specifies a shared secret of your choice (minimum 2 characters, no leading or trailing whitespaces). If you skip this option, a random shared secret is generated for you. In the latter case, Kinvey CLI will pass the secret automatically to the Flex Runtime and print it on the screen for your information.
         
 * `flex deploy [serviceId]`
 
-   Deploys the current project to the Kinvey FlexService Runtime. To use a different service than the one initiated last, specify its service ID as positional argument.
+   Deploys the current project to the Kinvey FlexService Runtime, using the current service, which is the one you initiated last. To use a different service, specify its service ID.
 
 * `flex job [id]`
 
@@ -201,7 +201,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex status [serviceId]`
 
-   Displays the health of the current (the one you initiated last) Flex Service. To get the status of a different service, specify its service ID using the `serviceId` positional argument.
+   Displays the health of the current Flex Service, which is the one you initiated last. To get the status of a different service, specify its service ID.
 
 * `flex list`
 
@@ -217,7 +217,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex logs [serviceId]`
 
-   Retrieves and displays Flex Services logs. Logs calls return 100 entries by default and can return up to 2,000 entries. Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`. Combine with the paging and limiting options to narrow down your search. Logs for external Flex Services are not returned. You can specify a Flex Service to read logs from using the `serviceId` positional argument. In addition to the global options, this command supports the following options:
+   Retrieves and displays logs for the current Flex Service, which is the one you initiated last. To get logs for a different service, specify its service ID. Log calls return 100 entries by default and can return up to 2,000 entries. Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`. Combine with the paging and limiting options to narrow down your search. Logs for external Flex Services are not returned. In addition to the global options, this command supports the following options:
 
    * `--from`
 
@@ -237,11 +237,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex recycle [serviceId]`
    
-   Recycles the current (the one you initiated last) Flex Service. To recycle a different service, specify its service ID using the `serviceId` positional argument.
+   Recycles the current Flex Service, which is the one you initiated last. To recycle a different service, specify its service ID.
 
 * `flex delete [serviceId]`
 
-    Deletes the specified internal flex service or the current one. You will be prompted for confirmation unless you set the `--no-prompt` flag.
+    Deletes the current Flex Service, which is the one you initiated last. To delete a different service, specify its service ID. You will be prompted for confirmation unless you set the `--no-prompt` flag.
     
     * `--no-prompt`
     
@@ -249,7 +249,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex clear`
 
-   Removes the current Flex Service configuration from the Node.js project directory that it has been executed in.
+   When executed in a Node.js project directory, this command removes the current Flex Service configuration from the project.
 
 * `help`
 

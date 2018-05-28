@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.0.0-beta.1
+* Add `flex create` command to create internal flex services
+* Add `flex clear` command to clear project settings
+* Repurpose the `flex delete` command to delete internal flex services
+* Ask for confirmation on app/env/coll/flex delete
+* Fail on unsupported hyphenated option or flag
+* Fix `flex deploy` to work with local setup
+* Update production dependencies (moment.js, request.js)
+
 ## 4.0.0-beta.0
 * Add commands:
     * organizations-related: `org list`, `org show`, `org use`

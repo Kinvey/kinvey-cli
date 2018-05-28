@@ -41,6 +41,7 @@ Options:
   -h, --help                Show help                                  [boolean]
   --env                     Env ID/name                                 [string]
   --app                     App ID/name                                 [string]
+  --no-prompt               Do not prompt             [boolean] [default: false]
 
 Not enough non-option arguments: got 0, need at least 1
 
@@ -203,6 +204,7 @@ Options:
   -h, --help                Show help                                  [boolean]
   --env                     Env ID/name                                 [string]
   --app                     App ID/name                                 [string]
+  --no-prompt               Do not prompt             [boolean] [default: false]
 
 Application is required. Please set active app or use the --app option.
 
@@ -233,6 +235,7 @@ Options:
   -h, --help                Show help                                  [boolean]
   --env                     Env ID/name                                 [string]
   --app                     App ID/name                                 [string]
+  --no-prompt               Do not prompt             [boolean] [default: false]
 
 Application is required. Please set active app or use the --app option.
 

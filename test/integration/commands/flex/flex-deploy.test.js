@@ -117,62 +117,6 @@ describe(`${baseCmd}`, () => {
         setup.clearProjectSetup(null, done);
       });
 
-      describe("and user's project is valid", () => {
-        /* it('should succeed', (done) => {
-          testFlexDeploy(activeProfile, null, validUserOne, done);
-        }); */
-
-        it('should succeed', (done) => {
-          const setup = new Setup(testsConfig.paths.session);
-          const manager = new CLIManager({ setup, config: testsConfig, logger, commandsManager: yargs });
-          manager.sendRequest = function stubSendRequest(options, done) {
-            const mockReq = {
-              on: () => {},
-              once: () => {},
-              send: () => {
-                if (options.endpoint === Endpoints.session()) {
-                  return done(null, { email: validUserOne.email, token: tokenOne });
-                } else if (options.endpoint === Endpoints.jobs(2)) {
-                  const formData = options.formData;
-                  const headers = options.headers;
-                  if (isEmpty(headers) || headers['Transfer-Encoding'] !== 'chunked') {
-                    return done(new Error('Bad headers.'));
-                  }
-
-                  if (isEmpty(formData) || formData.type !== 'deployDataLink' || isEmpty(formData.params) || formData.params.version === '0.6.2') {
-                    return done(new Error('Bad form data type or params.'));
-                  }
-
-                  const isOK = !isEmpty(formData.file) && !isEmpty(formData.file.options) && formData.file.options.contentType === 'application/tar';
-                  if (!isOK) {
-                    return done(new Error('Bad form data file.'));
-                  }
-
-
-                  return done(null, { job: '123' });
-                }
-
-                done(new Error('CLI made a bad request.'));
-              }
-            };
-            mockReq.send();
-            return mockReq;
-          };
-
-          const servicesService = new ServicesService(manager);
-          const ctrl = new FlexController({ cliManager: manager, servicesService });
-
-          const options = {
-            [AuthOptionsNames.EMAIL]: existentUserOne.email,
-            [AuthOptionsNames.PASSWORD]: existentUserOne.password
-          };
-          ctrl.deploy(options, (err) => {
-            expect(err).to.not.exist;
-            done();
-          });
-        });
-      });
-
       describe("and user's project is invalid", () => {
         const pathPackageJSON = path.join(testsConfig.paths.package, 'package.json');
         let initialPackageSetup;

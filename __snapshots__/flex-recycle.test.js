@@ -69,9 +69,12 @@ Recycle initiated. Job: idOfJobThatIsRecyclingTheService
 `
 
 exports['flex recycle by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
-kinvey flex recycle
+kinvey flex recycle [serviceId]
 
 Recycle the Service
+
+Positionals:
+  serviceId  Service ID                                                 [string]
 
 Options:
   --version                 Show version number                        [boolean]
@@ -86,7 +89,6 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
-  --serviceId               Service ID                                  [string]
 
 You must be authenticated.
 

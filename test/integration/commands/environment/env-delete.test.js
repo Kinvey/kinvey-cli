@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { ActiveItemType, AppOptionsName, AuthOptionsNames, Namespace } = require('./../../../../lib/Constants');
+const { ActiveItemType, AppOptionsName, AuthOptionsNames, CommonOptionsNames, Namespace } = require('./../../../../lib/Constants');
 const { assertions, buildCmd, execCmdWithAssertion, setup, testers } = require('../../../TestsHelper');
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureEnv = require('./../../../fixtures/env.json');
@@ -35,6 +35,8 @@ function testEnvDelete(options, flags, envIdentifier, appIdentifier, done) {
     mergedOptions[AppOptionsName.APP] = appIdentifier;
   }
 
+  flags = flags || [];
+  flags.push(CommonOptionsNames.NO_PROMPT);
   testers.execCmdWithIdentifier(baseCmd, mergedOptions, flags, envIdentifier, null, done);
 }
 
@@ -57,7 +59,7 @@ describe(baseCmd, () => {
         [AuthOptionsNames.PASSWORD]: existentUser.password,
         [AppOptionsName.APP]: fixtureApp.name
       };
-      const cmd = buildCmd(baseCmd, [existentEnvName], options, defaultFlags);
+      const cmd = buildCmd(baseCmd, [existentEnvName], options, [CommonOptionsNames.VERBOSE, CommonOptionsNames.NO_PROMPT]);
       execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
         done();

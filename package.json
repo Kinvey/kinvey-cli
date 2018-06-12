@@ -1,6 +1,6 @@
 {
   "name": "kinvey-cli",
-  "version": "4.0.0-beta.0",
+  "version": "4.0.0-beta.1",
   "description": "Utility for deploying and managing FlexServices on Kinvey's FlexService Runtime",
   "keywords": [
     "Kinvey"
@@ -32,6 +32,7 @@
     "eslint": "./node_modules/.bin/eslint bin config lib test"
   },
   "dependencies": {
+    "aes-js": "3.1.1",
     "archiver": "1.0.1",
     "async": "1.4.2",
     "chalk": "2.1.0",
@@ -46,9 +47,9 @@
     "lodash.isequal": "4.5.0",
     "lodash.merge": "4.6.0",
     "lodash.sortby": "4.7.0",
-    "moment": "2.11.2",
-    "request": "2.63.0",
-    "suppose": "0.6.2",
+    "moment": "2.22.1",
+    "request": "2.87.0",
+    "semver": "5.5.0",
     "update-notifier": "0.5.0",
     "uuid": "2.0.3",
     "uuid-v4": "0.1.0",
@@ -70,6 +71,7 @@
     "sinon-chai": "2.14.0",
     "snap-shot-it": "4.0.1",
     "strip-ansi": "4.0.0",
+    "suppose": "0.6.2",
     "test-console": "1.0.0"
   },
   "engines": {
@@ -82,6 +84,7 @@
   ],
   "preferGlobal": true,
   "yargs": {
-    "boolean-negation": false
+    "boolean-negation": false,
+    "camel-case-expansion": false
   }
 }

@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "schemaVersion": "1.0.1",
   "configType": "environment",
   "settings": {
     "apiVersion": 3,

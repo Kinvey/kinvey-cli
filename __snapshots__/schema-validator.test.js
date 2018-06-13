@@ -1,6 +1,6 @@
 exports['schema validator env with invalid env should fail 1'] = `
 
-	version: "version" must be one of [1.0.0]
+	schemaVersion: "schemaVersion" must be one of [1.0.0]
 	settings.emailVerification.required: "required" must be a boolean
 	collections.colle0.service: "service" is required
 	collections.colle3.type: "type" is required

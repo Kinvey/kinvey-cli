@@ -84,5 +84,10 @@
   "roles": {
     "Jedi": { "darkSide": "should not be here", "description": "presumably the good guys" },
     "Sith": { "description": "presumably the bad guys" }
+  },
+  "push": {
+    "android": {
+      "senderId": "id123"
+    }
   }
 }

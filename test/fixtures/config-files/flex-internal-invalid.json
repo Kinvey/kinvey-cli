@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "configType": "service",
+  "type": "flex-internal",
+  "secret": "123",
+  "host": "https://swapi.co/api"
+}

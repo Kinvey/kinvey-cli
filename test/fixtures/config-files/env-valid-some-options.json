@@ -13,5 +13,12 @@
       "type": "internal",
       "permissions": "read-only"
     }
+  },
+  "push": {
+    "ios": {
+      "production": false,
+      "certificateFilePath": "./mypushcertdev.p12",
+      "password": "12"
+    }
   }
 }

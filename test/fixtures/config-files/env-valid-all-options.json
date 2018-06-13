@@ -99,5 +99,16 @@
   "roles": {
     "Jedi": { "description": "presumably the good guys" },
     "Sith": { "description": "presumably the bad guys" }
+  },
+  "push": {
+    "android": {
+      "senderId": "id123",
+      "apiKey": "key123"
+    },
+    "ios": {
+      "production": false,
+      "certificateFilePath": "./mypushcertdev.p12",
+      "password": "ultraSecurePass"
+    }
   }
 }

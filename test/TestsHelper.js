@@ -17,6 +17,7 @@ const async = require('async');
 const inquirer = require('inquirer');
 const snapshot = require('snap-shot-it');
 const stripAnsi = require('strip-ansi');
+const uuidv4 = require('uuid-v4');
 
 const childProcess = require('child_process');
 const fs = require('fs');
@@ -716,6 +717,9 @@ TestsHelper.randomStrings = {
   },
   envName: (length=12) => {
     return `CliEnv${TestsHelper.randomStrings.plainString(length)}`.substr(0, length);
+  },
+  collName: (length=10) => {
+    return `Coll${uuidv4()}`.substr(0, length);
   }
 };
 

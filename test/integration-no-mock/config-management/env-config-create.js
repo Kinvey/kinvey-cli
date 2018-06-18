@@ -20,8 +20,122 @@ const ApiService = require('./../../ApiService');
 const ConfigManagementHelper = require('./../../ConfigManagementHelper');
 const EnvHelper = ConfigManagementHelper.env;
 const AppHelper = ConfigManagementHelper.app;
+const { BackendCollectionPermission } = require('./../../../lib/Constants');
 const { ConfigFilesDir, execCmdWoMocks, randomStrings } = require('./../../TestsHelper');
 const { writeJSON } = require('../../../lib/Utils');
+
+function createEnvFromConfig(envName, env, appName, done) {
+  let filePath;
+
+  async.series([
+    (next) => {
+      const fileName = `${randomStrings.plainString(10)}.json`;
+      filePath = path.join(ConfigFilesDir, fileName);
+      writeJSON(filePath, env, next);
+    },
+    (next) => {
+      execCmdWoMocks(`env create ${envName} ${filePath} --app ${appName} --output json`, null, (err, data) => {
+        if (err) {
+          return next(err);
+        }
+
+        const parsedData = JSON.parse(data);
+        const envId = parsedData.result.id;
+        next(null, envId);
+      });
+    }
+  ], (err, results) => {
+    if (err) {
+      return done(err);
+    }
+
+    done(null, results.pop());
+  });
+}
+
+function assertEnvOnly(envFromConfig, envId, envName, done) {
+  ApiService.envs.get(envId, (err, actualEnv) => {
+    if (err) {
+      return done(err);
+    }
+
+    expect(actualEnv.name).to.equal(envName);
+
+    const envSettings = envFromConfig.settings;
+    if (envSettings && envSettings.emailVerification) {
+      expect(actualEnv.emailVerification).to.deep.equal(envSettings.emailVerification);
+    } else {
+      expect(actualEnv).to.not.have.property('emailVerification');
+    }
+
+    let expectedApiVersion = 3;
+    if (envSettings && envSettings.apiVersion) {
+      expectedApiVersion = envSettings.apiVersion;
+    }
+
+    expect(actualEnv.apiVersion).to.equal(expectedApiVersion);
+
+    done();
+  });
+}
+
+function assertCollections(envId, collList, expCollCount, rolesNameIdPairs, done) {
+  ApiService.colls.get(envId, null, (err, actualColls) => {
+    if (err) {
+      return done(err);
+    }
+
+    expect(expCollCount).to.equal(actualColls.length);
+
+    const expectedPermissionsPerColl = buildExpectedPermissionsPerColl(collList, rolesNameIdPairs);
+    const collsFromConfigCount = collList.length;
+
+    for (let i = 0; i < collsFromConfigCount; i++) {
+      const expColl = collList[i];
+      const actualColl = actualColls.find(x => x.name === expColl.name);
+      if (!actualColl) {
+        return done(new Error(`Failed to find coll with name '${expColl.name}'.`));
+      }
+
+      const expPermissions = expectedPermissionsPerColl[actualColl.name];
+      expect(actualColl.permissions).to.deep.equal(expPermissions);
+    }
+
+    done();
+  });
+}
+
+function buildExpectedPermissionsPerColl(collList, rolesNameIdPairs) {
+  const expectedPermissionsPerColl = {};
+
+  collList.forEach((coll) => {
+    let expectedPermissions;
+    const collPermissionsInConfig = coll.permissions;
+    if (typeof collPermissionsInConfig === 'string') {
+      expectedPermissions = BackendCollectionPermission[collPermissionsInConfig];
+    } else {
+      expectedPermissions = {};
+      const rolesNames = Object.keys(collPermissionsInConfig);
+      rolesNames.forEach((roleName) => {
+        const permissionsPerRole = Object.keys(collPermissionsInConfig[roleName]);
+        permissionsPerRole.forEach((permission) => { // e.g. create, update
+          if (!expectedPermissions[permission]) {
+            expectedPermissions[permission] = [];
+          }
+
+          expectedPermissions[permission].push({
+            roleId: rolesNameIdPairs[roleName] || 'all-users',
+            type: collPermissionsInConfig[roleName][permission]
+          });
+        });
+      });
+    }
+
+    expectedPermissionsPerColl[coll.name] = expectedPermissions;
+  });
+
+  return expectedPermissionsPerColl;
+}
 
 module.exports = () => {
   const appName = randomStrings.appName();
@@ -37,110 +151,169 @@ module.exports = () => {
   it('settings only should succeed', (done) => {
     const envSettings = EnvHelper.buildSettings();
     const env = {
+      schemaVersion: '1.0.0',
       configType: 'environment',
       settings: envSettings
     };
 
     const envName = randomStrings.envName();
-    let filePath;
     let envId;
 
     async.series([
       (next) => {
-        const fileName = `${randomStrings.plainString(10)}.json`;
-        filePath = path.join(ConfigFilesDir, fileName);
-        writeJSON(filePath, env, next);
-      },
-      (next) => {
-        execCmdWoMocks(`env create ${envName} ${filePath} --app ${appName} --output json`, null, (err, data) => {
+        createEnvFromConfig(envName, env, appName, (err, id) => {
           if (err) {
             return next(err);
           }
 
-          const parsedData = JSON.parse(data);
-          envId = parsedData.result.id;
+          envId = id;
           next();
         });
       },
       (next) => {
-        ApiService.envs.get(envId, (err, actualEnv) => {
-          if (err) {
-            return next(err);
-          }
-
-          expect(actualEnv.name).to.equal(envName);
-          expect(actualEnv.emailVerification).to.deep.equal(envSettings.emailVerification);
-          expect(actualEnv.apiVersion).to.equal(envSettings.apiVersion);
-          next();
-        });
+        assertEnvOnly(env, envId, envName, next);
       }
     ], done);
   });
 
   it('settings and internal collections wo system collections should succeed', (done) => {
     const collList = EnvHelper.buildValidInternalCollectionsList(3, false);
-
     const envSettings = EnvHelper.buildSettings();
     const env = {
+      schemaVersion: '1.0.0',
       configType: 'environment',
-      settings: envSettings
+      settings: envSettings,
+      collections: ConfigManagementHelper.common.buildConfigEntityFromList(collList)
     };
 
     const envName = randomStrings.envName();
-    let filePath;
     let envId;
 
     async.series([
       (next) => {
-        const fileName = `${randomStrings.plainString(10)}.json`;
-        filePath = path.join(ConfigFilesDir, fileName);
-        writeJSON(filePath, env, next);
-      },
-      (next) => {
-        execCmdWoMocks(`env create ${envName} ${filePath} --app ${appName} --output json`, null, (err, data) => {
+        createEnvFromConfig(envName, env, appName, (err, id) => {
           if (err) {
             return next(err);
           }
 
-          const parsedData = JSON.parse(data);
-          envId = parsedData.result.id;
+          envId = id;
           next();
         });
       },
       (next) => {
-        ApiService.envs.get(envId, (err, actualEnv) => {
+        assertEnvOnly(env, envId, envName, next);
+      },
+      (next) => {
+        assertCollections(envId, collList, collList.length + 2, null, next);
+      }
+    ], done);
+  });
+
+  it('internal collections only plus system collections should succeed', (done) => {
+    const collList = EnvHelper.buildValidInternalCollectionsList(2, true);
+    const env = {
+      schemaVersion: '1.0.0',
+      configType: 'environment',
+      collections: ConfigManagementHelper.common.buildConfigEntityFromList(collList)
+    };
+
+    const envName = randomStrings.envName();
+    let envId;
+
+    async.series([
+      (next) => {
+        createEnvFromConfig(envName, env, appName, (err, id) => {
           if (err) {
             return next(err);
           }
 
-          expect(actualEnv.name).to.equal(envName);
-          expect(actualEnv.emailVerification).to.deep.equal(envSettings.emailVerification);
-          expect(actualEnv.apiVersion).to.equal(envSettings.apiVersion);
+          envId = id;
           next();
         });
       },
       (next) => {
-        ApiService.colls.get(envId, null, (err, actualColls) => {
+        assertEnvOnly(env, envId, envName, next);
+      },
+      (next) => {
+        assertCollections(envId, collList, collList.length, null, next);
+      }
+    ], done);
+  });
+
+  // TODO: cli-65 Add hooks
+  it('internal collections plus system collections, hooks and roles should succeed', (done) => {
+    const collList = EnvHelper.buildValidInternalCollectionsList(2, true);
+    const rolesList = ConfigManagementHelper.roles.buildValidRolesList(2);
+
+    // set complex permissions for a collection
+    const roleName = rolesList[0].name;
+    const collWithComplexPermissions = collList[0];
+    collWithComplexPermissions.permissions = {
+      'all-users': {
+        create: 'always',
+        read: 'grant',
+        update: 'always',
+        'delete': 'grant'
+      },
+      [roleName]: {
+        create: 'grant',
+        update: 'entity'
+      }
+    };
+
+    const env = {
+      schemaVersion: '1.0.0',
+      configType: 'environment',
+      collections: ConfigManagementHelper.common.buildConfigEntityFromList(collList),
+      roles: ConfigManagementHelper.common.buildConfigEntityFromList(rolesList)
+    };
+
+    const envName = randomStrings.envName();
+    let envId;
+    let actualRoles;
+    let rolesNameIdPairs = {};
+
+    async.series([
+      (next) => {
+        createEnvFromConfig(envName, env, appName, (err, id) => {
           if (err) {
             return next(err);
           }
 
-          const expectedCollCountWoSystemColls = collList.length;
-          const expectedCollCount = expectedCollCountWoSystemColls + 2;
-          expect(expectedCollCount).to.equal(actualColls.length);
+          envId = id;
+          next();
+        });
+      },
+      (next) => {
+        assertEnvOnly(env, envId, envName, next);
+      },
+      (next) => {
+        ApiService.roles.get(envId, null, (err, data) => {
+          if (err) {
+            return next(err);
+          }
 
-          for (let i = 0; i < expectedCollCountWoSystemColls; i++) {
-            const expColl = collList[i];
-            const actualColl = actualColls.find(x => x.name === expColl.name);
-            if (!actualColl) {
-              return next(new Error(`Failed to find coll with name '${expColl.name}'.`));
+          actualRoles = data;
+
+          const expectedRolesCount = rolesList.length;
+          expect(expectedRolesCount).to.equal(actualRoles.length);
+
+          for (let i = 0; i < expectedRolesCount; i++) {
+            const expected = rolesList[i];
+            const actual = actualRoles.find(x => x.name === expected.name);
+            if (!actual) {
+              return next(new Error(`Failed to find role with name '${expected.name}'.`));
             }
 
-            expect(actualColl.permissions).to.equal('append-read');
+            rolesNameIdPairs[actual.name] = actual._id;
+            expect(actual.description).to.equal(expected.description);
           }
 
           next();
         });
+      },
+      (next) => {
+        assertCollections(envId, collList, collList.length, rolesNameIdPairs, next);
       }
     ], done);
   });

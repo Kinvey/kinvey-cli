@@ -19,11 +19,12 @@ const async = require('async');
 const isempty = require('lodash.isempty');
 const request = require('request');
 
-let authToken;
+let authTokenMapi;
+let baasAuth;
 
 function getAuthToken(done) {
-  if (authToken) {
-    return setImmediate(() => { done(null, authToken); });
+  if (authTokenMapi) {
+    return setImmediate(() => { done(null, authTokenMapi); });
   }
 
   authenticate(null, null, (err, result) => {
@@ -35,7 +36,11 @@ function getAuthToken(done) {
   });
 }
 
-function getBaseUrl() {
+function getBaseUrl(isBaasRequest) {
+  if (isBaasRequest && process.env.KINVEY_CLI_BAAS) {
+    return process.env.KINVEY_CLI_BAAS;
+  }
+
   let instance = process.env.KINVEY_CLI_INSTANCE;
   if (instance && instance.includes('localhost')) {
     return instance;
@@ -45,21 +50,19 @@ function getBaseUrl() {
     instance = 'kvy-us1';
   }
 
-  return `https://${instance}-manage.kinvey.com`;
+  return isBaasRequest ? `https://${instance}-baas.kinvey.com` : `https://${instance}-manage.kinvey.com`;
 }
-
-const baseUrl = getBaseUrl();
 
 function getIdPartFromId(id) {
   return id === null || id === undefined ? '' : `/${id}`;
 }
 
-function getSchemaVersion() {
-  return '/v2';
+function getSchemaVersion(isBaasRequest) {
+  return isBaasRequest ? '' : '/v2';
 }
 
-function buildUrl(relativeUrl, id) {
-  const url = `${baseUrl}${getSchemaVersion()}/${relativeUrl}${getIdPartFromId(id)}`;
+function buildUrl(relativeUrl, id, isBaasRequest) {
+  const url = `${getBaseUrl(isBaasRequest)}${getSchemaVersion(isBaasRequest)}/${relativeUrl}${getIdPartFromId(id)}`;
   return url;
 }
 
@@ -149,7 +152,7 @@ function authenticate(email, password, done) {
   makeRequest(
     {
       body,
-      url: `${baseUrl}/session`,
+      url: `${getBaseUrl()}/session`,
       method: 'POST',
       skipAuth: true
     },
@@ -158,11 +161,40 @@ function authenticate(email, password, done) {
         return done(err);
       }
 
-      authToken = result.token;
+      authTokenMapi = result.token;
 
       done(null, result);
     }
   );
+}
+
+function getBaasAuthToken(envId, done) {
+  if (baasAuth) {
+    return setImmediate(() => { done(null, baasAuth); });
+  }
+
+  envs.get(envId, (err, env) => {
+    if (err) {
+      return done(err);
+    }
+
+    const envIdMasterSecretPair = `${env.id}:${env.masterSecret}`;
+    const encodedEnvIdMasterSecretPair = (new Buffer(envIdMasterSecretPair)).toString('base64');
+    baasAuth = encodedEnvIdMasterSecretPair;
+    return done(null, baasAuth);
+  });
+}
+
+function setBaasAuthHeader(envId, options, done) {
+  options.headers = options.headers || {};
+  getBaasAuthToken(envId, (err, token) => {
+    if (err) {
+      return done(err);
+    }
+
+    options.headers.Authorization = `Basic ${token}`;
+    done();
+  });
 }
 
 const apps = {
@@ -178,7 +210,7 @@ const apps = {
 
 const colls = {
   get: (envId, collName, done) => {
-    const url = buildUrl(`environments/${getIdPartFromId(envId)}/collections`, collName);
+    const url = buildUrl(`environments${getIdPartFromId(envId)}/collections`, collName);
     makeRequest({ url }, done);
   }
 };
@@ -197,11 +229,26 @@ const orgs = {
   }
 };
 
+const roles = {
+  get: (envId, roleId, done) => {
+    const url = `${buildUrl('roles', envId, true)}${getIdPartFromId(roleId)}`;
+    const options = { url };
+    setBaasAuthHeader(envId, options, (err) => {
+      if (err) {
+        return done(err);
+      }
+
+      makeRequest(options, done);
+    });
+  }
+};
+
 module.exports = {
   apps,
   colls,
   envs,
   orgs,
+  roles,
   general: {
     authenticate,
     makeRequest

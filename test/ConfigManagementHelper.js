@@ -33,7 +33,7 @@ env.buildSettings = function buildSettings(options) {
 };
 
 env.buildInternalCollection = function buildInternalCollection(name, permissions) {
-  const collName = name || TestsHelper.randomStrings.plainString(6);
+  const collName = name || TestsHelper.randomStrings.collName();
   const collPermissions = permissions || 'shared';
 
   return {
@@ -44,7 +44,7 @@ env.buildInternalCollection = function buildInternalCollection(name, permissions
 };
 
 env.buildExternalCollection = function buildExternalCollection(serviceName, handlerName, collName, permissions) {
-  collName = name || TestsHelper.randomStrings.plainString(6);
+  collName = name || TestsHelper.randomStrings.collName();
   permissions = permissions || 'shared';
 
   return {
@@ -71,18 +71,18 @@ env.buildValidInternalCollectionsList = function buildValidInternalCollectionsLi
   return result;
 };
 
-env.buildConfigCollectionsFromCollList = function buildConfigCollectionsFromCollList(collList) {
+function buildConfigEntityFromList(list) {
   const result = {};
 
-  collList.forEach((x) => {
-    const collCopy = clonedeep(x);
-    const name = collCopy.name;
-    delete collCopy.name;
-    result[name] = collCopy;
+  list.forEach((x) => {
+    const entityCopy = clonedeep(x);
+    const name = entityCopy.name;
+    delete entityCopy.name;
+    result[name] = entityCopy;
   });
 
   return result;
-};
+}
 
 const app = {};
 app.createInTestsOrg = function (data, done) {
@@ -123,9 +123,26 @@ app.createInTestsOrg = function (data, done) {
   });
 };
 
+const roles = {};
+roles.buildValidRolesList = function buildValidRolesList(count) {
+  const result = [];
+  for (let i = 0; i < count; i++) {
+    result.push({
+      name: TestsHelper.randomStrings.plainString(6),
+      description: `role description ${i}`
+    });
+  }
+
+  return result;
+};
+
 const ConfigManagementHelper = {
   app,
-  env
+  env,
+  roles,
+  common: {
+    buildConfigEntityFromList
+  }
 };
 
 module.exports = ConfigManagementHelper;

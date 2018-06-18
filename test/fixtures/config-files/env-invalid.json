@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "1.0.1",
+  "configType": "environment",
+  "settings": {
+    "apiVersion": 3,
+    "emailVerification": {
+      "auto": true,
+      "required": 1
+    }
+  },
+  "collections": {
+    "colle0": {
+      "type": "external",
+      "permissions": "full"
+    },
+    "colle3": {
+      "permissions": {
+        "all-users": {
+          "create": "always",
+          "read": "always"
+        },
+        "Jedi": {
+          "create": "grant",
+          "update": "entity"
+        }
+      }
+    }
+  },
+  "commonCode": {
+    "my-common-code": {
+    },
+    "ext-common-code": {
+      "codeFile": "./my-common-code.js",
+      "code": "nope"
+    }
+  },
+  "collectionHooks": {
+    "colle2": {
+      "onPreSaveD": {
+        "type": "internal",
+        "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPostSave": {
+        "type": "internal",
+        "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}"
+      }
+    },
+    "colle0": {
+      "onPreSave": {
+        "type": "external",
+        "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}",
+        "service": "serviceName",
+        "handlerName": "bizLogix"
+      },
+      "onPreFetch": {
+        "type": "external",
+        "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}",
+        "service": "serviceName",
+        "handlerName": "bizLogix"
+      }
+    }
+  },
+  "customEndpoints": {
+    "end0": {
+      "type": "internal",
+      "codeFile": "./my-scheduled-code.js"
+    },
+    "end1": {
+      "type": "external",
+      "codeFile": "./my-scheduled-code.js",
+      "service": "serviceName",
+      "handlerName": "bizLogix"
+    }
+  },
+  "scheduledCode": {
+    "end0": {
+      "interval": "75-minutes",
+      "start": "2018-04-02T16:35:00Z"
+    },
+    "end2": {
+      "interval": "5-minutes"
+    }
+  },
+  "roles": {
+    "Jedi": { "darkSide": "should not be here", "description": "presumably the good guys" },
+    "Sith": { "description": "presumably the bad guys" }
+  },
+  "push": {
+    "android": {
+      "senderId": "id123"
+    }
+  }
+}

@@ -13,7 +13,7 @@
       "type": "external",
       "permissions": "full",
       "service": "serviceName",
-      "handlerName": "CoolCollection"
+      "serviceObject": "CoolCollection"
     },
     "collection2": {
       "name": "colle2",

@@ -7,8 +7,8 @@ exports['schema validator env with invalid env should fail 1'] = `
 	commonCode.my-common-code: "value" must contain at least one of [code, codeFile]
 	commonCode.ext-common-code: "value" contains a conflict between exclusive peers [code, codeFile]
 	collectionHooks.colle2.onPreSaveD: "onPreSaveD" is not allowed
-	scheduledCode.end0.interval: "interval" must be one of [weekly, daily, hourly, 30-minutes, 10-minutes, 5-minutes, 1-minute]
-	scheduledCode.end2.start: "start" is required
+	customEndpoints.end0.schedule.interval: "interval" must be one of [weekly, daily, hourly, 30-minutes, 10-minutes, 5-minutes, 1-minute]
+	customEndpoints.end1.schedule.start: "start" is required
 	roles.Jedi.darkSide: "darkSide" is not allowed
 	push.android.apiKey: "apiKey" is required
 `

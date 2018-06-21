@@ -1,6 +1,6 @@
 {
   "name": "kinvey-cli",
-  "version": "3.1.0",
+  "version": "4.0.0-beta.1",
   "description": "Utility for deploying and managing FlexServices on Kinvey's FlexService Runtime",
   "keywords": [
     "Kinvey"
@@ -27,11 +27,12 @@
     "lint": "npm run eslint",
     "test": "npm run test-unit && npm run test-integration",
     "test-unit": "./node_modules/.bin/mocha test/unit --NODE_CONFIG_DIR=./test/config",
-    "test-integration": "mocha test/integration/commands/flex && mocha test/integration/commands/init && mocha test/integration/commands/profile",
+    "test-integration": "./node_modules/.bin/mocha test/integration",
     "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test --NODE_CONFIG_DIR=./test/config",
     "eslint": "./node_modules/.bin/eslint bin config lib test"
   },
   "dependencies": {
+    "aes-js": "3.1.1",
     "archiver": "1.0.1",
     "async": "1.4.2",
     "chalk": "2.1.0",
@@ -39,15 +40,16 @@
     "console.table": "0.10.0",
     "inquirer": "0.12.0",
     "isemail": "1.2.0",
+    "joi": "13.3.0",
     "lodash.clonedeep": "4.5.0",
     "lodash.get": "4.4.2",
     "lodash.isempty": "4.4.0",
     "lodash.isequal": "4.5.0",
     "lodash.merge": "4.6.0",
     "lodash.sortby": "4.7.0",
-    "moment": "2.11.2",
-    "request": "2.63.0",
-    "suppose": "0.6.2",
+    "moment": "2.22.1",
+    "request": "2.87.0",
+    "semver": "5.5.0",
     "update-notifier": "0.5.0",
     "uuid": "2.0.3",
     "uuid-v4": "0.1.0",
@@ -69,6 +71,7 @@
     "sinon-chai": "2.14.0",
     "snap-shot-it": "4.0.1",
     "strip-ansi": "4.0.0",
+    "suppose": "0.6.2",
     "test-console": "1.0.0"
   },
   "engines": {
@@ -81,6 +84,7 @@
   ],
   "preferGlobal": true,
   "yargs": {
-    "boolean-negation": false
+    "boolean-negation": false,
+    "camel-case-expansion": false
   }
 }

@@ -20,7 +20,7 @@ const path = require('path');
 
 const { AuthOptionsNames } = require('./../../../../lib/Constants');
 const FlexController = require('./../../../../lib/flex/FlexController');
-const FlexService = require('./../../../../lib/flex/FlexService');
+const ServicesService = require('./../../../../lib/service/ServicesService');
 const CLIManager = require('./../../../../lib/CLIManager');
 const logger = require('./../../../../lib/logger');
 const Setup = require('./../../../../lib/Setup');
@@ -115,61 +115,6 @@ describe(`${baseCmd}`, () => {
 
       afterEach('clearProjectSetup', (done) => {
         setup.clearProjectSetup(null, done);
-      });
-
-      describe("and user's project is valid", () => {
-        /* it('should succeed', (done) => {
-          testFlexDeploy(activeProfile, null, validUserOne, done);
-        }); */
-
-        it('should succeed', (done) => {
-          const setup = new Setup(testsConfig.paths.session);
-          const manager = new CLIManager({ setup, config: testsConfig, logger, commandsManager: yargs });
-          manager.sendRequest = function stubSendRequest(options, done) {
-            const mockReq = {
-              once: () => {},
-              send: () => {
-                if (options.endpoint === Endpoints.session()) {
-                  return done(null, { email: validUserOne.email, token: tokenOne });
-                } else if (options.endpoint === Endpoints.jobs(2)) {
-                  const formData = options.formData;
-                  const headers = options.headers;
-                  if (isEmpty(headers) || headers['Transfer-Encoding'] !== 'chunked') {
-                    return done(new Error('Bad headers.'));
-                  }
-
-                  if (isEmpty(formData) || formData.type !== 'deployDataLink' || isEmpty(formData.params) || formData.params.version === '0.6.2') {
-                    return done(new Error('Bad form data type or params.'));
-                  }
-
-                  const isOK = !isEmpty(formData.file) && !isEmpty(formData.file.options) && formData.file.options.contentType === 'application/tar';
-                  if (!isOK) {
-                    return done(new Error('Bad form data file.'));
-                  }
-
-
-                  return done(null, { job: '123' });
-                }
-
-                done(new Error('CLI made a bad request.'));
-              }
-            };
-            mockReq.send();
-            return mockReq;
-          };
-
-          const flexService = new FlexService(manager);
-          const ctrl = new FlexController({ cliManager: manager, flexService });
-
-          const options = {
-            [AuthOptionsNames.EMAIL]: existentUserOne.email,
-            [AuthOptionsNames.PASSWORD]: existentUserOne.password
-          };
-          ctrl.deploy(options, (err) => {
-            expect(err).to.not.exist;
-            done();
-          });
-        });
       });
 
       describe("and user's project is invalid", () => {

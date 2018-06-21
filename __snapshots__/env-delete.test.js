@@ -1,23 +1,3 @@
-exports['env delete without profile with credentials as options, existent app and env should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Logging in user: janeDoe@mail.com
-[debug] Request:  POST http://localhost:3234/session
-[debug] Response: POST http://localhost:3234/session 200
-[debug] Using application: TestApp
-[debug] Request:  GET http://localhost:3234/v2/apps
-[debug] Response: GET http://localhost:3234/v2/apps 200
-[debug] Using environment: Development
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
-[debug] Request:  DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M 204
-[debug] Request:  DELETE http://localhost:3234/session
-[debug] Response: DELETE http://localhost:3234/session 204
-[debug] Logged out current user.
-Deleted environment: kid_Sy4yRNV_M
-
-`
-
 exports['env delete with profile when active app is set active env is set without env arg should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
@@ -188,6 +168,7 @@ Options:
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --app                     App ID/name                                 [string]
+  --no-prompt               Do not prompt             [boolean] [default: false]
 
 Application is required. Please set active app or use the --app option.
 
@@ -217,7 +198,28 @@ Options:
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --app                     App ID/name                                 [string]
+  --no-prompt               Do not prompt             [boolean] [default: false]
 
 Application is required. Please set active app or use the --app option.
+
+`
+
+exports['env delete without profile with credentials as options, existent app and env should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Using application: TestApp
+[debug] Request:  GET http://localhost:3234/v2/apps
+[debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Using environment: Development
+[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M
+[debug] Response: DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M 204
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+Deleted environment: kid_Sy4yRNV_M
 
 `

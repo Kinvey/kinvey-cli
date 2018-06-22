@@ -47,6 +47,8 @@
     "lodash.isequal": "4.5.0",
     "lodash.merge": "4.6.0",
     "lodash.sortby": "4.7.0",
+    "lodash.isstring": "4.0.1",
+    "lodash.findkey": "4.6.0",
     "moment": "2.22.1",
     "request": "2.87.0",
     "semver": "5.5.0",

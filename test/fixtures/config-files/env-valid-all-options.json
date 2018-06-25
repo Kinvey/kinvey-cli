@@ -98,6 +98,12 @@
     "Jedi": { "description": "presumably the good guys" },
     "Sith": { "description": "presumably the bad guys" }
   },
+  "groups": {
+    "alliance": {
+      "name": "Alliance",
+      "groups": [ "otherGroup" ]
+    }
+  },
   "push": {
     "android": {
       "senderId": "id123",

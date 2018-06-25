@@ -700,7 +700,7 @@ To specify the built-in **All users** role, use *all-users*.
 
 `roles.[roleName].description` Role description. String. Optional.
 
-`groups` Groups. Optional. Object where each first-level property is the ID of a group.
+`groups` Groups. Optional. Object where each first-level property is the ID of a group. For example if the name is 'My group', then an appropriate ID could be 'myGroup' or 'my-group'.
 
 `groups.[groupId].name` Name. Optional.
 

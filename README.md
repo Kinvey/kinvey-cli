@@ -580,6 +580,15 @@ If an error occurs, the CLI stops applying the file and outputs the error messag
     "Intern": { "description": "Interns" },
     "Employee": { "description": "Employees" }
   },
+  "groups": {
+    "myGroup": {
+      "description": "Description here",
+      "groups": [ "anotherGroup" ]
+    },
+    "anotherGroup": {
+      "description": "Part of 'myGroup'"
+    }
+  },
   "push": {
   	"android": {
   	  "senderId": "id123",
@@ -626,6 +635,8 @@ If an error occurs, the CLI stops applying the file and outputs the error messag
 where **operation** is one of: *create, read, update, delete*
 
 and **accessType** is one of: *never, always, grant, entity*
+
+To specify the built-in **All users** role, use *all-users*.
  
  Example:
 
@@ -688,6 +699,14 @@ and **accessType** is one of: *never, always, grant, entity*
 `roles` Roles. Optional. Object where each first-level property is the name of a role.
 
 `roles.[roleName].description` Role description. String. Optional.
+
+`groups` Groups. Optional. Object where each first-level property is the ID of a group. For example if the name is 'My group', then an appropriate ID could be 'myGroup' or 'my-group'.
+
+`groups.[groupId].name` Name. Optional.
+
+`groups.[groupId].description` Description. Optional.
+
+`groups.[groupId].groups` Nested groups. Optional. An array of other groups IDs.
 
 `push` Push notifications settings. Optional. Object.
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.1.0-alpha.1
+* Add support for groups in env config file
+* Fix env export issues
+
+## 4.1.0-alpha.0
+* Add functionality to create/modify env from config file
+* Add functionality to export env to config file
+
 ## 4.0.0-beta.1
 * Add `flex create` command to create internal flex services
 * Add `flex clear` command to clear project settings

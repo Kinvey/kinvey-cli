@@ -23,13 +23,12 @@
   "scripts": {
     "start": "./bin/kinvey",
     "prepublish": "./node_modules/.bin/dos2unix ./bin/kinvey",
-    "pretest": "npm run eslint",
-    "lint": "npm run eslint",
+    "pretest": "npm run lint",
+    "lint": "./node_modules/.bin/eslint bin config lib test",
     "test": "npm run test-unit && npm run test-integration",
     "test-unit": "./node_modules/.bin/mocha test/unit --NODE_CONFIG_DIR=./test/config",
     "test-integration": "mocha test/integration/commands/flex && mocha test/integration/commands/init && mocha test/integration/commands/profile",
-    "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test --NODE_CONFIG_DIR=./test/config",
-    "eslint": "./node_modules/.bin/eslint bin config lib test"
+    "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test --NODE_CONFIG_DIR=./test/config"
   },
   "dependencies": {
     "archiver": "1.0.1",
@@ -59,9 +58,9 @@
     "body-parser": "1.18.2",
     "chai": "3.3.0",
     "dos2unix-cli": "1.0.1",
-    "eslint": "4.17.0",
+    "eslint": "5.0.1",
     "eslint-config-kinvey-platform": "kinvey/eslint-kinvey-platform#v0.1.1",
-    "eslint-plugin-import": "2.8.0",
+    "eslint-plugin-import": "2.13.0",
     "express": "4.16.2",
     "mocha": "5.0.4",
     "nyc": "11.1.0",

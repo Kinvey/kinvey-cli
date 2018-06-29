@@ -709,18 +709,10 @@ TestsHelper.testers.execCmdWithIdentifierAndActiveCheck = function execCmdWithId
 };
 
 TestsHelper.randomStrings = {
-  plainString: (length=14) => {
-    return (Math.random() + 1).toString(36).substr(0, length);
-  },
-  appName: (length=12) => {
-    return `CliApp${TestsHelper.randomStrings.plainString(length)}`.substr(0, length);
-  },
-  envName: (length=12) => {
-    return `CliEnv${TestsHelper.randomStrings.plainString(length)}`.substr(0, length);
-  },
-  collName: (length=10) => {
-    return `Coll${uuidv4()}`.substr(0, length);
-  }
+  plainString: (length = 14) => (Math.random() + 1).toString(36).substr(0, length),
+  appName: (length = 12) => `CliApp${TestsHelper.randomStrings.plainString(length)}`.substr(0, length),
+  envName: (length = 12) => `CliEnv${TestsHelper.randomStrings.plainString(length)}`.substr(0, length),
+  collName: (length = 10) => `Coll${uuidv4()}`.substr(0, length)
 };
 
 // TODO: cli-65 Consider moving to a separate file

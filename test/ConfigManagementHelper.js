@@ -20,6 +20,8 @@ const moment = require('moment');
 const ApiService = require('./ApiService');
 const TestsHelper = require('./TestsHelper');
 
+let ConfigManagementHelper = {};
+
 const env = {};
 env.buildSettings = function buildSettings(options) {
   return {
@@ -29,7 +31,7 @@ env.buildSettings = function buildSettings(options) {
       since: moment().add(1, 'days').toISOString()
     },
     apiVersion: 3
-  }
+  };
 };
 
 env.buildInternalCollection = function buildInternalCollection(name, permissions) {
@@ -40,11 +42,11 @@ env.buildInternalCollection = function buildInternalCollection(name, permissions
     name: collName,
     type: 'internal',
     permissions: collPermissions
-  }
+  };
 };
 
 env.buildExternalCollection = function buildExternalCollection(serviceName, handlerName, collName, permissions) {
-  collName = name || TestsHelper.randomStrings.collName();
+  collName = collName || TestsHelper.randomStrings.collName();
   permissions = permissions || 'shared';
 
   return {
@@ -54,12 +56,12 @@ env.buildExternalCollection = function buildExternalCollection(serviceName, hand
       service: serviceName,
       handlerName
     }
-  }
+  };
 };
 
 env.buildValidInternalCollectionsList = function buildValidInternalCollectionsList(count, addSystemColl) {
   const result = [];
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < count; i += 1) {
     result.push(ConfigManagementHelper.env.buildInternalCollection());
   }
 
@@ -126,7 +128,7 @@ app.createInTestsOrg = function (data, done) {
 const roles = {};
 roles.buildValidRolesList = function buildValidRolesList(count) {
   const result = [];
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < count; i += 1) {
     result.push({
       name: TestsHelper.randomStrings.plainString(6),
       description: `role description ${i}`
@@ -136,7 +138,7 @@ roles.buildValidRolesList = function buildValidRolesList(count) {
   return result;
 };
 
-const ConfigManagementHelper = {
+ConfigManagementHelper = {
   app,
   env,
   roles,

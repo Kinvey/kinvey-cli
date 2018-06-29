@@ -14,15 +14,17 @@
  */
 
 const async = require('async');
+const moment = require('moment');
 const path = require('path');
 
 const ApiService = require('./../../ApiService');
 const ConfigManagementHelper = require('./../../ConfigManagementHelper');
+
 const EnvHelper = ConfigManagementHelper.env;
 const AppHelper = ConfigManagementHelper.app;
-const { BackendCollectionPermission } = require('./../../../lib/Constants');
+const { BackendCollectionPermission, CollectionHook } = require('./../../../lib/Constants');
 const { ConfigFilesDir, execCmdWoMocks, randomStrings } = require('./../../TestsHelper');
-const { writeJSON } = require('../../../lib/Utils');
+const { isEmpty, writeJSON } = require('../../../lib/Utils');
 
 function createEnvFromConfig(envName, env, appName, done) {
   let filePath;
@@ -79,32 +81,6 @@ function assertEnvOnly(envFromConfig, envId, envName, done) {
   });
 }
 
-function assertCollections(envId, collList, expCollCount, rolesNameIdPairs, done) {
-  ApiService.colls.get(envId, null, (err, actualColls) => {
-    if (err) {
-      return done(err);
-    }
-
-    expect(expCollCount).to.equal(actualColls.length);
-
-    const expectedPermissionsPerColl = buildExpectedPermissionsPerColl(collList, rolesNameIdPairs);
-    const collsFromConfigCount = collList.length;
-
-    for (let i = 0; i < collsFromConfigCount; i++) {
-      const expColl = collList[i];
-      const actualColl = actualColls.find(x => x.name === expColl.name);
-      if (!actualColl) {
-        return done(new Error(`Failed to find coll with name '${expColl.name}'.`));
-      }
-
-      const expPermissions = expectedPermissionsPerColl[actualColl.name];
-      expect(actualColl.permissions).to.deep.equal(expPermissions);
-    }
-
-    done();
-  });
-}
-
 function buildExpectedPermissionsPerColl(collList, rolesNameIdPairs) {
   const expectedPermissionsPerColl = {};
 
@@ -135,6 +111,179 @@ function buildExpectedPermissionsPerColl(collList, rolesNameIdPairs) {
   });
 
   return expectedPermissionsPerColl;
+}
+
+function assertCollections(envId, collList, expCollCount, rolesNameIdPairs, done) {
+  ApiService.colls.get(envId, null, (err, actualColls) => {
+    if (err) {
+      return done(err);
+    }
+
+    expect(expCollCount).to.equal(actualColls.length);
+
+    const expectedPermissionsPerColl = buildExpectedPermissionsPerColl(collList, rolesNameIdPairs);
+    const collsFromConfigCount = collList.length;
+
+    for (let i = 0; i < collsFromConfigCount; i += 1) {
+      const expColl = collList[i];
+      const actualColl = actualColls.find(x => x.name === expColl.name);
+      if (!actualColl) {
+        return done(new Error(`Failed to find coll with name '${expColl.name}'.`));
+      }
+
+      const expPermissions = expectedPermissionsPerColl[actualColl.name];
+      expect(actualColl.permissions).to.deep.equal(expPermissions);
+    }
+
+    done();
+  });
+}
+
+function assertCollHooksPerColl(envId, collName, collHooks, done) {
+  const collHooksNames = Object.keys(collHooks);
+
+  async.eachSeries(
+    collHooksNames,
+    (currentHook, next) => {
+      const backendHookName = CollectionHook[currentHook];
+      ApiService.businessLogic.collHooks.get(envId, collName, backendHookName, (err, actualHook) => {
+        if (err) {
+          return next(err);
+        }
+
+        const expectedHook = collHooks[currentHook];
+        if (expectedHook.type === 'internal') {
+          expect(actualHook.host).to.be.null;
+        } else {
+          expect(actualHook.host).to.not.be.null;
+        }
+
+        const defaultCode = `function ${currentHook}(request, response, modules) {\n  response.continue();\n}`;
+        const expectedCode = expectedHook.code || defaultCode;
+        expect(expectedCode).to.equal(actualHook.code);
+
+        // TODO: cli-65 Add assertions for external hook
+
+        done();
+      });
+    },
+    done
+  );
+}
+
+function assertAllCollHooks(envId, configHooks, done) {
+  const collNames = Object.keys(configHooks);
+
+  async.eachSeries(
+    collNames,
+    (currentCollName, next) => {
+      assertCollHooksPerColl(envId, currentCollName, configHooks[currentCollName], next);
+    },
+    done
+  );
+}
+
+function assertEndpoints(envId, configEndpoints, done) {
+  const endpointNames = Object.keys(configEndpoints);
+
+  async.eachSeries(
+    endpointNames,
+    (currentEndpointName, next) => {
+      ApiService.businessLogic.endpoints.get(envId, currentEndpointName, (err, actual) => {
+        if (err) {
+          return done(err);
+        }
+
+        const expected = configEndpoints[currentEndpointName];
+        if (expected.type === 'internal') {
+          expect(actual.host).to.be.null;
+        } else {
+          expect(actual.host).to.not.be.null;
+        }
+
+        const defaultCode = 'function onRequest(request, response, modules) {\n  response.continue();\n}';
+        const expectedCode = expected.code || defaultCode;
+        expect(expectedCode).to.equal(actual.code);
+
+        if (expected.schedule) { // due to api peculiarities
+          if (!expected.schedule.interval) {
+            expect(expected.schedule.start).to.equal(actual.schedule);
+          } else {
+            expect(expected.schedule.start).to.equal(actual.schedule.start);
+            expect(expected.schedule.interval).to.equal(actual.schedule.interval);
+          }
+        } else {
+          expect(actual.schedule).to.be.null;
+        }
+
+        // TODO: cli-65 Add assertions for external
+
+        next();
+      });
+    },
+    done
+  );
+}
+
+function assertGroups(envId, configGroups, done) {
+  const groupNames = Object.keys(configGroups);
+
+  async.eachSeries(
+    groupNames,
+    (currentGroupName, next) => {
+      ApiService.groups.get(envId, currentGroupName, (err, actual) => {
+        if (err) {
+          return next(err);
+        }
+
+        expect(actual).to.have.property('_acl');
+        expect(actual).to.have.property('_kmd');
+
+        const expected = configGroups[currentGroupName];
+        if (isEmpty(expected)) {
+          return setImmediate(next);
+        }
+
+        expect(expected.name).to.equal(actual.name);
+        expect(expected.description).to.equal(actual.description);
+
+        if (!isEmpty(expected.groups)) {
+          expect(expected.groups.length).to.equal(actual.groups.length);
+
+          for (const expGroup of expected.groups) {
+            const foundGroup = actual.groups.find(x => x._id === expGroup);
+            if (!foundGroup) {
+              return next(new Error(`Could not find group with identifier '${expGroup}'.`));
+            }
+          }
+        }
+
+        next();
+      });
+    },
+    done
+  );
+}
+
+function assertPushSettings(envId, configPushSettings, done) {
+  ApiService.push.get(envId, (err, actual) => {
+    if (err) {
+      return done(err);
+    }
+
+    if (!isEmpty(configPushSettings.android)) {
+      expect(configPushSettings.android.senderId).to.equal(actual.android.projectId);
+      expect(configPushSettings.android.apiKey).to.equal(actual.android.apiKey);
+    } else {
+      expect(actual.android).to.be.false;
+    }
+
+    if (isEmpty(configPushSettings.ios)) {
+      expect(actual.ios).to.be.false;
+    }
+
+    done();
+  });
 }
 
 module.exports = () => {
@@ -240,8 +389,7 @@ module.exports = () => {
     ], done);
   });
 
-  // TODO: cli-65 Add hooks
-  it('internal collections plus system collections, hooks and roles should succeed', (done) => {
+  it('internal collections plus system collections, internal hooks and roles should succeed', (done) => {
     const collList = EnvHelper.buildValidInternalCollectionsList(2, true);
     const rolesList = ConfigManagementHelper.roles.buildValidRolesList(2);
 
@@ -253,7 +401,7 @@ module.exports = () => {
         create: 'always',
         read: 'grant',
         update: 'always',
-        'delete': 'grant'
+        delete: 'grant'
       },
       [roleName]: {
         create: 'grant',
@@ -261,17 +409,32 @@ module.exports = () => {
       }
     };
 
+    const collHooks = {
+      [collList[0].name]: {
+        onPreSave: {
+          type: 'internal'
+        }
+      },
+      [collList[1].name]: {
+        onPostFetch: {
+          type: 'internal',
+          code: 'function onPostFetch(request, response, modules) {\nconsole.log("Here");\n  response.continue();\n}'
+        }
+      }
+    };
+
     const env = {
       schemaVersion: '1.0.0',
       configType: 'environment',
       collections: ConfigManagementHelper.common.buildConfigEntityFromList(collList),
+      collectionHooks: collHooks,
       roles: ConfigManagementHelper.common.buildConfigEntityFromList(rolesList)
     };
 
     const envName = randomStrings.envName();
+    const rolesNameIdPairs = {};
     let envId;
     let actualRoles;
-    let rolesNameIdPairs = {};
 
     async.series([
       (next) => {
@@ -298,7 +461,7 @@ module.exports = () => {
           const expectedRolesCount = rolesList.length;
           expect(expectedRolesCount).to.equal(actualRoles.length);
 
-          for (let i = 0; i < expectedRolesCount; i++) {
+          for (let i = 0; i < expectedRolesCount; i += 1) {
             const expected = rolesList[i];
             const actual = actualRoles.find(x => x.name === expected.name);
             if (!actual) {
@@ -314,7 +477,87 @@ module.exports = () => {
       },
       (next) => {
         assertCollections(envId, collList, collList.length, rolesNameIdPairs, next);
+      },
+      (next) => {
+        assertAllCollHooks(envId, collHooks, next);
       }
     ], done);
   });
+
+  it('common code, internal endpoints, groups and push settings should succeed', (done) => {
+    const commonCode = {
+      someCommonModule: {
+        code: 'const commonLogic = {};\ncommonLogic.print = function print(msg) {\n  console.log(msg);\n};'
+      }
+    };
+
+    const endpoints = {
+      myEndpoint: {
+        type: 'internal',
+        code: 'function onRequest(request, response, modules) {\nconsole.log("On request...");\n  response.continue();\n}',
+        schedule: {
+          start: moment().add(1, 'month').toISOString(),
+          interval: '5-minutes'
+        }
+      },
+      anotherEndpoint: {
+        type: 'internal',
+        code: 'function onRequest(request, response, modules) {\nconsole.log("On request...");\n  response.continue();\n}'
+      }
+    };
+
+    const groups = {
+      oneGroup: {
+        description: 'One group',
+        groups: ['anotherGroup']
+      },
+      anotherGroup: {}
+    };
+
+    const pushSettings = {
+      android: {
+        senderId: 'id123',
+        apiKey: 'key123'
+      }
+    };
+
+    const env = {
+      schemaVersion: '1.0.0',
+      configType: 'environment',
+      commonCode,
+      groups,
+      customEndpoints: endpoints,
+      push: pushSettings
+    };
+
+    const envName = randomStrings.envName();
+    let envId;
+
+    async.series([
+      (next) => {
+        createEnvFromConfig(envName, env, appName, (err, id) => {
+          if (err) {
+            return next(err);
+          }
+
+          envId = id;
+          next();
+        });
+      },
+      (next) => {
+        assertEnvOnly(env, envId, envName, next);
+      },
+      (next) => {
+        assertEndpoints(envId, endpoints, next);
+      },
+      (next) => {
+        assertGroups(envId, groups, next);
+      },
+      (next) => {
+        assertPushSettings(envId, pushSettings, next);
+      }
+    ], done);
+  });
+
+  // TODO: cli-65 Add tests for external stuff
 };

@@ -20,21 +20,7 @@ const isempty = require('lodash.isempty');
 const request = require('request');
 
 let authTokenMapi;
-let baasAuth;
-
-function getAuthToken(done) {
-  if (authTokenMapi) {
-    return setImmediate(() => { done(null, authTokenMapi); });
-  }
-
-  authenticate(null, null, (err, result) => {
-    if (err) {
-      return done(err);
-    }
-
-    done(null, result.token);
-  });
-}
+const baasAuthTokens = {};
 
 function getBaseUrl(isBaasRequest) {
   if (isBaasRequest && process.env.KINVEY_CLI_BAAS) {
@@ -53,44 +39,19 @@ function getBaseUrl(isBaasRequest) {
   return isBaasRequest ? `https://${instance}-baas.kinvey.com` : `https://${instance}-manage.kinvey.com`;
 }
 
-function getIdPartFromId(id) {
-  return id === null || id === undefined ? '' : `/${id}`;
-}
-
-function getSchemaVersion(isBaasRequest) {
-  return isBaasRequest ? '' : '/v2';
-}
-
-function buildUrl(relativeUrl, id, isBaasRequest) {
-  const url = `${getBaseUrl(isBaasRequest)}${getSchemaVersion(isBaasRequest)}/${relativeUrl}${getIdPartFromId(id)}`;
-  return url;
-}
-
-function getProcessedError(err, response) {
-  const isSuccess = !err && response && response.statusCode >= 200 && response.statusCode < 300;
-  if (isSuccess) {
-    return null;
+function getAuthToken(done) {
+  if (authTokenMapi) {
+    return setImmediate(() => { done(null, authTokenMapi); });
   }
 
-  if (err) {
-    return err;
-  }
-
-  // status is not 2xx
-  if (response.body) {
-    let errMsg = response.body.description || response.body.debug;
-    const errors = response.body.errors;
-    if (!isempty(errors) && Array.isArray(errors)) {
-      errors.forEach((x) => {
-        const field = x.field ? `Field: ${x.field}.` : '';
-        errMsg += `${EOL}\t${field} ${x.message}`;
-      });
+  // eslint-disable-next-line no-use-before-define
+  authenticate(null, null, (err, result) => {
+    if (err) {
+      return done(err);
     }
 
-    return new Error(`${response.body.code} ${errMsg}`);
-  }
-
-  return new Error(`${response.statusCode} ${response.statusMessage}`);
+    done(null, result.token);
+  });
 }
 
 function setAuthorizationHeader(options, done) {
@@ -113,6 +74,33 @@ function setAuthorizationHeader(options, done) {
     options.headers.Authorization = `Kinvey ${token}`;
     done();
   });
+}
+
+function getProcessedError(err, response) {
+  const isSuccess = !err && response && response.statusCode >= 200 && response.statusCode < 300;
+  if (isSuccess) {
+    return null;
+  }
+
+  if (err) {
+    return err;
+  }
+
+  // status is not 2xx
+  if (response.body) {
+    let errMsg = response.body.description || response.body.debug || response.statusMessage;
+    const errors = response.body.errors;
+    if (!isempty(errors) && Array.isArray(errors)) {
+      errors.forEach((x) => {
+        const field = x.field ? `Field: ${x.field}.` : '';
+        errMsg += `${EOL}\t${field} ${x.message}`;
+      });
+    }
+
+    return new Error(`${response.body.code || response.statusCode} ${errMsg}`);
+  }
+
+  return new Error(`${response.statusCode} ${response.statusMessage}`);
 }
 
 function makeRequest(options, done) {
@@ -168,9 +156,29 @@ function authenticate(email, password, done) {
   );
 }
 
+function getIdPartFromId(id) {
+  return id === null || id === undefined ? '' : `/${id}`;
+}
+
+function getSchemaVersion(isBaasRequest) {
+  return isBaasRequest ? '' : '/v2';
+}
+
+function buildUrl(relativeUrl, id, isBaasRequest) {
+  const url = `${getBaseUrl(isBaasRequest)}${getSchemaVersion(isBaasRequest)}/${relativeUrl}${getIdPartFromId(id)}`;
+  return url;
+}
+
+const envs = {
+  get: (id, done) => {
+    const url = buildUrl('environments', id);
+    makeRequest({ url }, done);
+  }
+};
+
 function getBaasAuthToken(envId, done) {
-  if (baasAuth) {
-    return setImmediate(() => { done(null, baasAuth); });
+  if (baasAuthTokens[envId]) {
+    return setImmediate(() => { done(null, baasAuthTokens[envId]); });
   }
 
   envs.get(envId, (err, env) => {
@@ -180,8 +188,8 @@ function getBaasAuthToken(envId, done) {
 
     const envIdMasterSecretPair = `${env.id}:${env.masterSecret}`;
     const encodedEnvIdMasterSecretPair = (new Buffer(envIdMasterSecretPair)).toString('base64');
-    baasAuth = encodedEnvIdMasterSecretPair;
-    return done(null, baasAuth);
+    baasAuthTokens[envId] = encodedEnvIdMasterSecretPair;
+    return done(null, baasAuthTokens[envId]);
   });
 }
 
@@ -215,13 +223,6 @@ const colls = {
   }
 };
 
-const envs = {
-  get: (id, done) => {
-    const url = buildUrl('environments', id);
-    makeRequest({ url }, done);
-  }
-};
-
 const orgs = {
   get: (id, done) => {
     const url = buildUrl('organizations', id);
@@ -243,12 +244,73 @@ const roles = {
   }
 };
 
+const groups = {
+  get: (envId, groupId, done) => {
+    const url = `${buildUrl('group', envId, true)}${getIdPartFromId(groupId)}`;
+    const options = { url };
+    setBaasAuthHeader(envId, options, (err) => {
+      if (err) {
+        return done(err);
+      }
+
+      makeRequest(options, done);
+    });
+  }
+};
+
+const businessLogic = {
+  collHooks: {
+    get: (envId, collName, collHook, done) => {
+      const url = buildUrl(`environments${getIdPartFromId(envId)}/business-logic/collections/${collName}`, collHook);
+      makeRequest({ url }, done);
+    }
+  },
+  commonCode: {
+    get: (envId, moduleName, done) => {
+      const url = buildUrl(`environments${getIdPartFromId(envId)}/business-logic/common`, moduleName);
+      makeRequest({ url }, done);
+    }
+  },
+  endpoints: {
+    get: (envId, endpointName, done) => {
+      const url = buildUrl(`environments${getIdPartFromId(envId)}/business-logic/endpoints`, endpointName);
+      makeRequest({ url }, done);
+    }
+  }
+};
+
+const push = {
+  get: (envId, done) => {
+    const url = buildUrl(`environments${getIdPartFromId(envId)}/push`);
+    makeRequest({ url }, done);
+  }
+};
+
+const services = {
+  get: (id, done) => {
+    const url = buildUrl('data-links', id);
+    makeRequest({ url }, done);
+  },
+  remove: (id, done) => {
+    if (!id) {
+      return setImmediate(() => { done(new Error('Cannot remove a service without an ID.')); });
+    }
+
+    const url = buildUrl('data-links', id);
+    makeRequest({ url, method: 'DELETE' }, done);
+  }
+};
+
 module.exports = {
   apps,
+  businessLogic,
   colls,
   envs,
+  groups,
   orgs,
+  push,
   roles,
+  services,
   general: {
     authenticate,
     makeRequest

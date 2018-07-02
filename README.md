@@ -1,4 +1,4 @@
-| LINTING            | UNIT            | INTEGRATION            | NPM SECURITY         |
+| LINTING            | UNIT          | INTEGRATION          | NPM SECURITY       |
 |-------------------|-------------------|-------------------|-------------------|
 | [![Build1][1]][4] | [![Build2][2]][4] | [![Build3][3]][4] | [![Build4][4]][4] |
 

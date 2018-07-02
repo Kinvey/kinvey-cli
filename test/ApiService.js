@@ -298,6 +298,10 @@ const services = {
 
     const url = buildUrl('data-links', id);
     makeRequest({ url, method: 'DELETE' }, done);
+  },
+  status: (id, done) => {
+    const url = buildUrl(`data-links${getIdPartFromId(id)}/status`);
+    makeRequest({ url }, done);
   }
 };
 

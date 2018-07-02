@@ -13,6 +13,8 @@
  * contents is a violation of applicable laws.
  */
 
+const fs = require('fs');
+
 const async = require('async');
 const moment = require('moment');
 const path = require('path');
@@ -20,74 +22,26 @@ const path = require('path');
 const ApiService = require('./../../ApiService');
 const ConfigManagementHelper = require('./../../ConfigManagementHelper');
 
-const EnvHelper = ConfigManagementHelper.env;
-const AppHelper = ConfigManagementHelper.app;
-const { BackendCollectionPermission, CollectionHook } = require('./../../../lib/Constants');
-const { ConfigFilesDir, execCmdWoMocks, randomStrings } = require('./../../TestsHelper');
-const { isEmpty, writeJSON } = require('../../../lib/Utils');
-
-function createServiceFromConfig(serviceName, serviceConfig, serviceDomain, appOrOrgIdentifier, done) {
-  let filePath;
-
-  async.series([
-    (next) => {
-      const fileName = `${randomStrings.plainString(10)}.json`;
-      filePath = path.join(ConfigFilesDir, fileName);
-      writeJSON(filePath, serviceConfig, next);
-    },
-    (next) => {
-      execCmdWoMocks(`service create ${serviceName} ${filePath} --${serviceDomain} ${appOrOrgIdentifier} --output json`, null, (err, data) => {
-        if (err) {
-          return next(err);
-        }
-
-        const parsedData = JSON.parse(data);
-        const serviceId = parsedData.result.id;
-        next(null, serviceId);
-      });
-    }
-  ], (err, results) => {
-    if (err) {
-      return done(err);
-    }
-
-    done(null, results.pop());
-  });
-}
-
-function assertFlexService(id, serviceConfig, serviceName, done) {
-  ApiService.services.get(id, (err, actual) => {
-    if (err) {
-      return done(err);
-    }
-
-    expect(serviceName).to.equal(actual.name);
-    expect(serviceConfig.description).to.equal(actual.description);
-
-    const isFlexInternal = serviceConfig.type === 'flex-internal';
-    const expectedType = isFlexInternal  ? 'internal' : 'external';
-    expect(expectedType).to.equal(actual.type);
-
-    expect(actual.backingServers).to.be.an.array;
-    expect(actual.backingServers[0]).to.exist;
-    expect(serviceConfig.secret).to.equal(actual.backingServers[0].secret);
-
-    if (isFlexInternal) {
-      expect(actual.backingServers[0].host).to.exist;
-    } else {
-      expect(serviceConfig.host).to.equal(actual.backingServers[0].host);
-    }
-
-    done();
-  });
-}
+const { randomStrings } = require('./../../TestsHelper');
+const { writeJSON } = require('../../../lib/Utils');
 
 module.exports = () => {
+  const projectPath = path.join(process.cwd(), 'test/integration-no-mock/flex-project');
   let serviceId;
 
   afterEach('remove service', (done) => {
     ApiService.services.remove(serviceId, (err) => {
       serviceId = null;
+      done(err);
+    });
+  });
+
+  afterEach('remove package.json', (done) => {
+    fs.unlink(path.join(projectPath, 'package.json'), (err) => {
+      if (err && err.code && err.code.includes('ENOENT')) {
+        return done();
+      }
+
       done(err);
     });
   });
@@ -107,7 +61,7 @@ module.exports = () => {
 
       async.series([
         (next) => {
-          createServiceFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', (err, id) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', null, (err, id) => {
             if (err) {
               return next(err);
             }
@@ -117,7 +71,7 @@ module.exports = () => {
           });
         },
         (next) => {
-          assertFlexService(serviceId, serviceConfig, serviceName, next);
+          ConfigManagementHelper.service.assertFlexService(serviceId, serviceConfig, serviceName, next);
         }
       ], done);
     });
@@ -135,7 +89,7 @@ module.exports = () => {
 
       async.series([
         (next) => {
-          createServiceFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', (err, id) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', null, (err, id) => {
             if (err) {
               return next(err);
             }
@@ -145,13 +99,14 @@ module.exports = () => {
           });
         },
         (next) => {
-          assertFlexService(serviceId, serviceConfig, serviceName, next);
+          ConfigManagementHelper.service.assertFlexService(serviceId, serviceConfig, serviceName, next);
         }
       ], done);
     });
 
-    it('internal with project to deploy should succeed', (done) => {
-      const projectPath = path.join(process.cwd(), 'test/integration-no-mock/flex-project');
+    it('internal with project to deploy should succeed', function (done) {
+      this.timeout(61000);
+
       const serviceConfig = {
         configType: 'service',
         schemaVersion: '1.0.0',
@@ -162,20 +117,16 @@ module.exports = () => {
       };
 
       const serviceName = randomStrings.plainString();
+      const pkgJson = {
+        version: '1.0.0',
+        dependencies: {
+          'kinvey-flex-sdk': '3.0.0'
+        }
+      };
 
       async.series([
         (next) => {
-          const pkgJson = {
-            version: '1.0.0',
-            dependencies: {
-              'kinvey-flex-sdk': '3.0.0'
-            }
-          };
-
-          writeJSON(path.join(projectPath, 'package.json'), pkgJson, next);
-        },
-        (next) => {
-          createServiceFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', (err, id) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', pkgJson, (err, id) => {
             if (err) {
               return next(err);
             }
@@ -185,8 +136,10 @@ module.exports = () => {
           });
         },
         (next) => {
-          assertFlexService(serviceId, serviceConfig, serviceName, next);
-          // TODO: cli-65 Verify deployed; ignore package.json or remove
+          ConfigManagementHelper.service.assertFlexService(serviceId, serviceConfig, serviceName, next);
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, pkgJson.version, 'ONLINE', next);
         }
       ], done);
     });

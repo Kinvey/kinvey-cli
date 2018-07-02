@@ -13,12 +13,15 @@
  * contents is a violation of applicable laws.
  */
 
+const path = require('path');
+
 const async = require('async');
 const clonedeep = require('lodash.clonedeep');
 const moment = require('moment');
 
 const ApiService = require('./ApiService');
 const TestsHelper = require('./TestsHelper');
+const { writeJSON } = require('./../lib/Utils');
 
 let ConfigManagementHelper = {};
 
@@ -86,6 +89,31 @@ function buildConfigEntityFromList(list) {
   return result;
 }
 
+function passConfigFileToCli(cmd, configContent, filePath, done) {
+  async.series([
+    (next) => {
+      writeJSON(filePath, configContent, next);
+    },
+    (next) => {
+      TestsHelper.execCmdWoMocks(cmd, null, (err, data) => {
+        if (err) {
+          return next(err);
+        }
+
+        const parsedData = JSON.parse(data);
+        const id = parsedData.result.id;
+        next(null, id);
+      });
+    }
+  ], (err, results) => {
+    if (err) {
+      return done(err);
+    }
+
+    done(null, results.pop());
+  });
+}
+
 const app = {};
 app.createInTestsOrg = function (data, done) {
   let orgId;
@@ -138,10 +166,110 @@ roles.buildValidRolesList = function buildValidRolesList(count) {
   return result;
 };
 
+const service = {};
+service.createPackageJsonForFlexProject = function createPackageJsonForFlexProject(pkgJson, done) {
+  if (!pkgJson) {
+    return setImmediate(done);
+  }
+
+  const projectPath = path.join(process.cwd(), 'test/integration-no-mock/flex-project');
+  writeJSON(path.join(projectPath, 'package.json'), pkgJson, done);
+};
+
+service.createFromConfig = function createServiceFromConfig(serviceName, serviceConfig, serviceDomain, appOrOrgIdentifier, pkgJson, done) {
+  async.series([
+    (next) => {
+      service.createPackageJsonForFlexProject(pkgJson, next);
+    },
+    (next) => {
+      const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+      const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+      const cmd = `service create ${serviceName} ${filePath} --${serviceDomain} ${appOrOrgIdentifier} --output json`;
+      passConfigFileToCli(cmd, serviceConfig, filePath, next);
+    }
+  ], (err, results) => {
+    done(err, results.pop());
+  });
+};
+
+service.modifyFromConfig = function modifyServiceFromConfig(serviceId, serviceConfig, pkgJson, done) {
+  async.series([
+    (next) => {
+      service.createPackageJsonForFlexProject(pkgJson, next);
+    },
+    (next) => {
+      const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+      const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+      const cmd = `service push ${serviceId} ${filePath} --output json`;
+      passConfigFileToCli(cmd, serviceConfig, filePath, next);
+    }
+  ], (err, results) => {
+    done(err, results.pop());
+  });
+};
+
+service.assertFlexService = function assertFlexService(id, serviceConfig, serviceName, done) {
+  ApiService.services.get(id, (err, actual) => {
+    if (err) {
+      return done(err);
+    }
+
+    expect(serviceName).to.equal(actual.name);
+    expect(serviceConfig.description).to.equal(actual.description);
+
+    const isFlexInternal = serviceConfig.type === 'flex-internal';
+    const expectedType = isFlexInternal ? 'internal' : 'external';
+    expect(expectedType).to.equal(actual.type);
+
+    expect(actual.backingServers).to.be.an.array;
+    expect(actual.backingServers[0]).to.exist;
+    expect(serviceConfig.secret).to.equal(actual.backingServers[0].secret);
+
+    if (isFlexInternal) {
+      expect(actual.backingServers[0].host).to.exist;
+    } else {
+      expect(serviceConfig.host).to.equal(actual.backingServers[0].host);
+    }
+
+    done();
+  });
+};
+
+service.assertFlexServiceStatus = function assertFlexServiceStatus(id, expectedVersion, expectedStatus, done) {
+  ApiService.services.status(id, (err, actual) => {
+    if (err) {
+      return done(err);
+    }
+
+    try {
+      expect(actual.version).to.exist;
+      expect(expectedVersion).to.equal(actual.version);
+      if (expectedStatus) {
+        expect(actual.status).to.equal(expectedStatus);
+      }
+    } catch (ex) {
+      return done(ex);
+    }
+
+    done();
+  });
+};
+
+service.assertFlexServiceStatusRetryable = function assertFlexServiceStatusRetryable(id, expectedVersion, expectedStatus, done) {
+  async.retry(
+    { times: 10, interval: 6000 },
+    (next) => {
+      service.assertFlexServiceStatus(id, expectedVersion, expectedStatus, next);
+    },
+    done
+  );
+};
+
 ConfigManagementHelper = {
   app,
   env,
   roles,
+  service,
   common: {
     buildConfigEntityFromList
   }

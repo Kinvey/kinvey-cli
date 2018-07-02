@@ -1,4 +1,4 @@
-const sdk = require('kinvey-flex-sdk');
+const sdk = require('kinvey-flex-sdk'); // eslint-disable-line
 const pkgJson = require('./package.json');
 
 const service = sdk.service({ sharedSecret: '123' }, (err, flex) => {
@@ -6,7 +6,7 @@ const service = sdk.service({ sharedSecret: '123' }, (err, flex) => {
     console.log(err);
   }
 
-  const dataSdk = flex.data;   // gets the datalink object from the service
+  const dataSdk = flex.data; // gets the datalink object from the service
   const logger = service.logger;
 
   logger.info(`Version: ${pkgJson.version}`);

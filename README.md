@@ -5,7 +5,7 @@
 [1]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/1
 [2]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/2
 [3]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/3
-[4]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/QA-237-add-npm-audit/4
+[4]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/4
 [5]: https://travis-ci.org/Kinvey/kinvey-cli
 
 

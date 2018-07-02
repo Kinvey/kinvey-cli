@@ -24,7 +24,7 @@
     "start": "./bin/kinvey",
     "prepublish": "./node_modules/.bin/dos2unix ./bin/kinvey",
     "pretest": "npm run lint",
-    "lint": "./node_modules/.bin/eslint bin config lib test",
+    "lint": "./node_modules/.bin/eslint config lib test",
     "test": "npm run test-unit && npm run test-integration",
     "test-unit": "./node_modules/.bin/mocha test/unit --NODE_CONFIG_DIR=./test/config",
     "test-integration": "mocha test/integration/commands/flex && mocha test/integration/commands/init && mocha test/integration/commands/profile",

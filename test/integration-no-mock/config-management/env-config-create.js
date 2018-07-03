@@ -133,6 +133,13 @@ function assertCollections(envId, collList, expCollCount, rolesNameIdPairs, done
 
       const expPermissions = expectedPermissionsPerColl[actualColl.name];
       expect(actualColl.permissions).to.deep.equal(expPermissions);
+
+      if (expColl.type === 'internal') {
+        expect(actualColl.dataLink).to.be.null;
+      } else {
+        expect(actualColl.dataLink).to.exist;
+        expect(actualColl.dataLink.serviceObjectName).to.equal(expColl.serviceObject);
+      }
     }
 
     done();
@@ -162,7 +169,12 @@ function assertCollHooksPerColl(envId, collName, collHooks, done) {
         const expectedCode = expectedHook.code || defaultCode;
         expect(expectedCode).to.equal(actualHook.code);
 
-        // TODO: cli-65 Add assertions for external hook
+        if (expectedHook.type === 'internal') {
+          expect(actualHook.host).to.be.null;
+        } else {
+          expect(actualHook.host).to.not.be.null;
+          expect(actualHook.sdkHandlerName).to.equal(expectedHook.handlerName);
+        }
 
         done();
       });
@@ -216,7 +228,12 @@ function assertEndpoints(envId, configEndpoints, done) {
           expect(actual.schedule).to.be.null;
         }
 
-        // TODO: cli-65 Add assertions for external
+        if (expected.type === 'internal') {
+          expect(actual.host).to.be.null;
+        } else {
+          expect(actual.host).to.not.be.null;
+          expect(actual.sdkHandlerName).to.equal(expected.handlerName);
+        }
 
         next();
       });
@@ -288,13 +305,27 @@ function assertPushSettings(envId, configPushSettings, done) {
 
 module.exports = () => {
   const appName = randomStrings.appName();
+  const serviceIds = [];
 
   before('setup app', (done) => {
     AppHelper.createInTestsOrg({ name: appName }, done);
   });
 
-  after('remove app', (done) => {
-    execCmdWoMocks(`app delete ${appName} --no-prompt`, null, done);
+  after('remove app and services', (done) => {
+    async.series([
+      (next) => {
+        execCmdWoMocks(`app delete ${appName} --no-prompt`, null, next);
+      },
+      (next) => {
+        async.each(
+          serviceIds,
+          (serviceId, next) => {
+            ApiService.services.remove(serviceId, next);
+          },
+          next
+        );
+      }
+    ], done);
   });
 
   it('settings only should succeed', (done) => {
@@ -559,5 +590,94 @@ module.exports = () => {
     ], done);
   });
 
-  // TODO: cli-65 Add tests for external stuff
+  it('external collections, external hooks, external endpoints should succeed', (done) => {
+    const serviceName = randomStrings.plainString();
+    const collList = [
+      ConfigManagementHelper.env.buildExternalCollection(serviceName, 'MyCollection', randomStrings.collName()),
+      ConfigManagementHelper.env.buildExternalCollection(serviceName, 'MyCollection', randomStrings.collName())
+    ];
+
+    const collHooks = {
+      [collList[0].name]: {
+        onPreSave: {
+          type: 'external',
+          service: serviceName,
+          handlerName: 'someHandler'
+        }
+      }
+    };
+
+    const endpoints = {
+      myEndpoint: {
+        type: 'external',
+        service: serviceName,
+        handlerName: 'someHandler',
+        schedule: {
+          start: moment().add(1, 'month').toISOString(),
+          interval: '5-minutes'
+        }
+      }
+    };
+
+    const env = {
+      schemaVersion: '1.0.0',
+      configType: 'environment',
+      collections: ConfigManagementHelper.common.buildConfigEntityFromList(collList),
+      collectionHooks: collHooks,
+      customEndpoints: endpoints
+    };
+
+    const envName = randomStrings.envName();
+    let envId;
+
+    async.series([
+      (next) => {
+        const serviceConfig = {
+          configType: 'service',
+          schemaVersion: '1.0.0',
+          type: 'flex-internal',
+          secret: '123',
+          description: 'Test service',
+          sourcePath: path.join(process.cwd(), 'test/integration-no-mock/flex-project')
+        };
+
+        const pkgJson = {
+          version: '1.0.0',
+          dependencies: {
+            'kinvey-flex-sdk': '3.0.0'
+          }
+        };
+        ConfigManagementHelper.service.createFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', pkgJson, (err, id) => {
+          if (err) {
+            return next(err);
+          }
+
+          serviceIds.push(id);
+          next();
+        });
+      },
+      (next) => {
+        createEnvFromConfig(envName, env, appName, (err, id) => {
+          if (err) {
+            return next(err);
+          }
+
+          envId = id;
+          next();
+        });
+      },
+      (next) => {
+        assertEnvOnly(env, envId, envName, next);
+      },
+      (next) => {
+        assertCollections(envId, collList, 4, null, next);
+      },
+      (next) => {
+        assertAllCollHooks(envId, collHooks, next);
+      },
+      (next) => {
+        assertEndpoints(envId, endpoints, next);
+      }
+    ], done);
+  });
 };

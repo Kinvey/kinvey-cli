@@ -165,7 +165,7 @@ module.exports = () => {
   });
 
   it('modifying secret and bumping local version on internal flex service should succeed', function (done) {
-    this.timeout(65000);
+    this.timeout(85000);
 
     const initialServiceConfig = {
       configType: 'service',

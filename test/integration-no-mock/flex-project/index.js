@@ -28,8 +28,8 @@ const service = sdk.service({ sharedSecret: '123' }, (err, flex) => {
   });
 
   // handlers
-  flex.functions.register('onPreSave', (context, complete, modules) => {
-    logger.info('About to save');
+  flex.functions.register('someHandler', (context, complete, modules) => {
+    logger.info('About to do something');
     complete().setBody(context).ok().next();
   });
 });

@@ -48,17 +48,16 @@ env.buildInternalCollection = function buildInternalCollection(name, permissions
   };
 };
 
-env.buildExternalCollection = function buildExternalCollection(serviceName, handlerName, collName, permissions) {
+env.buildExternalCollection = function buildExternalCollection(serviceName, serviceObject, collName, permissions) {
   collName = collName || TestsHelper.randomStrings.collName();
   permissions = permissions || 'shared';
 
   return {
-    [collName]: {
-      type: 'external',
-      permissions,
-      service: serviceName,
-      handlerName
-    }
+    name: collName,
+    type: 'external',
+    permissions,
+    service: serviceName,
+    serviceObject
   };
 };
 

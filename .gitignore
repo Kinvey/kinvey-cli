@@ -6,3 +6,4 @@ npm-debug.log
 coverage
 test/integration/debug.txt
 test/config-files
+test/integration-no-mock/flex-project/package.json

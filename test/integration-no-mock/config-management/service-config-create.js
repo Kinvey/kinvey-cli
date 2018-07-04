@@ -105,7 +105,7 @@ module.exports = () => {
     });
 
     it('internal with project to deploy should succeed', function (done) {
-      this.timeout(61000);
+      this.timeout(85000);
 
       const serviceConfig = {
         configType: 'service',

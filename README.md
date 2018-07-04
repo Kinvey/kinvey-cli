@@ -583,9 +583,9 @@ If an error occurs, the CLI stops applying the file and outputs the error messag
   "groups": {
     "myGroup": {
       "description": "Description here",
-      "groups": [ "anotherGroup" ]
+      "groups": [ "otherGroup" ]
     },
-    "anotherGroup": {
+    "otherGroup": {
       "description": "Part of 'myGroup'"
     }
   },

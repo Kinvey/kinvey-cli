@@ -108,6 +108,21 @@ env.createFromConfig = function createEnvFromConfig(envName, env, appName, done)
   passConfigFileToCli(cmd, env, filePath, done);
 };
 
+env.modifyFromConfig = function modifyEnvFromConfig(config, envIdentifier, appIdentifier, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  let cmd = `env push ${filePath} --output json`;
+  if (envIdentifier) {
+    cmd = `${cmd} ${envIdentifier}`;
+  }
+
+  if (appIdentifier) {
+    cmd = `${cmd} --app ${appIdentifier}`;
+  }
+
+  passConfigFileToCli(cmd, config, filePath, done);
+};
+
 env.assertEnvOnly = function assertEnvOnly(envFromConfig, envId, envName, done) {
   ApiService.envs.get(envId, (err, actualEnv) => {
     if (err) {

@@ -21,6 +21,7 @@ const { ConfigFilesDir } = require('./../../TestsHelper');
 
 const envConfigCreateTests = require('./env-config-create');
 const envConfigPushTests = require('./env-config-push');
+const envConfigExportTests = require('./env-config-export');
 const serviceConfigCreateTests = require('./service-config-create');
 const serviceConfigPushTests = require('./service-config-push');
 
@@ -52,19 +53,33 @@ describe('Config management', () => {
   });
 
   after(() => {
-    const dirPath = ConfigFilesDir;
-    const files = fs.readdirSync(dirPath);
-    files.forEach((file) => {
-      const filePath = path.join(dirPath, file);
-      fs.unlinkSync(filePath);
-    });
+    const removeDir = function removeDir(relativePath) {
+      const dirPath = path.join(ConfigFilesDir, relativePath);
+      if (!fs.existsSync(dirPath)) {
+        return;
+      }
 
-    fs.rmdirSync(dirPath);
+      const dirContents = fs.readdirSync(dirPath);
+      dirContents.forEach((x) => {
+        const xPath = path.join(dirPath, x);
+        if (fs.lstatSync(xPath).isDirectory()) {
+          removeDir(path.join(relativePath, x));
+        } else {
+          fs.unlinkSync(xPath);
+        }
+      });
+
+      fs.rmdirSync(dirPath);
+    };
+
+    removeDir('/');
   });
 
   describe('Env config create', envConfigCreateTests);
 
   describe('Env config push', envConfigPushTests);
+
+  describe('Env config export', envConfigExportTests);
 
   describe('Service config create', serviceConfigCreateTests);
 

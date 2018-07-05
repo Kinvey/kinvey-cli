@@ -13,6 +13,7 @@
  * contents is a violation of applicable laws.
  */
 
+const fs = require('fs');
 const path = require('path');
 
 const async = require('async');
@@ -22,7 +23,7 @@ const moment = require('moment');
 const ApiService = require('./ApiService');
 const { BackendCollectionPermission, CollectionHook } = require('./../lib/Constants');
 const TestsHelper = require('./TestsHelper');
-const { isEmpty, writeJSON } = require('./../lib/Utils');
+const { getObjectByOmitting, isEmpty, writeJSON } = require('./../lib/Utils');
 
 let ConfigManagementHelper = {};
 
@@ -121,6 +122,33 @@ env.modifyFromConfig = function modifyEnvFromConfig(config, envIdentifier, appId
   }
 
   passConfigFileToCli(cmd, config, filePath, done);
+};
+
+env.exportEnv = function (envIdentifier, appIdentifier, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  let cmd = `env export ${filePath} --output json`;
+  if (envIdentifier) {
+    cmd = `${cmd} ${envIdentifier}`;
+  }
+
+  if (appIdentifier) {
+    cmd = `${cmd} --app ${appIdentifier}`;
+  }
+
+  TestsHelper.execCmdWoMocks(cmd, null, (err) => {
+    if (err) {
+      return done(err);
+    }
+
+    fs.readFile(filePath, null, (err, data) => {
+      if (err) {
+        return done(err);
+      }
+
+      done(null, JSON.parse(data));
+    });
+  });
 };
 
 env.assertEnvOnly = function assertEnvOnly(envFromConfig, envId, envName, done) {
@@ -371,6 +399,126 @@ env.assertPushSettings = function assertPushSettings(envId, configPushSettings, 
   });
 };
 
+env.assertExportedConfig = function assertExportedConfig(expected, actual, done) {
+  const expectedFirstLevelProps = Object.keys(expected);
+  async.eachSeries(
+    expectedFirstLevelProps,
+    (expectedProp, next) => {
+      const currentExpected = expected[expectedProp];
+      const currentActual = actual[expectedProp];
+
+      switch (expectedProp) {
+        case 'collectionHooks':
+          env.assertExportedCollHooks(currentExpected, currentActual, done);
+          break;
+        case 'commonCode':
+          env.assertExportedEntityWithCode(currentExpected, currentActual, done);
+          break;
+        case 'customEndpoints':
+          env.assertExportedEntityWithCode(currentExpected, currentActual, done);
+          break;
+        case 'roles':
+          env.assertExportedRoles(currentExpected, currentActual, done);
+          break;
+        default:
+          try {
+            expect(expected[expectedProp]).to.deep.equal(actual[expectedProp]);
+          } catch (ex) {
+            next(ex);
+          }
+
+          next();
+      }
+    },
+    done
+  );
+};
+
+env.assertExportedCollHooks = function assertExportedCollHooks(expected, actual, done) {
+  const collNames = Object.keys(expected);
+  async.each(
+    collNames,
+    (currentColl, next) => {
+      expect(actual[currentColl]).to.exist;
+
+      const expectedHooksPerColl = Object.keys(expected[currentColl]);
+      async.each(
+        expectedHooksPerColl,
+        (currentHookName, cb) => {
+          const actualHook = actual[currentColl][currentHookName];
+          expect(actualHook).to.exist;
+
+          const expectedHook = expected[currentColl][currentHookName];
+          env.assertExportedEntityWithCode(expectedHook, actualHook, cb);
+        },
+        next
+      );
+    },
+    done
+  );
+};
+
+env.assertExportedEntityWithCode = function assertExportedEntityWithCode(expected, actual, done) {
+  const expectedWoCode = getObjectByOmitting(expected, ['code']);
+  const actualWoCode = getObjectByOmitting(actual, ['codeFile']);
+  expect(expectedWoCode).to.deep.equal(actualWoCode);
+
+  env.getCode(expected, (err, expectedCode) => {
+    if (err) {
+      return done(err);
+    }
+
+    if (!expectedCode) {
+      return setImmediate(done);
+    }
+
+    env.getCode(actual, (err, actualCode) => {
+      if (err) {
+        return done(err);
+      }
+
+      expect(expectedCode).to.equal(actualCode);
+      done();
+    });
+  });
+};
+
+env.getCode = function (entityWithCode, done) {
+  if (entityWithCode.code) {
+    setImmediate(() => { done(null, entityWithCode.code); });
+  } else if (entityWithCode.codeFile) {
+    fs.readFile(path.join(TestsHelper.ConfigFilesDir, entityWithCode.codeFile), { encoding: 'utf8' }, (err, code) => {
+      if (err) {
+        return done(err);
+      }
+
+      done(null, code);
+    });
+  } else {
+    setImmediate(done);
+  }
+};
+
+env.assertExportedRoles = function assertExportedRoles(expected, actual, done) {
+  const expectedRoleNames = Object.keys(expected);
+  const actualRoleNames = Object.keys(actual);
+  const expectedCount = expectedRoleNames.length;
+  expect(actualRoleNames.length).to.equal(expectedCount);
+
+  for (let i = 0; i < expectedCount; i += 1) {
+    const expectedRole = expected[expectedRoleNames[i]];
+    const actualRole = actualRoleNames.find(x => x === expected.name);
+    if (!actualRole) {
+      return done(new Error(`Failed to find role with name '${expectedRole.name}'.`));
+    }
+
+    expect(actualRole.description).to.equal(expectedRole.description);
+    expect(actualRole.name).to.equal(expectedRole.name || expectedRoleNames[i]);
+  }
+
+  done();
+};
+
 function buildConfigEntityFromList(list) {
   const result = {};
 
@@ -470,7 +618,7 @@ service.modifyFromConfig = function modifyServiceFromConfig(serviceId, serviceCo
     (next) => {
       const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
       const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-      const cmd = `service push ${serviceId} ${filePath} --output json`;
+      const cmd = `service push ${serviceId} ${filePath} --output json --verbose`;
       passConfigFileToCli(cmd, serviceConfig, filePath, next);
     }
   ], (err, results) => {
@@ -513,7 +661,7 @@ service.assertFlexServiceStatus = function assertFlexServiceStatus(id, expectedV
 
     try {
       expect(actual.version).to.exist;
-      expect(expectedVersion).to.equal(actual.version);
+      expect(actual.version).to.equal(expectedVersion);
       if (expectedStatus) {
         expect(actual.status).to.equal(expectedStatus);
       }
@@ -527,7 +675,7 @@ service.assertFlexServiceStatus = function assertFlexServiceStatus(id, expectedV
 
 service.assertFlexServiceStatusRetryable = function assertFlexServiceStatusRetryable(id, expectedVersion, expectedStatus, done) {
   async.retry(
-    { times: 10, interval: 6000 },
+    { times: 6, interval: 20000 }, // 6 times every 20 sec
     (next) => {
       service.assertFlexServiceStatus(id, expectedVersion, expectedStatus, next);
     },

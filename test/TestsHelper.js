@@ -529,7 +529,6 @@ TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
   });
 };
 
-// TODO: cli-65 Refactor
 TestsHelper.execCmdWoMocks = function execCmd(cliCmd, options, done) {
   const nodeConfig = {
     paths: {
@@ -715,7 +714,6 @@ TestsHelper.randomStrings = {
   collName: (length = 10) => `Coll${uuidv4()}`.substr(0, length)
 };
 
-// TODO: cli-65 Consider moving to a separate file
 TestsHelper.ConfigFilesDir = path.join(process.cwd(), 'test/config-files');
 
 module.exports = TestsHelper;

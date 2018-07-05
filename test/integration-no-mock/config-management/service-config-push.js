@@ -165,7 +165,7 @@ module.exports = () => {
   });
 
   it('modifying secret and bumping local version on internal flex service should succeed', function (done) {
-    this.timeout(85000);
+    this.timeout(250000);
 
     const initialServiceConfig = {
       configType: 'service',
@@ -199,6 +199,10 @@ module.exports = () => {
           serviceId = id;
           next();
         });
+      },
+      (next) => {
+        // ensure initial flex project is deployed, otherwise the second deploy can fail
+        ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, initialPkgJson.version, 'ONLINE', next);
       },
       (next) => {
         ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, modifiedPkgJson, next);

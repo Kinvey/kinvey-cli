@@ -47,7 +47,7 @@ module.exports = () => {
     const groups = {
       oneGroup: {
         description: 'One group',
-        groups: ['anotherGroup']
+        groups: ['otherGroup']
       },
       otherGroup: {}
     };

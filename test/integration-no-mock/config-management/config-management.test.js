@@ -24,6 +24,7 @@ const envConfigPushTests = require('./env-config-push');
 const envConfigExportTests = require('./env-config-export');
 const serviceConfigCreateTests = require('./service-config-create');
 const serviceConfigPushTests = require('./service-config-push');
+const serviceConfigExportTests = require('./service-config-export');
 
 describe('Config management', () => {
   before(() => {
@@ -84,4 +85,6 @@ describe('Config management', () => {
   describe('Service config create', serviceConfigCreateTests);
 
   describe('Service config push', serviceConfigPushTests);
+
+  describe('Service config export', serviceConfigExportTests);
 });

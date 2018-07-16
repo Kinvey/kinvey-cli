@@ -626,6 +626,25 @@ service.modifyFromConfig = function modifyServiceFromConfig(serviceId, serviceCo
   });
 };
 
+service.exportConfig = function exportConfig(serviceId, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  const cmd = `service export ${filePath} ${serviceId} --output json`;
+  TestsHelper.execCmdWoMocks(cmd, null, (err) => {
+    if (err) {
+      return done(err);
+    }
+
+    fs.readFile(filePath, null, (err, data) => {
+      if (err) {
+        return done(err);
+      }
+
+      done(null, JSON.parse(data));
+    });
+  });
+};
+
 service.assertFlexService = function assertFlexService(id, serviceConfig, serviceName, done) {
   ApiService.services.get(id, (err, actual) => {
     if (err) {

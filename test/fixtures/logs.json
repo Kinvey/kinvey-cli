@@ -24,14 +24,17 @@
     "_id": "59a67219a86d05de4f97ea31",
     "containerId": "3864f1602739e924b257c7082f9e5c7bcd0b43d8986efe3acb4581f4f94dcd65",
     "message": "*** Booting runit daemon...",
-    "threshold": null,
+    "threshold": "warn",
     "timestamp": "2017-08-30T08:06:49.595Z"
   },
   {
     "_id": "59a672197f2a6ba14ec962e8",
     "containerId": "3864f1602739e924b257c7082f9e5c7bcd0b43d8986efe3acb4581f4f94dcd65",
-    "message": "chown: changing ownership of '/dev/xconsole': Operation not permitted",
-    "threshold": null,
+    "message": {
+      "name": "test",
+      "num": 10
+    },
+    "threshold": "info",
     "timestamp": "2017-08-30T08:06:49.595Z"
   }
 ]

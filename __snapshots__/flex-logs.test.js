@@ -6,13 +6,13 @@ exports['flex logs without query by specifying a profile and existent serviceId 
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 Count: 5
 
-containerId   message                                                                threshold  timestamp               
-------------  ---------------------------------------------------------------------  ---------  ------------------------
-3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...                null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Running /etc/rc.local...                                           null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Runit started as PID 11                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  *** Booting runit daemon...                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  chown: changing ownership of '/dev/xconsole': Operation not permitted  null       2017-08-30T08:06:49.595Z
+containerId   message                                                  threshold  timestamp               
+------------  -------------------------------------------------------  ---------  ------------------------
+3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...  null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Running /etc/rc.local...                             null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Runit started as PID 11                              null       2017-08-30T08:06:49.595Z
+3864f1602739  *** Booting runit daemon...                              warn       2017-08-30T08:06:49.595Z
+3864f1602739  {"name":"test","num":10}                                 info       2017-08-30T08:06:49.595Z
 
 
 
@@ -35,13 +35,13 @@ exports['flex logs without query by specifying a profile when valid project is s
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 Count: 5
 
-containerId   message                                                                threshold  timestamp               
-------------  ---------------------------------------------------------------------  ---------  ------------------------
-3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...                null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Running /etc/rc.local...                                           null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Runit started as PID 11                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  *** Booting runit daemon...                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  chown: changing ownership of '/dev/xconsole': Operation not permitted  null       2017-08-30T08:06:49.595Z
+containerId   message                                                  threshold  timestamp               
+------------  -------------------------------------------------------  ---------  ------------------------
+3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...  null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Running /etc/rc.local...                             null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Runit started as PID 11                              null       2017-08-30T08:06:49.595Z
+3864f1602739  *** Booting runit daemon...                              warn       2017-08-30T08:06:49.595Z
+3864f1602739  {"name":"test","num":10}                                 info       2017-08-30T08:06:49.595Z
 
 
 
@@ -54,13 +54,13 @@ exports['flex logs without query by specifying a profile when invalid project is
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 Count: 5
 
-containerId   message                                                                threshold  timestamp               
-------------  ---------------------------------------------------------------------  ---------  ------------------------
-3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...                null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Running /etc/rc.local...                                           null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Runit started as PID 11                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  *** Booting runit daemon...                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  chown: changing ownership of '/dev/xconsole': Operation not permitted  null       2017-08-30T08:06:49.595Z
+containerId   message                                                  threshold  timestamp               
+------------  -------------------------------------------------------  ---------  ------------------------
+3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...  null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Running /etc/rc.local...                             null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Runit started as PID 11                              null       2017-08-30T08:06:49.595Z
+3864f1602739  *** Booting runit daemon...                              warn       2017-08-30T08:06:49.595Z
+3864f1602739  {"name":"test","num":10}                                 info       2017-08-30T08:06:49.595Z
 
 
 
@@ -106,13 +106,13 @@ exports['flex logs without query by not specifying profile nor credentials when 
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
 Count: 5
 
-containerId   message                                                                threshold  timestamp               
-------------  ---------------------------------------------------------------------  ---------  ------------------------
-3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...                null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Running /etc/rc.local...                                           null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Runit started as PID 11                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  *** Booting runit daemon...                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  chown: changing ownership of '/dev/xconsole': Operation not permitted  null       2017-08-30T08:06:49.595Z
+containerId   message                                                  threshold  timestamp               
+------------  -------------------------------------------------------  ---------  ------------------------
+3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...  null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Running /etc/rc.local...                             null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Runit started as PID 11                              null       2017-08-30T08:06:49.595Z
+3864f1602739  *** Booting runit daemon...                              warn       2017-08-30T08:06:49.595Z
+3864f1602739  {"name":"test","num":10}                                 info       2017-08-30T08:06:49.595Z
 
 
 
@@ -146,14 +146,17 @@ exports['flex logs without query by not specifying profile nor credentials when 
       "_id": "59a67219a86d05de4f97ea31",
       "containerId": "3864f1602739e924b257c7082f9e5c7bcd0b43d8986efe3acb4581f4f94dcd65",
       "message": "*** Booting runit daemon...",
-      "threshold": null,
+      "threshold": "warn",
       "timestamp": "2017-08-30T08:06:49.595Z"
     },
     {
       "_id": "59a672197f2a6ba14ec962e8",
       "containerId": "3864f1602739e924b257c7082f9e5c7bcd0b43d8986efe3acb4581f4f94dcd65",
-      "message": "chown: changing ownership of '/dev/xconsole': Operation not permitted",
-      "threshold": null,
+      "message": {
+        "name": "test",
+        "num": 10
+      },
+      "threshold": "info",
       "timestamp": "2017-08-30T08:06:49.595Z"
     }
   ]
@@ -205,13 +208,13 @@ exports['flex logs without query by specifying credentials as options when valid
 [debug] Logged out current user.
 Count: 5
 
-containerId   message                                                                threshold  timestamp               
-------------  ---------------------------------------------------------------------  ---------  ------------------------
-3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...                null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Running /etc/rc.local...                                           null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Runit started as PID 11                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  *** Booting runit daemon...                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  chown: changing ownership of '/dev/xconsole': Operation not permitted  null       2017-08-30T08:06:49.595Z
+containerId   message                                                  threshold  timestamp               
+------------  -------------------------------------------------------  ---------  ------------------------
+3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...  null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Running /etc/rc.local...                             null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Runit started as PID 11                              null       2017-08-30T08:06:49.595Z
+3864f1602739  *** Booting runit daemon...                              warn       2017-08-30T08:06:49.595Z
+3864f1602739  {"name":"test","num":10}                                 info       2017-08-30T08:06:49.595Z
 
 
 
@@ -248,13 +251,13 @@ exports['flex logs with query with valid timestamps and valid paging should succ
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49&limit=5&page=3 200
 Count: 5
 
-containerId   message                                                                threshold  timestamp               
-------------  ---------------------------------------------------------------------  ---------  ------------------------
-3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...                null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Running /etc/rc.local...                                           null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Runit started as PID 11                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  *** Booting runit daemon...                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  chown: changing ownership of '/dev/xconsole': Operation not permitted  null       2017-08-30T08:06:49.595Z
+containerId   message                                                  threshold  timestamp               
+------------  -------------------------------------------------------  ---------  ------------------------
+3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...  null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Running /etc/rc.local...                             null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Runit started as PID 11                              null       2017-08-30T08:06:49.595Z
+3864f1602739  *** Booting runit daemon...                              warn       2017-08-30T08:06:49.595Z
+3864f1602739  {"name":"test","num":10}                                 info       2017-08-30T08:06:49.595Z
 
 
 
@@ -268,13 +271,13 @@ exports['flex logs with query with valid timestamps and without paging should su
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49.000Z 200
 Count: 5
 
-containerId   message                                                                threshold  timestamp               
-------------  ---------------------------------------------------------------------  ---------  ------------------------
-3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...                null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Running /etc/rc.local...                                           null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Runit started as PID 11                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  *** Booting runit daemon...                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  chown: changing ownership of '/dev/xconsole': Operation not permitted  null       2017-08-30T08:06:49.595Z
+containerId   message                                                  threshold  timestamp               
+------------  -------------------------------------------------------  ---------  ------------------------
+3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...  null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Running /etc/rc.local...                             null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Runit started as PID 11                              null       2017-08-30T08:06:49.595Z
+3864f1602739  *** Booting runit daemon...                              warn       2017-08-30T08:06:49.595Z
+3864f1602739  {"name":"test","num":10}                                 info       2017-08-30T08:06:49.595Z
 
 
 
@@ -296,13 +299,13 @@ exports['flex logs with query with valid start timestamp and nothing else should
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z 200
 Count: 5
 
-containerId   message                                                                threshold  timestamp               
-------------  ---------------------------------------------------------------------  ---------  ------------------------
-3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...                null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Running /etc/rc.local...                                           null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Runit started as PID 11                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  *** Booting runit daemon...                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  chown: changing ownership of '/dev/xconsole': Operation not permitted  null       2017-08-30T08:06:49.595Z
+containerId   message                                                  threshold  timestamp               
+------------  -------------------------------------------------------  ---------  ------------------------
+3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...  null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Running /etc/rc.local...                             null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Runit started as PID 11                              null       2017-08-30T08:06:49.595Z
+3864f1602739  *** Booting runit daemon...                              warn       2017-08-30T08:06:49.595Z
+3864f1602739  {"name":"test","num":10}                                 info       2017-08-30T08:06:49.595Z
 
 
 
@@ -332,13 +335,13 @@ exports['flex logs with query without timestamps and valid paging should succeed
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=5&page=3 200
 Count: 5
 
-containerId   message                                                                threshold  timestamp               
-------------  ---------------------------------------------------------------------  ---------  ------------------------
-3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...                null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Running /etc/rc.local...                                           null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Runit started as PID 11                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  *** Booting runit daemon...                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  chown: changing ownership of '/dev/xconsole': Operation not permitted  null       2017-08-30T08:06:49.595Z
+containerId   message                                                  threshold  timestamp               
+------------  -------------------------------------------------------  ---------  ------------------------
+3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...  null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Running /etc/rc.local...                             null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Runit started as PID 11                              null       2017-08-30T08:06:49.595Z
+3864f1602739  *** Booting runit daemon...                              warn       2017-08-30T08:06:49.595Z
+3864f1602739  {"name":"test","num":10}                                 info       2017-08-30T08:06:49.595Z
 
 
 
@@ -352,13 +355,13 @@ exports['flex logs with query without timestamps and page but with valid size sh
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=35 200
 Count: 5
 
-containerId   message                                                                threshold  timestamp               
-------------  ---------------------------------------------------------------------  ---------  ------------------------
-3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...                null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Running /etc/rc.local...                                           null       2017-08-30T08:06:49.594Z
-3864f1602739  *** Runit started as PID 11                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  *** Booting runit daemon...                                            null       2017-08-30T08:06:49.595Z
-3864f1602739  chown: changing ownership of '/dev/xconsole': Operation not permitted  null       2017-08-30T08:06:49.595Z
+containerId   message                                                  threshold  timestamp               
+------------  -------------------------------------------------------  ---------  ------------------------
+3864f1602739  *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...  null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Running /etc/rc.local...                             null       2017-08-30T08:06:49.594Z
+3864f1602739  *** Runit started as PID 11                              null       2017-08-30T08:06:49.595Z
+3864f1602739  *** Booting runit daemon...                              warn       2017-08-30T08:06:49.595Z
+3864f1602739  {"name":"test","num":10}                                 info       2017-08-30T08:06:49.595Z
 
 
 

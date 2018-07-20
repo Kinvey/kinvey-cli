@@ -104,7 +104,7 @@ describe(baseCmd, () => {
     });
 
     before((done) => {
-      mockServer(null, (err, server) => {
+      mockServer({ require2FAToken: true }, (err, server) => {
         if (err) {
           return done(err);
         }
@@ -124,7 +124,7 @@ describe(baseCmd, () => {
       }
     });
 
-    it('should succeed', (done) => {
+    it('and 2fa required should succeed', (done) => {
       const outputFilePath = testsConfig.paths.supposeDebug;
 
       async.series([
@@ -135,10 +135,13 @@ describe(baseCmd, () => {
           };
 
           const cliPath = path.join('bin', 'kinvey');
-          const promptMsg = new RegExp(`\\? ${PromptMessages.INPUT_EMAIL}: ${existentUser.email}(\n)*${PromptMessages.INPUT_PASSWORD} `);
+          const promptMsgPassword = new RegExp(`\\? ${PromptMessages.INPUT_EMAIL}: ${existentUser.email}(\n)*${PromptMessages.INPUT_PASSWORD} `);
+          const promptMsgToken = new RegExp(`\\? ${PromptMessages.INPUT_MFA_TOKEN}`);
           const sequence = suppose('node', [cliPath, Namespace.PROFILE, 'login'], { env, debug: fs.createWriteStream(outputFilePath) })
-            .when(promptMsg)
-            .respond(`${existentUser.password}\n`);
+            .when(promptMsgPassword)
+            .respond(`${existentUser.password}\n`)
+            .when(promptMsgToken)
+            .respond(`${fixtureUser.validTwoFactorToken}\n`);
 
           runSupposeSequence(sequence, (err, exitCode) => {
             expect(err).to.not.exist;

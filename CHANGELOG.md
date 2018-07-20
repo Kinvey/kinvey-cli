@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.0-beta.2
+* Prompt for 2FA token on 'profile login' if required
+* Rearrange logs
+* Output logs properly when log message is an object
+
 ## 4.0.0-beta.1
 * Add `flex create` command to create internal flex services
 * Add `flex clear` command to clear project settings

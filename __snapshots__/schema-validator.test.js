@@ -17,3 +17,10 @@ exports['schema validator service with invalid internal flex should fail 1'] = `
 
 	host: "host" is not allowed
 `
+
+exports['schema validator service with invalid rapid data (sharepoint) should fail 1'] = `
+
+	type: "type" must be one of [flex-internal, flex-external, rest, sharepoint, salesforce, mssql, sap, progressData, dataDirect]
+	environments.default.host: "host" is required
+	environments.default.authentication.type: "type" must be one of [ServiceAccount, ServiceAccountOAuth, MIC, WindowsServiceAccount, None, Basic]
+`

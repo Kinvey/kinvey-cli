@@ -1,5 +1,11 @@
 # Changelog
 
+# 4.1.0-alpha.2
+* Prompt for 2FA token on 'profile login' if required
+* Rearrange logs
+* Output logs properly when log message is an object
+* Add `service export` command to export a flex service to config file
+
 ## 4.1.0-alpha.1
 * Add support for groups in env config file
 * Fix env export issues

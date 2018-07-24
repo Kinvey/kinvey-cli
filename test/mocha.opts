@@ -2,5 +2,5 @@
 --recursive
 --reporter spec
 --require  ./test/common.js
---timeout  20000
+--timeout  50000
 --ui       bdd

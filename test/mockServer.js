@@ -77,7 +77,7 @@ function build(
     domainType = 'apps',
     domainEntityId = fixtureApp.id,
     require2FAToken = false,
-    twoFactorToken
+    twoFactorToken = fixtureUser.validTwoFactorToken
   },
   done
 ) {

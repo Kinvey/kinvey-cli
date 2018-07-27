@@ -22,5 +22,5 @@ exports['schema validator service with invalid rapid data (sharepoint) should fa
 
 	type: "type" must be one of [flex-internal, flex-external, rest, sharepoint, salesforce, mssql, sap, progressData, dataDirect]
 	environments.default.host: "host" is required
-	environments.default.authentication.type: "type" must be one of [ServiceAccount, ServiceAccountOAuth, MIC, WindowsServiceAccount, None, Basic]
+	environments.default.authentication.type: "type" must be one of [ServiceAccount, ServiceAccountOAuth, MIC, WindowsServiceAccount, None, Basic, oauthClientCredentials]
 `

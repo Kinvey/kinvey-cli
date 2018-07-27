@@ -129,4 +129,85 @@ module.exports = () => {
       });
     });
   });
+
+  describe('rapid data services', () => {
+    const serviceName = randomStrings.plainString();
+    const serviceConfig = {
+      configType: 'service',
+      schemaVersion: '1.0.0',
+      type: 'rest',
+      environments: {
+        default: {
+          connectionOptions: {
+            strictSSL: true
+          },
+          authentication: {
+            type: 'oauthClientCredentials',
+            credentials: {
+              username: 'testUser',
+              password: '123',
+              tokenEndpoint: 'https://swapi.co/TOKEN'
+            },
+            loginOptions: {
+              type: 'maintainSession',
+              httpMethod: 'POST',
+              headers: {
+                'x-custom-header': '1'
+              }
+            }
+          },
+          host: 'https://api.co/api',
+          mapping: {
+            planets: {
+              sourceObject: {
+                endpoint: 'planets',
+                contextRoot: 'someRoot',
+                httpMethod: 'PUT',
+                queryMapping: {
+                  query: 'dynamicEndpointToken'
+                }
+              }
+            },
+            vehicles: {
+              sourceObject: {
+                endpoint: 'vehicles',
+                contextRoot: 'someRoot'
+              }
+            }
+          }
+        }
+      }
+    };
+
+    before('create rapid data service - rest', (done) => {
+      ConfigManagementHelper.service.createFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', null, (err, id) => {
+        if (err) {
+          return done(err);
+        }
+
+        serviceId = id;
+        done();
+      });
+    });
+
+    after('remove service', (done) => {
+      ApiService.services.remove(serviceId, (err) => {
+        serviceId = null;
+        done(err);
+      });
+    });
+
+    it('should succeed', (done) => {
+      ConfigManagementHelper.service.exportConfig(serviceId, (err, exported) => {
+        if (err) {
+          return done(err);
+        }
+
+        expect(exported.name).to.equal(serviceName);
+        const actual = getObjectByOmitting(exported, ['name']);
+        expect(actual).to.deep.equal(serviceConfig);
+        done();
+      });
+    });
+  });
 };

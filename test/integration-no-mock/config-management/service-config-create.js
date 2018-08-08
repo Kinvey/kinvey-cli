@@ -23,7 +23,6 @@ const ApiService = require('./../../ApiService');
 const ConfigManagementHelper = require('./../../ConfigManagementHelper');
 
 const { randomStrings } = require('./../../TestsHelper');
-const { writeJSON } = require('../../../lib/Utils');
 
 module.exports = () => {
   const projectPath = path.join(process.cwd(), 'test/integration-no-mock/flex-project');

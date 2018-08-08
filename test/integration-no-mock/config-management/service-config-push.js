@@ -123,47 +123,6 @@ module.exports = () => {
     ], done);
   });
 
-  it('modifying only description on internal flex service with sourcePath should succeed', (done) => {
-    const initialServiceConfig = {
-      configType: 'service',
-      schemaVersion: '1.0.0',
-      type: 'flex-internal',
-      secret: '123',
-      description: 'Test service',
-      sourcePath: projectPath
-    };
-
-    const modifiedServiceConfig = cloneDeep(initialServiceConfig);
-    modifiedServiceConfig.description = 'Updated service without re-deploying';
-
-    const serviceName = randomStrings.plainString();
-    const pkgJson = {
-      version: '1.0.0',
-      dependencies: {
-        'kinvey-flex-sdk': '3.0.0'
-      }
-    };
-
-    async.series([
-      (next) => {
-        ConfigManagementHelper.service.createFromConfig(serviceName, initialServiceConfig, 'org', 'CliOrg', pkgJson, (err, id) => {
-          if (err) {
-            return next(err);
-          }
-
-          serviceId = id;
-          next();
-        });
-      },
-      (next) => {
-        ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, null, next);
-      },
-      (next) => {
-        ConfigManagementHelper.service.assertFlexService(serviceId, modifiedServiceConfig, serviceName, next);
-      }
-    ], done);
-  });
-
   it('modifying secret and bumping local version on internal flex service should succeed', function (done) {
     this.timeout(250000);
 

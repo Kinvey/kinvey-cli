@@ -27,7 +27,7 @@ function getBaseUrl(isBaasRequest) {
     return process.env.KINVEY_CLI_BAAS;
   }
 
-  let instance = process.env.KINVEY_CLI_INSTANCE;
+  let instance = process.env.KINVEY_CLI_INSTANCE_ID;
   if (instance && instance.includes('localhost')) {
     return instance;
   }

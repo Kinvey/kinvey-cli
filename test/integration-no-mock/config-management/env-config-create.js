@@ -211,7 +211,7 @@ module.exports = () => {
           actualRoles = data;
 
           const expectedRolesCount = rolesList.length;
-          expect(expectedRolesCount).to.equal(actualRoles.length);
+          expect(actualRoles.length).to.equal(expectedRolesCount);
 
           for (let i = 0; i < expectedRolesCount; i += 1) {
             const expected = rolesList[i];
@@ -298,6 +298,9 @@ module.exports = () => {
       },
       (next) => {
         EnvHelper.assertEnvOnly(env, envId, envName, next);
+      },
+      (next) => {
+        EnvHelper.assertAllCommonCodeModules(envId, commonCode, next);
       },
       (next) => {
         EnvHelper.assertEndpoints(envId, endpoints, next);

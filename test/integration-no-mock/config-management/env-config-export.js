@@ -14,10 +14,7 @@
  */
 
 const async = require('async');
-const moment = require('moment');
-const path = require('path');
 
-const ApiService = require('./../../ApiService');
 const ConfigManagementHelper = require('./../../ConfigManagementHelper');
 const { execCmdWoMocks, randomStrings } = require('./../../TestsHelper');
 

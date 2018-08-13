@@ -17,6 +17,7 @@ const async = require('async');
 const inquirer = require('inquirer');
 const snapshot = require('snap-shot-it');
 const stripAnsi = require('strip-ansi');
+const uuidv4 = require('uuid-v4');
 
 const childProcess = require('child_process');
 const fs = require('fs');
@@ -528,6 +529,25 @@ TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
   });
 };
 
+TestsHelper.execCmdWoMocks = function execCmd(cliCmd, options, done) {
+  const nodeConfig = {
+    paths: {
+      project: path.join(process.cwd(), 'test/integration/project', '.kinvey'),
+      package: path.join(process.cwd(), 'test/integration/project'),
+      session: path.join(require('os').homedir(), '.kinvey-cli-tests')
+    }
+  };
+
+  const env = process.env;
+  env.NODE_CONFIG = JSON.stringify(nodeConfig);
+  options = options || { env };
+
+  const fullCmd = `node ${path.join('bin', 'kinvey')} ${cliCmd}`;
+  return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
+    done(err, stdout, stderr);
+  });
+};
+
 TestsHelper.execCmdWithoutAssertion = function execCmdWithoutAssertion(cliCmd, options, done) {
   let ms = {};
   async.series([
@@ -686,5 +706,14 @@ TestsHelper.testers.execCmdWithIdentifierAndActiveCheck = function execCmdWithId
     TestsHelper.assertions.assertActiveItemsOnProfile(expectedActive, profileName, null, done);
   });
 };
+
+TestsHelper.randomStrings = {
+  plainString: (length = 14) => (Math.random() + 1).toString(36).substr(0, length),
+  appName: (length = 12) => `CliApp${TestsHelper.randomStrings.plainString(length)}`.substr(0, length),
+  envName: (length = 12) => `CliEnv${TestsHelper.randomStrings.plainString(length)}`.substr(0, length),
+  collName: (length = 10) => `Coll${uuidv4()}`.substr(0, length)
+};
+
+TestsHelper.ConfigFilesDir = path.join(process.cwd(), 'test/config-files');
 
 module.exports = TestsHelper;

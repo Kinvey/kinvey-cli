@@ -57,7 +57,7 @@
     "uuid": "2.0.3",
     "uuid-v4": "0.1.0",
     "valid-url": "1.0.9",
-    "winston": "2.4.0",
+    "winston": "2.4.3",
     "yargs": "10.0.3"
   },
   "devDependencies": {

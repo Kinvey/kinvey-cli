@@ -50,7 +50,7 @@ Not enough non-option arguments: got 0, need at least 1
 `
 
 exports['flex create with active profile without an app and org should fail 1'] = `
-[error] Error: Either '--app' or '--org' option must be set.
+[error] Either '--app' or '--org' option must be set.
 
 `
 

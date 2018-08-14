@@ -139,7 +139,7 @@ module.exports = () => {
           }
 
           const expectedRolesCount = rolesList.length;
-          expect(expectedRolesCount).to.equal(actualRoles.length);
+          expect(actualRoles.length).to.equal(expectedRolesCount);
 
           for (let i = 0; i < expectedRolesCount; i += 1) {
             const expected = rolesList[i];
@@ -157,6 +157,9 @@ module.exports = () => {
       },
       (next) => {
         ConfigManagementHelper.env.assertCollections(envId, collList, collList.length, rolesNameIdPairs, next);
+      },
+      (next) => {
+        ConfigManagementHelper.env.assertGroups(envId, modifiedConfig.groups, next);
       },
       (next) => {
         ConfigManagementHelper.env.assertAllCollHooks(envId, modifiedConfig.collectionHooks, next);

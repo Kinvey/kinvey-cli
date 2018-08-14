@@ -35,7 +35,8 @@ describe('Config management', () => {
       throw new Error(`Env variables KINVEY_CLI_EMAIL(${envEmail}) and KINVEY_CLI_PASSWORD must be set to execute the tests.`);
     }
 
-    console.log(`Starting config management tests...${EOL}E-mail: '${envEmail}'${EOL}Instance: '${process.env.KINVEY_CLI_INSTANCE_ID}'`);
+    const currentInstance = process.env.KINVEY_CLI_INSTANCE_ID || 'default instance (kvy-us1)';
+    console.log(`Starting config management tests...${EOL}E-mail: '${envEmail}'${EOL}Instance: '${currentInstance}'`);
   });
 
   before((done) => {

@@ -26,6 +26,8 @@ const existentUserOne = fixtureUser.existentOne;
 const tokenOne = fixtureUser.tokenOne;
 const nonExistentUser = fixtureUser.nonexistent;
 const defaultServiceId = fixtureInternalDataLink.id;
+const serviceWithRuntimeServiceId = '123456';
+const serviceWithMissingRuntimeServiceId = '1234567';
 
 const baseCmd = 'flex status';
 // this value depends on the requestedAt date in mockServer.js and is different for different timezones, so it is checked and removed from the output
@@ -156,6 +158,14 @@ describe(baseCmd, () => {
   describe('by specifying credentials as options', () => {
     it('when valid and existent serviceId should succeed', (done) => {
       testFlexStatus(null, existentUserOne, true, null, validUserForGettingStatus, replacementObject, done);
+    });
+
+    it('when valid and existent serviceId should succeed (with runtime)', (done) => {
+      testFlexStatus(null, existentUserOne, true, serviceWithRuntimeServiceId, validUserForGettingStatus, replacementObject, done);
+    });
+
+    it('when valid and existent serviceId should succeed (with missing runtime)', (done) => {
+      testFlexStatus(null, existentUserOne, true, serviceWithMissingRuntimeServiceId, validUserForGettingStatus, replacementObject, done);
     });
 
     it('when valid and non-existent serviceId should fail', (done) => {

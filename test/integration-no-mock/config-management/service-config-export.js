@@ -14,8 +14,9 @@
  */
 
 const fs = require('fs');
-
 const path = require('path');
+
+const cloneDeep = require('lodash.clonedeep');
 
 const ApiService = require('./../../ApiService');
 const ConfigManagementHelper = require('./../../ConfigManagementHelper');
@@ -31,9 +32,13 @@ module.exports = () => {
       configType: 'service',
       schemaVersion: '1.0.0',
       type: 'flex-external',
-      secret: '123',
       description: 'Test service',
-      host: 'https://swapi.co/api'
+      environments: {
+        dev: {
+          secret: '123',
+          host: 'https://swapi.co/api'
+        }
+      }
     };
     const serviceName = randomStrings.plainString();
 
@@ -75,9 +80,13 @@ module.exports = () => {
       configType: 'service',
       schemaVersion: '1.0.0',
       type: 'flex-internal',
-      secret: '123',
       description: 'Test service',
-      sourcePath: projectPath
+      environments: {
+        dev: {
+          secret: '123',
+          sourcePath: projectPath
+        }
+      }
     };
     const serviceName = randomStrings.plainString();
 
@@ -122,7 +131,8 @@ module.exports = () => {
           return done(err);
         }
 
-        const expected = getObjectByOmitting(internalFlexSrvConfig, ['sourcePath']);
+        const expected = cloneDeep(internalFlexSrvConfig);
+        delete expected.environments[Object.keys(expected.environments)[0]].sourcePath;
         expected.name = serviceName;
         expect(exported).to.deep.equal(expected);
         done();

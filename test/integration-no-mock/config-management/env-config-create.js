@@ -360,9 +360,13 @@ module.exports = () => {
           configType: 'service',
           schemaVersion: '1.0.0',
           type: 'flex-internal',
-          secret: '123',
           description: 'Test service',
-          sourcePath: path.join(process.cwd(), 'test/integration-no-mock/flex-project')
+          environments: {
+            dev: {
+              secret: '123',
+              sourcePath: path.join(process.cwd(), 'test/integration-no-mock/flex-project')
+            }
+          }
         };
 
         const pkgJson = {

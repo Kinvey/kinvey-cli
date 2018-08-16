@@ -42,7 +42,7 @@
     "console.table": "0.10.0",
     "inquirer": "0.12.0",
     "isemail": "1.2.0",
-    "joi": "13.3.0",
+    "joi": "13.6.0",
     "lodash.clonedeep": "4.5.0",
     "lodash.findkey": "4.6.0",
     "lodash.get": "4.4.2",

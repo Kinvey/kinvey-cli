@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.0-beta.3
+* Rename the `env` namespace to `appenv`
+* Add `org` option to `app create`
+
 ## 4.0.0-beta.2
 * Prompt for 2FA token on 'profile login' if required
 * Rearrange logs

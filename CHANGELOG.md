@@ -4,11 +4,6 @@
 * Rename the `env` namespace to `appenv`
 * Add `org` option to `app create`
 
-## 4.0.0-beta.2
-* Prompt for 2FA token on 'profile login' if required
-* Rearrange logs
-* Output logs properly when log message is an object
-
 ## 4.0.0-beta.1
 * Add `flex create` command to create internal flex services
 * Add `flex clear` command to clear project settings
@@ -25,6 +20,11 @@
     * environments-related: `env create`, `env list`, `env show`, `env use`, `env delete`
     * collections-related: `coll create`, `coll list`, `coll delete`
 * Fix `profile login` to update only token
+
+## 3.1.1
+* Prompt for 2FA token on 'profile login' if required
+* Rearrange logs
+* Output logs properly when log message is an object
 
 ## 3.1.0
 * Ask for profile override if profile already exists on 'kinvey init'

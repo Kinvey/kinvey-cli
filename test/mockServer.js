@@ -28,6 +28,7 @@ const fixtureCollection = require('./fixtures/collection.json');
 const fixtureOrgs = require('./fixtures/orgs.json');
 const fixtureServices = require('./fixtures/datalinks.json');
 const fixtureInternalFlexService = require('./fixtures/internal-flex-service.json');
+const fixtureServicesStatuses = require('./fixtures/datalinks-status-response.json');
 const fixtureJob = require('./fixtures/job.json');
 const fixtureJobs = require('./fixtures/jobs.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
@@ -144,25 +145,16 @@ function build(
   // SERVICES
   app.get(`/${versionPart}/data-links/:id/status`, (req, res) => {
     const id = req.params.id;
-    if (id !== fixtureInternalDataLink.id) {
+
+    const datalinkStatus = fixtureServicesStatuses.find(dl => dl.id === id);
+    if (!datalinkStatus) {
       return res.status(404).send({
         code: 'DataLinkNotFound',
         description: 'The specified data link could not be found.'
       });
     }
 
-    const result = {
-      status: serviceStatus,
-      requestedAt: '2017-11-06T03:42:31.970Z',
-      deployUserInfo:
-        { firstName: 'Davy',
-          lastName: 'Jones',
-          email: 'davy.jones@mail.com'
-        },
-      version: '1.4.2'
-    };
-
-    res.send(result);
+    res.send(datalinkStatus.status);
   });
 
   app.get(`/${versionPart}/data-links/:id/logs`, (req, res) => {

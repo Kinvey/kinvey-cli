@@ -29,7 +29,8 @@
     "test-unit": "./node_modules/.bin/mocha test/unit --NODE_CONFIG_DIR=./test/config",
     "test-integration": "./node_modules/.bin/mocha test/integration",
     "coverage": "./node_modules/.bin/nyc --reporter=html --reporter=text ./node_modules/.bin/mocha test --NODE_CONFIG_DIR=./test/config",
-    "eslint": "./node_modules/.bin/eslint bin config lib test"
+    "eslint": "./node_modules/.bin/eslint bin config lib test",
+    "test-npm-security": "npm audit"
   },
   "dependencies": {
     "aes-js": "3.1.1",

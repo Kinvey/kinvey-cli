@@ -2,8 +2,8 @@ exports['flex job by specifying a profile and existent jobId should succeed and 
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetJobStatus'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37
-[debug] Response: GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
+[debug] Request:  GET http://localhost:3234/v3/jobs/6fa90d40d78c43f9a8a9a1838de41a37
+[debug] Response: GET http://localhost:3234/v3/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
 Job status: COMPLETE
 
 `
@@ -12,8 +12,8 @@ exports['flex job by specifying a profile and existent jobId should succeed and 
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetJobStatus'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37
-[debug] Response: GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
+[debug] Request:  GET http://localhost:3234/v3/jobs/6fa90d40d78c43f9a8a9a1838de41a37
+[debug] Response: GET http://localhost:3234/v3/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
 {
   "result": {
     "status": "COMPLETE",
@@ -28,8 +28,8 @@ exports['flex job by specifying a profile and non-existent jobId should fail 1']
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetJobStatus'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/jobs/123jobDoesntExist
-[debug] Response: GET http://localhost:3234/v2/jobs/123jobDoesntExist 404
+[debug] Request:  GET http://localhost:3234/v3/jobs/123jobDoesntExist
+[debug] Response: GET http://localhost:3234/v3/jobs/123jobDoesntExist 404
 [error] JobNotFound: The specified job could not be found.
 
 `
@@ -38,8 +38,8 @@ exports['flex job by not specifying profile nor credentials when one profile and
 [debug] Checking for package updates
 [debug] Using profile 'flexJobProfile'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37
-[debug] Response: GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
+[debug] Request:  GET http://localhost:3234/v3/jobs/6fa90d40d78c43f9a8a9a1838de41a37
+[debug] Response: GET http://localhost:3234/v3/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
 Job status: COMPLETE
 
 `
@@ -75,8 +75,8 @@ exports['flex job by specifying credentials as options when valid and existent j
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37
-[debug] Response: GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
+[debug] Request:  GET http://localhost:3234/v3/jobs/6fa90d40d78c43f9a8a9a1838de41a37
+[debug] Response: GET http://localhost:3234/v3/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -89,8 +89,8 @@ exports['flex job by specifying credentials as options when valid and non-existe
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/jobs/123jobDoesntExist
-[debug] Response: GET http://localhost:3234/v2/jobs/123jobDoesntExist 404
+[debug] Request:  GET http://localhost:3234/v3/jobs/123jobDoesntExist
+[debug] Response: GET http://localhost:3234/v3/jobs/123jobDoesntExist 404
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -110,8 +110,8 @@ exports['flex job by specifying credentials as options when invalid and existent
 exports['flex job without additional args and options when active profile is set should suceed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'willBeActive'
-[debug] Request:  GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37
-[debug] Response: GET http://localhost:3234/v2/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
+[debug] Request:  GET http://localhost:3234/v3/jobs/6fa90d40d78c43f9a8a9a1838de41a37
+[debug] Response: GET http://localhost:3234/v3/jobs/6fa90d40d78c43f9a8a9a1838de41a37 200
 Job status: COMPLETE
 
 `

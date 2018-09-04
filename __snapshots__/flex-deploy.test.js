@@ -1,3 +1,8 @@
+exports['flex deploy when project setup exists is valid and user\'s project is invalid should fail 1'] = `
+[error] InvalidProject: This project is not valid. Please implement the kinvey-flex-sdk node module.
+
+`
+
 exports['flex deploy when project setup is non-existent by not specifying profile nor credentials when one profile should use it and fail 1'] = `
 kinvey flex deploy [serviceId]
 
@@ -19,13 +24,9 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --svcEnv                  Service environment name/ID                 [string]
 
 This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use positional arguments: serviceId.
-
-`
-
-exports['flex deploy when project setup exists is valid and user\'s project is invalid should fail 1'] = `
-[error] InvalidProject: This project is not valid. Please implement the kinvey-flex-sdk node module.
 
 `
 
@@ -50,6 +51,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --svcEnv                  Service environment name/ID                 [string]
 
 This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use positional arguments: serviceId.
 

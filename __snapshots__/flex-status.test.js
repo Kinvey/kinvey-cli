@@ -1,27 +1,11 @@
-exports['flex status by specifying a profile and existent serviceId should succeed and output default format 1'] = `
+exports['flex status by specifying a profile existent serviceId and existent svc env name should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServiceStatus'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-key            value                                
--------------  -------------------------------------
-status         ONLINE                               
-version        1.4.2                                
-id             12378kdl2                            
-requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                  
-deployerName   Davy Jones                           
-
-
-`
-
-exports['flex status by specifying a profile and existent serviceId should succeed and output JSON 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'profileToGetServiceStatus'
-[debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
 {
   "result": {
     "status": "ONLINE",
@@ -41,17 +25,17 @@ exports['flex status by specifying a profile and non-existent serviceId should f
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServiceStatus'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/z793f26c8I_DONT_EXIST/status
-[debug] Response: GET http://localhost:3234/v2/data-links/z793f26c8I_DONT_EXIST/status 404
-[error] DataLinkNotFound: The specified data link could not be found.
+[debug] Request:  GET http://localhost:3234/v3/services/z793f26c8I_DONT_EXIST/environments
+[debug] Response: GET http://localhost:3234/v3/services/z793f26c8I_DONT_EXIST/environments 404
+[error] ServiceNotFound: The specified service could not be found.
 
 `
 
-exports['flex status by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
+exports['flex status by specifying a profile when valid project is set without serviceId and svcEnv as options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServiceStatus'
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status 200
 key            value                                
 -------------  -------------------------------------
 status         ONLINE                               
@@ -65,11 +49,13 @@ deployerName   Davy Jones
 
 `
 
-exports['flex status by specifying a profile when invalid project is set with existent serviceId as an option should succeed 1'] = `
+exports['flex status by specifying a profile when invalid project is set with existent serviceId and svcEnv as options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServiceStatus'
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
 key            value                                
 -------------  -------------------------------------
 status         ONLINE                               
@@ -82,12 +68,14 @@ deployerName   Davy Jones
 
 `
 
-exports['flex status by not specifying profile nor credentials when one profile and existent serviceId should succeed 1'] = `
+exports['flex status by not specifying profile nor credentials when one profile and existent serviceId plus existent svcEnv should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'flexStatusProfile'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
 key            value                                
 -------------  -------------------------------------
 status         ONLINE                               
@@ -100,7 +88,7 @@ deployerName   Davy Jones
 
 `
 
-exports['flex status by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
+exports['flex status by not specifying profile nor credentials when several profiles and existent serviceId plus existent svcEnv should fail 1'] = `
 kinvey flex status [serviceId]
 
 Return the health of a Flex Service cluster
@@ -121,18 +109,21 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --svcEnv                  Service environment name/ID                 [string]
 
 You must be authenticated.
 
 `
 
-exports['flex status by specifying credentials as options when valid and existent serviceId should succeed 1'] = `
+exports['flex status by specifying credentials as options when valid and existent serviceId plus existent svcEnv should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -148,13 +139,15 @@ deployerName   Davy Jones
 
 `
 
-exports['flex status by specifying credentials as options when valid and existent serviceId should succeed (with runtime) 1'] = `
+exports['flex status by specifying credentials as options when valid and existent serviceId plus existent svcEnv should succeed (with runtime) 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/data-links/123456/status
-[debug] Response: GET http://localhost:3234/v2/data-links/123456/status 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/123456/status
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/123456/status 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -163,7 +156,7 @@ key                value
 status             ONLINE                               
 version            1.4.2                                
 runtime            FLEX-RUNTIME-NODE8                   
-id                 123456                               
+id                 12378kdl2                            
 requestedAt        replaced_value
 deployerEmail      davy.jones@mail.com                  
 deployerName       Davy Jones                           
@@ -174,13 +167,15 @@ deploymentRuntime  FLEX-RUNTIME-NODE10
 
 `
 
-exports['flex status by specifying credentials as options when valid and existent serviceId should succeed (with missing runtime) 1'] = `
+exports['flex status by specifying credentials as options when valid and existent serviceId plus existent svcEnv should succeed (with missing runtime) 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/data-links/1234567/status
-[debug] Response: GET http://localhost:3234/v2/data-links/1234567/status 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/1234567/status
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/1234567/status 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -189,7 +184,7 @@ key                value
 status             UPDATING                             
 version            1.4.2                                
 runtime            UNKNOWN                              
-id                 1234567                              
+id                 12378kdl2                            
 requestedAt        replaced_value
 deployerEmail      davy.jones@mail.com                  
 deployerName       Davy Jones                           
@@ -200,17 +195,31 @@ deploymentRuntime  FLEX-RUNTIME-NODE10
 
 `
 
+exports['flex status by specifying credentials as options when valid and existent serviceId plus non-existent svcEnv should fail 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+[error] NotFound: Could not find service environment with identifier '123-non-existent'.
+
+`
+
 exports['flex status by specifying credentials as options when valid and non-existent serviceId should fail 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/data-links/z793f26c8I_DONT_EXIST/status
-[debug] Response: GET http://localhost:3234/v2/data-links/z793f26c8I_DONT_EXIST/status 404
+[debug] Request:  GET http://localhost:3234/v3/services/z793f26c8I_DONT_EXIST/environments
+[debug] Response: GET http://localhost:3234/v3/services/z793f26c8I_DONT_EXIST/environments 404
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-[error] DataLinkNotFound: The specified data link could not be found.
+[error] ServiceNotFound: The specified service could not be found.
 
 `
 
@@ -220,5 +229,25 @@ exports['flex status by specifying credentials as options when invalid and exist
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
 [error] InvalidCredentials: Credentials are invalid. Please authenticate.
+
+`
+
+exports['flex status by specifying a profile existent serviceId and existent svc env ID should succeed and output default format 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToGetServiceStatus'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status 200
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+id             12378kdl2                            
+requestedAt    replaced_value
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
+
 
 `

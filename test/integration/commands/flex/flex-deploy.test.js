@@ -18,7 +18,7 @@ const yargs = require('yargs');
 
 const path = require('path');
 
-const { AuthOptionsNames } = require('./../../../../lib/Constants');
+const { AuthOptionsNames, FlexOptionsNames, ServiceOptionsNames } = require('./../../../../lib/Constants');
 const FlexController = require('./../../../../lib/flex/FlexController');
 const FlexService = require('./../../../../lib/flex/FlexService');
 const CLIManager = require('./../../../../lib/CLIManager');
@@ -31,6 +31,7 @@ const { execCmdWithAssertion, setup } = require('../../../TestsHelper');
 const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureInternalDataLink = require('./../../../fixtures/kinvey-dlc.json');
 const fixtureApp = require('./../../../fixtures/app.json');
+const fixtureSvcEnvs = require('./../../../fixtures/svc-envs-one.json');
 
 const existentUserOne = fixtureUser.existentOne;
 const tokenOne = fixtureUser.tokenOne;
@@ -48,7 +49,7 @@ function testFlexDeploy(profileName, optionsForCredentials, validUser, done) {
   }
 
   const apiOptions = {
-    jobType: 'deployDataLink'
+    jobType: 'deployService'
   };
   if (!isEmpty(validUser)) {
     apiOptions.token = validUser.token;
@@ -100,7 +101,7 @@ describe(`${baseCmd}`, () => {
     before((done) => {
       async.series([
         (next) => {
-          setup.createProfile(activeProfile, existentUserOne.email, existentUserOne.password, next);
+          setup.createProfile(activeProfile, null, null, next);
         },
         (next) => {
           setup.setActiveProfile(activeProfile, false, next);
@@ -130,16 +131,19 @@ describe(`${baseCmd}`, () => {
               on: () => {},
               once: () => {},
               send: () => {
+                const svcEnvsEnd = Endpoints.serviceEnvs(testsConfig.defaultSchemaVersion, fixtureInternalDataLink.id);
                 if (options.endpoint === Endpoints.session()) {
                   return done(null, { email: validUserOne.email, token: tokenOne });
-                } else if (options.endpoint === Endpoints.jobs(2)) {
+                } else if (options.endpoint === svcEnvsEnd) {
+                  return done(null, fixtureSvcEnvs);
+                } else if (options.endpoint === Endpoints.jobs(testsConfig.defaultSchemaVersion)) {
                   const formData = options.formData;
                   const headers = options.headers;
                   if (isEmpty(headers) || headers['Transfer-Encoding'] !== 'chunked') {
                     return done(new Error('Bad headers.'));
                   }
 
-                  if (isEmpty(formData) || formData.type !== 'deployDataLink' || isEmpty(formData.params) || formData.params.version === '0.6.2') {
+                  if (isEmpty(formData) || formData.type !== 'deployService' || isEmpty(formData.params) || formData.params.version === '0.6.2') {
                     return done(new Error('Bad form data type or params.'));
                   }
 
@@ -164,8 +168,11 @@ describe(`${baseCmd}`, () => {
 
           const options = {
             [AuthOptionsNames.EMAIL]: existentUserOne.email,
-            [AuthOptionsNames.PASSWORD]: existentUserOne.password
+            [AuthOptionsNames.PASSWORD]: existentUserOne.password,
+            [FlexOptionsNames.SERVICE_ID]: fixtureInternalDataLink.id,
+            _: ['flex', 'deploy']
           };
+          ctrl.preProcessOptions(options);
           ctrl.deploy(options, (err) => {
             expect(err).to.not.exist;
             done();

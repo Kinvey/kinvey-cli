@@ -1,0 +1,44 @@
+[
+  {
+    "name": "dev",
+    "host": "k8s-4415a2a3a26193gb72a9",
+    "secret": "123",
+    "id": "642dd1efe3d92e0180317487b29c6e88"
+  },
+  {
+    "name": "prod",
+    "host": "k8s-4415a2a3a26193gb72a9",
+    "secret": "123",
+    "id": "662dd1efe3d92e0180317487b29c6e66"
+  },
+  {
+    "name": "stg0",
+    "host": "k8s-4415a2a3a26193gb72a0",
+    "secret": "123",
+    "id": "123456"
+  },
+  {
+    "name": "stg1",
+    "host": "k8s-4415a2a3a26193gb72a1",
+    "secret": "123",
+    "id": "1234567"
+  },
+  {
+    "name": "stg2",
+    "host": "k8s-4415a2a3a26193gb72a2",
+    "secret": "123",
+    "id": "12378kdl2"
+  },
+  {
+    "name": "stg3",
+    "host": "k8s-4415a2a3a26193gb72a3",
+    "secret": "123",
+    "id": "12389kd89"
+  },
+  {
+    "name": "stg4",
+    "host": "k8s-4415a2a3a26193gb72a4",
+    "secret": "123",
+    "id": "124"
+  }
+]

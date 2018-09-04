@@ -18,6 +18,7 @@ const bodyParser = require('body-parser');
 const isEqual = require('lodash.isequal');
 
 const { HTTPMethod, ServiceStatus } = require('./../lib/Constants');
+const { isEmpty } = require('./../lib/Utils');
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApps = require('./fixtures/apps.json');
 const fixtureApp = require('./fixtures/app.json');
@@ -28,6 +29,7 @@ const fixtureCollection = require('./fixtures/collection.json');
 const fixtureOrgs = require('./fixtures/orgs.json');
 const fixtureServices = require('./fixtures/datalinks.json');
 const fixtureInternalFlexService = require('./fixtures/internal-flex-service.json');
+const fixtureSvcEnvs = require('./fixtures/svc-envs-one.json');
 const fixtureServicesStatuses = require('./fixtures/datalinks-status-response.json');
 const fixtureJob = require('./fixtures/job.json');
 const fixtureJobs = require('./fixtures/jobs.json');
@@ -37,6 +39,15 @@ const fixtureLogs = require('./fixtures/logs.json');
 const testsConfig = require('./TestsConfig');
 
 const existentUserOne = fixtureUser.existentOne;
+
+const serviceNotFound = {
+  code: 'ServiceNotFound',
+  description: 'The specified service could not be found.'
+};
+const svcEnvNotFound = {
+  code: 'ServiceEnvironmentNotFound',
+  description: 'The specified service environment could not be found.'
+};
 
 let server;
 
@@ -68,14 +79,15 @@ function build(
     token = fixtureUser.token,
     nonExistentUser = fixtureUser.nonexistent,
     serviceStatus = ServiceStatus.ONLINE,
+    svcEnvs = fixtureSvcEnvs,
     orgs = fixtureOrgs,
     apps = fixtureApps,
     service = fixtureInternalFlexService,
     envs = fixtureEnvs,
     colls = fixtureCollections,
-    jobType = 'recycleDataLink',
+    jobType = 'recycleService',
     serviceLogsQuery = {},
-    domainType = 'apps',
+    domainType = 'appId', // appId, organizationId
     domainEntityId = fixtureApp.id,
     require2FAToken = false,
     twoFactorToken = fixtureUser.validTwoFactorToken
@@ -143,27 +155,26 @@ function build(
   app.delete('/session', (req, res) => res.sendStatus(204));
 
   // SERVICES
-  app.get(`/${versionPart}/data-links/:id/status`, (req, res) => {
+  app.get(`/${versionPart}/services/:id/environments/:envId/status`, (req, res) => {
     const id = req.params.id;
-
-    const datalinkStatus = fixtureServicesStatuses.find(dl => dl.id === id);
-    if (!datalinkStatus) {
-      return res.status(404).send({
-        code: 'DataLinkNotFound',
-        description: 'The specified data link could not be found.'
-      });
+    const service = fixtureServices.find(x => x.id === id);
+    if (!service) {
+      return res.status(404).send(serviceNotFound);
     }
 
-    res.send(datalinkStatus.status);
+    const envId = req.params.envId;
+    const status = fixtureServicesStatuses.find(dl => dl.id === envId);
+    if (!status) {
+      return res.status(404).send(svcEnvNotFound);
+    }
+
+    res.send(status.status);
   });
 
-  app.get(`/${versionPart}/data-links/:id/logs`, (req, res) => {
+  app.get(`/${versionPart}/services/:id/logs`, (req, res) => {
     const id = req.params.id;
     if (id !== fixtureInternalDataLink.id) {
-      return res.status(404).send({
-        code: 'DataLinkNotFound',
-        description: 'The specified data link could not be found.'
-      });
+      return res.status(404).send(serviceNotFound);
     }
 
     const query = req.query;
@@ -174,11 +185,36 @@ function build(
     res.send(fixtureLogs);
   });
 
-  app.get(`/${versionPart}/data-links/:id`, (req, res) => {
+  app.get(`/${versionPart}/services/:id/environments`, (req, res) => {
     const id = req.params.id;
-    if (id) {
-      const wantedService = fixtureServices.find(x => x.id === id);
-      return res.send(wantedService);
+    const wantedService = fixtureServices.find(x => x.id === id);
+    if (!wantedService) {
+      return res.status(404).send(serviceNotFound);
+    }
+
+    res.send(svcEnvs);
+  });
+
+  app.get(`/${versionPart}/services/:id`, (req, res) => {
+    const id = req.params.id;
+    const wantedService = fixtureServices.find(x => x.id === id);
+    if (wantedService) {
+      res.send(wantedService);
+    } else {
+      res.status(404).send(serviceNotFound);
+    }
+  });
+
+  app.get(`/${versionPart}/services`, (req, res) => {
+    const query = req.query;
+    const unexpectedQueryIsSent = !domainType && !isEmpty(query);
+    const queryIsWrong = domainType && Object.keys(query)[0] !== domainType;
+    if (unexpectedQueryIsSent || queryIsWrong) {
+      return res.status(400).send({ description: `CLI sent bad query: ${JSON.stringify(query)}. Expected: ${domainType}: ${domainEntityId}` });
+    }
+
+    if (domainType && query[domainType] !== domainEntityId) {
+      return res.send([]);
     }
 
     res.send(fixtureServices);
@@ -216,34 +252,21 @@ function build(
 
   app.post(`/${versionPart}/jobs`, (req, res) => {
     const body = req.body;
-    const isAsExpected = body && body.type === jobType && body.params && body.params.dataLinkId === fixtureInternalDataLink.id;
+    const isAsExpected = body && body.type === jobType && body.params && body.params.serviceId === fixtureInternalDataLink.id
+      && svcEnvs.find(x => x.id === body.params.serviceEnvironmentId);
     if (!isAsExpected) {
-      if (body.params.dataLinkId !== fixtureInternalDataLink.id) {
-        return res.status(404).send({
-          code: 'DataLinkNotFound',
-          description: 'The specified data link could not be found.'
-        });
+      if (body.params.serviceId !== fixtureInternalDataLink.id) {
+        return res.status(404).send(serviceNotFound);
+      }
+
+      if (!svcEnvs.find(x => x.id === body.params.serviceEnvironmentId)) {
+        return res.status(404).send(svcEnvNotFound);
       }
 
       return res.status(400).send({ description: `CLI has constructed bad job: ${JSON.stringify(body)}` });
     }
 
     res.send({ job: 'idOfJobThatIsRecyclingTheService' });
-  });
-
-  // SERVICES BY APP/ORG
-  app.get(`/${versionPart}/${domainType}/${domainEntityId}/data-links`, (req, res) => {
-    res.send(fixtureServices);
-  });
-
-  app.post(`/${versionPart}/${domainType}/${domainEntityId}/data-links`, (req, res) => {
-    const body = req.body;
-    if (!body.name || body.name !== service.name || body.type !== service.type || !Array.isArray(body.backingServers)
-      || !body.backingServers[0] || !body.backingServers[0].secret) {
-      return res.sendStatus(400);
-    }
-
-    res.status(201).send(service);
   });
 
   // ENVS BY APP

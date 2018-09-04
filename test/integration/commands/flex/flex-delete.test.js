@@ -94,7 +94,7 @@ describe(baseCmd, () => {
     });
 
     it('without explicit profile and with non-existent serviceId should fail', (done) => {
-      const nonExistentServiceId = '031784463981495d915c45cdf04790';
+      const nonExistentServiceId = '124';
       testServiceDelete(null, defaultFlagsPlusNoPrompt, nonExistentServiceId, fullConfig, done);
     });
 

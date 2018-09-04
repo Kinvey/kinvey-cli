@@ -130,7 +130,7 @@ TestsHelper.assertions = {
     });
   },
 
-  buildExpectedProject(domain, domainEntityId, serviceId, serviceName, svcEnvId, schemaVersion = testsConfig.defaultSchemaVersion) {
+  buildExpectedProject(domain, domainEntityId, serviceId, serviceName, svcEnvId = fixtureSvcEnv.id, schemaVersion = testsConfig.defaultSchemaVersion) {
     return {
       domain,
       domainEntityId,

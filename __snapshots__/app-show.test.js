@@ -2,8 +2,8 @@ exports['app show when no active app with existent app id as option should outpu
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
 key             value                           
 --------------  --------------------------------
 id              885f5d307afd4168bebca1a64f815c1e
@@ -19,8 +19,8 @@ exports['app show when no active app with existent app id as option should outpu
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
 {
   "result": {
     "name": "TestApp",
@@ -80,8 +80,8 @@ exports['app show when active app without id should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
 key             value                           
 --------------  --------------------------------
 id              885f5d307afd4168bebca1a64f815c1e
@@ -97,8 +97,8 @@ exports['app show when active app with non-existent app name should disregard ac
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: noSuchName
-[debug] Request:  GET http://localhost:3234/v2/apps
-[debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Request:  GET http://localhost:3234/v3/apps
+[debug] Response: GET http://localhost:3234/v3/apps 200
 [error] NotFound: Could not find application with identifier 'noSuchName'.
 
 `
@@ -109,8 +109,8 @@ exports['app show when active app with credentials as options and existent name 
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Using application: TestApp
-[debug] Request:  GET http://localhost:3234/v2/apps
-[debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Request:  GET http://localhost:3234/v3/apps
+[debug] Response: GET http://localhost:3234/v3/apps 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

@@ -36,6 +36,8 @@ const fixtureJobs = require('./fixtures/jobs.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureLogs = require('./fixtures/logs.json');
 
+const fixtureSvcEnv = fixtureSvcEnvs[0];
+
 const testsConfig = require('./TestsConfig');
 
 const existentUserOne = fixtureUser.existentOne;
@@ -201,7 +203,8 @@ function build(
       return res.sendStatus(400);
     }
 
-    res.status(201).send(body);
+    const result = Object.assign({ id: fixtureSvcEnv.id }, body);
+    res.status(201).send(result);
   });
 
   app.get(`/${versionPart}/services/:id`, (req, res) => {
@@ -239,16 +242,13 @@ function build(
   });
 
 
-  app.delete(`/${versionPart}/data-links/:id`, (req, res) => {
+  app.delete(`/${versionPart}/services/:id`, (req, res) => {
     const id = req.params.id;
     if (id === service.id) {
       return res.sendStatus(204);
     }
 
-    res.status(404).send({
-      code: 'DataLinkNotFound',
-      description: 'The specified data link could not be found.'
-    });
+    res.status(404).send(serviceNotFound);
   });
 
   // JOBS

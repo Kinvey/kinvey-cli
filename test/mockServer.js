@@ -195,6 +195,15 @@ function build(
     res.send(svcEnvs);
   });
 
+  app.post(`/${versionPart}/services/:id/environments`, (req, res) => {
+    const body = req.body;
+    if (!body.name || !body.secret) {
+      return res.sendStatus(400);
+    }
+
+    res.status(201).send(body);
+  });
+
   app.get(`/${versionPart}/services/:id`, (req, res) => {
     const id = req.params.id;
     const wantedService = fixtureServices.find(x => x.id === id);
@@ -219,6 +228,16 @@ function build(
 
     res.send(fixtureServices);
   });
+
+  app.post(`/${versionPart}/services`, (req, res) => {
+    const body = req.body;
+    if (!body.name || body.name !== service.name || body.type !== service.type) {
+      return res.sendStatus(400);
+    }
+
+    res.status(201).send(service);
+  });
+
 
   app.delete(`/${versionPart}/data-links/:id`, (req, res) => {
     const id = req.params.id;

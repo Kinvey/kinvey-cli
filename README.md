@@ -1,11 +1,12 @@
-| LINTING            | UNIT            | INTEGRATION            |
-|-------------------|-------------------|-------------------|
-| [![Build1][1]][4] | [![Build2][2]][4] | [![Build3][3]][4] |
+| LINTING            | UNIT          |   INTEGRATION          |  NPM SECURITY       |
+|-------------------|-------------------|-------------------|-------------------|
+| [![Build1][1]][4] | [![Build2][2]][4] |  [![Build3][3]][4] | [![Build4][4]][4] |
 
 [1]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/1
 [2]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/2
 [3]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/3
-[4]: https://travis-ci.org/Kinvey/kinvey-cli
+[4]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/4
+[5]: https://travis-ci.org/Kinvey/kinvey-cli
 
 
 
@@ -73,7 +74,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
 * `app create <name>`
 
-    Creates an application.
+    Creates an application. You can specify an organization ID or name if you want to create the app within the context of an organization.
+    
+    * `--org <organization>`
+    
+            Organization ID/name.
     
 * `app list`
 
@@ -95,7 +100,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
         
             Do not ask for confirmation.
 
-* `env create <name> [file]`
+* `appenv create <name> [file]`
 
     Creates an environment within the active application. To use a different application, specify it using `--app`.
     
@@ -111,7 +116,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
            
       Specifies a Kinvey app by ID or name.
     
-* `env show [env]`
+* `appenv show [env]`
 
     Shows detailed information about the specified environment or about the active one if you don't specify an environment. You can specify an environment by ID or name. By default, the command searches inside the active application but you can specify a different application using `--app`.
     
@@ -119,7 +124,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
        
       Specifies a Kinvey app by ID or name.
 
-* `env use <env>`
+* `appenv use <env>`
 
     Sets the specified environment as active. By default, the command searches inside the active application but you can specify a different application using `--app`.
     
@@ -127,7 +132,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
        
       Specifies a Kinvey app by ID or name.
     
-* `env delete [env]`
+* `appenv delete [env]`
 
     Deletes the specified environment or the active one if you don't specify an environment. You can specify an environment by ID or name. By default, the command searches inside the active application but you can specify a different application using `--app`. You will be prompted for confirmation unless you set the `--no-prompt` flag.
     

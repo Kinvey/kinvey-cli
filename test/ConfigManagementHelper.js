@@ -105,14 +105,14 @@ env.buildValidInternalCollectionsList = function buildValidInternalCollectionsLi
 env.createFromConfig = function createEnvFromConfig(envName, env, appName, done) {
   const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-  const cmd = `env create ${envName} ${filePath} --app ${appName} --output json`;
+  const cmd = `appenv create ${envName} ${filePath} --app ${appName} --output json`;
   passConfigFileToCli(cmd, env, filePath, done);
 };
 
 env.modifyFromConfig = function modifyEnvFromConfig(config, envIdentifier, appIdentifier, done) {
   const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-  let cmd = `env push ${filePath} --output json`;
+  let cmd = `appenv push ${filePath} --output json`;
   if (envIdentifier) {
     cmd = `${cmd} ${envIdentifier}`;
   }
@@ -127,7 +127,7 @@ env.modifyFromConfig = function modifyEnvFromConfig(config, envIdentifier, appId
 env.exportEnv = function (envIdentifier, appIdentifier, done) {
   const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-  let cmd = `env export ${filePath} --output json`;
+  let cmd = `appenv export ${filePath} --output json`;
   if (envIdentifier) {
     cmd = `${cmd} ${envIdentifier}`;
   }

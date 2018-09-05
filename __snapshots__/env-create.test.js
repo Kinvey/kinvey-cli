@@ -1,4 +1,4 @@
-exports['env create when active app is set with a name should succeed and output default format 1'] = `
+exports['appenv create when active app is set with a name should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -10,7 +10,7 @@ Created environment: kid_Sy4yRNV_M
 
 `
 
-exports['env create when active app is set with a name should succeed and output JSON 1'] = `
+exports['appenv create when active app is set with a name should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -26,8 +26,8 @@ exports['env create when active app is set with a name should succeed and output
 
 `
 
-exports['env create when active app is set without a name should fail 1'] = `
-kinvey env create <name> [file]
+exports['appenv create when active app is set without a name should fail 1'] = `
+kinvey appenv create <name> [file]
 
 Create an environment
 
@@ -54,7 +54,7 @@ Not enough non-option arguments: got 0, need at least 1
 
 `
 
-exports['env create when active app is set with non-existent app id should take precedence and return error 1'] = `
+exports['appenv create when active app is set with non-existent app id should take precedence and return error 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 173783d46f3d4bffb1c581d5b203fc7c
@@ -66,7 +66,7 @@ exports['env create when active app is set with non-existent app id should take 
 
 `
 
-exports['env create when active app is set with non-existent app name should take precedence and return error 1'] = `
+exports['appenv create when active app is set with non-existent app name should take precedence and return error 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: iJustDoNotExist
@@ -76,7 +76,7 @@ exports['env create when active app is set with non-existent app name should tak
 
 `
 
-exports['env create when one-time session with existent app name should succeed 1'] = `
+exports['appenv create when one-time session with existent app name should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
@@ -93,9 +93,9 @@ Created environment: kid_Sy4yRNV_M
 
 `
 
-exports['env create when one-time session without app identifier should fail 1'] = `
+exports['appenv create when one-time session without app identifier should fail 1'] = `
 [debug] Checking for package updates
-kinvey env create <name> [file]
+kinvey appenv create <name> [file]
 
 Create an environment
 

@@ -1,4 +1,4 @@
-exports['env show without profile with credentials as options, existent app and env should succeed 1'] = `
+exports['appenv show without profile with credentials as options, existent app and env should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
@@ -21,7 +21,7 @@ appSecret  f006f2fda0fd4fc7b154e12a15ae81fe
 
 `
 
-exports['env show with profile when active app is set active env is set without env arg should succeed 1'] = `
+exports['appenv show with profile when active app is set active env is set without env arg should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using environment: kid_Sy4yRNV_M
@@ -36,7 +36,7 @@ appSecret  f006f2fda0fd4fc7b154e12a15ae81fe
 
 `
 
-exports['env show with profile when active app is set active env is set with non-existent env id should take precedence and fail 1'] = `
+exports['appenv show with profile when active app is set active env is set with non-existent env id should take precedence and fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -51,7 +51,7 @@ exports['env show with profile when active app is set active env is set with non
 
 `
 
-exports['env show with profile when active app is set active env is not set using existent env id should succeed and output default format 1'] = `
+exports['appenv show with profile when active app is set active env is not set using existent env id should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -69,7 +69,7 @@ appSecret  f006f2fda0fd4fc7b154e12a15ae81fe
 
 `
 
-exports['env show with profile when active app is set active env is not set using existent env id should succeed and output JSON 1'] = `
+exports['appenv show with profile when active app is set active env is not set using existent env id should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -93,7 +93,7 @@ exports['env show with profile when active app is set active env is not set usin
 
 `
 
-exports['env show with profile when active app is set active env is not set using existent env name should succeed 1'] = `
+exports['appenv show with profile when active app is set active env is not set using existent env name should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -111,7 +111,7 @@ appSecret  f006f2fda0fd4fc7b154e12a15ae81fe
 
 `
 
-exports['env show with profile when active app is set active env is not set using existent env name and non-existent app name should fail 1'] = `
+exports['appenv show with profile when active app is set active env is not set using existent env name and non-existent app name should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: noSuchApp
@@ -121,7 +121,7 @@ exports['env show with profile when active app is set active env is not set usin
 
 `
 
-exports['env show with profile when active app is set active env is not set using non-existent env name should fail 1'] = `
+exports['appenv show with profile when active app is set active env is not set using non-existent env name should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -134,7 +134,7 @@ exports['env show with profile when active app is set active env is not set usin
 
 `
 
-exports['env show with profile when active app is set active env is not set using non-existent env id should fail 1'] = `
+exports['appenv show with profile when active app is set active env is not set using non-existent env id should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -149,7 +149,7 @@ exports['env show with profile when active app is set active env is not set usin
 
 `
 
-exports['env show with profile when active app is not set using existent env name and existent app name should succeed 1'] = `
+exports['appenv show with profile when active app is not set using existent env name and existent app name should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: TestApp
@@ -167,7 +167,7 @@ appSecret  f006f2fda0fd4fc7b154e12a15ae81fe
 
 `
 
-exports['env show with profile when active app is not set using existent env name and existent app id should succeed 1'] = `
+exports['appenv show with profile when active app is not set using existent env name and existent app id should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -185,10 +185,10 @@ appSecret  f006f2fda0fd4fc7b154e12a15ae81fe
 
 `
 
-exports['env show with profile when active app is not set using existent env id and no app should fail 1'] = `
+exports['appenv show with profile when active app is not set using existent env id and no app should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-kinvey env show [env]
+kinvey appenv show [env]
 
 Show detailed info for a specified environment or for the active one
 
@@ -214,10 +214,10 @@ Application is required. Please set active app or use the --app option.
 
 `
 
-exports['env show with profile when active app is not set without env and without app should fail 1'] = `
+exports['appenv show with profile when active app is not set without env and without app should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-kinvey env show [env]
+kinvey appenv show [env]
 
 Show detailed info for a specified environment or for the active one
 

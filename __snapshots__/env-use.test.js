@@ -1,10 +1,10 @@
-exports['env use without profile with credentials as options should fail 1'] = `
+exports['appenv use without profile with credentials as options should fail 1'] = `
 [debug] Checking for package updates
 [error] ProfileRequired: Profile is required. Please set active profile or use the --profile option.
 
 `
 
-exports['env use with profile when active app is set using existent env id should succeed and output default format 1'] = `
+exports['appenv use with profile when active app is set using existent env id should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -18,7 +18,7 @@ Active environment: kid_Sy4yRNV_M
 
 `
 
-exports['env use with profile when active app is set using existent env id should succeed and output JSON 1'] = `
+exports['appenv use with profile when active app is set using existent env id should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -36,7 +36,7 @@ exports['env use with profile when active app is set using existent env id shoul
 
 `
 
-exports['env use with profile when active app is set using existent env name should succeed 1'] = `
+exports['appenv use with profile when active app is set using existent env name should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -50,7 +50,7 @@ Active environment: kid_Sy4yRNV_M
 
 `
 
-exports['env use with profile when active app is set using existent env name and non-existent app name should fail 1'] = `
+exports['appenv use with profile when active app is set using existent env name and non-existent app name should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: noSuchApp
@@ -60,7 +60,7 @@ exports['env use with profile when active app is set using existent env name and
 
 `
 
-exports['env use with profile when active app is set using non-existent env name should fail 1'] = `
+exports['appenv use with profile when active app is set using non-existent env name should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -73,7 +73,7 @@ exports['env use with profile when active app is set using non-existent env name
 
 `
 
-exports['env use with profile when active app is set using non-existent env id should fail 1'] = `
+exports['appenv use with profile when active app is set using non-existent env id should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -88,7 +88,7 @@ exports['env use with profile when active app is set using non-existent env id s
 
 `
 
-exports['env use with profile when active app is not set using existent env name and existent app name should succeed 1'] = `
+exports['appenv use with profile when active app is not set using existent env name and existent app name should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: TestApp
@@ -102,7 +102,7 @@ Active environment: kid_Sy4yRNV_M
 
 `
 
-exports['env use with profile when active app is not set using existent env name and existent app id should succeed 1'] = `
+exports['appenv use with profile when active app is not set using existent env name and existent app id should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -116,10 +116,10 @@ Active environment: kid_Sy4yRNV_M
 
 `
 
-exports['env use with profile when active app is not set using existent env id and no app should fail 1'] = `
+exports['appenv use with profile when active app is not set using existent env id and no app should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-kinvey env use <env>
+kinvey appenv use <env>
 
 Set the active environment
 
@@ -145,8 +145,8 @@ Application is required. Please set active app or use the --app option.
 
 `
 
-exports['env use with profile when active app is not set without env and without app should fail 1'] = `
-kinvey env use <env>
+exports['appenv use with profile when active app is not set without env and without app should fail 1'] = `
+kinvey appenv use <env>
 
 Set the active environment
 

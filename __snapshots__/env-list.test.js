@@ -1,4 +1,4 @@
-exports['env list when active app is set should output default format 1'] = `
+exports['appenv list when active app is set should output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -17,7 +17,7 @@ kid_Ty4yRNV_O  Staging
 
 `
 
-exports['env list when active app is set should output JSON 1'] = `
+exports['appenv list when active app is set should output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -52,7 +52,7 @@ exports['env list when active app is set should output JSON 1'] = `
 
 `
 
-exports['env list when active app is set with non-existent app id should take precedence and return error 1'] = `
+exports['appenv list when active app is set with non-existent app id should take precedence and return error 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 173783d46f3d4bffb1c581d5b203fc7c
@@ -64,7 +64,7 @@ exports['env list when active app is set with non-existent app id should take pr
 
 `
 
-exports['env list when active app is set with non-existent app name should take precedence and return error 1'] = `
+exports['appenv list when active app is set with non-existent app name should take precedence and return error 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: iJustDoNotExist
@@ -74,7 +74,7 @@ exports['env list when active app is set with non-existent app name should take 
 
 `
 
-exports['env list when one-time session with existent app name should succeed 1'] = `
+exports['appenv list when one-time session with existent app name should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
@@ -98,9 +98,9 @@ kid_Ty4yRNV_O  Staging
 
 `
 
-exports['env list when one-time session without app identifier should fail 1'] = `
+exports['appenv list when one-time session without app identifier should fail 1'] = `
 [debug] Checking for package updates
-kinvey env list
+kinvey appenv list
 
 List environments per app
 

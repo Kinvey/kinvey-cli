@@ -15,8 +15,9 @@
 
 const async = require('async');
 
-const { Namespace } = require('./../../../../lib/Constants');
+const { Namespace, OrgOptionsName } = require('./../../../../lib/Constants');
 const fixtureApp = require('./../../../fixtures/app.json');
+const fixtureOrg = require('./../../../fixtures/org');
 const { setup, testers } = require('../../../TestsHelper');
 
 const baseCmd = `${Namespace.APP} create`;
@@ -48,6 +49,14 @@ describe(baseCmd, () => {
 
   it('with a name should succeed and output default format', (done) => {
     testAppCreate(null, defaultFlags, appName, done);
+  });
+
+  it('with a name and existent org identifier (name) should succeed', (done) => {
+    testAppCreate({ [OrgOptionsName.ORG]: JSON.stringify(fixtureOrg.name) }, defaultFlags, appName, done);
+  });
+
+  it('with a name and existent org identifier (ID) should succeed', (done) => {
+    testAppCreate({ [OrgOptionsName.ORG]: fixtureOrg.id }, defaultFlags, appName, done);
   });
 
   it('with a name should succeed and output JSON', (done) => {

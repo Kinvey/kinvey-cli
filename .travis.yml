@@ -18,6 +18,11 @@ matrix:
     node_js: "${NODEJS_VERSION}"
     env: JOB='INTEGRATION'
     script: npm run test-integration
+- language: node_js
+    node_js: ${NODEJS_VERSION}
+    env: JOB='NPM SECURITY'
+    before_install: npm i -g npm@^6.0.0
+    script: npm run test-npm-security
 notifications:
   slack:
     secure: pwBZ9Zr1171ra/IhIYsMPXlylQkK/Gshd8Gkni4S0X2V+ajFY0oz4ZF3MhNjpPx+b1jOqe7GDiL2fGI7CEuNZ5pUfTm1lZnSWRZ7XOid+X9vu1rq5TrLbQLEy4Bszmkyg/POOhml/jiZLrH9z+rYiYS5Kgonl2EPzURwuSQ32zJBmJwh4i60PmyGMdX8VwLt1cYyRHl8qMsp5sAkqk3yep6LzFBZIlI3Ek3aOLBmg1oj2gEcmmU7dBr74sTH9jsxBlmmLKAUfmfWtscEjQ8CAQzMq5k7bti+ChuVG7jUB+BPRdU3QtrvOdWLvWIpEYqb7wA584lWBy1WfAnFvPp0jRpyiNZSbh4QPBHSEC4dIlzeEOEl8TQIQBbO7O61QxyHpEpectszf05pGKxmEO4t313myG8CBYsKmS221ZqTC6Y7V7dm20ib1a1sSZaTNbGr/Mbo+RcqvvXzxgWtoHlowJm7q9hU/vhQuUnQJbNkVapgzOAPoy6VRm+EgfZoL9W5ayzjmHxF+m+7Vnwejb5ibs3hb0/sHMAmDxAAolIgLkkxOBKKR8OiBAcZ+LUlYXteHPrlI3vnxLuuf/0Z0b38iGuwYlUK9gojXwZ7H9RYaa1LYriz8/i5tbvRBIwpZiADIKgSzGJTObqIfD8l/wJY9LTN4MiBrpOLOnmN8hH6OOw=

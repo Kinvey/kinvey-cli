@@ -2,31 +2,16 @@
   {
     "id"  : "12378kdl2",
     "type" : "internal",
-    "name" : "TestKinveyDatalink",
-    "backingServers": [{
-      "_id"    : "456",
-      "host"   : "https://example.com",
-      "secret" : "789"
-    }]
+    "name" : "TestKinveyDatalink"
   },
   {
     "id"  : "12389kd89",
     "type" : "internal",
-    "name" : "TestSecondKinveyDatalink",
-    "backingServers": [{
-      "_id"    : "456",
-      "host"   : "https://example.com",
-      "secret" : "789"
-    }]
+    "name" : "TestSecondKinveyDatalink"
   },
   {
     "id"  : "124",
     "type" : "custom",
-    "name" : "TestDatalink",
-    "backingServers": [{
-      "_id"    : "456",
-      "host"   : "https://example.com",
-      "secret" : "789"
-    }]
+    "name" : "TestDatalink"
   }
 ]

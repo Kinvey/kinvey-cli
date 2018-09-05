@@ -20,8 +20,10 @@ const Utils = require('../../../lib/Utils');
 
 const projectPath = 'fakePath';
 const serviceId = '123';
+const svcEnvId = '662dd1efe3d92e0180317487b29c6e66';
 const flexNs = {
   serviceId,
+  svcEnvId,
   serviceName: 'Monday',
   domain: 'app',
   domainEntityId: '5678',

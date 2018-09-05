@@ -36,7 +36,11 @@ function testFlexList(profileName, optionsForCredentials, domain, domainEntityId
   if (domain) {
     options[FlexOptionsNames.DOMAIN_TYPE] = domain;
     if (domain === 'org') {
-      apiOptions.domainType = 'organizations';
+      apiOptions.domainType = 'organizationId';
+    }
+
+    if (domain === 'app') {
+      apiOptions.domainType = 'appId';
     }
   }
 
@@ -111,7 +115,17 @@ describe(baseCmd, () => {
       });
 
       it('without options should succeed', (done) => {
-        testFlexList(profileToUse, null, null, null, true, validUserForListing, null, done);
+        const options = buildOptions(profileToUse);
+        const cmd = buildCmd(baseCmd, null, options, [[CommonOptionsNames.VERBOSE]]);
+        const apiOptions = {
+          token: validUserForListing.token,
+          existentUser: { email: validUserForListing.email },
+          domainType: 'appId'
+        };
+        execCmdWithAssertion(cmd, null, apiOptions, true, true, true, null, (err) => {
+          expect(err).to.not.exist;
+          done();
+        });
       });
 
       after((done) => {

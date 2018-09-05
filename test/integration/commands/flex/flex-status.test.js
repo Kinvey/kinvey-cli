@@ -15,19 +15,18 @@
 
 const async = require('async');
 
-const { CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
+const { CommonOptionsNames, FlexOptionsNames, OutputFormat, ServiceOptionsNames } = require('./../../../../lib/Constants');
 const { isEmpty } = require('./../../../../lib/Utils');
 const { buildCmd, buildOptions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
 const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureInternalDataLink = require('./../../../fixtures/kinvey-dlc.json');
+const fixtureEnvsSeveral = require('./../../../fixtures/svc-envs-several.json');
 
 const existentUserOne = fixtureUser.existentOne;
 const tokenOne = fixtureUser.tokenOne;
 const nonExistentUser = fixtureUser.nonexistent;
 const defaultServiceId = fixtureInternalDataLink.id;
-const serviceWithRuntimeServiceId = '123456';
-const serviceWithMissingRuntimeServiceId = '1234567';
 
 const baseCmd = 'flex status';
 // this value depends on the requestedAt date in mockServer.js and is different for different timezones, so it is checked and removed from the output
@@ -46,6 +45,7 @@ function testFlexStatus(profileName, options, useServiceId, serviceId, validUser
   }
 
   const apiOptions = {};
+  apiOptions.svcEnvs = fixtureEnvsSeveral;
   if (!isEmpty(validUser)) {
     apiOptions.token = validUser.token;
     apiOptions.existentUser = { email: validUser.email };
@@ -57,6 +57,7 @@ function testFlexStatus(profileName, options, useServiceId, serviceId, validUser
 
 describe(baseCmd, () => {
   const nonExistentServiceId = 'z793f26c8I_DONT_EXIST';
+  const defaultSvcEnvIdentifier = fixtureEnvsSeveral[1].name;
 
   const validUserForGettingStatus = {
     email: existentUserOne.email,
@@ -89,12 +90,17 @@ describe(baseCmd, () => {
       setup.deleteProfileFromSetup(profileToUse, null, done);
     });
 
-    it('and existent serviceId should succeed and output default format', (done) => {
-      testFlexStatus(profileToUse, null, true, null, validUserForGettingStatus, replacementObject, done);
+    it('existent serviceId and existent svc env ID should succeed and output default format', (done) => {
+      const svcEnvIdentifier = fixtureEnvsSeveral[0].id;
+      testFlexStatus(profileToUse, { [ServiceOptionsNames.SVC_ENV]: svcEnvIdentifier }, true, null, validUserForGettingStatus, replacementObject, done);
     });
 
-    it('and existent serviceId should succeed and output JSON', (done) => {
-      testFlexStatus(profileToUse, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, true, null, validUserForGettingStatus, null, done);
+    it('existent serviceId and existent svc env name should succeed and output JSON', (done) => {
+      const options = {
+        [ServiceOptionsNames.SVC_ENV]: defaultSvcEnvIdentifier,
+        [CommonOptionsNames.OUTPUT]: OutputFormat.JSON
+      };
+      testFlexStatus(profileToUse, options, true, null, validUserForGettingStatus, null, done);
     });
 
     it('and non-existent serviceId should fail', (done) => {
@@ -106,7 +112,7 @@ describe(baseCmd, () => {
         setup.createProjectSetup(profileToUse, null, done);
       });
 
-      it('without serviceId as an option should succeed', (done) => {
+      it('without serviceId and svcEnv as options should succeed', (done) => {
         testFlexStatus(profileToUse, null, false, null, validUserForGettingStatus, replacementObject, done);
       });
 
@@ -120,9 +126,9 @@ describe(baseCmd, () => {
         setup.createProjectSetup(profileToUse, { serviceId: nonExistentServiceId }, done);
       });
 
-      it('with existent serviceId as an option should succeed', (done) => {
+      it('with existent serviceId and svcEnv as options should succeed', (done) => {
         // project contains non-existent serviceId; an existent one is provided as an option and it must be used
-        testFlexStatus(profileToUse, null, true, null, validUserForGettingStatus, replacementObject, done);
+        testFlexStatus(profileToUse, { [ServiceOptionsNames.SVC_ENV]: defaultSvcEnvIdentifier }, true, null, validUserForGettingStatus, replacementObject, done);
       });
 
       after((done) => {
@@ -132,8 +138,8 @@ describe(baseCmd, () => {
   });
 
   describe('by not specifying profile nor credentials', () => {
-    it('when one profile and existent serviceId should succeed', (done) => {
-      testFlexStatus(null, null, true, null, null, replacementObject, done);
+    it('when one profile and existent serviceId plus existent svcEnv should succeed', (done) => {
+      testFlexStatus(null, { [ServiceOptionsNames.SVC_ENV]: defaultSvcEnvIdentifier }, true, null, null, replacementObject, done);
     });
   });
 
@@ -147,8 +153,8 @@ describe(baseCmd, () => {
       setup.deleteProfileFromSetup(oneMoreProfile, null, done);
     });
 
-    it('and existent serviceId should fail', (done) => {
-      const cmd = `${baseCmd} --${FlexOptionsNames.SERVICE_ID} ${defaultServiceId}`;
+    it('and existent serviceId plus existent svcEnv should fail', (done) => {
+      const cmd = `${baseCmd} --${FlexOptionsNames.SERVICE_ID} ${defaultServiceId} --${ServiceOptionsNames.SVC_ENV} ${defaultSvcEnvIdentifier}`;
       execCmdWithAssertion(cmd, null, null, true, false, true, null, (err) => {
         expect(err).to.not.exist;
         done();
@@ -157,16 +163,27 @@ describe(baseCmd, () => {
   });
 
   describe('by specifying credentials as options', () => {
-    it('when valid and existent serviceId should succeed', (done) => {
-      testFlexStatus(null, existentUserOne, true, null, validUserForGettingStatus, replacementObject, done);
+    it('when valid and existent serviceId plus existent svcEnv should succeed', (done) => {
+      const options = Object.assign({}, existentUserOne, { [ServiceOptionsNames.SVC_ENV]: defaultSvcEnvIdentifier });
+      testFlexStatus(null, options, true, null, validUserForGettingStatus, replacementObject, done);
     });
 
-    it('when valid and existent serviceId should succeed (with runtime)', (done) => {
-      testFlexStatus(null, existentUserOne, true, serviceWithRuntimeServiceId, validUserForGettingStatus, replacementObject, done);
+    it('when valid and existent serviceId plus existent svcEnv should succeed (with runtime)', (done) => {
+      const svcEnvIdentifierWithRuntime = '123456';
+      const options = Object.assign({}, existentUserOne, { [ServiceOptionsNames.SVC_ENV]: svcEnvIdentifierWithRuntime });
+      testFlexStatus(null, options, true, null, validUserForGettingStatus, replacementObject, done);
     });
 
-    it('when valid and existent serviceId should succeed (with missing runtime)', (done) => {
-      testFlexStatus(null, existentUserOne, true, serviceWithMissingRuntimeServiceId, validUserForGettingStatus, replacementObject, done);
+    it('when valid and existent serviceId plus existent svcEnv should succeed (with missing runtime)', (done) => {
+      const svcEnvIdentifierWithMissingRuntime = '1234567';
+      const options = Object.assign({}, existentUserOne, { [ServiceOptionsNames.SVC_ENV]: svcEnvIdentifierWithMissingRuntime });
+      testFlexStatus(null, options, true, null, validUserForGettingStatus, replacementObject, done);
+    });
+
+    it('when valid and existent serviceId plus non-existent svcEnv should fail', (done) => {
+      const svcEnvIdentifierNonExistent = '123-non-existent';
+      const options = Object.assign({}, existentUserOne, { [ServiceOptionsNames.SVC_ENV]: svcEnvIdentifierNonExistent });
+      testFlexStatus(null, options, true, null, validUserForGettingStatus, replacementObject, done);
     });
 
     it('when valid and non-existent serviceId should fail', (done) => {

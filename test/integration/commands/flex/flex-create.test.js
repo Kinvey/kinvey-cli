@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { AppOptionsName, AuthOptionsNames, Namespace, OrgOptionsName } = require('./../../../../lib/Constants');
+const { AppOptionsName, AuthOptionsNames, CommonOptionsNames, Namespace, OrgOptionsName } = require('./../../../../lib/Constants');
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureOrg = require('./../../../fixtures/org.json');
 const fixtureUser = require('./../../../fixtures/user.json');
@@ -70,7 +70,12 @@ describe(baseCmd, () => {
     });
 
     it('without a secret should succeed', (done) => {
-      testServiceCreate(optionsForApp, null, serviceName, done);
+      const cmd = buildCmd(baseCmd, [serviceName], optionsForApp, CommonOptionsNames.VERBOSE);
+      const replacementObj = {
+        oldValue: /Secret: \S{4,}/,
+        newValue: 'Secret: auto-generated'
+      };
+      execCmdWithAssertion(cmd, null, null, true, true, false, replacementObj, done);
     });
 
     it('without an app and org should fail', (done) => {

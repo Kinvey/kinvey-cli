@@ -4,13 +4,13 @@ exports['coll list without profile with credentials as options, existent app and
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Using application: TestApp
-[debug] Request:  GET http://localhost:3234/v2/apps
-[debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Request:  GET http://localhost:3234/v3/apps
+[debug] Response: GET http://localhost:3234/v3/apps 200
 [debug] Using environment: Development
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -31,10 +31,10 @@ exports['coll list with profile when active app is set active env is set without
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using environment: kid_Sy4yRNV_M
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M 200
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections 200
 Count: 4
 
 name                  type    
@@ -53,10 +53,10 @@ exports['coll list with profile when active app is set active env is set with no
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Using environment: kid_JjJJjg2cN
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_JjJJjg2cN
-[debug] Response: GET http://localhost:3234/v2/environments/kid_JjJJjg2cN 404
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_JjJJjg2cN
+[debug] Response: GET http://localhost:3234/v3/environments/kid_JjJJjg2cN 404
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [error] NotFound: Could not find environment with identifier 'kid_JjJJjg2cN'.
 
 `
@@ -66,10 +66,10 @@ exports['coll list with profile when active app is set active env is not set usi
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Using environment: kid_Sy4yRNV_M
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M 200
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections 200
 Count: 4
 
 name                  type    
@@ -88,10 +88,10 @@ exports['coll list with profile when active app is set active env is not set usi
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Using environment: kid_Sy4yRNV_M
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M 200
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections 200
 {
   "result": [
     {
@@ -158,10 +158,10 @@ exports['coll list with profile when active app is set active env is not set usi
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Using environment: Development
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections 200
 Count: 4
 
 name                  type    
@@ -179,8 +179,8 @@ exports['coll list with profile when active app is set active env is not set usi
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: noSuchApp
-[debug] Request:  GET http://localhost:3234/v2/apps
-[debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Request:  GET http://localhost:3234/v3/apps
+[debug] Response: GET http://localhost:3234/v3/apps 200
 [error] NotFound: Could not find application with identifier 'noSuchApp'.
 
 `
@@ -190,8 +190,8 @@ exports['coll list with profile when active app is set active env is not set usi
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Using environment: noSuchName
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [error] NotFound: Could not find environment with identifier 'noSuchName'.
 
 `
@@ -201,10 +201,10 @@ exports['coll list with profile when active app is set active env is not set usi
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
 [debug] Using environment: kid_JjJJjg2cN
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_JjJJjg2cN
-[debug] Response: GET http://localhost:3234/v2/environments/kid_JjJJjg2cN 404
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_JjJJjg2cN
+[debug] Response: GET http://localhost:3234/v3/environments/kid_JjJJjg2cN 404
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [error] NotFound: Could not find environment with identifier 'kid_JjJJjg2cN'.
 
 `
@@ -213,13 +213,13 @@ exports['coll list with profile when active app is not set using existent env na
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: TestApp
-[debug] Request:  GET http://localhost:3234/v2/apps
-[debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Request:  GET http://localhost:3234/v3/apps
+[debug] Response: GET http://localhost:3234/v3/apps 200
 [debug] Using environment: Development
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections 200
 Count: 4
 
 name                  type    
@@ -237,13 +237,13 @@ exports['coll list with profile when active app is not set using existent env na
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
 [debug] Using environment: Development
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M/collections 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M/collections 200
 Count: 4
 
 name                  type    

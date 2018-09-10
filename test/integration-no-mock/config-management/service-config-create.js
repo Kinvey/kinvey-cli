@@ -51,9 +51,13 @@ module.exports = () => {
         configType: 'service',
         schemaVersion: '1.0.0',
         type: 'flex-external',
-        secret: '123',
         description: 'Test service',
-        host: 'https://swapi.co/api'
+        environments: {
+          dev: {
+            secret: '123',
+            host: 'https://swapi.co/api'
+          }
+        }
       };
 
       const serviceName = randomStrings.plainString();
@@ -80,8 +84,12 @@ module.exports = () => {
         configType: 'service',
         schemaVersion: '1.0.0',
         type: 'flex-internal',
-        secret: '123',
-        description: 'Test service'
+        description: 'Test service',
+        environments: {
+          dev: {
+            secret: '123'
+          }
+        }
       };
 
       const serviceName = randomStrings.plainString();
@@ -110,9 +118,13 @@ module.exports = () => {
         configType: 'service',
         schemaVersion: '1.0.0',
         type: 'flex-internal',
-        secret: '123',
         description: 'Test service',
-        sourcePath: projectPath
+        environments: {
+          dev: {
+            secret: '123',
+            sourcePath: projectPath
+          }
+        }
       };
 
       const serviceName = randomStrings.plainString();
@@ -139,6 +151,114 @@ module.exports = () => {
         },
         (next) => {
           ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, pkgJson.version, 'ONLINE', next);
+        }
+      ], done);
+    });
+  });
+
+  describe('rapid data', () => {
+    it('sharepoint with one environment and mapping should succeed', (done) => {
+      const serviceName = randomStrings.plainString();
+      const serviceType = 'sharepoint';
+      const srvEnv = {
+        version: 'online',
+        authentication: {
+          type: 'ServiceAccount',
+          credentials: {
+            username: 'test@test.onmicrosoft.com',
+            password: 'pass0'
+          }
+        },
+        host: 'https://test.sharepoint.com',
+        mapping: {
+          GroceriesObjectName: {
+            sourceObject: {
+              objectName: 'Groceries'
+            },
+            fields: [
+              {
+                kinveyFieldMapping: '_id',
+                sourceFieldMapping: 'ID'
+              },
+              {
+                kinveyFieldMapping: 'title',
+                sourceFieldMapping: 'Title'
+              }
+            ],
+            methods: {
+              getAll: {
+                isEnabled: true
+              },
+              getById: {
+                isEnabled: false
+              }
+            }
+          }
+        }
+      };
+      const serviceConfig = {
+        configType: 'service',
+        schemaVersion: '1.0.0',
+        type: serviceType,
+        description: 'Test service',
+        environments: {
+          dev: srvEnv
+        }
+      };
+
+      async.series([
+        (next) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', null, (err, id) => {
+            if (err) {
+              return next(err);
+            }
+
+            serviceId = id;
+            next();
+          });
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertRapidDataService(serviceId, serviceConfig, serviceName, next);
+        }
+      ], done);
+    });
+
+    it('salesforce with one environment and no mapping should succeed', (done) => {
+      const serviceName = randomStrings.plainString();
+      const srvEnv = {
+        authentication: {
+          type: 'ServiceAccountOAuth',
+          credentials: {
+            username: 'test@test.com',
+            password: 'pass0',
+            clientId: 'id123',
+            clientSecret: 'secr123'
+          }
+        },
+        host: 'https://login.salesforce.com'
+      };
+      const serviceConfig = {
+        configType: 'service',
+        schemaVersion: '1.0.0',
+        type: 'salesforce',
+        environments: {
+          dev: srvEnv
+        }
+      };
+
+      async.series([
+        (next) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', null, (err, id) => {
+            if (err) {
+              return next(err);
+            }
+
+            serviceId = id;
+            next();
+          });
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertRapidDataService(serviceId, serviceConfig, serviceName, next);
         }
       ], done);
     });

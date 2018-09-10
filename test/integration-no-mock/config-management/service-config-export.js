@@ -14,8 +14,9 @@
  */
 
 const fs = require('fs');
-
 const path = require('path');
+
+const cloneDeep = require('lodash.clonedeep');
 
 const ApiService = require('./../../ApiService');
 const ConfigManagementHelper = require('./../../ConfigManagementHelper');
@@ -31,9 +32,13 @@ module.exports = () => {
       configType: 'service',
       schemaVersion: '1.0.0',
       type: 'flex-external',
-      secret: '123',
       description: 'Test service',
-      host: 'https://swapi.co/api'
+      environments: {
+        dev: {
+          secret: '123',
+          host: 'https://swapi.co/api'
+        }
+      }
     };
     const serviceName = randomStrings.plainString();
 
@@ -75,9 +80,13 @@ module.exports = () => {
       configType: 'service',
       schemaVersion: '1.0.0',
       type: 'flex-internal',
-      secret: '123',
       description: 'Test service',
-      sourcePath: projectPath
+      environments: {
+        dev: {
+          secret: '123',
+          sourcePath: projectPath
+        }
+      }
     };
     const serviceName = randomStrings.plainString();
 
@@ -122,9 +131,91 @@ module.exports = () => {
           return done(err);
         }
 
-        const expected = getObjectByOmitting(internalFlexSrvConfig, ['sourcePath']);
+        const expected = cloneDeep(internalFlexSrvConfig);
+        delete expected.environments[Object.keys(expected.environments)[0]].sourcePath;
         expected.name = serviceName;
         expect(exported).to.deep.equal(expected);
+        done();
+      });
+    });
+  });
+
+  describe('rapid data services', () => {
+    const serviceName = randomStrings.plainString();
+    const serviceConfig = {
+      configType: 'service',
+      schemaVersion: '1.0.0',
+      type: 'rest',
+      environments: {
+        default: {
+          connectionOptions: {
+            strictSSL: true
+          },
+          authentication: {
+            type: 'oauthClientCredentials',
+            credentials: {
+              username: 'testUser',
+              password: '123',
+              tokenEndpoint: 'https://swapi.co/TOKEN'
+            },
+            loginOptions: {
+              type: 'maintainSession',
+              httpMethod: 'POST',
+              headers: {
+                'x-custom-header': '1'
+              }
+            }
+          },
+          host: 'https://api.co/api',
+          mapping: {
+            planets: {
+              sourceObject: {
+                endpoint: 'planets',
+                contextRoot: 'someRoot',
+                httpMethod: 'PUT',
+                queryMapping: {
+                  query: 'dynamicEndpointToken'
+                }
+              }
+            },
+            vehicles: {
+              sourceObject: {
+                endpoint: 'vehicles',
+                contextRoot: 'someRoot'
+              }
+            }
+          }
+        }
+      }
+    };
+
+    before('create rapid data service - rest', (done) => {
+      ConfigManagementHelper.service.createFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', null, (err, id) => {
+        if (err) {
+          return done(err);
+        }
+
+        serviceId = id;
+        done();
+      });
+    });
+
+    after('remove service', (done) => {
+      ApiService.services.remove(serviceId, (err) => {
+        serviceId = null;
+        done(err);
+      });
+    });
+
+    it('should succeed', (done) => {
+      ConfigManagementHelper.service.exportConfig(serviceId, (err, exported) => {
+        if (err) {
+          return done(err);
+        }
+
+        expect(exported.name).to.equal(serviceName);
+        const actual = getObjectByOmitting(exported, ['name']);
+        expect(actual).to.deep.equal(serviceConfig);
         done();
       });
     });

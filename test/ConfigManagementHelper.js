@@ -21,7 +21,7 @@ const clonedeep = require('lodash.clonedeep');
 const moment = require('moment');
 
 const ApiService = require('./ApiService');
-const { BackendCollectionPermission, CollectionHook } = require('./../lib/Constants');
+const { BackendCollectionPermission, CollectionHook, ConfigFiles } = require('./../lib/Constants');
 const TestsHelper = require('./TestsHelper');
 const { getObjectByOmitting, isEmpty, writeJSON } = require('./../lib/Utils');
 
@@ -713,12 +713,15 @@ service.assertFlexService = function assertFlexService(id, serviceConfig, servic
 
     expect(actual.backingServers).to.be.an.array;
     expect(actual.backingServers[0]).to.exist;
-    expect(serviceConfig.secret).to.equal(actual.backingServers[0].secret);
+    const expectedEnvName = Object.keys(serviceConfig.environments)[0];
+    const expectedEnv = serviceConfig.environments[expectedEnvName];
+    expect(actual.backingServers[0].secret).to.equal(expectedEnv.secret);
+    expect(actual.backingServers[0].name).to.equal(expectedEnvName);
 
     if (isFlexInternal) {
       expect(actual.backingServers[0].host).to.exist;
     } else {
-      expect(serviceConfig.host).to.equal(actual.backingServers[0].host);
+      expect(actual.backingServers[0].host).to.equal(expectedEnv.host);
     }
 
     done();
@@ -732,7 +735,7 @@ service.assertFlexServiceStatus = function assertFlexServiceStatus(id, expectedV
     }
 
     try {
-      expect(actual.version).to.exist;
+      expect(actual.version, 'Version').to.exist;
       expect(actual.version).to.equal(expectedVersion);
       if (expectedStatus) {
         expect(actual.status).to.equal(expectedStatus);
@@ -747,12 +750,60 @@ service.assertFlexServiceStatus = function assertFlexServiceStatus(id, expectedV
 
 service.assertFlexServiceStatusRetryable = function assertFlexServiceStatusRetryable(id, expectedVersion, expectedStatus, done) {
   async.retry(
-    { times: 6, interval: 20000 }, // 6 times every 20 sec
+    { times: 9, interval: 20000 }, // 6 times every 20 sec
     (next) => {
       service.assertFlexServiceStatus(id, expectedVersion, expectedStatus, next);
     },
     done
   );
+};
+
+service.assertRapidDataService = function (id, serviceConfig, serviceName, done) {
+  ApiService.services.get(id, (err, actual) => {
+    if (err) {
+      return done(err);
+    }
+
+    try {
+      const expected = serviceConfig;
+      expect(actual.name).to.equal(serviceName);
+      expect(actual.type).to.equal(ConfigFiles.ConfigToBackendServiceType[serviceConfig.type]);
+      if (expected.description) {
+        expect(actual.description).to.equal(expected.description);
+      } else {
+        expect(actual.description).to.not.exist;
+      }
+
+
+      // assert env-related settings
+      expect(actual.backingServers).to.be.an.array;
+      expect(actual.backingServers.length).to.equal(1);
+
+      const actualDefaultEnv = actual.backingServers[0];
+      const envName = Object.keys(serviceConfig.environments)[0];
+      const srvEnv = serviceConfig.environments[envName];
+      srvEnv.name = envName;
+
+      const expectedEnvWoMapping = getObjectByOmitting(srvEnv, ['mapping']);
+      const actualEnvWoMapping = getObjectByOmitting(actualDefaultEnv, ['_id', 'mapping', 'access']);
+      expect(actualEnvWoMapping).to.deep.equal(expectedEnvWoMapping);
+
+      // assert mapping
+      const envId = actualDefaultEnv._id;
+      const expectedDefEnvMapping = clonedeep(srvEnv.mapping);
+      if (expectedDefEnvMapping) {
+        Object.keys(expectedDefEnvMapping).forEach((serviceObjectName) => {
+          expectedDefEnvMapping[serviceObjectName].backingServer = envId;
+        });
+      }
+
+      expect(actualDefaultEnv.mapping).to.deep.equal(expectedDefEnvMapping);
+    } catch (ex) {
+      return done(ex);
+    }
+
+    done();
+  });
 };
 
 ConfigManagementHelper = {

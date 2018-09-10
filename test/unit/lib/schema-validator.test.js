@@ -24,6 +24,9 @@ const validInternalFlexAllOptions = require('../../fixtures/config-files/flex-in
 const validInternalFlexSomeOptions = require('../../fixtures/config-files/flex-internal-valid-some-options.json');
 const invalidInternalFlex = require('../../fixtures/config-files/flex-internal-invalid.json');
 const validExternalFlexAllOptions = require('../../fixtures/config-files/flex-external-valid-all-options.json');
+const validRapidDataSpSomeOptions = require('../../fixtures/config-files/rapid-data-sp-valid-some-options.json');
+const invalidRapidDataSp = require('../../fixtures/config-files/rapid-data-sp-invalid.json');
+const invalidRapidDataSpSomeOptions = require('../../fixtures/config-files/rapid-data-sp-invalid-some-options.json');
 
 describe('schema validator', () => {
   describe('env', () => {
@@ -92,6 +95,45 @@ describe('schema validator', () => {
     it('with valid external flex service with all options should succeed', (done) => {
       SchemaValidator.validate(ConfigType.SERVICE, validExternalFlexAllOptions, null, (err) => {
         expect(err).to.not.exist;
+        done();
+      });
+    });
+
+    it('with valid rapid data (sharepoint) with some options should succeed', (done) => {
+      SchemaValidator.validate(ConfigType.SERVICE, validRapidDataSpSomeOptions, null, (err) => {
+        expect(err).to.not.exist;
+        done();
+      });
+    });
+
+    it('with invalid rapid data (wrong type) should fail', (done) => {
+      SchemaValidator.validate(ConfigType.SERVICE, invalidRapidDataSp, null, (err) => {
+        expect(err).to.exist;
+        expect(err.name).to.equal('ValidationError');
+
+        const actualMsg = err.message.replace(/\r\n/g, '\n');
+        try {
+          snapshot(actualMsg);
+        } catch (ex) {
+          return done(ex);
+        }
+
+        done();
+      });
+    });
+
+    it('with invalid rapid data (sharepoint) should fail', (done) => {
+      SchemaValidator.validate(ConfigType.SERVICE, invalidRapidDataSpSomeOptions, null, (err) => {
+        expect(err).to.exist;
+        expect(err.name).to.equal('ValidationError');
+
+        const actualMsg = err.message.replace(/\r\n/g, '\n');
+        try {
+          snapshot(actualMsg);
+        } catch (ex) {
+          return done(ex);
+        }
+
         done();
       });
     });

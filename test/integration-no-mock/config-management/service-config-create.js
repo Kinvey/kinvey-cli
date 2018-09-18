@@ -29,7 +29,7 @@ module.exports = () => {
   let serviceId;
 
   afterEach('remove service', (done) => {
-    ApiService.services.remove(serviceId, (err) => {
+    ConfigManagementHelper.testHooks.removeService(serviceId, (err) => {
       serviceId = null;
       done(err);
     });
@@ -74,7 +74,7 @@ module.exports = () => {
           });
         },
         (next) => {
-          ConfigManagementHelper.service.assertFlexService(serviceId, serviceConfig, serviceName, next);
+          ConfigManagementHelper.service.assertService(serviceId, serviceConfig, serviceName, next);
         }
       ], done);
     });
@@ -106,7 +106,7 @@ module.exports = () => {
           });
         },
         (next) => {
-          ConfigManagementHelper.service.assertFlexService(serviceId, serviceConfig, serviceName, next);
+          ConfigManagementHelper.service.assertService(serviceId, serviceConfig, serviceName, next);
         }
       ], done);
     });
@@ -147,10 +147,10 @@ module.exports = () => {
           });
         },
         (next) => {
-          ConfigManagementHelper.service.assertFlexService(serviceId, serviceConfig, serviceName, next);
+          ConfigManagementHelper.service.assertService(serviceId, serviceConfig, serviceName, next);
         },
         (next) => {
-          ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, pkgJson.version, 'ONLINE', next);
+          ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, null, pkgJson.version, 'ONLINE', next);
         }
       ], done);
     });
@@ -218,7 +218,7 @@ module.exports = () => {
           });
         },
         (next) => {
-          ConfigManagementHelper.service.assertRapidDataService(serviceId, serviceConfig, serviceName, next);
+          ConfigManagementHelper.service.assertService(serviceId, serviceConfig, serviceName, next);
         }
       ], done);
     });
@@ -258,7 +258,7 @@ module.exports = () => {
           });
         },
         (next) => {
-          ConfigManagementHelper.service.assertRapidDataService(serviceId, serviceConfig, serviceName, next);
+          ConfigManagementHelper.service.assertService(serviceId, serviceConfig, serviceName, next);
         }
       ], done);
     });

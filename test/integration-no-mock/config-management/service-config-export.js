@@ -54,7 +54,7 @@ module.exports = () => {
     });
 
     after('remove service', (done) => {
-      ApiService.services.remove(serviceId, (err) => {
+      ConfigManagementHelper.testHooks.removeService(serviceId, (err) => {
         serviceId = null;
         done(err);
       });
@@ -66,9 +66,7 @@ module.exports = () => {
           return done(err);
         }
 
-        const expected = getObjectByOmitting(externalFlexSrvConfig, ['host']);
-        expected.name = serviceName;
-        expect(exported).to.deep.equal(expected);
+        expect(exported).to.deep.equal(externalFlexSrvConfig);
         done();
       });
     });
@@ -109,7 +107,7 @@ module.exports = () => {
     });
 
     after('remove service', (done) => {
-      ApiService.services.remove(serviceId, (err) => {
+      ConfigManagementHelper.testHooks.removeService(serviceId, (err) => {
         serviceId = null;
         done(err);
       });
@@ -133,7 +131,6 @@ module.exports = () => {
 
         const expected = cloneDeep(internalFlexSrvConfig);
         delete expected.environments[Object.keys(expected.environments)[0]].sourcePath;
-        expected.name = serviceName;
         expect(exported).to.deep.equal(expected);
         done();
       });
@@ -201,7 +198,7 @@ module.exports = () => {
     });
 
     after('remove service', (done) => {
-      ApiService.services.remove(serviceId, (err) => {
+      ConfigManagementHelper.testHooks.removeService(serviceId, (err) => {
         serviceId = null;
         done(err);
       });
@@ -213,7 +210,6 @@ module.exports = () => {
           return done(err);
         }
 
-        expect(exported.name).to.equal(serviceName);
         const actual = getObjectByOmitting(exported, ['name']);
         expect(actual).to.deep.equal(serviceConfig);
         done();

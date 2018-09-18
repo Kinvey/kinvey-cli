@@ -145,6 +145,48 @@ describe(baseCmd, () => {
       });
     });
 
+    it('with one active valid profile and only apps to choose from should succeed', (done) => {
+      setup.setActiveProfile(defaultProfileName, true, (err) => {
+        expect(err).to.not.exist;
+        mockServer({ orgs: [] }, (err, server) => {
+          expect(err).to.not.exist;
+
+          ms = server;
+          const sequence = suppose(nodeCommand, defaultFlexInitOptions, defaultEnvWithDebug)
+            .when(Prompt.selectApp)
+            .respond(Keys.downArrow)
+            .respond('\n')
+            .when(Prompt.selectService)
+            .respond('\n');
+
+          runSupposeSequence(sequence, (error, exitCode) => {
+            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
+          });
+        });
+      });
+    });
+
+    it('with one active valid profile and only orgs to choose from should succeed', (done) => {
+      setup.setActiveProfile(defaultProfileName, true, (err) => {
+        expect(err).to.not.exist;
+        mockServer({ apps: [], domainType: 'organizations', domainEntityId: fixtureOrg.id }, (err, server) => {
+          expect(err).to.not.exist;
+
+          ms = server;
+          const sequence = suppose(nodeCommand, defaultFlexInitOptions, defaultEnvWithDebug)
+            .when(Prompt.selectOrganization)
+            .respond('\n')
+            .when(Prompt.selectService)
+            .respond(Keys.downArrow)
+            .respond('\n');
+
+          runSupposeSequence(sequence, (error, exitCode) => {
+            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedOrgProject, outputFile, flexInitSuccessMessage, done);
+          });
+        });
+      });
+    });
+
     it('from two profiles should use the active one', (done) => {
       setup.createProfiles(secondValidProfileName, (err) => {
         expect(err).to.not.exist;

@@ -53,28 +53,6 @@ You must be authenticated.
 
 `
 
-exports['flex status by specifying credentials as options when valid and existent serviceId should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Logging in user: janeyDoe@mail.com
-[debug] Request:  POST http://localhost:3234/session
-[debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-[debug] Request:  DELETE http://localhost:3234/session
-[debug] Response: DELETE http://localhost:3234/session 204
-[debug] Logged out current user.
-key            value                                    
--------------  -----------------------------------------
-status         ONLINE                                   
-version        1.4.2                                    
-id             12378kdl2                                
-requestedAt    Wednesday, November 1st 2017, 10:42:31 AM
-deployerEmail  davy.jones@mail.com                      
-deployerName   Davy Jones                               
-
-
-`
-
 exports['flex status by specifying credentials as options when valid and non-existent serviceId should fail 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeyDoe@mail.com
@@ -125,8 +103,8 @@ key            value
 -------------  -------------------------------------
 status         ONLINE                               
 version        1.4.2                                
-id             12378kdl2                            
 name           TestKinveyDatalink                   
+id             12378kdl2                            
 requestedAt    replaced_value
 deployerEmail  davy.jones@mail.com                  
 deployerName   Davy Jones                           
@@ -187,6 +165,58 @@ id             12378kdl2
 requestedAt    replaced_value
 deployerEmail  davy.jones@mail.com                  
 deployerName   Davy Jones                           
+
+
+`
+
+exports['flex status by specifying credentials as options when valid and existent serviceId should succeed (with runtime) 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v2/data-links/123456/status
+[debug] Response: GET http://localhost:3234/v2/data-links/123456/status 200
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+key                value                                
+-----------------  -------------------------------------
+status             ONLINE                               
+version            1.4.2                                
+runtime            FLEX-RUNTIME-NODE8                   
+id                 123456                               
+requestedAt        replaced_value
+deployerEmail      davy.jones@mail.com                  
+deployerName       Davy Jones                           
+deploymentStatus   COMPLETED                            
+deploymentVersion  1.4.3                                
+deploymentRuntime  FLEX-RUNTIME-NODE10                  
+
+
+`
+
+exports['flex status by specifying credentials as options when valid and existent serviceId should succeed (with missing runtime) 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v2/data-links/1234567/status
+[debug] Response: GET http://localhost:3234/v2/data-links/1234567/status 200
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+key                value                                
+-----------------  -------------------------------------
+status             UPDATING                             
+version            1.4.2                                
+runtime            UNKNOWN                              
+id                 1234567                              
+requestedAt        replaced_value
+deployerEmail      davy.jones@mail.com                  
+deployerName       Davy Jones                           
+deploymentStatus   RUNNING                              
+deploymentVersion  1.4.3                                
+deploymentRuntime  FLEX-RUNTIME-NODE10                  
 
 
 `

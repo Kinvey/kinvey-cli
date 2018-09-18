@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.1
+* Prompt for 2FA token on 'profile login' if required
+* Rearrange logs
+* Output logs properly when log message is an object
+
 ## 3.1.0
 * Ask for profile override if profile already exists on 'kinvey init'
 * Setup Travis

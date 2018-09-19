@@ -16,10 +16,8 @@
 const fs = require('fs');
 
 const async = require('async');
-const moment = require('moment');
 const path = require('path');
 
-const ApiService = require('./../../ApiService');
 const ConfigManagementHelper = require('./../../ConfigManagementHelper');
 
 const { randomStrings } = require('./../../TestsHelper');
@@ -56,6 +54,44 @@ module.exports = () => {
           dev: {
             secret: '123',
             host: 'https://swapi.co/api'
+          }
+        }
+      };
+
+      const serviceName = randomStrings.plainString();
+
+      async.series([
+        (next) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', null, (err, id) => {
+            if (err) {
+              return next(err);
+            }
+
+            serviceId = id;
+            next();
+          });
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertService(serviceId, serviceConfig, serviceName, next);
+        }
+      ], done);
+    });
+
+    it('external with two valid svc envs should succeed', (done) => {
+      const serviceConfig = {
+        configType: 'service',
+        schemaVersion: '1.0.0',
+        type: 'flex-external',
+        description: 'Test service',
+        environments: {
+          dev: {
+            secret: '123',
+            host: 'https://swapi.co/api'
+          },
+          prod: {
+            secret: '1234',
+            host: 'https://swapi.co',
+            description: 'production svc env'
           }
         }
       };
@@ -243,6 +279,77 @@ module.exports = () => {
         type: 'salesforce',
         environments: {
           dev: srvEnv
+        }
+      };
+
+      async.series([
+        (next) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', null, (err, id) => {
+            if (err) {
+              return next(err);
+            }
+
+            serviceId = id;
+            next();
+          });
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertService(serviceId, serviceConfig, serviceName, next);
+        }
+      ], done);
+    });
+
+    it('sharepoint with two environments and mapping should succeed', (done) => {
+      const serviceName = randomStrings.plainString();
+      const serviceType = 'sharepoint';
+      const srvEnv = {
+        version: 'online',
+        authentication: {
+          type: 'ServiceAccount',
+          credentials: {
+            username: 'test@test.onmicrosoft.com',
+            password: 'pass0'
+          }
+        },
+        host: 'https://test.sharepoint.com',
+        mapping: {
+          GroceriesObjectName: {
+            sourceObject: {
+              objectName: 'Groceries'
+            },
+            fields: [
+              {
+                kinveyFieldMapping: '_id',
+                sourceFieldMapping: 'ID'
+              },
+              {
+                kinveyFieldMapping: 'title',
+                sourceFieldMapping: 'Title'
+              }
+            ],
+            methods: {
+              getAll: {
+                isEnabled: true
+              },
+              getById: {
+                isEnabled: false
+              }
+            }
+          }
+        }
+      };
+
+      const srvEnvWoMapping = Object.assign({}, srvEnv);
+      delete srvEnvWoMapping.mapping;
+
+      const serviceConfig = {
+        configType: 'service',
+        schemaVersion: '1.0.0',
+        type: serviceType,
+        description: 'Test service',
+        environments: {
+          dev: srvEnv,
+          'dev 0': srvEnvWoMapping
         }
       };
 

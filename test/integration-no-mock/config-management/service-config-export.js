@@ -37,6 +37,11 @@ module.exports = () => {
         dev: {
           secret: '123',
           host: 'https://swapi.co/api'
+        },
+        prod: {
+          secret: '1234',
+          host: 'https://swapi.co',
+          description: 'production svc env'
         }
       }
     };

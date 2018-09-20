@@ -1,3 +1,21 @@
+exports['flex status by specifying a profile and existent serviceId should succeed and output default format 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToGetServiceStatus'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
+[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+id             12378kdl2                            
+requestedAt    replaced_value
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
+
+
+`
+
 exports['flex status by specifying a profile and existent serviceId should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServiceStatus'
@@ -26,6 +44,59 @@ exports['flex status by specifying a profile and non-existent serviceId should f
 [debug] Request:  GET http://localhost:3234/v2/data-links/z793f26c8I_DONT_EXIST/status
 [debug] Response: GET http://localhost:3234/v2/data-links/z793f26c8I_DONT_EXIST/status 404
 [error] DataLinkNotFound: The specified data link could not be found.
+
+`
+
+exports['flex status by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToGetServiceStatus'
+[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
+[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+name           TestKinveyDatalink                   
+id             12378kdl2                            
+requestedAt    replaced_value
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
+
+
+`
+
+exports['flex status by specifying a profile when invalid project is set with existent serviceId as an option should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToGetServiceStatus'
+[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
+[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+id             12378kdl2                            
+requestedAt    replaced_value
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
+
+
+`
+
+exports['flex status by not specifying profile nor credentials when one profile and existent serviceId should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'flexStatusProfile'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
+[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+id             12378kdl2                            
+requestedAt    replaced_value
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
+
 
 `
 
@@ -77,6 +148,58 @@ deployerName   Davy Jones
 
 `
 
+exports['flex status by specifying credentials as options when valid and existent serviceId should succeed (with runtime) 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v2/data-links/123456/status
+[debug] Response: GET http://localhost:3234/v2/data-links/123456/status 200
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+key                value                                
+-----------------  -------------------------------------
+status             ONLINE                               
+version            1.4.2                                
+runtime            FLEX-RUNTIME-NODE8                   
+id                 123456                               
+requestedAt        replaced_value
+deployerEmail      davy.jones@mail.com                  
+deployerName       Davy Jones                           
+deploymentStatus   COMPLETED                            
+deploymentVersion  1.4.3                                
+deploymentRuntime  FLEX-RUNTIME-NODE10                  
+
+
+`
+
+exports['flex status by specifying credentials as options when valid and existent serviceId should succeed (with missing runtime) 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v2/data-links/1234567/status
+[debug] Response: GET http://localhost:3234/v2/data-links/1234567/status 200
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+key                value                                
+-----------------  -------------------------------------
+status             UPDATING                             
+version            1.4.2                                
+runtime            UNKNOWN                              
+id                 1234567                              
+requestedAt        replaced_value
+deployerEmail      davy.jones@mail.com                  
+deployerName       Davy Jones                           
+deploymentStatus   RUNNING                              
+deploymentVersion  1.4.3                                
+deploymentRuntime  FLEX-RUNTIME-NODE10                  
+
+
+`
+
 exports['flex status by specifying credentials as options when valid and non-existent serviceId should fail 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeyDoe@mail.com
@@ -97,76 +220,5 @@ exports['flex status by specifying credentials as options when invalid and exist
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
 [error] InvalidCredentials: Credentials are invalid. Please authenticate.
-
-`
-
-exports['flex status by specifying a profile and existent serviceId should succeed and output default format 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'profileToGetServiceStatus'
-[debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-key            value                                
--------------  -------------------------------------
-status         ONLINE                               
-version        1.4.2                                
-id             12378kdl2                            
-requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                  
-deployerName   Davy Jones                           
-
-
-`
-
-exports['flex status by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'profileToGetServiceStatus'
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-key            value                                
--------------  -------------------------------------
-status         ONLINE                               
-version        1.4.2                                
-id             12378kdl2                            
-name           TestKinveyDatalink                   
-requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                  
-deployerName   Davy Jones                           
-
-
-`
-
-exports['flex status by specifying a profile when invalid project is set with existent serviceId as an option should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'profileToGetServiceStatus'
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-key            value                                
--------------  -------------------------------------
-status         ONLINE                               
-version        1.4.2                                
-id             12378kdl2                            
-requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                  
-deployerName   Davy Jones                           
-
-
-`
-
-exports['flex status by not specifying profile nor credentials when one profile and existent serviceId should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'flexStatusProfile'
-[debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-key            value                                
--------------  -------------------------------------
-status         ONLINE                               
-version        1.4.2                                
-id             12378kdl2                            
-requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                  
-deployerName   Davy Jones                           
-
 
 `

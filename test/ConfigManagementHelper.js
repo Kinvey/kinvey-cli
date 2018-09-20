@@ -105,14 +105,14 @@ env.buildValidInternalCollectionsList = function buildValidInternalCollectionsLi
 env.createFromConfig = function createEnvFromConfig(envName, env, appName, done) {
   const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-  const cmd = `env create ${envName} ${filePath} --app ${appName} --output json`;
+  const cmd = `appenv create ${envName} ${filePath} --app ${appName} --output json`;
   passConfigFileToCli(cmd, env, filePath, done);
 };
 
 env.modifyFromConfig = function modifyEnvFromConfig(config, envIdentifier, appIdentifier, done) {
   const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-  let cmd = `env push ${filePath} --output json`;
+  let cmd = `appenv push ${filePath} --output json`;
   if (envIdentifier) {
     cmd = `${cmd} ${envIdentifier}`;
   }
@@ -127,7 +127,7 @@ env.modifyFromConfig = function modifyEnvFromConfig(config, envIdentifier, appId
 env.exportEnv = function (envIdentifier, appIdentifier, done) {
   const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-  let cmd = `env export ${filePath} --output json`;
+  let cmd = `appenv export ${filePath} --output json`;
   if (envIdentifier) {
     cmd = `${cmd} ${envIdentifier}`;
   }
@@ -766,7 +766,6 @@ service.assertRapidDataService = function (id, serviceConfig, serviceName, done)
 
     try {
       const expected = serviceConfig;
-      expect(actual.name).to.equal(serviceName);
       expect(actual.type).to.equal(ConfigFiles.ConfigToBackendServiceType[serviceConfig.type]);
       if (expected.description) {
         expect(actual.description).to.equal(expected.description);
@@ -782,10 +781,9 @@ service.assertRapidDataService = function (id, serviceConfig, serviceName, done)
       const actualDefaultEnv = actual.backingServers[0];
       const envName = Object.keys(serviceConfig.environments)[0];
       const srvEnv = serviceConfig.environments[envName];
-      srvEnv.name = envName;
 
       const expectedEnvWoMapping = getObjectByOmitting(srvEnv, ['mapping']);
-      const actualEnvWoMapping = getObjectByOmitting(actualDefaultEnv, ['_id', 'mapping', 'access']);
+      const actualEnvWoMapping = getObjectByOmitting(actualDefaultEnv, ['_id', 'mapping', 'name']);
       expect(actualEnvWoMapping).to.deep.equal(expectedEnvWoMapping);
 
       // assert mapping

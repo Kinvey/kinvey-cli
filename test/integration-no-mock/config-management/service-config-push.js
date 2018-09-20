@@ -17,7 +17,6 @@ const fs = require('fs');
 
 const async = require('async');
 const cloneDeep = require('lodash.clonedeep');
-const moment = require('moment');
 const path = require('path');
 
 const ApiService = require('./../../ApiService');
@@ -26,7 +25,6 @@ const ConfigManagementHelper = require('./../../ConfigManagementHelper');
 const { randomStrings } = require('./../../TestsHelper');
 
 module.exports = () => {
-  const projectPath = path.join(process.cwd(), 'test/integration-no-mock/flex-project');
   let serviceId;
 
   afterEach('remove service', (done) => {
@@ -36,142 +34,295 @@ module.exports = () => {
     });
   });
 
-  afterEach('remove package.json', (done) => {
-    fs.unlink(path.join(projectPath, 'package.json'), (err) => {
-      if (err && err.code && err.code.includes('ENOENT')) {
-        return done();
-      }
+  describe('flex', () => {
+    const projectPath = path.join(process.cwd(), 'test/integration-no-mock/flex-project');
 
-      done(err);
+    afterEach('remove package.json', (done) => {
+      fs.unlink(path.join(projectPath, 'package.json'), (err) => {
+        if (err && err.code && err.code.includes('ENOENT')) {
+          return done();
+        }
+
+        done(err);
+      });
+    });
+
+    it('modifying host and secret on external flex service should succeed', (done) => {
+      const initialServiceConfig = {
+        configType: 'service',
+        schemaVersion: '1.0.0',
+        type: 'flex-external',
+        secret: '123',
+        description: 'Test service',
+        host: 'https://swapi.co/api'
+      };
+
+      const modifiedServiceConfig = cloneDeep(initialServiceConfig);
+      modifiedServiceConfig.secret = '456';
+      modifiedServiceConfig.host = 'https://apis.is/cyclecounter';
+
+      const serviceName = randomStrings.plainString();
+
+      async.series([
+        (next) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, initialServiceConfig, 'org', 'CliOrg', null, (err, id) => {
+            if (err) {
+              return next(err);
+            }
+
+            serviceId = id;
+            next();
+          });
+        },
+        (next) => {
+          ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, null, next);
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertFlexService(serviceId, modifiedServiceConfig, serviceName, next);
+        }
+      ], done);
+    });
+
+    it('modifying only description on internal flex service with sourcePath should succeed', (done) => {
+      const initialServiceConfig = {
+        configType: 'service',
+        schemaVersion: '1.0.0',
+        type: 'flex-internal',
+        secret: '123',
+        description: 'Test service',
+        sourcePath: projectPath
+      };
+
+      const modifiedServiceConfig = cloneDeep(initialServiceConfig);
+      modifiedServiceConfig.description = 'Updated service without re-deploying';
+
+      const serviceName = randomStrings.plainString();
+      const pkgJson = {
+        version: '1.0.0',
+        dependencies: {
+          'kinvey-flex-sdk': '3.0.0'
+        }
+      };
+
+      async.series([
+        (next) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, initialServiceConfig, 'org', 'CliOrg', pkgJson, (err, id) => {
+            if (err) {
+              return next(err);
+            }
+
+            serviceId = id;
+            next();
+          });
+        },
+        (next) => {
+          ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, null, next);
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertFlexService(serviceId, modifiedServiceConfig, serviceName, next);
+        }
+      ], done);
+    });
+
+    it('modifying secret and bumping local version on internal flex service should succeed', function (done) {
+      this.timeout(250000);
+
+      const initialServiceConfig = {
+        configType: 'service',
+        schemaVersion: '1.0.0',
+        type: 'flex-internal',
+        secret: '123',
+        description: 'Test service',
+        sourcePath: projectPath
+      };
+
+      const modifiedServiceConfig = cloneDeep(initialServiceConfig);
+      modifiedServiceConfig.secret = '456';
+
+      const serviceName = randomStrings.plainString();
+      const initialPkgJson = {
+        version: '1.0.0',
+        dependencies: {
+          'kinvey-flex-sdk': '3.0.0'
+        }
+      };
+      const modifiedPkgJson = cloneDeep(initialPkgJson);
+      modifiedPkgJson.version = '1.0.1';
+
+      async.series([
+        (next) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, initialServiceConfig, 'org', 'CliOrg', initialPkgJson, (err, id) => {
+            if (err) {
+              return next(err);
+            }
+
+            serviceId = id;
+            next();
+          });
+        },
+        (next) => {
+          // ensure initial flex project is deployed, otherwise the second deploy can fail
+          ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, initialPkgJson.version, 'ONLINE', next);
+        },
+        (next) => {
+          ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, modifiedPkgJson, next);
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertFlexService(serviceId, modifiedServiceConfig, serviceName, next);
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, modifiedPkgJson.version, null, next);
+        }
+      ], done);
     });
   });
 
-  it('modifying host and secret on external flex service should succeed', (done) => {
-    const initialServiceConfig = {
-      configType: 'service',
-      schemaVersion: '1.0.0',
-      type: 'flex-external',
-      secret: '123',
-      description: 'Test service',
-      host: 'https://swapi.co/api'
-    };
-
-    const modifiedServiceConfig = cloneDeep(initialServiceConfig);
-    modifiedServiceConfig.secret = '456';
-    modifiedServiceConfig.host = 'https://apis.is/cyclecounter';
-
-    const serviceName = randomStrings.plainString();
-
-    async.series([
-      (next) => {
-        ConfigManagementHelper.service.createFromConfig(serviceName, initialServiceConfig, 'org', 'CliOrg', null, (err, id) => {
-          if (err) {
-            return next(err);
+  describe('rapid data', () => {
+    it('adding mapping to a mssql service should succeed', (done) => {
+      const serviceName = randomStrings.plainString();
+      const initialServiceConfig = {
+        configType: 'service',
+        schemaVersion: '1.0.0',
+        type: 'mssql',
+        environments: {
+          dev: {
+            version: '2008-r2',
+            connectionOptions: {
+              database: 'testdb',
+              encrypt: true
+            },
+            authentication: {
+              type: 'ServiceAccount',
+              credentials: {
+                username: 'testUser',
+                password: 'pass0'
+              }
+            },
+            host: 'mssql://sql-2008.z82ddddd214f.us-east-1.rds.amazonaws.com'
           }
-
-          serviceId = id;
-          next();
-        });
-      },
-      (next) => {
-        ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, null, next);
-      },
-      (next) => {
-        ConfigManagementHelper.service.assertFlexService(serviceId, modifiedServiceConfig, serviceName, next);
-      }
-    ], done);
-  });
-
-  it('modifying only description on internal flex service with sourcePath should succeed', (done) => {
-    const initialServiceConfig = {
-      configType: 'service',
-      schemaVersion: '1.0.0',
-      type: 'flex-internal',
-      secret: '123',
-      description: 'Test service',
-      sourcePath: projectPath
-    };
-
-    const modifiedServiceConfig = cloneDeep(initialServiceConfig);
-    modifiedServiceConfig.description = 'Updated service without re-deploying';
-
-    const serviceName = randomStrings.plainString();
-    const pkgJson = {
-      version: '1.0.0',
-      dependencies: {
-        'kinvey-flex-sdk': '3.0.0'
-      }
-    };
-
-    async.series([
-      (next) => {
-        ConfigManagementHelper.service.createFromConfig(serviceName, initialServiceConfig, 'org', 'CliOrg', pkgJson, (err, id) => {
-          if (err) {
-            return next(err);
+        }
+      };
+      const modifiedServiceConfig = cloneDeep(initialServiceConfig);
+      modifiedServiceConfig.environments.dev.mapping = {
+        EmployeesServiceObject: {
+          sourceObject: {
+            schemaName: 'dbo',
+            objectName: 'Employees',
+            objectType: 'BASE TABLE',
+            primaryKey: {
+              name: 'id'
+            }
+          },
+          fields: [
+            {
+              kinveyFieldMapping: '_id',
+              sourceFieldMapping: 'id'
+            }
+          ],
+          methods: {
+            getById: {
+              isEnabled: false
+            }
           }
+        }
+      };
 
-          serviceId = id;
-          next();
-        });
-      },
-      (next) => {
-        ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, null, next);
-      },
-      (next) => {
-        ConfigManagementHelper.service.assertFlexService(serviceId, modifiedServiceConfig, serviceName, next);
-      }
-    ], done);
-  });
+      async.series([
+        (next) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, initialServiceConfig, 'org', 'CliOrg', null, (err, id) => {
+            if (err) {
+              return next(err);
+            }
 
-  it('modifying secret and bumping local version on internal flex service should succeed', function (done) {
-    this.timeout(250000);
+            serviceId = id;
+            next();
+          });
+        },
+        (next) => {
+          ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, null, next);
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertRapidDataService(serviceId, modifiedServiceConfig, serviceName, next);
+        }
+      ], done);
+    });
 
-    const initialServiceConfig = {
-      configType: 'service',
-      schemaVersion: '1.0.0',
-      type: 'flex-internal',
-      secret: '123',
-      description: 'Test service',
-      sourcePath: projectPath
-    };
-
-    const modifiedServiceConfig = cloneDeep(initialServiceConfig);
-    modifiedServiceConfig.secret = '456';
-
-    const serviceName = randomStrings.plainString();
-    const initialPkgJson = {
-      version: '1.0.0',
-      dependencies: {
-        'kinvey-flex-sdk': '3.0.0'
-      }
-    };
-    const modifiedPkgJson = cloneDeep(initialPkgJson);
-    modifiedPkgJson.version = '1.0.1';
-
-    async.series([
-      (next) => {
-        ConfigManagementHelper.service.createFromConfig(serviceName, initialServiceConfig, 'org', 'CliOrg', initialPkgJson, (err, id) => {
-          if (err) {
-            return next(err);
+    it('modifying rest service should succeed', (done) => {
+      const serviceName = randomStrings.plainString();
+      const initialServiceConfig = {
+        configType: 'service',
+        schemaVersion: '1.0.0',
+        type: 'rest',
+        environments: {
+          dev: {
+            connectionOptions: {
+              strictSSL: true
+            },
+            authentication: {
+              type: 'oauthClientCredentials',
+              credentials: {
+                username: 'testUser',
+                password: '123',
+                tokenEndpoint: 'https://swapi.co/TOKEN'
+              },
+              loginOptions: {
+                type: 'maintainSession',
+                httpMethod: 'POST',
+                headers: {
+                  'x-custom-header': '1'
+                }
+              }
+            },
+            host: 'https://api.co/api'
           }
+        }
+      };
+      const modifiedServiceConfig = cloneDeep(initialServiceConfig);
+      modifiedServiceConfig.environments.dev.authentication = {
+        type: 'None',
+        loginOptions: {
+          type: 'noLogin'
+        }
+      };
 
-          serviceId = id;
-          next();
-        });
-      },
-      (next) => {
-        // ensure initial flex project is deployed, otherwise the second deploy can fail
-        ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, initialPkgJson.version, 'ONLINE', next);
-      },
-      (next) => {
-        ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, modifiedPkgJson, next);
-      },
-      (next) => {
-        ConfigManagementHelper.service.assertFlexService(serviceId, modifiedServiceConfig, serviceName, next);
-      },
-      (next) => {
-        ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, modifiedPkgJson.version, null, next);
-      }
-    ], done);
+      modifiedServiceConfig.environments.dev.host = 'https://swapi.co/api';
+      modifiedServiceConfig.environments.dev.mapping = {
+        planets: {
+          sourceObject: {
+            endpoint: 'planets',
+            contextRoot: 'someRoot',
+            httpMethod: 'PUT',
+            queryMapping: {
+              query: 'dynamicEndpointToken'
+            }
+          }
+        },
+        vehicles: {
+          sourceObject: {
+            endpoint: 'vehicles',
+            contextRoot: 'someRoot'
+          }
+        }
+      };
+
+      async.series([
+        (next) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, initialServiceConfig, 'org', 'CliOrg', null, (err, id) => {
+            if (err) {
+              return next(err);
+            }
+
+            serviceId = id;
+            next();
+          });
+        },
+        (next) => {
+          ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, null, next);
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertRapidDataService(serviceId, modifiedServiceConfig, serviceName, next);
+        }
+      ], done);
+    });
   });
 };

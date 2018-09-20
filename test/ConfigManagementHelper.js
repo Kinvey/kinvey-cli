@@ -763,7 +763,6 @@ service.assertRapidDataService = function (id, serviceConfig, serviceName, done)
 
     try {
       const expected = serviceConfig;
-      expect(actual.name).to.equal(serviceName);
       expect(actual.type).to.equal(ConfigFiles.ConfigToBackendServiceType[serviceConfig.type]);
       if (expected.description) {
         expect(actual.description).to.equal(expected.description);
@@ -780,7 +779,7 @@ service.assertRapidDataService = function (id, serviceConfig, serviceName, done)
       const srvEnv = serviceConfig.environments[Object.keys(serviceConfig.environments)[0]];
 
       const expectedEnvWoMapping = getObjectByOmitting(srvEnv, ['mapping']);
-      const actualEnvWoMapping = getObjectByOmitting(actualDefaultEnv, ['_id', 'mapping', 'access']);
+      const actualEnvWoMapping = getObjectByOmitting(actualDefaultEnv, ['_id', 'mapping', 'name']);
       expect(actualEnvWoMapping).to.deep.equal(expectedEnvWoMapping);
 
       // assert mapping

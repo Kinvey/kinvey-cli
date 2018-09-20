@@ -62,7 +62,6 @@ module.exports = () => {
         }
 
         const expected = getObjectByOmitting(externalFlexSrvConfig, ['host']);
-        expected.name = serviceName;
         expect(exported).to.deep.equal(expected);
         done();
       });
@@ -123,7 +122,6 @@ module.exports = () => {
         }
 
         const expected = getObjectByOmitting(internalFlexSrvConfig, ['sourcePath']);
-        expected.name = serviceName;
         expect(exported).to.deep.equal(expected);
         done();
       });
@@ -203,7 +201,6 @@ module.exports = () => {
           return done(err);
         }
 
-        expect(exported.name).to.equal(serviceName);
         const actual = getObjectByOmitting(exported, ['name']);
         expect(actual).to.deep.equal(serviceConfig);
         done();

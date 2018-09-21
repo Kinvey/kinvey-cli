@@ -2,7 +2,11 @@
   "schemaVersion": "1.0.0",
   "configType": "service",
   "type": "flex-external",
-  "host": "https://swapi.co/api",
-  "secret": "123",
-  "description": "test"
+  "description": "test",
+  "environments": {
+    "dev": {
+      "host": "https://swapi.co/api",
+      "secret": "123"
+    }
+  }
 }

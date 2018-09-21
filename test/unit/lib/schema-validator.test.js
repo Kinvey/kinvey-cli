@@ -26,6 +26,7 @@ const invalidInternalFlex = require('../../fixtures/config-files/flex-internal-i
 const validExternalFlexAllOptions = require('../../fixtures/config-files/flex-external-valid-all-options.json');
 const validRapidDataSpSomeOptions = require('../../fixtures/config-files/rapid-data-sp-valid-some-options.json');
 const invalidRapidDataSp = require('../../fixtures/config-files/rapid-data-sp-invalid.json');
+const invalidRapidDataSpSomeOptions = require('../../fixtures/config-files/rapid-data-sp-invalid-some-options.json');
 
 describe('schema validator', () => {
   describe('env', () => {
@@ -105,8 +106,24 @@ describe('schema validator', () => {
       });
     });
 
-    it('with invalid rapid data (sharepoint) should fail', (done) => {
+    it('with invalid rapid data (wrong type) should fail', (done) => {
       SchemaValidator.validate(ConfigType.SERVICE, invalidRapidDataSp, null, (err) => {
+        expect(err).to.exist;
+        expect(err.name).to.equal('ValidationError');
+
+        const actualMsg = err.message.replace(/\r\n/g, '\n');
+        try {
+          snapshot(actualMsg);
+        } catch (ex) {
+          return done(ex);
+        }
+
+        done();
+      });
+    });
+
+    it('with invalid rapid data (sharepoint) should fail', (done) => {
+      SchemaValidator.validate(ConfigType.SERVICE, invalidRapidDataSpSomeOptions, null, (err) => {
         expect(err).to.exist;
         expect(err.name).to.equal('ValidationError');
 

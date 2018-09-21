@@ -52,14 +52,18 @@ module.exports = () => {
         configType: 'service',
         schemaVersion: '1.0.0',
         type: 'flex-external',
-        secret: '123',
         description: 'Test service',
-        host: 'https://swapi.co/api'
+        environments: {
+          dev: {
+            secret: '123',
+            host: 'https://swapi.co/api'
+          }
+        }
       };
 
       const modifiedServiceConfig = cloneDeep(initialServiceConfig);
-      modifiedServiceConfig.secret = '456';
-      modifiedServiceConfig.host = 'https://apis.is/cyclecounter';
+      modifiedServiceConfig.environments.dev.secret = '456';
+      modifiedServiceConfig.environments.dev.host = 'https://apis.is/cyclecounter';
 
       const serviceName = randomStrings.plainString();
 
@@ -88,9 +92,13 @@ module.exports = () => {
         configType: 'service',
         schemaVersion: '1.0.0',
         type: 'flex-internal',
-        secret: '123',
         description: 'Test service',
-        sourcePath: projectPath
+        environments: {
+          dev: {
+            secret: '123',
+            sourcePath: projectPath
+          }
+        }
       };
 
       const modifiedServiceConfig = cloneDeep(initialServiceConfig);
@@ -131,13 +139,17 @@ module.exports = () => {
         configType: 'service',
         schemaVersion: '1.0.0',
         type: 'flex-internal',
-        secret: '123',
         description: 'Test service',
-        sourcePath: projectPath
+        environments: {
+          dev: {
+            secret: '123',
+            sourcePath: projectPath
+          }
+        }
       };
 
       const modifiedServiceConfig = cloneDeep(initialServiceConfig);
-      modifiedServiceConfig.secret = '456';
+      modifiedServiceConfig.environments.dev.secret = '456';
 
       const serviceName = randomStrings.plainString();
       const initialPkgJson = {

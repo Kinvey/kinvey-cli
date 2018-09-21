@@ -713,12 +713,15 @@ service.assertFlexService = function assertFlexService(id, serviceConfig, servic
 
     expect(actual.backingServers).to.be.an.array;
     expect(actual.backingServers[0]).to.exist;
-    expect(serviceConfig.secret).to.equal(actual.backingServers[0].secret);
+    const expectedEnvName = Object.keys(serviceConfig.environments)[0];
+    const expectedEnv = serviceConfig.environments[expectedEnvName];
+    expect(actual.backingServers[0].secret).to.equal(expectedEnv.secret);
+    expect(actual.backingServers[0].name).to.equal(expectedEnvName);
 
     if (isFlexInternal) {
       expect(actual.backingServers[0].host).to.exist;
     } else {
-      expect(serviceConfig.host).to.equal(actual.backingServers[0].host);
+      expect(actual.backingServers[0].host).to.equal(expectedEnv.host);
     }
 
     done();
@@ -732,7 +735,7 @@ service.assertFlexServiceStatus = function assertFlexServiceStatus(id, expectedV
     }
 
     try {
-      expect(actual.version).to.exist;
+      expect(actual.version, 'Version').to.exist;
       expect(actual.version).to.equal(expectedVersion);
       if (expectedStatus) {
         expect(actual.status).to.equal(expectedStatus);
@@ -747,7 +750,7 @@ service.assertFlexServiceStatus = function assertFlexServiceStatus(id, expectedV
 
 service.assertFlexServiceStatusRetryable = function assertFlexServiceStatusRetryable(id, expectedVersion, expectedStatus, done) {
   async.retry(
-    { times: 6, interval: 20000 }, // 6 times every 20 sec
+    { times: 9, interval: 20000 }, // 9 times every 20 sec
     (next) => {
       service.assertFlexServiceStatus(id, expectedVersion, expectedStatus, next);
     },
@@ -776,7 +779,8 @@ service.assertRapidDataService = function (id, serviceConfig, serviceName, done)
       expect(actual.backingServers.length).to.equal(1);
 
       const actualDefaultEnv = actual.backingServers[0];
-      const srvEnv = serviceConfig.environments[Object.keys(serviceConfig.environments)[0]];
+      const envName = Object.keys(serviceConfig.environments)[0];
+      const srvEnv = serviceConfig.environments[envName];
 
       const expectedEnvWoMapping = getObjectByOmitting(srvEnv, ['mapping']);
       const actualEnvWoMapping = getObjectByOmitting(actualDefaultEnv, ['_id', 'mapping', 'name']);

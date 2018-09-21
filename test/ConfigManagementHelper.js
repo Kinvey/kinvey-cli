@@ -750,7 +750,7 @@ service.assertFlexServiceStatus = function assertFlexServiceStatus(id, expectedV
 
 service.assertFlexServiceStatusRetryable = function assertFlexServiceStatusRetryable(id, expectedVersion, expectedStatus, done) {
   async.retry(
-    { times: 9, interval: 20000 }, // 6 times every 20 sec
+    { times: 9, interval: 20000 }, // 9 times every 20 sec
     (next) => {
       service.assertFlexServiceStatus(id, expectedVersion, expectedStatus, next);
     },

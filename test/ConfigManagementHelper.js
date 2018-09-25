@@ -549,9 +549,6 @@ env.assertExportedEntitiesWithCode = function assertExportedEntitiesWithCode(exp
 };
 
 env.assertExportedRoles = function assertExportedRoles(expected, actual, done) {
-  // TODO: cli-135 Remove next line when role names bug is fixed
-  return setImmediate(done);
-  /* eslint-disable */
   const expectedRoleNames = Object.keys(expected);
   const actualRoleNames = Object.keys(actual);
   const expectedCount = expectedRoleNames.length;
@@ -559,13 +556,13 @@ env.assertExportedRoles = function assertExportedRoles(expected, actual, done) {
 
   for (let i = 0; i < expectedCount; i += 1) {
     const expectedRole = Object.assign({ name: expectedRoleNames[i] }, expected[expectedRoleNames[i]]);
-    const actualRole = actualRoleNames.find(x => x === expectedRole.name);
-    if (!actualRole) {
+    const actualRoleName = actualRoleNames.find(x => x === expectedRole.name);
+    if (!actualRoleName) {
       return done(new Error(`Failed to find role with name '${expectedRole.name}'.`));
     }
 
-    expect(actualRole.description).to.equal(expectedRole.description);
-    expect(actualRole.name).to.equal(expectedRole.name || expectedRoleNames[i]);
+    const actualRole = actual[actualRoleName];
+    expect(actualRole).to.deep.equal(actualRole);
   }
 
   done();

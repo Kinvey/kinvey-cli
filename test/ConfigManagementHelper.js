@@ -621,6 +621,98 @@ app.createInTestsOrg = function (data, done) {
   });
 };
 
+app.createFromConfig = function createAppFromConfig(appName, appConfig, orgIdentifier, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  let cmd = `app create ${appName} ${filePath} --output json`;
+  if (orgIdentifier) {
+    cmd += ` --org ${orgIdentifier}`;
+  }
+  passConfigFileToCli(cmd, appConfig, filePath, done);
+};
+
+app.modifyFromConfig = function modifyFromConfig(appIdentifier, appConfig, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  let cmd = `app push ${filePath} --output json`;
+  if (appIdentifier) {
+    cmd += ` ${appIdentifier}`;
+  }
+  passConfigFileToCli(cmd, appConfig, filePath, done);
+};
+
+app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, expectOrg, collList }, done) {
+  let actualApp;
+  let assertEnvsDetails = true;
+
+  async.series([
+    (next) => {
+      ApiService.apps.get(id, (err, data) => {
+        if (err) {
+          return next(err);
+        }
+
+        actualApp = data;
+        expect(actualApp.name).to.equal(expectedName);
+
+        if (expectOrg) {
+          expect(actualApp.organizationId).to.exist;
+        } else {
+          expect(actualApp.organizationId).to.not.exist;
+        }
+
+        // assert settings
+        if (!isEmpty(config.settings) && !isEmpty(config.settings.realtime)) {
+          expect(actualApp.realtime.enabled).to.equal(config.settings.realtime.enabled);
+        } else {
+          expect(actualApp.realtime).to.not.exist;
+        }
+
+
+        if (config.settings && config.settings.sessionTimeoutInSeconds) {
+          expect(actualApp.sessionTimeoutInSeconds).to.equal(config.settings.sessionTimeoutInSeconds);
+        }
+
+        // assert env count
+        const expEnvsCount = isEmpty(config.environments) ? 1 : (Object.keys(config.environments).length);
+        expect(actualApp.environments.length).to.equal(expEnvsCount);
+
+        if (isEmpty(config.environments)) { // then only the default env ('Development') is created
+          assertEnvsDetails = false;
+        }
+
+        next();
+      });
+    },
+    (next) => {
+      if (!assertEnvsDetails) {
+        return setImmediate(next);
+      }
+
+      const configEnvNames = Object.keys(config.environments);
+      async.eachSeries(
+        configEnvNames,
+        (currName, cb) => {
+          const configEnv = config.environments[currName];
+          const actualEnv = actualApp.environments.find(x => x.name.toLowerCase() === currName.toLowerCase());
+          if (!actualEnv) {
+            return cb(new Error(`Failed to find env '${currName}'`));
+          }
+
+          env.assertEnvOnly(configEnv, actualEnv.id, currName, (err) => {
+            if (err) {
+              return cb(err);
+            }
+
+            env.assertCollections(actualEnv.id, collList, collList.length + 2, null, cb);
+          });
+        },
+        next
+      );
+    }
+  ], done);
+};
+
 const roles = {};
 roles.buildValidRolesList = function buildValidRolesList(count) {
   const result = [];

@@ -801,9 +801,46 @@ service.assertRapidDataService = function (id, serviceConfig, serviceName, done)
   });
 };
 
+const org = {};
+org.exportOrg = function exportOrg(orgIdentifier, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  let cmd = `org export ${filePath} --output json`;
+  if (orgIdentifier) {
+    cmd = `${cmd} ${orgIdentifier}`;
+  }
+
+  TestsHelper.execCmdWoMocks(cmd, null, (err) => {
+    if (err) {
+      return done(err);
+    }
+
+    fs.readFile(filePath, null, (err, data) => {
+      if (err) {
+        return done(err);
+      }
+
+      done(null, JSON.parse(data));
+    });
+  });
+};
+
+org.assertSettings = function assertSettings(actual) {
+  expect(actual.schemaVersion).to.exist;
+  expect(actual.configType).to.equal('organization');
+
+  const exportedSettings = actual.settings;
+  expect(exportedSettings).to.be.an('object').and.not.empty;
+  expect(exportedSettings.security).to.be.an('object');
+  expect(exportedSettings.security.requireApprovals).to.be.a('boolean');
+  expect(exportedSettings.security.requireEmailVerification).to.be.a('boolean');
+  expect(exportedSettings.security.requireTwoFactorAuth).to.be.a('boolean');
+};
+
 ConfigManagementHelper = {
   app,
   env,
+  org,
   roles,
   service,
   common: {

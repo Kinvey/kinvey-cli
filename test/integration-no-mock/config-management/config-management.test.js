@@ -19,6 +19,7 @@ const path = require('path');
 
 const { ConfigFilesDir } = require('./../../TestsHelper');
 
+const orgConfigExportTests = require('./org-config-export');
 const envConfigCreateTests = require('./env-config-create');
 const envConfigPushTests = require('./env-config-push');
 const envConfigExportTests = require('./env-config-export');
@@ -88,4 +89,6 @@ describe('Config management', () => {
   describe('Service config push', serviceConfigPushTests);
 
   describe('Service config export', serviceConfigExportTests);
+
+  describe('Org config export', orgConfigExportTests);
 });

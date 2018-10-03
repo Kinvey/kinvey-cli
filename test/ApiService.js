@@ -210,9 +210,17 @@ const apps = {
     const url = buildUrl('applications', id);
     makeRequest({ url }, done);
   },
+  getByOrg: (orgId, done) => {
+    const url = buildUrl(`organizations/${orgId}/apps`);
+    makeRequest({ url }, done);
+  },
   create: (body, done) => {
     const url = buildUrl('apps');
     makeRequest({ url, body, method: 'POST' }, done);
+  },
+  remove: (id, done) => {
+    const url = buildUrl('apps', id);
+    makeRequest({ url, method: 'DELETE' }, done);
   }
 };
 
@@ -289,6 +297,10 @@ const push = {
 const services = {
   get: (id, done) => {
     const url = buildUrl('data-links', id);
+    makeRequest({ url }, done);
+  },
+  getAllByOrg: (id, done) => {
+    const url = buildUrl(`organizations/${id}/data-links`);
     makeRequest({ url }, done);
   },
   remove: (id, done) => {

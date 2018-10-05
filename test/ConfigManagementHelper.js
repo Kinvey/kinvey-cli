@@ -807,7 +807,8 @@ ConfigManagementHelper = {
   roles,
   service,
   common: {
-    buildConfigEntityFromList
+    buildConfigEntityFromList,
+    EndpointsRelatedTestsTimeout: 65000
   }
 };
 

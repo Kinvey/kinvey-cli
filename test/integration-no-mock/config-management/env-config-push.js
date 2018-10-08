@@ -33,7 +33,8 @@ module.exports = () => {
     execCmdWoMocks(`app delete ${appName} --no-prompt`, null, done);
   });
 
-  it('modifying collections, groups, endpoints and push settings; creating hooks; omitting roles should succeed', (done) => {
+  it('modifying collections, groups, endpoints and push settings; creating hooks; omitting roles should succeed', function (done) {
+    this.timeout(ConfigManagementHelper.common.EndpointsRelatedTestsTimeout);
     // initial env
     const collList = ConfigManagementHelper.env.buildValidInternalCollectionsList(2, true);
     const rolesList = ConfigManagementHelper.roles.buildValidRolesList(2);

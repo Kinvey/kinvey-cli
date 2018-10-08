@@ -236,7 +236,8 @@ module.exports = () => {
     ], done);
   });
 
-  it('common code, internal endpoints, groups and push settings should succeed', (done) => {
+  it('common code, internal endpoints, groups and push settings should succeed', function (done) {
+    this.timeout(ConfigManagementHelper.common.EndpointsRelatedTestsTimeout);
     const commonCode = {
       someCommonModule: {
         code: 'const commonLogic = {};\ncommonLogic.print = function print(msg) {\n  console.log(msg);\n};'
@@ -314,7 +315,8 @@ module.exports = () => {
     ], done);
   });
 
-  it('external collections, external hooks, external endpoints should succeed', (done) => {
+  it('external collections, external hooks, external endpoints should succeed', function (done) {
+    this.timeout(ConfigManagementHelper.common.EndpointsRelatedTestsTimeout);
     const serviceName = randomStrings.plainString();
     const collList = [
       ConfigManagementHelper.env.buildExternalCollection(serviceName, 'MyCollection', randomStrings.collName()),

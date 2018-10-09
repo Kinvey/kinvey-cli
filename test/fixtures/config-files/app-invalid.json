@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0.0",
+  "configType": "application",
+  "settings": {
+    "realtime": true,
+    "sessionTimeoutInSeconds": false
+  },
+  "environments": {
+    "dev": {
+      "settings": {
+        "emailVerification": {
+          "auto": true,
+          "required": true
+        }
+      },
+      "collections": {
+        "colle0": {
+          "permissions": "full"
+        }
+      }
+    }
+  }
+}

@@ -19,6 +19,8 @@ const path = require('path');
 
 const { ConfigFilesDir } = require('./../../TestsHelper');
 
+const appConfigCreateTests = require('./app-config-create');
+const appConfigPushTests = require('./app-config-push');
 const envConfigCreateTests = require('./env-config-create');
 const envConfigPushTests = require('./env-config-push');
 const envConfigExportTests = require('./env-config-export');
@@ -76,6 +78,10 @@ describe('Config management', () => {
 
     removeDir('/');
   });
+
+  describe('App config create', appConfigCreateTests);
+
+  describe('App config push', appConfigPushTests);
 
   describe('Env config create', envConfigCreateTests);
 

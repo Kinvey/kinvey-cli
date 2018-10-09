@@ -207,7 +207,7 @@ function setBaasAuthHeader(envId, options, done) {
 
 const apps = {
   get: (id, done) => {
-    const url = buildUrl('applications', id);
+    const url = buildUrl('apps', id);
     makeRequest({ url }, done);
   },
   getByOrg: (orgId, done) => {

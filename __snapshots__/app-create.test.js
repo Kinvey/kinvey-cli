@@ -45,12 +45,13 @@ exports['app create with a name should succeed and output JSON 1'] = `
 `
 
 exports['app create without a name should fail 1'] = `
-kinvey app create <name>
+kinvey app create <name> [file]
 
 Create an application
 
 Positionals:
   name  App name                                                      [required]
+  file  Path to an application configuration file
 
 Options:
   --version                 Show version number                        [boolean]

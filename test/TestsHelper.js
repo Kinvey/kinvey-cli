@@ -354,7 +354,7 @@ TestsHelper.setup = {
       }
 
       setup.profiles[profileName].active[activeItemType] = activeItem;
-      writeJSON(path, setup, done);
+      writeJSON({ file: path, data: setup }, done);
     });
   },
 
@@ -366,7 +366,7 @@ TestsHelper.setup = {
         delete setup.active.profile;
       }
 
-      writeJSON(path, setup, done);
+      writeJSON({ file: path, data: setup }, done);
     });
   },
 
@@ -390,18 +390,18 @@ TestsHelper.setup = {
       };
       data[key] = flex;
 
-      writeJSON(filePath, data, done);
+      writeJSON({ file: filePath, data }, done);
     });
   },
 
   clearGlobalSetup(path, done) {
     path = path || globalSetupPath;
-    writeJSON(path, '', done);
+    writeJSON({ file: path, data: '' }, done);
   },
 
   clearSupposeDebugFile(path, done) {
     path = path || supposeDebugPath;
-    writeJSON(path, '', done);
+    writeJSON({ file: path, data: '' }, done);
   },
 
   _clearActiveItemsOnProfile(profileName, activeItemType, path, done) {
@@ -418,7 +418,7 @@ TestsHelper.setup = {
         delete setup.profiles[profileName].active[activeItemType];
       }
 
-      writeJSON(path, setup, done);
+      writeJSON({ file: path, data: setup }, done);
     });
   },
 

@@ -101,12 +101,9 @@ deployerName   Davy Jones
 `
 
 exports['flex status by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
-kinvey flex status [serviceId]
+kinvey flex status
 
 Return the health of a Flex Service cluster
-
-Positionals:
-  serviceId  Service ID                                                 [string]
 
 Options:
   --version                 Show version number                        [boolean]
@@ -121,6 +118,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --serviceId               Service ID                                  [string]
 
 You must be authenticated.
 

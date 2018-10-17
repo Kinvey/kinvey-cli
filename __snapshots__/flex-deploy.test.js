@@ -1,10 +1,7 @@
 exports['flex deploy when project setup is non-existent by not specifying profile nor credentials when one profile should use it and fail 1'] = `
-kinvey flex deploy [serviceId]
+kinvey flex deploy
 
 Deploy the current project to the Kinvey FlexService Runtime
-
-Positionals:
-  serviceId  Service ID                                                 [string]
 
 Options:
   --version                 Show version number                        [boolean]
@@ -19,6 +16,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --serviceId               Service ID                                  [string]
 
 This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use positional arguments: serviceId.
 
@@ -30,12 +28,9 @@ exports['flex deploy when project setup exists is valid and user\'s project is i
 `
 
 exports['flex deploy when project setup exists is not valid and user\'s project is valid should fail 1'] = `
-kinvey flex deploy [serviceId]
+kinvey flex deploy
 
 Deploy the current project to the Kinvey FlexService Runtime
-
-Positionals:
-  serviceId  Service ID                                                 [string]
 
 Options:
   --version                 Show version number                        [boolean]
@@ -50,6 +45,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --serviceId               Service ID                                  [string]
 
 This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use positional arguments: serviceId.
 

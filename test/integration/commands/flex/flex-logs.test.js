@@ -39,7 +39,7 @@ function testFlexLogs(profileName, optionsForCredentials, serviceId, query, vali
   }
 
   if (serviceId) {
-    cmd = `${cmd} ${serviceId}`;
+    cmd = `${cmd} --${FlexOptionsNames.SERVICE_ID} ${serviceId}`;
   }
 
   const apiOptions = {};

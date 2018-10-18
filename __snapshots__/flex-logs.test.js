@@ -84,7 +84,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
-  --serviceId               Service ID                                  [string]
+  --service                 Service ID                                  [string]
   --from                    Fetch log entries starting from provided timestamp
                                                                         [string]
   --to                      Fetch log entries up to provided timestamp  [string]
@@ -92,7 +92,7 @@ Options:
   --number, -n              Number of entries to fetch, i.e. page size (non-zero
                             integer, default=100, max=2000)             [number]
 
-This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use positional arguments: serviceId.
+This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: service.
 
 `
 
@@ -180,7 +180,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
-  --serviceId               Service ID                                  [string]
+  --service                 Service ID                                  [string]
   --from                    Fetch log entries starting from provided timestamp
                                                                         [string]
   --to                      Fetch log entries up to provided timestamp  [string]

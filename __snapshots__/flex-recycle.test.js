@@ -86,7 +86,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
-  --serviceId               Service ID                                  [string]
+  --service                 Service ID                                  [string]
 
 You must be authenticated.
 

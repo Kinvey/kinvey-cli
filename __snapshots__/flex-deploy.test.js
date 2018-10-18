@@ -16,9 +16,9 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
-  --serviceId               Service ID                                  [string]
+  --service                 Service ID                                  [string]
 
-This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use positional arguments: serviceId.
+This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: service.
 
 `
 
@@ -45,8 +45,8 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
-  --serviceId               Service ID                                  [string]
+  --service                 Service ID                                  [string]
 
-This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use positional arguments: serviceId.
+This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: service.
 
 `

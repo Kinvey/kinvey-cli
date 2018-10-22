@@ -44,6 +44,9 @@ Options:
   --app                     App ID/name                                 [string]
   --org                     Org ID/name                                 [string]
   --secret                  Shared secret                               [string]
+  --vars, --setVars         Environment variables. Specify either as
+                            comma-separated list of key-value pairs
+                            (key1=value1,key2=value2) or in JSON format.
 
 Not enough non-option arguments: got 0, need at least 1
 
@@ -78,6 +81,9 @@ Options:
   --app                     App ID/name                                 [string]
   --org                     Org ID/name                                 [string]
   --secret                  Shared secret                               [string]
+  --vars, --setVars         Environment variables. Specify either as
+                            comma-separated list of key-value pairs
+                            (key1=value1,key2=value2) or in JSON format.
 
 Arguments app and org are mutually exclusive
 

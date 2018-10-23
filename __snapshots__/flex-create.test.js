@@ -1,4 +1,4 @@
-exports['flex create with active profile with a name, secret and app should succeed and output default format 1'] = `
+exports['flex create with active profile with a name, secret, basic env vars and app should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
@@ -10,7 +10,41 @@ Created service: 12378kdl2. Secret: 789
 
 `
 
-exports['flex create with active profile with a name, secret and app should succeed and output JSON 1'] = `
+exports['flex create with active profile with a name, app and invalid env vars should fail 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'activeProfile'
+kinvey flex create <name>
+
+Create a Flex service
+
+Positionals:
+  name  Flex service name                                             [required]
+
+Options:
+  --version                 Show version number                        [boolean]
+  --email                   E-mail address of your Kinvey account       [string]
+  --password                Password of your Kinvey account             [string]
+  --2fa, --2Fa              Two-factor authentication token             [string]
+  --instanceId              Instance ID                                 [string]
+  --profile                 Profile to use                              [string]
+  --output                  Output format             [string] [choices: "json"]
+  --silent                  Do not output anything                     [boolean]
+  --suppress-version-check  Do not check for package updates           [boolean]
+  --verbose                 Output debug messages                      [boolean]
+  --no-color                Disable colors                             [boolean]
+  -h, --help                Show help                                  [boolean]
+  --app                     App ID/name                                 [string]
+  --org                     Org ID/name                                 [string]
+  --secret                  Shared secret                               [string]
+  --vars, --setVars         Environment variables. Specify either as
+                            comma-separated list of key-value pairs
+                            (key1=value1,key2=value2) or in JSON format.
+
+Environment variables must be specified as comma-separated list where key=value or in valid JSON format.
+
+`
+
+exports['flex create with active profile with a name, secret, complex env vars and app should succeed and output JSON 1'] = `
 {
   "result": {
     "id": "12378kdl2",
@@ -49,6 +83,11 @@ Options:
                             (key1=value1,key2=value2) or in JSON format.
 
 Not enough non-option arguments: got 0, need at least 1
+
+`
+
+exports['flex create with active profile without a secret should succeed 1'] = `
+Created service: 12378kdl2. Secret: 789
 
 `
 
@@ -102,11 +141,6 @@ exports['flex create with one-time session with name, secret and org should succ
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-Created service: 12378kdl2. Secret: 789
-
-`
-
-exports['flex create with active profile without a secret should succeed 1'] = `
 Created service: 12378kdl2. Secret: 789
 
 `

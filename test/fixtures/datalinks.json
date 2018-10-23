@@ -20,6 +20,29 @@
     }]
   },
   {
+    "type": "internal",
+    "name": "TestKinveyService",
+    "backingServers": [
+      {
+        "secret": "666666e6642c3418398f982666",
+        "environmentVariables": {
+          "MY_ENV": "dev"
+        },
+        "host": "k8s-d0f34091237849ac5253",
+        "_id": "456",
+        "name": "Default"
+      }
+    ],
+    "access": {
+      "writers": {
+        "apps": [
+          "555594ffb9e7473781ad4cebdfd55555"
+        ]
+      }
+    },
+    "id": "0de22ffb3f2243ec8138170844envVar"
+  },
+  {
     "id"  : "124",
     "type" : "custom",
     "name" : "TestDatalink",

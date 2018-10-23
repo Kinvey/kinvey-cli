@@ -8,12 +8,13 @@ exports['flex list by specifying credentials as options when valid and valid opt
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-Count: 2
+Count: 3
 
-id         name                    
----------  ------------------------
-12378kdl2  TestKinveyDatalink      
-12389kd89  TestSecondKinveyDatalink
+id                                name                    
+--------------------------------  ------------------------
+12378kdl2                         TestKinveyDatalink      
+0de22ffb3f2243ec8138170844envVar  TestKinveyService       
+12389kd89                         TestSecondKinveyDatalink
 
 
 
@@ -25,12 +26,13 @@ exports['flex list by specifying a profile and valid options (app and id) should
 [debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
-Count: 2
+Count: 3
 
-id         name                    
----------  ------------------------
-12378kdl2  TestKinveyDatalink      
-12389kd89  TestSecondKinveyDatalink
+id                                name                    
+--------------------------------  ------------------------
+12378kdl2                         TestKinveyDatalink      
+0de22ffb3f2243ec8138170844envVar  TestKinveyService       
+12389kd89                         TestSecondKinveyDatalink
 
 
 
@@ -47,6 +49,10 @@ exports['flex list by specifying a profile and valid options (org and id) should
     {
       "id": "12378kdl2",
       "name": "TestKinveyDatalink"
+    },
+    {
+      "id": "0de22ffb3f2243ec8138170844envVar",
+      "name": "TestKinveyService"
     },
     {
       "id": "12389kd89",
@@ -89,12 +95,13 @@ exports['flex list by specifying a profile when valid project is set without opt
 [debug] Using profile 'profileToGetServices'
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
-Count: 2
+Count: 3
 
-id         name                    
----------  ------------------------
-12378kdl2  TestKinveyDatalink      
-12389kd89  TestSecondKinveyDatalink
+id                                name                    
+--------------------------------  ------------------------
+12378kdl2                         TestKinveyDatalink      
+0de22ffb3f2243ec8138170844envVar  TestKinveyService       
+12389kd89                         TestSecondKinveyDatalink
 
 
 
@@ -105,12 +112,13 @@ exports['flex list by specifying a profile when invalid project is set with vali
 [debug] Using profile 'profileToGetServices'
 [debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
 [debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
-Count: 2
+Count: 3
 
-id         name                    
----------  ------------------------
-12378kdl2  TestKinveyDatalink      
-12389kd89  TestSecondKinveyDatalink
+id                                name                    
+--------------------------------  ------------------------
+12378kdl2                         TestKinveyDatalink      
+0de22ffb3f2243ec8138170844envVar  TestKinveyService       
+12389kd89                         TestSecondKinveyDatalink
 
 
 

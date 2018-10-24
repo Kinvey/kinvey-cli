@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { ActiveItemType, AuthOptionsNames, Namespace } = require('./../../../../lib/Constants');
+const { ActiveItemType, AppOptionsName, AuthOptionsNames, Namespace } = require('./../../../../lib/Constants');
 const { setup, testers } = require('../../../TestsHelper');
 
 const fixtureApp = require('./../../../fixtures/app.json');
@@ -27,8 +27,12 @@ const tokenOne = fixtureUser.tokenOne;
 const baseCmd = `${Namespace.APP} show`;
 const activeProfile = 'activeProfile';
 
-function testAppShow(options, flags, identifier, validUser, done) {
-  testers.execCmdWithIdentifier(baseCmd, options, flags, identifier, validUser, done);
+function testAppShow(options, flags, appIdentifier, validUser, done) {
+  options = options || {};
+  if (appIdentifier) {
+    options[AppOptionsName.APP] = appIdentifier;
+  }
+  testers.execCmdWithIdentifier(baseCmd, options, flags, null, validUser, done);
 }
 
 describe(baseCmd, () => {

@@ -39,10 +39,9 @@ const replacementObject = {
 
 function testFlexStatus(profileName, options, useServiceId, serviceId, validUser, replacementObject, done) {
   const allOptions = buildOptions(profileName, options);
-  const posArgs = [];
   if (useServiceId) {
     const id = serviceId || defaultServiceId;
-    posArgs.push(id);
+    allOptions[FlexOptionsNames.SERVICE_ID] = id;
   }
 
   const apiOptions = {};
@@ -51,7 +50,7 @@ function testFlexStatus(profileName, options, useServiceId, serviceId, validUser
     apiOptions.existentUser = { email: validUser.email };
   }
 
-  const cmd = buildCmd(baseCmd, posArgs, allOptions, [CommonOptionsNames.VERBOSE]);
+  const cmd = buildCmd(baseCmd, null, allOptions, [CommonOptionsNames.VERBOSE]);
   execCmdWithAssertion(cmd, null, apiOptions, true, true, false, replacementObject, done);
 }
 

@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { ActiveItemType, AuthOptionsNames } = require('./../../../../lib/Constants');
+const { ActiveItemType, AuthOptionsNames, OrgOptionsName } = require('./../../../../lib/Constants');
 const { buildCmd, execCmdWithAssertion, setup, testers } = require('../../../TestsHelper');
 
 const fixtureOrg = require('./../../../fixtures/org.json');
@@ -28,7 +28,11 @@ const baseCmd = 'org show';
 const activeProfile = 'activeProfile';
 
 function testOrgShow(options, flags, orgIdentifier, validUser, done) {
-  testers.execCmdWithIdentifier(baseCmd, options, flags, orgIdentifier, validUser, done);
+  options = options || {};
+  if (orgIdentifier) {
+    options[OrgOptionsName.ORG] = orgIdentifier;
+  }
+  testers.execCmdWithIdentifier(baseCmd, options, flags, null, validUser, done);
 }
 
 describe(baseCmd, () => {
@@ -80,9 +84,10 @@ describe(baseCmd, () => {
     it('with credentials as options and existent name should succeed', (done) => {
       const options = {
         [AuthOptionsNames.EMAIL]: existentUserOne.email,
-        [AuthOptionsNames.PASSWORD]: existentUserOne.password
+        [AuthOptionsNames.PASSWORD]: existentUserOne.password,
+        [OrgOptionsName.ORG]: `"${fixtureOrg.name}"`
       };
-      const cmd = buildCmd(baseCmd, [`"${fixtureOrg.name}"`], options, defaultFlags);
+      const cmd = buildCmd(baseCmd, null, options, defaultFlags);
       execCmdWithAssertion(cmd, null, { token: tokenOne, email: existentUserOne.email }, true, true, false, null, done);
     });
   });

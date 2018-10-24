@@ -16,7 +16,6 @@
 const fs = require('fs');
 
 const async = require('async');
-const moment = require('moment');
 const path = require('path');
 
 const ApiService = require('./../../ApiService');
@@ -29,6 +28,10 @@ module.exports = () => {
   let serviceId;
 
   afterEach('remove service', (done) => {
+    if (!serviceId) {
+      return setImmediate(done);
+    }
+
     ApiService.services.remove(serviceId, (err) => {
       serviceId = null;
       done(err);

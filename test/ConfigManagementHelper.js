@@ -30,7 +30,7 @@ let ConfigManagementHelper = {};
 function passConfigFileToCli(cmd, configContent, filePath, done) {
   async.series([
     (next) => {
-      writeJSON(filePath, configContent, next);
+      writeJSON({ file: filePath, data: configContent }, next);
     },
     (next) => {
       TestsHelper.execCmdWoMocks(cmd, null, (err, data) => {
@@ -733,7 +733,7 @@ service.createPackageJsonForFlexProject = function createPackageJsonForFlexProje
   }
 
   const projectPath = path.join(process.cwd(), 'test/integration-no-mock/flex-project');
-  writeJSON(path.join(projectPath, 'package.json'), pkgJson, done);
+  writeJSON({ file: path.join(projectPath, 'package.json'), data: pkgJson }, done);
 };
 
 service.createFromConfig = function createServiceFromConfig(serviceName, serviceConfig, serviceDomain, appOrOrgIdentifier, pkgJson, done) {
@@ -768,9 +768,9 @@ service.modifyFromConfig = function modifyServiceFromConfig(serviceId, serviceCo
   });
 };
 
-service.exportConfig = function exportConfig(serviceId, done) {
+service.exportConfig = function exportConfig({ serviceId, relativePath = '' }, done) {
   const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
-  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  const filePath = path.join(TestsHelper.ConfigFilesDir, relativePath, fileName);
   const cmd = `service export ${filePath} ${serviceId} --output json`;
   TestsHelper.execCmdWoMocks(cmd, null, (err) => {
     if (err) {
@@ -893,9 +893,46 @@ service.assertRapidDataService = function (id, serviceConfig, serviceName, done)
   });
 };
 
+const org = {};
+org.exportOrg = function exportOrg(orgIdentifier, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  let cmd = `org export ${filePath} --output json`;
+  if (orgIdentifier) {
+    cmd = `${cmd} ${orgIdentifier}`;
+  }
+
+  TestsHelper.execCmdWoMocks(cmd, null, (err) => {
+    if (err) {
+      return done(err);
+    }
+
+    fs.readFile(filePath, null, (err, data) => {
+      if (err) {
+        return done(err);
+      }
+
+      done(null, JSON.parse(data));
+    });
+  });
+};
+
+org.assertSettings = function assertSettings(actual) {
+  expect(actual.schemaVersion).to.exist;
+  expect(actual.configType).to.equal('organization');
+
+  const exportedSettings = actual.settings;
+  expect(exportedSettings).to.be.an('object').and.not.empty;
+  expect(exportedSettings.security).to.be.an('object');
+  expect(exportedSettings.security.requireApprovals).to.be.a('boolean');
+  expect(exportedSettings.security.requireEmailVerification).to.be.a('boolean');
+  expect(exportedSettings.security.requireTwoFactorAuth).to.be.a('boolean');
+};
+
 ConfigManagementHelper = {
   app,
   env,
+  org,
   roles,
   service,
   common: {

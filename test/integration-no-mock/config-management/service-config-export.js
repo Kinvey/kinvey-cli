@@ -54,14 +54,19 @@ module.exports = () => {
     });
 
     after('remove service', (done) => {
+      if (!serviceId) {
+        return setImmediate(done);
+      }
+
       ApiService.services.remove(serviceId, (err) => {
         serviceId = null;
         done(err);
       });
     });
 
-    it('should succeed', (done) => {
-      ConfigManagementHelper.service.exportConfig(serviceId, (err, exported) => {
+    it('and filePath with non-existing directories should succeed', (done) => {
+      const relativePath = randomStrings.plainString(5);
+      ConfigManagementHelper.service.exportConfig({ serviceId, relativePath }, (err, exported) => {
         if (err) {
           return done(err);
         }
@@ -108,6 +113,10 @@ module.exports = () => {
     });
 
     after('remove service', (done) => {
+      if (!serviceId) {
+        return setImmediate(done);
+      }
+
       ApiService.services.remove(serviceId, (err) => {
         serviceId = null;
         done(err);
@@ -125,7 +134,7 @@ module.exports = () => {
     });
 
     it('should succeed', (done) => {
-      ConfigManagementHelper.service.exportConfig(serviceId, (err, exported) => {
+      ConfigManagementHelper.service.exportConfig({ serviceId }, (err, exported) => {
         if (err) {
           return done(err);
         }
@@ -206,7 +215,7 @@ module.exports = () => {
     });
 
     it('should succeed', (done) => {
-      ConfigManagementHelper.service.exportConfig(serviceId, (err, exported) => {
+      ConfigManagementHelper.service.exportConfig({ serviceId }, (err, exported) => {
         if (err) {
           return done(err);
         }

@@ -24,6 +24,7 @@ const appConfigPushTests = require('./app-config-push');
 const envConfigCreateTests = require('./env-config-create');
 const envConfigPushTests = require('./env-config-push');
 const envConfigExportTests = require('./env-config-export');
+const orgConfigExportTests = require('./org-config-export');
 const serviceConfigCreateTests = require('./service-config-create');
 const serviceConfigPushTests = require('./service-config-push');
 const serviceConfigExportTests = require('./service-config-export');
@@ -94,4 +95,6 @@ describe('Config management', () => {
   describe('Service config push', serviceConfigPushTests);
 
   describe('Service config export', serviceConfigExportTests);
+
+  describe('Org config export', orgConfigExportTests);
 });

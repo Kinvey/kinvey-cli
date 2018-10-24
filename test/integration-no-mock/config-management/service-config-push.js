@@ -28,6 +28,10 @@ module.exports = () => {
   let serviceId;
 
   afterEach('remove service', (done) => {
+    if (!serviceId) {
+      return setImmediate(done);
+    }
+
     ApiService.services.remove(serviceId, (err) => {
       serviceId = null;
       done(err);

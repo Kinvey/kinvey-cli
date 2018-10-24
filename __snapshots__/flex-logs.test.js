@@ -67,12 +67,9 @@ containerId   timestamp                 threshold  message
 `
 
 exports['flex logs without query by specifying a profile when project is not set without serviceId as an option should fail 1'] = `
-kinvey flex logs [serviceId]
+kinvey flex logs
 
 Retrieve and display Internal Flex Service logs
-
-Positionals:
-  serviceId  Service ID                                                 [string]
 
 Options:
   --version                 Show version number                        [boolean]
@@ -87,6 +84,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --service                 Service ID                                  [string]
   --from                    Fetch log entries starting from provided timestamp
                                                                         [string]
   --to                      Fetch log entries up to provided timestamp  [string]
@@ -94,7 +92,7 @@ Options:
   --number, -n              Number of entries to fetch, i.e. page size (non-zero
                             integer, default=100, max=2000)             [number]
 
-This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use positional arguments: serviceId.
+This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: service.
 
 `
 
@@ -165,12 +163,9 @@ exports['flex logs without query by not specifying profile nor credentials when 
 `
 
 exports['flex logs without query by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
-kinvey flex logs [serviceId]
+kinvey flex logs
 
 Retrieve and display Internal Flex Service logs
-
-Positionals:
-  serviceId  Service ID                                                 [string]
 
 Options:
   --version                 Show version number                        [boolean]
@@ -185,6 +180,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --service                 Service ID                                  [string]
   --from                    Fetch log entries starting from provided timestamp
                                                                         [string]
   --to                      Fetch log entries up to provided timestamp  [string]

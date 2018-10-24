@@ -16,7 +16,7 @@
 const async = require('async');
 const deepCopy = require('lodash.clonedeep');
 
-const { ActiveItemType, AppOptionsName, AuthOptionsNames, CommonOptionsNames, DomainTypes, Namespace } = require('./../../../../lib/Constants');
+const { ActiveItemType, AppOptionsName, AuthOptionsNames, CommonOptionsNames, DomainTypes, FlexOptionsNames, Namespace } = require('./../../../../lib/Constants');
 const { assertions, buildCmd, execCmdWithAssertion, setup, testers } = require('../../../TestsHelper');
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureUser = require('./../../../fixtures/user.json');
@@ -25,7 +25,11 @@ const fixtureService = require('./../../../fixtures/internal-flex-service.json')
 const baseCmd = 'flex delete';
 
 function testServiceDelete(options, flags, serviceId, expectedProjectConfig, done) {
-  testers.execCmdWithIdentifier(baseCmd, options, flags, serviceId, null, (err) => {
+  options = options || {};
+  if (serviceId) {
+    options[FlexOptionsNames.SERVICE_ID] = serviceId;
+  }
+  testers.execCmdWithIdentifier(baseCmd, options, flags, null, null, (err) => {
     expect(err).to.not.exist;
     assertions.assertProjectSetup(expectedProjectConfig, null, done);
   });

@@ -167,12 +167,9 @@ Deleted environment: kid_Sy4yRNV_M
 exports['appenv delete with profile when active app is not set using existent env id and no app should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-kinvey appenv delete [env]
+kinvey appenv delete
 
 Delete a specified environment or the active one
-
-Positionals:
-  env  Env ID/name                                                      [string]
 
 Options:
   --version                 Show version number                        [boolean]
@@ -187,6 +184,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --env                     Env ID/name                                 [string]
   --app                     App ID/name                                 [string]
   --no-prompt               Do not prompt             [boolean] [default: false]
 
@@ -197,12 +195,9 @@ Application is required. Please set active app or use the --app option.
 exports['appenv delete with profile when active app is not set without env and without app should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-kinvey appenv delete [env]
+kinvey appenv delete
 
 Delete a specified environment or the active one
-
-Positionals:
-  env  Env ID/name                                                      [string]
 
 Options:
   --version                 Show version number                        [boolean]
@@ -217,6 +212,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --env                     Env ID/name                                 [string]
   --app                     App ID/name                                 [string]
   --no-prompt               Do not prompt             [boolean] [default: false]
 

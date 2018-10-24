@@ -47,24 +47,6 @@ exports['flex status by specifying a profile and non-existent serviceId should f
 
 `
 
-exports['flex status by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'profileToGetServiceStatus'
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-key            value                                
--------------  -------------------------------------
-status         ONLINE                               
-version        1.4.2                                
-name           TestKinveyDatalink                   
-id             12378kdl2                            
-requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                  
-deployerName   Davy Jones                           
-
-
-`
-
 exports['flex status by specifying a profile when invalid project is set with existent serviceId as an option should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServiceStatus'
@@ -101,12 +83,9 @@ deployerName   Davy Jones
 `
 
 exports['flex status by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
-kinvey flex status [serviceId]
+kinvey flex status
 
 Return the health of a Flex Service cluster
-
-Positionals:
-  serviceId  Service ID                                                 [string]
 
 Options:
   --version                 Show version number                        [boolean]
@@ -121,6 +100,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --service                 Service ID                                  [string]
 
 You must be authenticated.
 
@@ -220,5 +200,23 @@ exports['flex status by specifying credentials as options when invalid and exist
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
 [error] InvalidCredentials: Credentials are invalid. Please authenticate.
+
+`
+
+exports['flex status by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToGetServiceStatus'
+[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
+[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+name           TestKinveyDatalink                   
+id             12378kdl2                            
+requestedAt    replaced_value
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
+
 
 `

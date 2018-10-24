@@ -17,11 +17,11 @@ Options:
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --service                 Service ID                                  [string]
-  --replaceVars             Environment variables (replaces all already
+  --replace-vars            Environment variables (replaces all already
                             existing). Specify either as comma-separated list of
                             key-value pairs (key1=value1,key2=value2) or in JSON
                             format.
-  --setVars                 Environment variables to set. Specify either as
+  --set-vars                Environment variables to set. Specify either as
                             comma-separated list of key-value pairs
                             (key1=value1,key2=value2) or in JSON format.
 
@@ -53,11 +53,11 @@ Options:
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --service                 Service ID                                  [string]
-  --replaceVars             Environment variables (replaces all already
+  --replace-vars            Environment variables (replaces all already
                             existing). Specify either as comma-separated list of
                             key-value pairs (key1=value1,key2=value2) or in JSON
                             format.
-  --setVars                 Environment variables to set. Specify either as
+  --set-vars                Environment variables to set. Specify either as
                             comma-separated list of key-value pairs
                             (key1=value1,key2=value2) or in JSON format.
 

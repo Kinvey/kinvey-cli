@@ -36,7 +36,7 @@ Options:
   --app                     App ID/name                                 [string]
   --org                     Org ID/name                                 [string]
   --secret                  Shared secret                               [string]
-  --vars, --setVars         Environment variables. Specify either as
+  --vars, --set-vars        Environment variables. Specify either as
                             comma-separated list of key-value pairs
                             (key1=value1,key2=value2) or in JSON format.
 
@@ -78,7 +78,7 @@ Options:
   --app                     App ID/name                                 [string]
   --org                     Org ID/name                                 [string]
   --secret                  Shared secret                               [string]
-  --vars, --setVars         Environment variables. Specify either as
+  --vars, --set-vars        Environment variables. Specify either as
                             comma-separated list of key-value pairs
                             (key1=value1,key2=value2) or in JSON format.
 
@@ -120,7 +120,7 @@ Options:
   --app                     App ID/name                                 [string]
   --org                     Org ID/name                                 [string]
   --secret                  Shared secret                               [string]
-  --vars, --setVars         Environment variables. Specify either as
+  --vars, --set-vars        Environment variables. Specify either as
                             comma-separated list of key-value pairs
                             (key1=value1,key2=value2) or in JSON format.
 

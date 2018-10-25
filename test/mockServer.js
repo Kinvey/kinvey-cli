@@ -74,6 +74,7 @@ function build(
     updatedService = null,
     envVars = null,
     envs = fixtureEnvs,
+    runtime = null,
     colls = fixtureCollections,
     jobType = 'recycleDataLink',
     serviceLogsQuery = {},
@@ -256,8 +257,9 @@ function build(
     const body = req.body;
     const envVarsDiffer = (envVars && !isEqual(body.backingServers[0].environmentVariables, envVars)) ||
       (!envVars && body.backingServers[0].environmentVariables);
+    const runtimesDiffer = runtime != body.backingServers[0].runtime;
     if (!body.name || body.name !== service.name || body.type !== service.type || !Array.isArray(body.backingServers)
-      || !body.backingServers[0] || !body.backingServers[0].secret || envVarsDiffer) {
+      || !body.backingServers[0] || !body.backingServers[0].secret || envVarsDiffer || runtimesDiffer) {
       return res.sendStatus(400);
     }
 

@@ -39,6 +39,8 @@ Options:
   --vars, --set-vars        Environment variables. Specify either as
                             comma-separated list of key-value pairs
                             (key1=value1,key2=value2) or in JSON format.
+  --runtime                 Runtime environment
+                                  [string] [choices: "node6", "node8", "node10"]
 
 Environment variables must be specified as comma-separated list where key=value or in valid JSON format.
 
@@ -81,6 +83,8 @@ Options:
   --vars, --set-vars        Environment variables. Specify either as
                             comma-separated list of key-value pairs
                             (key1=value1,key2=value2) or in JSON format.
+  --runtime                 Runtime environment
+                                  [string] [choices: "node6", "node8", "node10"]
 
 Not enough non-option arguments: got 0, need at least 1
 
@@ -123,6 +127,8 @@ Options:
   --vars, --set-vars        Environment variables. Specify either as
                             comma-separated list of key-value pairs
                             (key1=value1,key2=value2) or in JSON format.
+  --runtime                 Runtime environment
+                                  [string] [choices: "node6", "node8", "node10"]
 
 Arguments app and org are mutually exclusive
 
@@ -142,5 +148,54 @@ exports['flex create with one-time session with name, secret and org should succ
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
 Created service: 12378kdl2. Secret: 789
+
+`
+
+exports['flex create with active profile with a name, secret, basic env vars, runtime and app should succeed and output default format 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'activeProfile'
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
+[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
+[debug] Response: POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 201
+Created service: 12378kdl2. Secret: 789
+
+`
+
+exports['flex create with active profile with a name, app and invalid runtime should fail 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'activeProfile'
+kinvey flex create <name>
+
+Create a Flex service
+
+Positionals:
+  name  Flex service name                                             [required]
+
+Options:
+  --version                 Show version number                        [boolean]
+  --email                   E-mail address of your Kinvey account       [string]
+  --password                Password of your Kinvey account             [string]
+  --2fa, --2Fa              Two-factor authentication token             [string]
+  --instanceId              Instance ID                                 [string]
+  --profile                 Profile to use                              [string]
+  --output                  Output format             [string] [choices: "json"]
+  --silent                  Do not output anything                     [boolean]
+  --suppress-version-check  Do not check for package updates           [boolean]
+  --verbose                 Output debug messages                      [boolean]
+  --no-color                Disable colors                             [boolean]
+  -h, --help                Show help                                  [boolean]
+  --app                     App ID/name                                 [string]
+  --org                     Org ID/name                                 [string]
+  --secret                  Shared secret                               [string]
+  --vars, --set-vars        Environment variables. Specify either as
+                            comma-separated list of key-value pairs
+                            (key1=value1,key2=value2) or in JSON format.
+  --runtime                 Runtime environment
+                                  [string] [choices: "node6", "node8", "node10"]
+
+Invalid values:
+  Argument: runtime, Given: "node8.11.1", Choices: "node6", "node8", "node10"
 
 `

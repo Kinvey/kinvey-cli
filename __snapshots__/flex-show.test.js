@@ -7,6 +7,7 @@ key          value
 -----------  ------------------
 serviceName  TestKinveyDatalink
 secret       789               
+runtime      node6             
 
 
 `
@@ -20,6 +21,7 @@ key                          value
 ---------------------------  --------------------------
 serviceName                  TestKinveyService         
 secret                       666666e6642c3418398f982666
+runtime                      node6                     
 environmentVariables.MY_ENV  dev                       
 
 

@@ -303,6 +303,10 @@ const services = {
     const url = buildUrl(`organizations/${id}/data-links`);
     makeRequest({ url }, done);
   },
+  getAllByApp: (id, done) => {
+    const url = buildUrl(`apps/${id}/data-links`);
+    makeRequest({ url }, done);
+  },
   remove: (id, done) => {
     if (!id) {
       return setImmediate(() => { done(new Error('Cannot remove a service without an ID.')); });

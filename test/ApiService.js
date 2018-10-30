@@ -300,7 +300,7 @@ const services = {
     makeRequest({ url, method: 'DELETE' }, done);
   },
   status: (id, svcEnvId, done) => {
-    const url = buildUrl(`services${getIdPartFromId(id)}${getIdPartFromId(svcEnvId)}/status`);
+    const url = buildUrl(`services${getIdPartFromId(id)}/environments${getIdPartFromId(svcEnvId)}/status`);
     makeRequest({ url }, done);
   }
 };

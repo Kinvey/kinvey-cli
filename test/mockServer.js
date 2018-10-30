@@ -439,7 +439,10 @@ function build(
   app.get(`/${versionPart}/organizations/:id`, (req, res) => {
     const id = req.params.id;
     if (id) {
-      return res.send(orgs.find(x => x.id === id));
+      const wantedOrg = orgs.find(x => x.id === id);
+      if (wantedOrg) {
+        return res.send(wantedOrg);
+      }
     }
 
     res.status(404).send({

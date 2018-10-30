@@ -75,7 +75,7 @@ env.buildInternalCollection = function buildInternalCollection(name, permissions
   };
 };
 
-env.buildExternalCollection = function buildExternalCollection(serviceName, serviceObject, collName, permissions) {
+env.buildExternalCollection = function buildExternalCollection(serviceName, svcEnvIdentifier, serviceObject, collName, permissions) {
   collName = collName || TestsHelper.randomStrings.collName();
   permissions = permissions || 'shared';
 
@@ -84,6 +84,7 @@ env.buildExternalCollection = function buildExternalCollection(serviceName, serv
     type: 'external',
     permissions,
     service: serviceName,
+    serviceEnvironment: svcEnvIdentifier,
     serviceObject
   };
 };
@@ -796,7 +797,7 @@ service.assertFlexServiceStatus = function assertFlexServiceStatus(id, svcEnvId,
       expect(actual.version, 'Version').to.exist;
       expect(actual.version).to.equal(expectedVersion);
       if (expectedStatus) {
-        expect(actual.status).to.equal(expectedStatus);
+        expect(actual.status.toLowerCase()).to.equal(expectedStatus.toLowerCase());
       }
     } catch (ex) {
       return done(ex);

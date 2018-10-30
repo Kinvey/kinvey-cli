@@ -107,7 +107,7 @@ Options:
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
-  --svcEnv                  Service environment name/ID                 [string]
+  --env                     Service environment name/ID                 [string]
 
 You must be authenticated.
 

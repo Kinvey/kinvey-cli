@@ -22,7 +22,7 @@ Options:
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
-  --svcEnv                  Service environment name/ID                 [string]
+  --env                     Service environment name/ID                 [string]
 
 This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: serviceId.
 
@@ -47,7 +47,7 @@ Options:
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
-  --svcEnv                  Service environment name/ID                 [string]
+  --env                     Service environment name/ID                 [string]
 
 This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: serviceId.
 

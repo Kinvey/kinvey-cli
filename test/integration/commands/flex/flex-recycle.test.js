@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { CommonOptionsNames, FlexOptionsNames, OutputFormat, ServiceOptionsNames } = require('./../../../../lib/Constants');
+const { CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
 const { isEmpty } = require('./../../../../lib/Utils');
 const { buildCmd, buildOptions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
@@ -89,7 +89,7 @@ describe(baseCmd, () => {
     });
 
     it('and existent serviceId plus non-existent svcEnv should fail', (done) => {
-      testFlexRecycle(profileToUse, { [ServiceOptionsNames.SVC_ENV]: 'nonExistentEnv' }, defaultServiceId, validUserOne, done);
+      testFlexRecycle(profileToUse, { [FlexOptionsNames.SVC_ENV]: 'nonExistentEnv' }, defaultServiceId, validUserOne, done);
     });
 
     it('and non-existent serviceId should fail', (done) => {
@@ -106,7 +106,7 @@ describe(baseCmd, () => {
       });
 
       it('without serviceId as an option but with non-existent svcEnv should fail', (done) => {
-        testFlexRecycle(profileToUse, { [ServiceOptionsNames.SVC_ENV]: 'nonExistentEnv' }, null, validUserOne, done);
+        testFlexRecycle(profileToUse, { [FlexOptionsNames.SVC_ENV]: 'nonExistentEnv' }, null, validUserOne, done);
       });
 
       after((done) => {

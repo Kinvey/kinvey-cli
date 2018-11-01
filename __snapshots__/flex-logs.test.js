@@ -1,9 +1,11 @@
-exports['flex logs without query by specifying a profile and existent serviceId without query should succeed 1'] = `
+exports['flex logs without query by specifying a profile and existent serviceId without svc env (when one) without query should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetLogs'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/logs
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/logs 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -15,6 +17,16 @@ containerId   timestamp                 threshold  message
 3864f1602739  2017-08-30T08:06:49.595Z  info       {"name":"test","num":10}                               
 
 
+
+`
+
+exports['flex logs without query by specifying a profile and existent serviceId without svc env (when several) without query should fail 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToGetLogs'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[error] TooManySvcEnvs: You should choose an environment: dev, prod, stg0, stg1, stg2, stg3, stg4
 
 `
 
@@ -22,8 +34,8 @@ exports['flex logs without query by specifying a profile and non-existent servic
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetLogs'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/logs
-[debug] Response: GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/logs 404
+[debug] Request:  GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/environments
+[debug] Response: GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/environments 404
 [error] ServiceNotFound: The specified service could not be found.
 
 `
@@ -31,8 +43,8 @@ exports['flex logs without query by specifying a profile and non-existent servic
 exports['flex logs without query by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetLogs'
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/logs
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/logs 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -47,11 +59,13 @@ containerId   timestamp                 threshold  message
 
 `
 
-exports['flex logs without query by specifying a profile when invalid project is set with existent serviceId as an option should succeed 1'] = `
+exports['flex logs without query by specifying a profile when invalid project is set with existent serviceId without svc env (when one) as an option should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetLogs'
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/logs
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/logs 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -66,7 +80,7 @@ containerId   timestamp                 threshold  message
 
 `
 
-exports['flex logs without query by specifying a profile when project is not set without serviceId as an option should fail 1'] = `
+exports['flex logs without query by specifying a profile when project is not set without serviceId and svc env as options should fail 1'] = `
 kinvey flex logs
 
 Retrieve and display Internal Flex Service logs
@@ -85,6 +99,7 @@ Options:
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
+  --env                     Service environment name/ID                 [string]
   --from                    Fetch log entries starting from provided timestamp
                                                                         [string]
   --to                      Fetch log entries up to provided timestamp  [string]
@@ -100,8 +115,10 @@ exports['flex logs without query by not specifying profile nor credentials when 
 [debug] Checking for package updates
 [debug] Using profile 'flexLogsProfile'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/logs
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/logs 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -116,7 +133,7 @@ containerId   timestamp                 threshold  message
 
 `
 
-exports['flex logs without query by not specifying profile nor credentials when one profile and existent serviceId should succeed and output JSON 1'] = `
+exports['flex logs without query by not specifying profile nor credentials when one profile and existent serviceId without svc env (when one) should succeed and output JSON 1'] = `
 {
   "result": [
     {
@@ -181,6 +198,7 @@ Options:
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --serviceId               Service ID                                  [string]
+  --env                     Service environment name/ID                 [string]
   --from                    Fetch log entries starting from provided timestamp
                                                                         [string]
   --to                      Fetch log entries up to provided timestamp  [string]
@@ -192,13 +210,15 @@ You must be authenticated.
 
 `
 
-exports['flex logs without query by specifying credentials as options when valid and existent serviceId should succeed 1'] = `
+exports['flex logs without query by specifying credentials as options when valid and existent serviceId without svc env (when one) should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/logs
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/logs 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -216,13 +236,53 @@ containerId   timestamp                 threshold  message
 
 `
 
-exports['flex logs without query by specifying credentials as options when valid and non-existent serviceId should fail 1'] = `
+exports['flex logs without query by specifying credentials as options when valid and existent serviceId with valid svc env should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/logs
-[debug] Response: GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/logs 404
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/124/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/124/logs 200
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+Count: 5
+
+containerId   timestamp                 threshold  message                                                
+------------  ------------------------  ---------  -------------------------------------------------------
+3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...
+3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/rc.local...                           
+3864f1602739  2017-08-30T08:06:49.595Z  null       *** Runit started as PID 11                            
+3864f1602739  2017-08-30T08:06:49.595Z  warn       *** Booting runit daemon...                            
+3864f1602739  2017-08-30T08:06:49.595Z  info       {"name":"test","num":10}                               
+
+
+
+`
+
+exports['flex logs without query by specifying credentials as options when valid and existent serviceId with invalid svc env should fail 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+[error] NotFound: Could not find service environment with identifier 'noSuchEnv'.
+
+`
+
+exports['flex logs without query by specifying credentials as options when valid and non-existent serviceId without svc env (when one) should fail 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/environments
+[debug] Response: GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/environments 404
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -230,7 +290,7 @@ exports['flex logs without query by specifying credentials as options when valid
 
 `
 
-exports['flex logs without query by specifying credentials as options when invalid and existent serviceId should fail 1'] = `
+exports['flex logs without query by specifying credentials as options when invalid and existent serviceId without svc env (when one) should fail 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
@@ -243,8 +303,10 @@ exports['flex logs with query with valid timestamps and valid paging should succ
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49&limit=5&page=3
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49&limit=5&page=3 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49&limit=5&page=3
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49&limit=5&page=3 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -263,8 +325,10 @@ exports['flex logs with query with valid timestamps and without paging should su
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49.000Z
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49.000Z 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49.000Z
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49.000Z 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -291,8 +355,10 @@ exports['flex logs with query with valid start timestamp and nothing else should
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/logs?from=2017-08-30T08:06:49.594Z
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/logs?from=2017-08-30T08:06:49.594Z 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?from=2017-08-30T08:06:49.594Z
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?from=2017-08-30T08:06:49.594Z 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -327,8 +393,10 @@ exports['flex logs with query without timestamps and valid paging should succeed
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/logs?limit=5&page=3
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/logs?limit=5&page=3 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?limit=5&page=3
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?limit=5&page=3 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -347,8 +415,10 @@ exports['flex logs with query without timestamps and page but with valid size sh
 [debug] Checking for package updates
 [debug] Using profile 'profileToSetAsActive'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/logs?limit=35
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/logs?limit=35 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?limit=35
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?limit=35 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                

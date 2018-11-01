@@ -878,10 +878,17 @@ app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, ex
       );
     },
     (next) => {
-      ApiService.services.getAllByApp(actualApp.id, (err, actualServices) => {
+      ApiService.services.getAllByApp(actualApp.id, (err, data) => {
         if (err) {
           return next(err);
         }
+
+        const actualServices = [];
+        data.forEach((x) => {
+          if (x.access.writers.apps && x.access.writers.apps.find(appId => appId === actualApp.id)) {
+            actualServices.push(x);
+          }
+        });
 
         const expectedServices = config.services;
         if (!expectedServices) {

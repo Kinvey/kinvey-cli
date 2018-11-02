@@ -21,6 +21,8 @@ const { buildCmd, execCmdWithAssertion, setup } = require('../../../TestsHelper'
 
 const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureInternalDataLink = require('./../../../fixtures/kinvey-dlc.json');
+const fixtureEnvsSeveral = require('./../../../fixtures/svc-envs-several.json');
+const fixtureEnvsOne = require('./../../../fixtures/svc-envs-one.json');
 
 const existentUserOne = fixtureUser.existentOne;
 const tokenOne = fixtureUser.tokenOne;
@@ -28,7 +30,7 @@ const defaultServiceId = fixtureInternalDataLink.id;
 
 const baseCmd = 'flex logs';
 
-function testFlexLogs(profileName, optionsForCredentials, serviceId, query, validUser, done) {
+function testFlexLogs(profileName, optionsForCredentials, serviceId, svcEnvOptions, query, validUser, done) {
   let cmd = `${baseCmd} --verbose`;
   if (profileName) {
     cmd = `${cmd} --${AuthOptionsNames.PROFILE} ${profileName}`;
@@ -43,6 +45,16 @@ function testFlexLogs(profileName, optionsForCredentials, serviceId, query, vali
   }
 
   const apiOptions = {};
+
+  if (!isEmpty(svcEnvOptions)) {
+    if (svcEnvOptions.name) {
+      cmd = `${cmd} --${FlexOptionsNames.SVC_ENV} ${svcEnvOptions.name}`;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(svcEnvOptions, 'data')) {
+      apiOptions.svcEnvs = svcEnvOptions.data;
+    }
+  }
 
   let queryPart = '';
   if (!isEmpty(query)) {
@@ -101,6 +113,8 @@ function buildQueryObject(start, end, pageNum, pageSize) {
   return query;
 }
 
+const noSvcEnvsOpts = null;
+
 describe(`${baseCmd}`, () => {
   const nonExistentServiceId = '12serviceIdThatDoesntExist';
 
@@ -141,12 +155,16 @@ describe(`${baseCmd}`, () => {
         setup.deleteProfileFromSetup(profileToUse, null, done);
       });
 
-      it('and existent serviceId without query should succeed', (done) => {
-        testFlexLogs(profileToUse, null, defaultServiceId, noQuery, validUserOne, done);
+      it('and existent serviceId without svc env (when one) without query should succeed', (done) => {
+        testFlexLogs(profileToUse, null, defaultServiceId, { data: fixtureEnvsOne }, noQuery, validUserOne, done);
+      });
+
+      it('and existent serviceId without svc env (when several) without query should fail', (done) => {
+        testFlexLogs(profileToUse, null, defaultServiceId, { data: fixtureEnvsSeveral }, noQuery, validUserOne, done);
       });
 
       it('and non-existent serviceId should fail', (done) => {
-        testFlexLogs(profileToUse, null, nonExistentServiceId, noQuery, validUserOne, done);
+        testFlexLogs(profileToUse, null, nonExistentServiceId, noSvcEnvsOpts, noQuery, validUserOne, done);
       });
 
       describe('when valid project is set', () => {
@@ -155,7 +173,7 @@ describe(`${baseCmd}`, () => {
         });
 
         it('without serviceId as an option should succeed', (done) => {
-          testFlexLogs(profileToUse, null, null, noQuery, validUserOne, done);
+          testFlexLogs(profileToUse, null, null, noSvcEnvsOpts, noQuery, validUserOne, done);
         });
 
         after((done) => {
@@ -168,9 +186,9 @@ describe(`${baseCmd}`, () => {
           setup.createProjectSetup(profileToUse, { serviceId: nonExistentServiceId }, done);
         });
 
-        it('with existent serviceId as an option should succeed', (done) => {
+        it('with existent serviceId without svc env (when one) as an option should succeed', (done) => {
           // project contains non-existent serviceId; an existent one is provided as an option and it must be used
-          testFlexLogs(profileToUse, null, defaultServiceId, noQuery, validUserOne, done);
+          testFlexLogs(profileToUse, null, defaultServiceId, { data: fixtureEnvsOne }, noQuery, validUserOne, done);
         });
 
         after((done) => {
@@ -183,7 +201,7 @@ describe(`${baseCmd}`, () => {
           setup.createProjectSetup('profileNotInUse', { serviceId: defaultServiceId }, done);
         });
 
-        it('without serviceId as an option should fail', (done) => {
+        it('without serviceId and svc env as options should fail', (done) => {
           const cmd = `${baseCmd} --${AuthOptionsNames.PROFILE} ${profileToUse}`;
           const apiOptions = { existentUser: existentUserOne, token: tokenOne };
           execCmdWithAssertion(cmd, null, apiOptions, true, false, true, null, (err) => {
@@ -200,10 +218,10 @@ describe(`${baseCmd}`, () => {
 
     describe('by not specifying profile nor credentials', () => {
       it('when one profile and existent serviceId should succeed and output default format', (done) => {
-        testFlexLogs(null, null, defaultServiceId, noQuery, null, done);
+        testFlexLogs(null, null, defaultServiceId, noSvcEnvsOpts, noQuery, null, done);
       });
 
-      it('when one profile and existent serviceId should succeed and output JSON', (done) => {
+      it('when one profile and existent serviceId without svc env (when one) should succeed and output JSON', (done) => {
         const options = {
           [FlexOptionsNames.SERVICE_ID]: defaultServiceId,
           [CommonOptionsNames.OUTPUT]: OutputFormat.JSON
@@ -236,17 +254,33 @@ describe(`${baseCmd}`, () => {
     });
 
     describe('by specifying credentials as options', () => {
-      it('when valid and existent serviceId should succeed', (done) => {
-        testFlexLogs(null, existentUserOne, defaultServiceId, noQuery, validUserOne, done);
+      it('when valid and existent serviceId without svc env (when one) should succeed', (done) => {
+        testFlexLogs(null, existentUserOne, defaultServiceId, noSvcEnvsOpts, noQuery, validUserOne, done);
       });
 
-      it('when valid and non-existent serviceId should fail', (done) => {
-        testFlexLogs(null, existentUserOne, nonExistentServiceId, noQuery, validUserOne, done);
+      it('when valid and existent serviceId with valid svc env should succeed', (done) => {
+        const svcEnvOpts = {
+          data: fixtureEnvsSeveral,
+          name: fixtureEnvsSeveral[fixtureEnvsSeveral.length - 1].name
+        };
+        testFlexLogs(null, existentUserOne, defaultServiceId, svcEnvOpts, noQuery, validUserOne, done);
       });
 
-      it('when invalid and existent serviceId should fail', (done) => {
+      it('when valid and existent serviceId with invalid svc env should fail', (done) => {
+        const svcEnvOpts = {
+          data: fixtureEnvsSeveral,
+          name: 'noSuchEnv'
+        };
+        testFlexLogs(null, existentUserOne, defaultServiceId, svcEnvOpts, noQuery, validUserOne, done);
+      });
+
+      it('when valid and non-existent serviceId without svc env (when one) should fail', (done) => {
+        testFlexLogs(null, existentUserOne, nonExistentServiceId, noSvcEnvsOpts, noQuery, validUserOne, done);
+      });
+
+      it('when invalid and existent serviceId without svc env (when one) should fail', (done) => {
         const nonExistentUser = fixtureUser.nonexistent;
-        testFlexLogs(null, nonExistentUser, defaultServiceId, noQuery, validUserOne, done);
+        testFlexLogs(null, nonExistentUser, defaultServiceId, noSvcEnvsOpts, noQuery, validUserOne, done);
       });
     });
   });
@@ -274,14 +308,14 @@ describe(`${baseCmd}`, () => {
       const pageSize = 5;
       const page = 3;
       const query = buildQueryObject(start, end, page, pageSize);
-      testFlexLogs(noProfile, noCredentials, defaultServiceId, query, validUserOne, done);
+      testFlexLogs(noProfile, noCredentials, defaultServiceId, noSvcEnvsOpts, query, validUserOne, done);
     });
 
     it('with valid timestamps and without paging should succeed', (done) => {
       const start = '2017-08-30T08:06:49.594Z';
       const end = '2017-09-02T08:06:49.000Z';
       const query = buildQueryObject(start, end);
-      testFlexLogs(noProfile, noCredentials, defaultServiceId, query, validUserOne, done);
+      testFlexLogs(noProfile, noCredentials, defaultServiceId, noSvcEnvsOpts, query, validUserOne, done);
     });
 
     it('with valid timestamps and invalid paging should fail', (done) => {
@@ -289,38 +323,38 @@ describe(`${baseCmd}`, () => {
       const end = '2017-09-02T08:06:49.000Z';
       const invalidPage = -1;
       const query = buildQueryObject(start, end, invalidPage);
-      testFlexLogs(noProfile, noCredentials, defaultServiceId, query, validUserOne, done);
+      testFlexLogs(noProfile, noCredentials, defaultServiceId, noSvcEnvsOpts, query, validUserOne, done);
     });
 
     it('with valid start timestamp and nothing else should succeed', (done) => {
       const start = '2017-08-30T08:06:49.594Z';
       const query = buildQueryObject(start);
-      testFlexLogs(noProfile, noCredentials, defaultServiceId, query, validUserOne, done);
+      testFlexLogs(noProfile, noCredentials, defaultServiceId, noSvcEnvsOpts, query, validUserOne, done);
     });
 
     it('with invalid start timestamp and nothing else should fail', (done) => {
       const start = '2017-30-08';
       const query = buildQueryObject(start);
-      testFlexLogs(noProfile, noCredentials, defaultServiceId, query, validUserOne, done);
+      testFlexLogs(noProfile, noCredentials, defaultServiceId, noSvcEnvsOpts, query, validUserOne, done);
     });
 
     it(`with invalid timestamps ('${FlexOptionsNames.FROM}' not before '${FlexOptionsNames.TO}') and nothing else should fail`, (done) => {
       const start = '2017-12-14T17:15:21.771Z';
       const query = buildQueryObject(start, start);
-      testFlexLogs(noProfile, noCredentials, defaultServiceId, query, validUserOne, done);
+      testFlexLogs(noProfile, noCredentials, defaultServiceId, noSvcEnvsOpts, query, validUserOne, done);
     });
 
     it('without timestamps and valid paging should succeed', (done) => {
       const pageSize = 5;
       const page = 3;
       const query = buildQueryObject(null, null, page, pageSize);
-      testFlexLogs(noProfile, noCredentials, defaultServiceId, query, validUserOne, done);
+      testFlexLogs(noProfile, noCredentials, defaultServiceId, noSvcEnvsOpts, query, validUserOne, done);
     });
 
     it('without timestamps and page but with valid size should succeed', (done) => {
       const pageSize = 35;
       const query = buildQueryObject(null, null, null, pageSize);
-      testFlexLogs(noProfile, noCredentials, defaultServiceId, query, validUserOne, done);
+      testFlexLogs(noProfile, noCredentials, defaultServiceId, noSvcEnvsOpts, query, validUserOne, done);
     });
   });
 });

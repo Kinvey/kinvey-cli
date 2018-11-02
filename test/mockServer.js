@@ -173,10 +173,17 @@ function build(
     res.send(status.status);
   });
 
-  app.get(`/${versionPart}/services/:id/logs`, (req, res) => {
+  app.get(`/${versionPart}/services/:id/environments/:envId/logs`, (req, res) => {
     const id = req.params.id;
-    if (id !== fixtureInternalDataLink.id) {
+    const service = fixtureServices.find(x => x.id === id);
+    if (!service) {
       return res.status(404).send(serviceNotFound);
+    }
+
+    const envId = req.params.envId;
+    const status = svcEnvs.find(x => x.id === envId);
+    if (!status) {
+      return res.status(404).send(svcEnvNotFound);
     }
 
     const query = req.query;

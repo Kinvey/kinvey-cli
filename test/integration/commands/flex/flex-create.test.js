@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { AppOptionsName, AuthOptionsNames, Namespace, OrgOptionsName } = require('./../../../../lib/Constants');
+const { AppOptionsName, AuthOptionsNames, FlexOptionsNames, Namespace, OrgOptionsName } = require('./../../../../lib/Constants');
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureOrg = require('./../../../fixtures/org.json');
 const fixtureUser = require('./../../../fixtures/user.json');
@@ -25,8 +25,10 @@ const { buildCmd, execCmdWithAssertion, setup, testers } = require('../../../Tes
 const baseCmd = `${Namespace.FLEX} create`;
 const serviceName = fixtureService.name;
 
-function testServiceCreate(options, flags, name, done) {
-  testers.execCmdWithIdentifier(baseCmd, options, flags, name, null, done);
+function testServiceCreate(options, flags, name, apiOptions, done) {
+  const posArgs = name ? [name] : [];
+  const cmd = buildCmd(baseCmd, posArgs, options, flags);
+  execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, done);
 }
 
 describe(baseCmd, () => {
@@ -57,29 +59,37 @@ describe(baseCmd, () => {
       setup.clearGlobalSetup(null, done);
     });
 
-    it('with a name, secret and app should succeed and output default format', (done) => {
-      testServiceCreate(optionsForSecretAndApp, defaultFlags, serviceName, done);
+    it('with a name, secret, basic env vars and app should succeed and output default format', (done) => {
+      const options = Object.assign({ [FlexOptionsNames.ENV_VARS]: 'KEY_1=value1,KEY_2=value2' }, optionsForSecretAndApp);
+      testServiceCreate(options, defaultFlags, serviceName, { envVars: { KEY_1: 'value1', KEY_2: 'value2' } }, done);
     });
 
-    it('with a name, secret and app should succeed and output JSON', (done) => {
-      testServiceCreate(jsonOptionsPlusSecretAndApp, null, serviceName, done);
+    it('with a name, app and invalid env vars should fail', (done) => {
+      const options = Object.assign({ [FlexOptionsNames.ENV_VARS]: 'KEY_1=value1,KEY_2=[3,5]' }, optionsForApp);
+      testServiceCreate(options, defaultFlags, serviceName, null, done);
+    });
+
+    it('with a name, secret, complex env vars and app should succeed and output JSON', (done) => {
+      const envVarsValue = '"{\\"KEY_1\\": [1, 2, \\"three\\"], \\"KEY_2\\": \\"some value\\"}"';
+      const options = Object.assign({ [FlexOptionsNames.ENV_VARS_SET]: envVarsValue }, jsonOptionsPlusSecretAndApp);
+      testServiceCreate(options, null, serviceName, { envVars: { KEY_1: JSON.stringify([1, 2, 'three']), KEY_2: 'some value' } }, done);
     });
 
     it('without a name should fail', (done) => {
-      testServiceCreate(optionsForSecretAndApp, defaultFlags, null, done);
+      testServiceCreate(optionsForSecretAndApp, defaultFlags, null, null, done);
     });
 
     it('without a secret should succeed', (done) => {
-      testServiceCreate(optionsForApp, null, serviceName, done);
+      testServiceCreate(optionsForApp, null, serviceName, null, done);
     });
 
     it('without an app and org should fail', (done) => {
-      testServiceCreate(optionsForSecret, null, serviceName, done);
+      testServiceCreate(optionsForSecret, null, serviceName, null, done);
     });
 
     it('with both app and org should fail', (done) => {
       const optionsAppOrg = Object.assign({}, optionsForSecretAndApp, optionsForOrg);
-      testServiceCreate(optionsAppOrg, null, serviceName, done);
+      testServiceCreate(optionsAppOrg, null, serviceName, null, done);
     });
   });
 

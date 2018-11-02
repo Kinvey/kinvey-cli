@@ -62,8 +62,10 @@ Commands:
                              FlexService Runtime
   kinvey flex job [id]       Get the job status of a deploy/recycle command
   kinvey flex status         Return the health of a Flex Service cluster
+  kinvey flex show           Show info for a service
   kinvey flex list           List Internal Flex Services for an app or org
   kinvey flex logs           Retrieve and display Internal Flex Service logs
+  kinvey flex update         Update environment variables
   kinvey flex recycle        Recycle the Service
   kinvey flex delete         Delete service
   kinvey flex clear          Clear project settings

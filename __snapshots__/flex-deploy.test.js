@@ -17,6 +17,13 @@ Options:
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --service                 Service ID                                  [string]
+  --replace-vars            Environment variables (replaces all already
+                            existing). Specify either as comma-separated list of
+                            key-value pairs (key1=value1,key2=value2) or in JSON
+                            format.
+  --set-vars                Environment variables to set. Specify either as
+                            comma-separated list of key-value pairs
+                            (key1=value1,key2=value2) or in JSON format.
 
 This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: service.
 
@@ -46,6 +53,13 @@ Options:
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
   --service                 Service ID                                  [string]
+  --replace-vars            Environment variables (replaces all already
+                            existing). Specify either as comma-separated list of
+                            key-value pairs (key1=value1,key2=value2) or in JSON
+                            format.
+  --set-vars                Environment variables to set. Specify either as
+                            comma-separated list of key-value pairs
+                            (key1=value1,key2=value2) or in JSON format.
 
 This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: service.
 

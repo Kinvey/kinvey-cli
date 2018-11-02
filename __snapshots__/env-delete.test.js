@@ -167,19 +167,16 @@ Deleted environment: kid_Sy4yRNV_M
 exports['appenv delete with profile when active app is not set using existent env id and no app should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-kinvey appenv delete [env]
+kinvey appenv delete
 
 Delete a specified environment or the active one
-
-Positionals:
-  env  Env ID/name                                                      [string]
 
 Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
   --2fa, --2Fa              Two-factor authentication token             [string]
-  --instanceId              Instance ID                                 [string]
+  --instance-id             Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
   --silent                  Do not output anything                     [boolean]
@@ -187,6 +184,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --env                     Env ID/name                                 [string]
   --app                     App ID/name                                 [string]
   --no-prompt               Do not prompt             [boolean] [default: false]
 
@@ -197,19 +195,16 @@ Application is required. Please set active app or use the --app option.
 exports['appenv delete with profile when active app is not set without env and without app should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-kinvey appenv delete [env]
+kinvey appenv delete
 
 Delete a specified environment or the active one
-
-Positionals:
-  env  Env ID/name                                                      [string]
 
 Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
   --2fa, --2Fa              Two-factor authentication token             [string]
-  --instanceId              Instance ID                                 [string]
+  --instance-id             Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
   --silent                  Do not output anything                     [boolean]
@@ -217,6 +212,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --env                     Env ID/name                                 [string]
   --app                     App ID/name                                 [string]
   --no-prompt               Do not prompt             [boolean] [default: false]
 

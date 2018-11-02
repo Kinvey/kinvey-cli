@@ -57,7 +57,7 @@ Options:
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
   --2fa, --2Fa              Two-factor authentication token             [string]
-  --instanceId              Instance ID                                 [string]
+  --instance-id             Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
   --silent                  Do not output anything                     [boolean]

@@ -13,10 +13,22 @@
  * contents is a violation of applicable laws.
  */
 
-const { Namespace } = require('./../../lib/Constants');
-const { buildCmd, execCmdWithAssertion } = require('../TestsHelper');
+const async = require('async');
+
+const { ActiveItemType, Namespace } = require('./../../lib/Constants');
+const fixtureApp = require('./../fixtures/app.json');
+const fixtureEnv = require('./../fixtures/env.json');
+const { buildCmd, execCmdWithAssertion, setup } = require('../TestsHelper');
 
 describe('common', () => {
+  before((done) => {
+    setup.clearGlobalSetup(null, done);
+  });
+
+  after((done) => {
+    setup.clearGlobalSetup(null, done);
+  });
+
   describe('flags and options', () => {
     it('with unsupported hyphenated option should fail', (done) => {
       const options = {
@@ -29,6 +41,30 @@ describe('common', () => {
     it('with unsupported hyphenated flag should fail', (done) => {
       const cmd = buildCmd(`${Namespace.PROFILE} show`, null, null, ['no-prompt']);
       execCmdWithAssertion(cmd, null, null, true, true, false, null, done);
+    });
+  });
+
+  describe('incomplete commands', () => {
+    before((done) => {
+      const profileName = 'testProfile';
+      async.series([
+        (next) => {
+          setup.setActiveProfile(profileName, true, next);
+        },
+        (next) => {
+          setup.setActiveItemOnProfile(profileName, ActiveItemType.APP, { id: fixtureApp.id }, null, next);
+        },
+        (next) => {
+          setup.setActiveItemOnProfile(profileName, ActiveItemType.ENV, { id: fixtureEnv.id }, null, next);
+        },
+      ], done);
+    });
+
+    const allNamespaces = Object.keys(Namespace).map(x => Namespace[x]);
+    allNamespaces.forEach((ns) => {
+      it(`namespace (${ns}) only should show help`, (done) => {
+        execCmdWithAssertion(ns, null, null, true, true, false, null, done);
+      });
     });
   });
 });

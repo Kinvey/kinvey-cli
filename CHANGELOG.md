@@ -21,6 +21,9 @@
     * collections-related: `coll create`, `coll list`, `coll delete`
 * Fix `profile login` to update only token
 
+## 3.1.2
+* Enhance `flex status` output
+
 ## 3.1.1
 * Prompt for 2FA token on 'profile login' if required
 * Rearrange logs

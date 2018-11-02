@@ -77,19 +77,16 @@ Recycle initiated. Job: idOfJobThatIsRecyclingTheService
 `
 
 exports['flex recycle by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
-kinvey flex recycle [serviceId]
+kinvey flex recycle
 
 Recycle the Service
-
-Positionals:
-  serviceId  Service ID                                                 [string]
 
 Options:
   --version                 Show version number                        [boolean]
   --email                   E-mail address of your Kinvey account       [string]
   --password                Password of your Kinvey account             [string]
   --2fa, --2Fa              Two-factor authentication token             [string]
-  --instanceId              Instance ID                                 [string]
+  --instance-id             Instance ID                                 [string]
   --profile                 Profile to use                              [string]
   --output                  Output format             [string] [choices: "json"]
   --silent                  Do not output anything                     [boolean]
@@ -97,6 +94,7 @@ Options:
   --verbose                 Output debug messages                      [boolean]
   --no-color                Disable colors                             [boolean]
   -h, --help                Show help                                  [boolean]
+  --service                 Service ID                                  [string]
   --svcEnv                  Service environment name/ID                 [string]
 
 You must be authenticated.

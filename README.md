@@ -19,6 +19,7 @@ Kinvey CLI is a utility for managing various aspects of your Kinvey account from
 * Creating, listing, and deleting applications
 * Creating, listing, and deleting app environments
 * Creating, listing, and deleting collections
+* ???
 
 ## Installation
 
@@ -46,7 +47,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
    
 * `profile login [name]`
 
-    Re-authenticates a specified profile. If you omit the profile name, the active profile is used. Prompts for password and for 2FA token if needed.
+    Re-authenticates a specified profile. If you omit the profile name, the active profile is used. Prompts for password and for two-factor authentication token if needed.
 
 * `profile show [name]`
 
@@ -70,7 +71,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
     * `--org <organization>`
            
-          Specifies a Kinvey organization by ID or name.
+        Specifies a Kinvey organization by ID or name.
           
 * `org use <org>`
 
@@ -82,7 +83,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     * `--org <organization>`
                
-              Specifies a Kinvey organization by ID or name.
+        Specifies a Kinvey organization by ID or name.
     
 * `app list`
 
@@ -94,7 +95,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     * `--app <application>`
            
-          Specifies a Kinvey app by ID or name.
+        Specifies a Kinvey app by ID or name.
 
 * `app use <app>`
 
@@ -106,11 +107,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     * `--app <application>`
                
-              Specifies a Kinvey app by ID or name.
+        Specifies a Kinvey app by ID or name.
               
     * `--no-prompt`
         
-            Do not ask for confirmation.
+        Do not ask for confirmation.
 
 * `appenv create <name>`
 
@@ -118,7 +119,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     * `--app <application>`
        
-      Specifies a Kinvey app by ID or name.
+        Specifies a Kinvey app by ID or name.
     
 * `appenv show`
 
@@ -126,11 +127,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     * `--env <environment>`
           
-          Specifies a Kinvey app environment by ID or name.
+        Specifies a Kinvey app environment by ID or name.
     
     * `--app <application>`
        
-      Specifies a Kinvey app by ID or name.
+        Specifies a Kinvey app by ID or name.
 
 * `appenv use <env>`
 
@@ -138,7 +139,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     * `--app <application>`
        
-      Specifies a Kinvey app by ID or name.
+        Specifies a Kinvey app by ID or name.
     
 * `appenv delete`
 
@@ -146,7 +147,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     * `--env <environment>`
           
-          Specifies a Kinvey app environment by ID or name.
+        Specifies a Kinvey app environment by ID or name.
     
     * `--app <application>`
        
@@ -154,7 +155,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
       
     * `--no-prompt`
         
-            Do not ask for confirmation.
+        Do not ask for confirmation.
 
 * `coll create <name>`
 
@@ -162,11 +163,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     * `--app <application>`
        
-      Specifies a Kinvey app by ID or name. Requires `--env`.
+        Specifies a Kinvey app by ID or name. Requires `--env`.
     
     * `--env <environment>`
       
-      Specifies a Kinvey app environment by ID or name.
+        Specifies a Kinvey app environment by ID or name.
     
 * `coll list`
 
@@ -174,11 +175,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
     * `--app <application>`
        
-      Specifies a Kinvey app by ID or name. Requires `--env`.
+        Specifies a Kinvey app by ID or name. Requires `--env`.
     
     * `--env <environment>`
       
-      Specifies a Kinvey app environment by ID or name.
+        Specifies a Kinvey app environment by ID or name.
 
 * `coll delete <coll>`
     
@@ -186,15 +187,15 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
     * `--app <application>`
        
-      Specifies a Kinvey app by ID or name. Requires `--env`.
+        Specifies a Kinvey app by ID or name. Requires `--env`.
     
     * `--env <environment>`
       
-      Specifies a Kinvey app environment by ID or name.
+        Specifies a Kinvey app environment by ID or name.
       
     * `--no-prompt`
         
-            Do not ask for confirmation.
+        Do not ask for confirmation.
 
 * `flex init`
 
@@ -206,19 +207,19 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
     * `--app <application>`
            
-          Specifies a Kinvey app by ID or name.
+        Specifies a Kinvey app by ID or name.
           
     * `--org <organization>`
             
-          Specifies a Kinvey organization by ID or name.
+        Specifies a Kinvey organization by ID or name.
            
     * `--secret <secret>`
      
-          Specifies a shared secret of your choice (minimum 2 characters, no leading or trailing whitespaces). If you skip this option, a random shared secret is generated for you. In the latter case, Kinvey CLI will pass the secret automatically to the Flex Runtime and print it on the screen for your information.
+        Specifies a shared secret of your choice (minimum 2 characters, no leading or trailing whitespaces). If you skip this option, a random shared secret is generated for you. In the latter case, Kinvey CLI will pass the secret automatically to the Flex Runtime and print it on the screen for your information.
         
     * `--vars, --set-vars <environment variables>`
     
-        Specifies environment variables either as comma-separated list of key-value pairs (key1=value1,key2=value2) or in JSON format.
+        Specifies environment variables to set. Existing variables are overwritten while new variables are added to the set. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
         
 * `flex deploy`
 
@@ -230,11 +231,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
         
     * `--replace-vars <environment variables>`
     
-        Specifies environment variables that replace all already existing. Must be specified either as comma-separated list of key-value pairs (key1=value1,key2=value2) or in JSON format.
+        Overwrite the full set of existing environment variables with a new set. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
 
     * `--set-vars <environment variables>`
     
-        Specifies environment variables to set. Must be specified either as comma-separated list of key-value pairs (key1=value1,key2=value2) or in JSON format.
+        Specifies environment variables to set. Existing variables are overwritten while new variables are added to the set. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
     
 * `flex job [id]`
 
@@ -262,11 +263,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    * `--domain <app|org>`
    
-      Specifies the domain type as either `app` for application or `org` for organization.
+        Specifies the domain type as either `app` for application or `org` for organization.
    
    * `--id <app or organization ID>`
    
-      App or organization ID for use with `--domain <app|org>`.
+        App or organization ID for use with `--domain <app|org>`.
 
 * `flex logs`
 
@@ -302,11 +303,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
         
     * `--replace-vars <environment variables>`
         
-        Specifies environment variables that replace all already existing. Must be specified either as comma-separated list of key-value pairs (key1=value1,key2=value2) or in JSON format.
+        Overwrite the full set of existing environment variables with a new set. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
     
     * `--set-vars <environment variables>`
         
-        Specifies environment variables to set. Must be specified either as comma-separated list of key-value pairs (key1=value1,key2=value2) or in JSON format.
+        Specifies environment variables to set. Existing variables are overwritten while new variables are added to the set. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
 
 * `flex recycle`
    
@@ -390,7 +391,9 @@ You can add a global option to every Kinvey CLI command to get the described beh
 
 ## Environment Variables
 
-Use these environment variables to specify profile information for the `profile create` command when you don't want to specify it at the command line. Keep in mind that any values specified at the command line take precedence over the environment variable values.
+Use environment variables to specify profile information for the `profile create` command when you don't want to specify it at the command line. Keep in mind that any values specified at the command line take precedence over the environment variable values.
+
+Command-specific options can also be specified as environment variables. You just need to prefix the name of the option with `KINVEY_CLI_` and capitalize all letters. For example, `--no-prompt` becomes `KINVEY_CLI_NO_PROMPT` as environment variable.
 
 * `KINVEY_CLI_EMAIL`
 
@@ -418,7 +421,6 @@ Kinvey CLI also supports these universal environment variables:
 
    Routes all Kinvey CLI requests through the specified proxy server.
 
-Command-specific options can also be specified as environment variables. You just need to prefix the name of the option with `KINVEY_CLI_`. E.g. `--no-prompt` becomes `KINVEY_CLI_NO_PROMPT` as environment variable.
 
 ## Getting Help
 
@@ -464,11 +466,11 @@ Finally, you are ready to deploy your node.js project as a Flex Service.
 
     kinvey flex deploy
     
-Alongside the deploy you can set environment variables for your service. If they don't contain the equal sign (`=`) or comma (`,`), you can use the shorthand syntax:
+Alongside the deploy you can set environment variables for your service. If both names and values are void of the equality sign (`=`) and comma (`,`), you can use the shorthand syntax:
 
     kinvey flex deploy --set-vars "MY_APP_A=valueA,MY_APP_B=valueB" 
     
-Or you can specify environment variables in JSON format:
+Otherwise you need to specify environment variables in stringified JSON format:
 
     kinvey flex deploy --set-vars "{\"MY_APP_A\":[\"value 1\", \"value 2\"], \"MY_APP_B\":\"valueB\"}"
 

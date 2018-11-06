@@ -219,7 +219,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
         
     * `--vars, --set-vars <environment variables>`
     
-        Specifies environment variables to set. Existing variables are overwritten while new variables are added to the set. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
+        Specifies environment variables to set. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
         
 * `flex deploy`
 
@@ -235,7 +235,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
     * `--set-vars <environment variables>`
     
-        Specifies environment variables to set. Existing variables are overwritten while new variables are added to the set. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
+        Specifies environment variables to set. If any of the variables already exist on the server, they are overwritten without prompt. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
     
 * `flex job [id]`
 
@@ -307,7 +307,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     * `--set-vars <environment variables>`
         
-        Specifies environment variables to set. Existing variables are overwritten while new variables are added to the set. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
+        Specifies environment variables to set. If any of the variables already exist on the server, they are overwritten without prompt. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
 
 * `flex recycle`
    
@@ -393,7 +393,7 @@ You can add a global option to every Kinvey CLI command to get the described beh
 
 Use environment variables to specify profile information for the `profile create` command when you don't want to specify it at the command line. Keep in mind that any values specified at the command line take precedence over the environment variable values.
 
-Command-specific options can also be specified as environment variables. You just need to prefix the name of the option with `KINVEY_CLI_` and capitalize all letters. For example, `--no-prompt` becomes `KINVEY_CLI_NO_PROMPT` as environment variable.
+Command-specific options can also be specified as environment variables. You just need to prefix the name of the option with `KINVEY_CLI_`. For example, `--no-prompt` becomes `KINVEY_CLI_NO_PROMPT` as environment variable.
 
 * `KINVEY_CLI_EMAIL`
 

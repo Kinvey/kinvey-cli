@@ -41,8 +41,7 @@ function testFlexRecycle(profileName, options, serviceId, validUser, done) {
     allOptions[FlexOptionsNames.SERVICE_ID] = serviceId;
   }
 
-  const positionalArgs = null;
-  const cmd = buildCmd(baseCmd, positionalArgs, allOptions, [CommonOptionsNames.VERBOSE]);
+  const cmd = buildCmd(baseCmd, null, allOptions, [CommonOptionsNames.VERBOSE]);
   execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, done);
 }
 

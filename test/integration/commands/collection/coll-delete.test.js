@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { ActiveItemType, AppOptionsName, AuthOptionsNames, EnvOptionsName, Namespace } = require('./../../../../lib/Constants');
+const { ActiveItemType, AppOptionsName, AuthOptionsNames, CommonOptionsNames, EnvOptionsName, Namespace } = require('./../../../../lib/Constants');
 const { buildCmd, execCmdWithAssertion, setup, testers } = require('../../../TestsHelper');
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureEnv = require('./../../../fixtures/env.json');
@@ -41,6 +41,8 @@ function testCollCreate(options, flags, envIdentifier, appIdentifier, collName, 
     mergedOptions[EnvOptionsName.ENV] = envIdentifier;
   }
 
+  flags = flags || [];
+  flags.push(CommonOptionsNames.NO_PROMPT);
   testers.execCmdWithIdentifier(baseCmd, mergedOptions, flags, collName, null, done);
 }
 
@@ -64,7 +66,7 @@ describe(baseCmd, () => {
         [AppOptionsName.APP]: fixtureApp.name,
         [EnvOptionsName.ENV]: fixtureEnv.name
       };
-      const cmd = buildCmd(baseCmd, [fixtureColl.name], options, defaultFlags);
+      const cmd = buildCmd(baseCmd, [fixtureColl.name], options, [CommonOptionsNames.VERBOSE, CommonOptionsNames.NO_PROMPT]);
       execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
         done();

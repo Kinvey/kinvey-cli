@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { AuthOptionsNames, CommonOptionsNames, Namespace, OutputFormat } = require('./../../../../lib/Constants');
+const { AuthOptionsNames, AppOptionsName, CommonOptionsNames, Namespace, OutputFormat } = require('./../../../../lib/Constants');
 const { buildCmd, execCmdWithAssertion, setup, testers } = require('../../../TestsHelper');
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureUser = require('./../../../fixtures/user.json');
@@ -28,8 +28,14 @@ const activeProfile = 'activeProfile';
 const appName = fixtureApp.name;
 const appId = fixtureApp.id;
 
-function testAppDelete(options, flags, identifier, done) {
-  testers.execCmdWithIdentifier(baseCmd, options, flags, identifier, null, done);
+function testAppDelete(options, flags, appIdentifier, done) {
+  flags = flags || [];
+  flags.push(CommonOptionsNames.NO_PROMPT);
+  options = options || {};
+  if (appIdentifier) {
+    options[AppOptionsName.APP] = appIdentifier;
+  }
+  testers.execCmdWithIdentifier(baseCmd, options, flags, null, null, done);
 }
 
 describe(baseCmd, () => {
@@ -79,7 +85,8 @@ describe(baseCmd, () => {
         [AuthOptionsNames.EMAIL]: existentUser.email,
         [AuthOptionsNames.PASSWORD]: existentUser.password
       };
-      const cmd = buildCmd(baseCmd, [appId], credentials, defaultFlags);
+      const options = Object.assign({ [AppOptionsName.APP]: appId }, credentials);
+      const cmd = buildCmd(baseCmd, null, options, defaultFlags);
       execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
         expect(err).to.not.exist;
         done();

@@ -13,7 +13,12 @@
 
 # Kinvey CLI
 
-Kinvey CLI is a utility for deploying and managing FlexServices running on the Kinvey FlexService Runtime.
+Kinvey CLI is a utility for managing various aspects of your Kinvey account from the command line. Its features include:
+
+* Deploying and managing FlexServices running on the Kinvey FlexService Runtime
+* Creating, listing, and deleting applications
+* Creating, listing, and deleting environments
+* Creating, listing, and deleting collections
 
 ## Installation
 
@@ -33,7 +38,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `profile create <name> [profile information]`
 
-   Creates a profile with the specified name. You can specify the profile information either at the command line as arguments or as environment variables. In the presence of command line argument, any values in the environment variables are ignored.
+   Creates a profile with the specified name. You can specify the profile information either at the command line as arguments or as environment variables. In the presence of command line argument, any values specified through environment variables are ignored.
 
 * `profile list`
 
@@ -55,33 +60,157 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    Deletes the specified profile or the active one if you don't specify a profile name.
 
+* `org list`
+
+    Lists all existing organizations within your Kinvey account.
+    
+* `org show [org]`
+
+    Shows detailed information about the specified organization or about the active one if you don't specify an organization. You can specify an organization by ID or name.
+
+* `org use <org>`
+
+    Sets the specified organization as active. You can specify an organization by ID or name.
+    
+* `app create <name>`
+
+    Creates an application. You can specify an organization ID or name if you want to create the app within the context of an organization.
+    
+    * `--org <organization>`
+    
+            Organization ID/name.
+    
+* `app list`
+
+    Lists all existing applications within your Kinvey account.
+    
+* `app show [app]`
+
+    Shows detailed information about the specified application or about the active one if you don't specify an application. You can specify an application by ID or name.
+
+* `app use <app>`
+
+    Sets the specified application as active. You can specify an application by ID or name.
+    
+* `app delete [app]`
+
+    Deletes the specified application or the active one if you don't specify an application. You can specify an application by ID or name. You will be prompted for confirmation unless you set the `--no-prompt` flag.
+    
+    * `--no-prompt`
+        
+            Do not ask for confirmation.
+
+* `appenv create <name>`
+
+    Creates an environment within the active application. To use a different application, specify it using `--app`.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
+    
+* `appenv show [env]`
+
+    Shows detailed information about the specified environment or about the active one if you don't specify an environment. You can specify an environment by ID or name. By default, the command searches inside the active application but you can specify a different application using `--app`.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
+
+* `appenv use <env>`
+
+    Sets the specified environment as active. By default, the command searches inside the active application but you can specify a different application using `--app`.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
+    
+* `appenv delete [env]`
+
+    Deletes the specified environment or the active one if you don't specify an environment. You can specify an environment by ID or name. By default, the command searches inside the active application but you can specify a different application using `--app`. You will be prompted for confirmation unless you set the `--no-prompt` flag.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
+      
+    * `--no-prompt`
+        
+            Do not ask for confirmation.
+
+* `coll create <name>`
+
+    Creates a collection within the active application and environment. You can specify another pair of application and environment using the `--app` and `--env` options.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name. Requires `--env`.
+    
+    * `--env <environment>`
+      
+      Specifies a Kinvey app environment by ID or name. Requires `--app`.
+    
+* `coll list`
+
+    Lists all existing collections within the active application and environment. You can specify another pair of application and environment using the `--app` and `--env` options.
+
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name. Requires `--env`.
+    
+    * `--env <environment>`
+      
+      Specifies a Kinvey app environment by ID or name. Requires `--app`.
+
+* `coll delete <coll>`
+    
+    Deletes a collection by name within the active application and environment. You can specify another pair of application and environment using the `--app` and `--env` options. You will be prompted for confirmation unless you set the `--no-prompt` flag.
+
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name. Requires `--env`.
+    
+    * `--env <environment>`
+      
+      Specifies a Kinvey app environment by ID or name. Requires `--app`.
+      
+    * `--no-prompt`
+        
+            Do not ask for confirmation.
+
 * `flex init`
 
-   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Information inside the file is saved per profile. Each successive execution in the same directory overwrites the respective profile section in the configuration file. This command requires that either an active profile is set or a profile is specified using the `--profile` option. Profile data options such as `--email`, `--password`, and `--instanceId` are ignored if specified. 
+   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Information within the file is saved per profile. Each successive execution in the same directory overwrites the respective profile section in the configuration file. This command requires that either an active profile is set or a profile is specified using the `--profile` option. Profile data options such as `--email`, `--password`, and `--instanceId` are ignored if specified. 
 
-* `flex deploy`
+* `flex create <service_name>`
 
-   Deploys the current project to the Kinvey FlexService Runtime. To use a different service than the one initiated last, specify its service ID.
-   
-   * `--serviceId <Flex Service ID>`
-      
-      Specifies a Flex Service by its ID.
+    Creates an internal flex service with the specified name. You need to specify a domain (application or organization) using the `--app` or `--org` option.
+
+    * `--app <application>`
+           
+          Specifies a Kinvey app by ID or name.
+          
+    * `--org <organization>`
+            
+          Specifies a Kinvey organization by ID or name.
+           
+    * `--secret <secret>`
+     
+          Specifies a shared secret of your choice (minimum 2 characters, no leading or trailing whitespaces). If you skip this option, a random shared secret is generated for you. In the latter case, Kinvey CLI will pass the secret automatically to the Flex Runtime and print it on the screen for your information.
+        
+* `flex deploy [serviceId]`
+
+   Deploys the current project to the Kinvey FlexService Runtime, using the current service, which is the one you initiated last. To use a different service, specify its service ID.
 
 * `flex job [id]`
 
    Shows the job status of a deploy/recycle command. If you don't specify an `id`, the command returns the status of the most recent `flex deploy` or `flex recycle` command.
 
-* `flex status`
+* `flex status [serviceId]`
 
-   Displays the health of the current (the one you initiated last) Flex Service. To get the status of a different service, specify its service ID using the `--serviceId` option. In addition to the global options, this command supports the following options:
-
-   * `--serviceId <Flex Service ID>`
-   
-      Specifies a Flex Service by its ID.
+   Displays the health of the current Flex Service, which is the one you initiated last. To get the status of a different service, specify its service ID.
 
 * `flex list`
 
-   Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services inside the domain you've configured as part of running `flex init`. In addition to the global options, this command supports the following options:
+   Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services within the domain you've configured as part of running `flex init`. In addition to the global options, this command supports the following options:
 
    * `--domain <app|org>`
    
@@ -91,9 +220,9 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
    
       App or organization ID for use with `--domain <app|org>`.
 
-* `flex logs`
+* `flex logs [serviceId]`
 
-   Retrieves and displays Flex Services logs. Logs calls return 100 entries by default and can return up to 2,000 entries. Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`. Combine with the paging and limiting options to narrow down your search. Logs for external Flex Services are not returned. You can specify a Flex Service to read logs from using the `--serviceId` option. In addition to the global options, this command supports the following options:
+   Retrieves and displays logs for the current Flex Service, which is the one you initiated last. To get logs for a different service, specify its service ID. Log calls return 100 entries by default and can return up to 2,000 entries. Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`. Combine with the paging and limiting options to narrow down your search. Logs for external Flex Services are not returned. In addition to the global options, this command supports the following options:
 
    * `--from`
 
@@ -107,25 +236,25 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
       Page number to fetch. The first page is indexed 1.
 
-   * `--serviceId <Flex Service ID>`
-
-      Specifies a Flex Service by its ID.
-
    * `--to`
 
       Timestamp specifying the end of a period for which you want to fetch log entries, in ISO 8601 format.
 
-* `flex recycle`
+* `flex recycle [serviceId]`
    
-   Recycles the current (the one you initiated last) Flex Service. To recycle a different service, specify its service ID using the `--serviceId` option. In addition to the global options, this command supports the following options:
+   Recycles the current Flex Service, which is the one you initiated last. To recycle a different service, specify its service ID.
 
-   * `--serviceId <Flex Service ID>`
-   
-      Specifies a Flex Service by its ID.
+* `flex delete [serviceId]`
 
-* `flex delete`
+    Deletes the current Flex Service, which is the one you initiated last. To delete a different service, specify its service ID. You will be prompted for confirmation unless you set the `--no-prompt` flag.
+    
+    * `--no-prompt`
+    
+        Do not ask for confirmation.
 
-   Deletes the current Flex Service configuration from the Node.js project directory that it has been executed in.
+* `flex clear`
+
+   When executed in a Node.js project directory, this command removes the current Flex Service configuration from the project.
 
 * `help`
 

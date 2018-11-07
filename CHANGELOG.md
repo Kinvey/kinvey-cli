@@ -1,5 +1,26 @@
 # Changelog
 
+## 4.0.0-beta.3
+* Rename the `env` namespace to `appenv`
+* Add `org` option to `app create`
+
+## 4.0.0-beta.1
+* Add `flex create` command to create internal flex services
+* Add `flex clear` command to clear project settings
+* Repurpose the `flex delete` command to delete internal flex services
+* Ask for confirmation on app/env/coll/flex delete
+* Fail on unsupported hyphenated option or flag
+* Fix `flex deploy` to work with local setup
+* Update production dependencies (moment.js, request.js)
+
+## 4.0.0-beta.0
+* Add commands:
+    * organizations-related: `org list`, `org show`, `org use`
+    * applications-related: `app create`, `app list`, `app show`, `app use`, `app delete`
+    * environments-related: `env create`, `env list`, `env show`, `env use`, `env delete`
+    * collections-related: `coll create`, `coll list`, `coll delete`
+* Fix `profile login` to update only token
+
 ## 3.1.2
 * Enhance `flex status` output
 

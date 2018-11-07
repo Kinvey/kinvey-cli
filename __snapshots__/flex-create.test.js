@@ -42,7 +42,7 @@ Options:
   --runtime                 Runtime environment
                                   [string] [choices: "node6", "node8", "node10"]
 
-Environment variables must be specified as comma-separated list where key=value or in valid JSON format.
+Environment variables must be specified as comma-separated list (e.g. key1=value1,key2=value2) or in valid JSON format.
 
 `
 

@@ -29,7 +29,7 @@ exports['flex update by specifying a profile when valid project is set with inva
 [debug] Using profile 'primaryProfile'
 kinvey flex update
 
-Update environment variables and runtime
+Update environment variables and runtime. Causes restart/rebuild of the service
 
 Options:
   --version                 Show version number                        [boolean]
@@ -55,7 +55,7 @@ Options:
   --runtime                 Runtime environment
                                   [string] [choices: "node6", "node8", "node10"]
 
-Environment variables must be specified as comma-separated list where key=value or in valid JSON format.
+Environment variables must be specified as comma-separated list (e.g. key1=value1,key2=value2) or in valid JSON format.
 
 `
 
@@ -64,7 +64,7 @@ exports['flex update by specifying a profile when valid project is set with both
 [debug] Using profile 'primaryProfile'
 kinvey flex update
 
-Update environment variables and runtime
+Update environment variables and runtime. Causes restart/rebuild of the service
 
 Options:
   --version                 Show version number                        [boolean]
@@ -109,7 +109,7 @@ exports['flex update by specifying credentials without service should fail 1'] =
 [debug] Checking for package updates
 kinvey flex update
 
-Update environment variables and runtime
+Update environment variables and runtime. Causes restart/rebuild of the service
 
 Options:
   --version                 Show version number                        [boolean]
@@ -171,7 +171,7 @@ exports['flex update by specifying a profile when valid project is set with inva
 [debug] Using profile 'primaryProfile'
 kinvey flex update
 
-Update environment variables and runtime
+Update environment variables and runtime. Causes restart/rebuild of the service
 
 Options:
   --version                 Show version number                        [boolean]

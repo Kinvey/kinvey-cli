@@ -168,7 +168,6 @@ key                value
 -----------------  -------------------------------------
 status             UPDATING                             
 version            1.4.2                                
-runtime            node6                                
 id                 1234567                              
 requestedAt        replaced_value
 deployerEmail      davy.jones@mail.com                  

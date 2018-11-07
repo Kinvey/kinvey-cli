@@ -19,7 +19,6 @@ Kinvey CLI is a utility for managing various aspects of your Kinvey account from
 * Creating, listing, and deleting applications
 * Creating, listing, and deleting app environments
 * Creating, listing, and deleting collections
-* ???
 
 ## Installation
 

@@ -1,6 +1,6 @@
 | LINTING            | UNIT          |   INTEGRATION          |  NPM SECURITY       |
 |-------------------|-------------------|-------------------|-------------------|
-| [![Build1][1]][4] | [![Build2][2]][4] |  [![Build3][3]][4] | [![Build4][4]][4] |
+| [![Build1][1]][5] | [![Build2][2]][5] |  [![Build3][3]][5] | [![Build4][4]][5] |
 
 [1]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/1
 [2]: https://travis-matrix-badges.herokuapp.com/repos/Kinvey/kinvey-cli/branches/master/2

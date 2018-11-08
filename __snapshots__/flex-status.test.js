@@ -1,6 +1,6 @@
-exports['flex status by specifying a profile and existent serviceId should succeed and output default format 1'] = `
+exports['flex status by not specifying profile nor credentials when one profile and existent serviceId should succeed 1'] = `
 [debug] Checking for package updates
-[debug] Using profile 'profileToGetServiceStatus'
+[debug] Using profile 'flexStatusProfile'
 [debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
@@ -13,6 +13,35 @@ requestedAt    replaced_value
 deployerEmail  davy.jones@mail.com                  
 deployerName   Davy Jones                           
 
+
+`
+
+exports['flex status by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
+kinvey flex status
+
+Return the health of a Flex Service cluster
+
+Options:
+  --version                                 Show version number        [boolean]
+  --email                                   E-mail address of your Kinvey
+                                            account                     [string]
+  --password                                Password of your Kinvey account
+                                                                        [string]
+  --2fa, --2Fa                              Two-factor authentication token
+                                                                        [string]
+  --instance-id, --instanceId               Instance ID                 [string]
+  --profile                                 Profile to use              [string]
+  --output                                  Output format
+                                                      [string] [choices: "json"]
+  --silent                                  Do not output anything     [boolean]
+  --suppress-version-check,                 Do not check for package updates
+  --suppressVersionCheck                                               [boolean]
+  --verbose                                 Output debug messages      [boolean]
+  --no-color, --noColor                     Disable colors             [boolean]
+  -h, --help                                Show help                  [boolean]
+  --service                                 Service ID                  [string]
+
+You must be authenticated.
 
 `
 
@@ -34,6 +63,24 @@ exports['flex status by specifying a profile and existent serviceId should succe
     "version": "1.4.2"
   }
 }
+
+`
+
+exports['flex status by specifying a profile and existent serviceId should succeed and output default format 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToGetServiceStatus'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
+[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+id             12378kdl2                            
+requestedAt    replaced_value
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
+
 
 `
 
@@ -64,16 +111,16 @@ deployerName   Davy Jones
 
 `
 
-exports['flex status by not specifying profile nor credentials when one profile and existent serviceId should succeed 1'] = `
+exports['flex status by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
 [debug] Checking for package updates
-[debug] Using profile 'flexStatusProfile'
-[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Using profile 'profileToGetServiceStatus'
 [debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
 [debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
 key            value                                
 -------------  -------------------------------------
 status         ONLINE                               
 version        1.4.2                                
+name           TestKinveyDatalink                   
 id             12378kdl2                            
 requestedAt    replaced_value
 deployerEmail  davy.jones@mail.com                  
@@ -82,48 +129,36 @@ deployerName   Davy Jones
 
 `
 
-exports['flex status by not specifying profile nor credentials when several profiles and existent serviceId should fail 1'] = `
-kinvey flex status
-
-Return the health of a Flex Service cluster
-
-Options:
-  --version                 Show version number                        [boolean]
-  --email                   E-mail address of your Kinvey account       [string]
-  --password                Password of your Kinvey account             [string]
-  --2fa, --2Fa              Two-factor authentication token             [string]
-  --instance-id             Instance ID                                 [string]
-  --profile                 Profile to use                              [string]
-  --output                  Output format             [string] [choices: "json"]
-  --silent                  Do not output anything                     [boolean]
-  --suppress-version-check  Do not check for package updates           [boolean]
-  --verbose                 Output debug messages                      [boolean]
-  --no-color                Disable colors                             [boolean]
-  -h, --help                Show help                                  [boolean]
-  --service                 Service ID                                  [string]
-
-You must be authenticated.
+exports['flex status by specifying credentials as options when invalid and existent serviceId should fail 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: johnDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 401
+[error] InvalidCredentials: Credentials are invalid. Please authenticate.
 
 `
 
-exports['flex status by specifying credentials as options when valid and existent serviceId should succeed 1'] = `
+exports['flex status by specifying credentials as options when valid and existent serviceId should succeed (with missing runtime) 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
+[debug] Request:  GET http://localhost:3234/v2/data-links/1234567/status
+[debug] Response: GET http://localhost:3234/v2/data-links/1234567/status 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-key            value                                
--------------  -------------------------------------
-status         ONLINE                               
-version        1.4.2                                
-id             12378kdl2                            
-requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                  
-deployerName   Davy Jones                           
+key                value                                
+-----------------  -------------------------------------
+status             UPDATING                             
+version            1.4.2                                
+id                 1234567                              
+requestedAt        replaced_value
+deployerEmail      davy.jones@mail.com                  
+deployerName       Davy Jones                           
+deploymentStatus   RUNNING                              
+deploymentVersion  1.4.3                                
+deploymentRuntime  node10                               
 
 
 `
@@ -154,27 +189,24 @@ deploymentRuntime  node10
 
 `
 
-exports['flex status by specifying credentials as options when valid and existent serviceId should succeed (with missing runtime) 1'] = `
+exports['flex status by specifying credentials as options when valid and existent serviceId should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/data-links/1234567/status
-[debug] Response: GET http://localhost:3234/v2/data-links/1234567/status 200
+[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
+[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-key                value                                
------------------  -------------------------------------
-status             UPDATING                             
-version            1.4.2                                
-id                 1234567                              
-requestedAt        replaced_value
-deployerEmail      davy.jones@mail.com                  
-deployerName       Davy Jones                           
-deploymentStatus   RUNNING                              
-deploymentVersion  1.4.3                                
-deploymentRuntime  node10                               
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+id             12378kdl2                            
+requestedAt    replaced_value
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
 
 
 `
@@ -190,32 +222,5 @@ exports['flex status by specifying credentials as options when valid and non-exi
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
 [error] DataLinkNotFound: The specified data link could not be found.
-
-`
-
-exports['flex status by specifying credentials as options when invalid and existent serviceId should fail 1'] = `
-[debug] Checking for package updates
-[debug] Logging in user: johnDoe@mail.com
-[debug] Request:  POST http://localhost:3234/session
-[debug] Response: POST http://localhost:3234/session 401
-[error] InvalidCredentials: Credentials are invalid. Please authenticate.
-
-`
-
-exports['flex status by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'profileToGetServiceStatus'
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/status
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/status 200
-key            value                                
--------------  -------------------------------------
-status         ONLINE                               
-version        1.4.2                                
-name           TestKinveyDatalink                   
-id             12378kdl2                            
-requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                  
-deployerName   Davy Jones                           
-
 
 `

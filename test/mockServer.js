@@ -85,6 +85,8 @@ function build(
     orgs = fixtureOrgs,
     apps = fixtureApps,
     service = fixtureInternalFlexService,
+    updatedService = null,
+    envVars = null,
     envs = fixtureEnvs,
     colls = fixtureCollections,
     jobType = 'recycleService',
@@ -206,7 +208,13 @@ function build(
 
   app.post(`/${versionPart}/services/:id/environments`, (req, res) => {
     const body = req.body;
-    if (!body.name || !body.secret) {
+    if (!body) {
+      return res.sendStatus(400);
+    }
+
+    const envVarsDiffer = (envVars && !isEqual(body.environmentVariables, envVars)) ||
+      (!envVars && body.environmentVariables);
+    if (!body.name || !body.secret ||envVarsDiffer) {
       return res.sendStatus(400);
     }
 
@@ -258,6 +266,22 @@ function build(
     res.status(404).send(serviceNotFound);
   });
 
+
+  app.put(`/${versionPart}/services/:id`, (req, res) => {
+    const id = req.params.id;
+    const wantedService = fixtureServices.find(x => x.id === id);
+    if (!wantedService) {
+      return res.status(404);
+    }
+
+    if (!isEqual(req.body, updatedService)) {
+      return res.status(400).send(req.body);
+    }
+
+    return res.send(req.body);
+  });
+
+
   // JOBS
   app.get(`/${versionPart}/jobs/:id`, (req, res) => {
     const id = req.params.id;
@@ -295,7 +319,6 @@ function build(
     res.send({ job: 'idOfJobThatIsRecyclingTheService' });
   });
 
-  // ENVS BY APP
   app.get(`/${versionPart}/apps/:id/environments`, (req, res) => {
     const id = req.params.id;
     const wantedApp = apps.find(x => x.id === id);

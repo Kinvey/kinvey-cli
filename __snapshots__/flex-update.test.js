@@ -1,11 +1,13 @@
-exports['flex update by specifying a profile when invalid project is set with existent service as an option and single env var (set) should succeed 1'] = `
+exports['flex update by specifying a profile when invalid project is set with existent service and svc env as options and single env var (set) should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'primaryProfile'
-[debug] Request:  GET http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar
-[debug] Response: GET http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar 200
-[debug] Request:  PUT http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar
-[debug] Response: PUT http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar 200
-Updated service: 0de22ffb3f2243ec8138170844envVar
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  PUT http://localhost:3234/v3/services/12378kdl2/environments/0de22ffb3f2243ec8138170844envVar
+[debug] Response: PUT http://localhost:3234/v3/services/12378kdl2/environments/0de22ffb3f2243ec8138170844envVar 200
+Updated service environment: 0de22ffb3f2243ec8138170844envVar
 
 `
 
@@ -35,6 +37,7 @@ Options:
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
   --service                                 Service ID                  [string]
+  --env                                     Service environment name/ID [string]
   --replace-vars, --replaceVars             Environment variables (replaces all
                                             already existing). Specify either as
                                             comma-separated list of key-value
@@ -76,6 +79,7 @@ Options:
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
   --service                                 Service ID                  [string]
+  --env                                     Service environment name/ID [string]
   --replace-vars, --replaceVars             Environment variables (replaces all
                                             already existing). Specify either as
                                             comma-separated list of key-value
@@ -94,21 +98,21 @@ Environment variables must be specified as comma-separated list where key=value 
 exports['flex update by specifying a profile when valid project is set with valid basic env vars (replace) should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'primaryProfile'
-[debug] Request:  GET http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar
-[debug] Response: GET http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar 200
-[debug] Request:  PUT http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar
-[debug] Response: PUT http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar 200
-Updated service: 0de22ffb3f2243ec8138170844envVar
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  PUT http://localhost:3234/v3/services/12378kdl2/environments/0de22ffb3f2243ec8138170844envVar
+[debug] Response: PUT http://localhost:3234/v3/services/12378kdl2/environments/0de22ffb3f2243ec8138170844envVar 200
+Updated service environment: 0de22ffb3f2243ec8138170844envVar
 
 `
 
 exports['flex update by specifying a profile when valid project is set with valid basic env vars (set) should succeed and output JSON format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'primaryProfile'
-[debug] Request:  GET http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar
-[debug] Response: GET http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar 200
-[debug] Request:  PUT http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar
-[debug] Response: PUT http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  PUT http://localhost:3234/v3/services/12378kdl2/environments/0de22ffb3f2243ec8138170844envVar
+[debug] Response: PUT http://localhost:3234/v3/services/12378kdl2/environments/0de22ffb3f2243ec8138170844envVar 200
 {
   "result": {
     "id": "0de22ffb3f2243ec8138170844envVar"
@@ -117,23 +121,39 @@ exports['flex update by specifying a profile when valid project is set with vali
 
 `
 
-exports['flex update by specifying credentials with service and valid complex env vars (set) should succeed 1'] = `
+exports['flex update by specifying credentials with service but without svc env (when many) should fail 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar
-[debug] Response: GET http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar 200
-[debug] Request:  PUT http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar
-[debug] Response: PUT http://localhost:3234/v2/data-links/0de22ffb3f2243ec8138170844envVar 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-Updated service: 0de22ffb3f2243ec8138170844envVar
+[error] TooManySvcEnvs: You should choose an environment: dev, prod, stg0, stg1, stg2, stg3, stg4
 
 `
 
-exports['flex update by specifying credentials without service should fail 1'] = `
+exports['flex update by specifying credentials with service, svc env and valid complex env vars (set) should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  PUT http://localhost:3234/v3/services/12378kdl2/environments/0de22ffb3f2243ec8138170844envVar
+[debug] Response: PUT http://localhost:3234/v3/services/12378kdl2/environments/0de22ffb3f2243ec8138170844envVar 200
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+Updated service environment: 0de22ffb3f2243ec8138170844envVar
+
+`
+
+exports['flex update by specifying credentials without service and svc env should fail 1'] = `
 [debug] Checking for package updates
 kinvey flex update
 
@@ -158,6 +178,7 @@ Options:
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
   --service                                 Service ID                  [string]
+  --env                                     Service environment name/ID [string]
   --replace-vars, --replaceVars             Environment variables (replaces all
                                             already existing). Specify either as
                                             comma-separated list of key-value

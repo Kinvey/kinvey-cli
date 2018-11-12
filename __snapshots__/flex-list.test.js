@@ -74,7 +74,7 @@ Count: 3
 id                                name                    
 --------------------------------  ------------------------
 12378kdl2                         TestKinveyDatalink      
-0de22ffb3f2243ec8138170844envVar  TestKinveyService       
+334d6ab3df5e4af1a13ec011c12d0208  TestKinveyService       
 12389kd89                         TestSecondKinveyDatalink
 
 
@@ -96,7 +96,7 @@ exports['flex list by specifying a profile and valid options (org and id) should
       "name": "TestKinveyDatalink"
     },
     {
-      "id": "0de22ffb3f2243ec8138170844envVar",
+      "id": "334d6ab3df5e4af1a13ec011c12d0208",
       "name": "TestKinveyService"
     },
     {
@@ -120,7 +120,7 @@ Count: 3
 id                                name                    
 --------------------------------  ------------------------
 12378kdl2                         TestKinveyDatalink      
-0de22ffb3f2243ec8138170844envVar  TestKinveyService       
+334d6ab3df5e4af1a13ec011c12d0208  TestKinveyService       
 12389kd89                         TestSecondKinveyDatalink
 
 
@@ -139,7 +139,7 @@ Count: 3
 id                                name                    
 --------------------------------  ------------------------
 12378kdl2                         TestKinveyDatalink      
-0de22ffb3f2243ec8138170844envVar  TestKinveyService       
+334d6ab3df5e4af1a13ec011c12d0208  TestKinveyService       
 12389kd89                         TestSecondKinveyDatalink
 
 
@@ -186,7 +186,7 @@ Count: 3
 id                                name                    
 --------------------------------  ------------------------
 12378kdl2                         TestKinveyDatalink      
-0de22ffb3f2243ec8138170844envVar  TestKinveyService       
+334d6ab3df5e4af1a13ec011c12d0208  TestKinveyService       
 12389kd89                         TestSecondKinveyDatalink
 
 

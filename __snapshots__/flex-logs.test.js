@@ -390,8 +390,8 @@ exports['flex logs without query by specifying credentials as options when valid
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
 [debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/124/logs
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/124/logs 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/0de22ffb3f2243ec8138170844envVar/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/0de22ffb3f2243ec8138170844envVar/logs 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

@@ -85,7 +85,7 @@ function build(
     orgs = fixtureOrgs,
     apps = fixtureApps,
     service = fixtureInternalFlexService,
-    updatedService = null,
+    updatedSvcEnv = null,
     envVars = null,
     envs = fixtureEnvs,
     colls = fixtureCollections,
@@ -196,6 +196,22 @@ function build(
     res.send(fixtureLogs);
   });
 
+  app.get(`/${versionPart}/services/:id/environments/:envId`, (req, res) => {
+    const id = req.params.id;
+    const wantedService = fixtureServices.find(x => x.id === id);
+    if (!wantedService) {
+      return res.status(404).send(serviceNotFound);
+    }
+
+    const envId = req.params.envId;
+    const svcEnv = svcEnvs.find(x => x.id === envId);
+    if (!svcEnv) {
+      return res.status(404).send(svcEnvNotFound);
+    }
+
+    res.send(svcEnv);
+  });
+
   app.get(`/${versionPart}/services/:id/environments`, (req, res) => {
     const id = req.params.id;
     const wantedService = fixtureServices.find(x => x.id === id);
@@ -214,12 +230,31 @@ function build(
 
     const envVarsDiffer = (envVars && !isEqual(body.environmentVariables, envVars)) ||
       (!envVars && body.environmentVariables);
-    if (!body.name || !body.secret ||envVarsDiffer) {
+    if (!body.name || !body.secret || envVarsDiffer) {
       return res.sendStatus(400);
     }
 
     const result = Object.assign({ id: fixtureSvcEnv.id }, body);
     res.status(201).send(result);
+  });
+
+  app.put(`/${versionPart}/services/:id/environments/:envId`, (req, res) => {
+    const id = req.params.id;
+    const wantedService = fixtureServices.find(x => x.id === id);
+    if (!wantedService) {
+      return res.status(404).send(serviceNotFound);
+    }
+
+    const svcEnvId = req.params.envId;
+    if (!svcEnvs.find(x => x.id === svcEnvId)) {
+      return res.status(404).send(svcEnvNotFound);
+    }
+
+    if (!isEqual(req.body, updatedSvcEnv)) {
+      return res.status(400).send(req.body);
+    }
+
+    return res.send(req.body);
   });
 
   app.get(`/${versionPart}/services/:id`, (req, res) => {
@@ -264,21 +299,6 @@ function build(
     }
 
     res.status(404).send(serviceNotFound);
-  });
-
-
-  app.put(`/${versionPart}/services/:id`, (req, res) => {
-    const id = req.params.id;
-    const wantedService = fixtureServices.find(x => x.id === id);
-    if (!wantedService) {
-      return res.status(404);
-    }
-
-    if (!isEqual(req.body, updatedService)) {
-      return res.status(400).send(req.body);
-    }
-
-    return res.send(req.body);
   });
 
 

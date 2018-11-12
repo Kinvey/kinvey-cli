@@ -2,27 +2,30 @@
   {
     "id"  : "12378kdl2",
     "type" : "internal",
-    "name" : "TestKinveyDatalink"
+    "name" : "TestKinveyDatalink",
+    "access": {
+      "writers": {
+        "apps": [
+          "555594ffb9e7473781ad4cebdfd55555"
+        ]
+      }
+    }
   },
   {
     "id"  : "12389kd89",
     "type" : "internal",
-    "name" : "TestSecondKinveyDatalink"
+    "name" : "TestSecondKinveyDatalink",
+    "access": {
+      "writers": {
+        "apps": [
+          "555594ffb9e7473781ad4cebdfd55555"
+        ]
+      }
+    }
   },
   {
     "type": "internal",
     "name": "TestKinveyService",
-    "backingServers": [
-      {
-        "secret": "666666e6642c3418398f982666",
-        "environmentVariables": {
-          "MY_ENV": "dev"
-        },
-        "host": "k8s-d0f34091237849ac5253",
-        "_id": "456",
-        "name": "Default"
-      }
-    ],
     "access": {
       "writers": {
         "apps": [
@@ -30,11 +33,18 @@
         ]
       }
     },
-    "id": "0de22ffb3f2243ec8138170844envVar"
+    "id": "334d6ab3df5e4af1a13ec011c12d0208"
   },
   {
     "id"  : "124",
     "type" : "custom",
-    "name" : "TestDatalink"
+    "name" : "TestDatalink",
+    "access": {
+      "writers": {
+        "apps": [
+          "555594ffb9e7473781ad4cebdfd55555"
+        ]
+      }
+    }
   }
 ]

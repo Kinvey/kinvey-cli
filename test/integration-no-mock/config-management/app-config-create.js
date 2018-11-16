@@ -14,7 +14,6 @@
  */
 
 const async = require('async');
-const cloneDeep = require('lodash.clonedeep');
 
 const ConfigManagementHelper = require('./../../ConfigManagementHelper');
 

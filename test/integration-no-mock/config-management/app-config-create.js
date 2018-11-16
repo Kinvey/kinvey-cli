@@ -74,7 +74,88 @@ module.exports = () => {
             orgIdentifier,
             id: appId,
             expectedName: appName,
-            collList: internalCollList,
+            collListPerEnv: { Prod: internalCollList, Development: internalCollList },
+            expectOrg: true
+          };
+          AppHelper.assertApp(options, next);
+        }
+      ], done);
+    });
+
+    it('settings and 1 env (containing external colls) should succeed', (done) => {
+      const svcOne = randomStrings.plainString();
+      const svcTwo = randomStrings.plainString();
+      const externalCollList = [
+        ConfigManagementHelper.env.buildExternalCollection(svcOne, 'MyCollection', randomStrings.collName()),
+        ConfigManagementHelper.env.buildExternalCollection(svcTwo, 'MyCollection', randomStrings.collName())
+      ];
+      const configColls = ConfigManagementHelper.common.buildConfigEntityFromList(externalCollList);
+      const envUsingServices = {
+        schemaVersion: '1.0.0',
+        settings: EnvHelper.buildSettings(),
+        collections: configColls
+      };
+
+      const config = {
+        schemaVersion: '1.0.0',
+        configType: 'application',
+        settings: {
+          realtime: {
+            enabled: true
+          },
+          sessionTimeoutInSeconds: 120
+        },
+        environments: {
+          Prod: envUsingServices
+        },
+        services: {
+          [svcOne]: {
+            schemaVersion: '1.0.0',
+            type: 'flex-external',
+            description: 'Test service I',
+            environments: {
+              dev: {
+                secret: '123',
+                host: 'https://swapi.co/api'
+              }
+            }
+          },
+          [svcTwo]: {
+            schemaVersion: '1.0.0',
+            type: 'flex-external',
+            description: 'Test service II',
+            environments: {
+              dev: {
+                secret: '456',
+                host: 'https://swapi.co/api'
+              }
+            }
+          }
+        }
+      };
+
+      appName = randomStrings.appName();
+      const orgIdentifier = 'CliOrg';
+      let appId;
+
+      async.series([
+        (next) => {
+          AppHelper.createFromConfig(appName, config, orgIdentifier, (err, id) => {
+            if (err) {
+              return next(err);
+            }
+
+            appId = id;
+            next();
+          });
+        },
+        (next) => {
+          const options = {
+            config,
+            orgIdentifier,
+            id: appId,
+            expectedName: appName,
+            collListPerEnv: { Prod: externalCollList },
             expectOrg: true
           };
           AppHelper.assertApp(options, next);
@@ -147,7 +228,7 @@ module.exports = () => {
             config,
             id: appId,
             expectedName: appName,
-            collList: internalCollList
+            collListPerEnv: { Prod: internalCollList, Test: internalCollList }
           };
           AppHelper.assertApp(options, next);
         }

@@ -52,6 +52,173 @@ function passConfigFileToCli(cmd, configContent, filePath, done) {
   });
 }
 
+const service = {};
+service.createPackageJsonForFlexProject = function createPackageJsonForFlexProject(pkgJson, done) {
+  if (!pkgJson) {
+    return setImmediate(done);
+  }
+
+  const projectPath = path.join(process.cwd(), 'test/integration-no-mock/flex-project');
+  writeJSON({ file: path.join(projectPath, 'package.json'), data: pkgJson }, done);
+};
+
+service.createFromConfig = function createServiceFromConfig(serviceName, serviceConfig, serviceDomain, appOrOrgIdentifier, pkgJson, done) {
+  async.series([
+    (next) => {
+      service.createPackageJsonForFlexProject(pkgJson, next);
+    },
+    (next) => {
+      const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+      const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+      const cmd = `service create ${serviceName} ${filePath} --${serviceDomain} ${appOrOrgIdentifier} --output json`;
+      passConfigFileToCli(cmd, serviceConfig, filePath, next);
+    }
+  ], (err, results) => {
+    done(err, results.pop());
+  });
+};
+
+service.modifyFromConfig = function modifyServiceFromConfig(serviceId, serviceConfig, pkgJson, done) {
+  async.series([
+    (next) => {
+      service.createPackageJsonForFlexProject(pkgJson, next);
+    },
+    (next) => {
+      const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+      const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+      const cmd = `service push ${serviceId} ${filePath} --output json --verbose`;
+      passConfigFileToCli(cmd, serviceConfig, filePath, next);
+    }
+  ], (err, results) => {
+    done(err, results.pop());
+  });
+};
+
+service.exportConfig = function exportConfig({ serviceId, relativePath = '' }, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, relativePath, fileName);
+  const cmd = `service export ${filePath} ${serviceId} --output json`;
+  TestsHelper.execCmdWoMocks(cmd, null, (err) => {
+    if (err) {
+      return done(err);
+    }
+
+    fs.readFile(filePath, null, (err, data) => {
+      if (err) {
+        return done(err);
+      }
+
+      done(null, JSON.parse(data));
+    });
+  });
+};
+
+service.assertFlexService = function assertFlexService(id, serviceConfig, serviceName, done) {
+  ApiService.services.get(id, (err, actual) => {
+    if (err) {
+      return done(err);
+    }
+
+    expect(serviceName).to.equal(actual.name);
+    expect(serviceConfig.description).to.equal(actual.description);
+
+    const isFlexInternal = serviceConfig.type === 'flex-internal';
+    const expectedType = isFlexInternal ? 'internal' : 'external';
+    expect(actual.type).to.equal(expectedType);
+
+    expect(actual.backingServers).to.be.an.array;
+    expect(actual.backingServers[0]).to.exist;
+    const expectedEnvName = Object.keys(serviceConfig.environments)[0];
+    const expectedEnv = serviceConfig.environments[expectedEnvName];
+    expect(actual.backingServers[0].secret).to.equal(expectedEnv.secret);
+    expect(actual.backingServers[0].name).to.equal(expectedEnvName);
+
+    if (isFlexInternal) {
+      expect(actual.backingServers[0].host).to.exist;
+    } else {
+      expect(actual.backingServers[0].host).to.equal(expectedEnv.host);
+    }
+
+    done();
+  });
+};
+
+service.assertFlexServiceStatus = function assertFlexServiceStatus(id, expectedVersion, expectedStatus, done) {
+  ApiService.services.status(id, (err, actual) => {
+    if (err) {
+      return done(err);
+    }
+
+    try {
+      expect(actual.version, 'Version').to.exist;
+      expect(actual.version).to.equal(expectedVersion);
+      if (expectedStatus) {
+        expect(actual.status.toLowerCase()).to.equal(expectedStatus.toLowerCase());
+      }
+    } catch (ex) {
+      return done(ex);
+    }
+
+    done();
+  });
+};
+
+service.assertFlexServiceStatusRetryable = function assertFlexServiceStatusRetryable(id, expectedVersion, expectedStatus, done) {
+  async.retry(
+    { times: 9, interval: 20000 }, // 9 times every 20 sec
+    (next) => {
+      service.assertFlexServiceStatus(id, expectedVersion, expectedStatus, next);
+    },
+    done
+  );
+};
+
+service.assertRapidDataService = function (id, serviceConfig, serviceName, done) {
+  ApiService.services.get(id, (err, actual) => {
+    if (err) {
+      return done(err);
+    }
+
+    try {
+      const expected = serviceConfig;
+      expect(actual.type).to.equal(ConfigFiles.ConfigToBackendServiceType[serviceConfig.type]);
+      if (expected.description) {
+        expect(actual.description).to.equal(expected.description);
+      } else {
+        expect(actual.description).to.not.exist;
+      }
+
+
+      // assert env-related settings
+      expect(actual.backingServers).to.be.an.array;
+      expect(actual.backingServers.length).to.equal(1);
+
+      const actualDefaultEnv = actual.backingServers[0];
+      const envName = Object.keys(serviceConfig.environments)[0];
+      const srvEnv = serviceConfig.environments[envName];
+
+      const expectedEnvWoMapping = getObjectByOmitting(srvEnv, ['mapping']);
+      const actualEnvWoMapping = getObjectByOmitting(actualDefaultEnv, ['_id', 'mapping', 'name']);
+      expect(actualEnvWoMapping).to.deep.equal(expectedEnvWoMapping);
+
+      // assert mapping
+      const envId = actualDefaultEnv._id;
+      const expectedDefEnvMapping = clonedeep(srvEnv.mapping);
+      if (expectedDefEnvMapping) {
+        Object.keys(expectedDefEnvMapping).forEach((serviceObjectName) => {
+          expectedDefEnvMapping[serviceObjectName].backingServer = envId;
+        });
+      }
+
+      expect(actualDefaultEnv.mapping).to.deep.equal(expectedDefEnvMapping);
+    } catch (ex) {
+      return done(ex);
+    }
+
+    done();
+  });
+};
+
 const env = {};
 env.buildSettings = function buildSettings() {
   return {
@@ -641,7 +808,7 @@ app.modifyFromConfig = function modifyFromConfig(appIdentifier, appConfig, done)
   passConfigFileToCli(cmd, appConfig, filePath, done);
 };
 
-app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, expectOrg, collList }, done) {
+app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, expectOrg, collListPerEnv }, done) {
   let actualApp;
   let assertEnvsDetails = true;
 
@@ -704,11 +871,45 @@ app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, ex
               return cb(err);
             }
 
-            env.assertCollections(actualEnv.id, collList, collList.length + 2, null, cb);
+            env.assertCollections(actualEnv.id, collListPerEnv[currName], collListPerEnv[currName].length + 2, null, cb);
           });
         },
         next
       );
+    },
+    (next) => {
+      ApiService.services.getAllByApp(actualApp.id, (err, actualServices) => {
+        if (err) {
+          return next(err);
+        }
+
+        const expectedServices = config.services;
+        if (!expectedServices) {
+          expect(actualServices.length).to.equal(0);
+          return setImmediate(next);
+        }
+
+        const expServiceNames = Object.keys(expectedServices);
+        async.eachSeries(
+          expServiceNames,
+          (currName, cb) => {
+            const actualService = actualServices.find(x => x.name === currName);
+            if (!actualService) {
+              return cb(new Error(`Failed to find actual service with name '${currName}'.`));
+            }
+
+            const actualId = actualService.id;
+            const serviceConfig = expectedServices[currName];
+            const actualType = actualService.type;
+            if (actualType === 'internal' || actualType === 'external') {
+              service.assertFlexService(actualId, serviceConfig, currName, cb);
+            } else {
+              service.assertRapidDataService(actualId, serviceConfig, currName, cb);
+            }
+          },
+          next
+        );
+      });
     }
   ], done);
 };
@@ -724,173 +925,6 @@ roles.buildValidRolesList = function buildValidRolesList(count) {
   }
 
   return result;
-};
-
-const service = {};
-service.createPackageJsonForFlexProject = function createPackageJsonForFlexProject(pkgJson, done) {
-  if (!pkgJson) {
-    return setImmediate(done);
-  }
-
-  const projectPath = path.join(process.cwd(), 'test/integration-no-mock/flex-project');
-  writeJSON({ file: path.join(projectPath, 'package.json'), data: pkgJson }, done);
-};
-
-service.createFromConfig = function createServiceFromConfig(serviceName, serviceConfig, serviceDomain, appOrOrgIdentifier, pkgJson, done) {
-  async.series([
-    (next) => {
-      service.createPackageJsonForFlexProject(pkgJson, next);
-    },
-    (next) => {
-      const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
-      const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-      const cmd = `service create ${serviceName} ${filePath} --${serviceDomain} ${appOrOrgIdentifier} --output json`;
-      passConfigFileToCli(cmd, serviceConfig, filePath, next);
-    }
-  ], (err, results) => {
-    done(err, results.pop());
-  });
-};
-
-service.modifyFromConfig = function modifyServiceFromConfig(serviceId, serviceConfig, pkgJson, done) {
-  async.series([
-    (next) => {
-      service.createPackageJsonForFlexProject(pkgJson, next);
-    },
-    (next) => {
-      const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
-      const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-      const cmd = `service push ${serviceId} ${filePath} --output json --verbose`;
-      passConfigFileToCli(cmd, serviceConfig, filePath, next);
-    }
-  ], (err, results) => {
-    done(err, results.pop());
-  });
-};
-
-service.exportConfig = function exportConfig({ serviceId, relativePath = '' }, done) {
-  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
-  const filePath = path.join(TestsHelper.ConfigFilesDir, relativePath, fileName);
-  const cmd = `service export ${filePath} ${serviceId} --output json`;
-  TestsHelper.execCmdWoMocks(cmd, null, (err) => {
-    if (err) {
-      return done(err);
-    }
-
-    fs.readFile(filePath, null, (err, data) => {
-      if (err) {
-        return done(err);
-      }
-
-      done(null, JSON.parse(data));
-    });
-  });
-};
-
-service.assertFlexService = function assertFlexService(id, serviceConfig, serviceName, done) {
-  ApiService.services.get(id, (err, actual) => {
-    if (err) {
-      return done(err);
-    }
-
-    expect(serviceName).to.equal(actual.name);
-    expect(serviceConfig.description).to.equal(actual.description);
-
-    const isFlexInternal = serviceConfig.type === 'flex-internal';
-    const expectedType = isFlexInternal ? 'internal' : 'external';
-    expect(actual.type).to.equal(expectedType);
-
-    expect(actual.backingServers).to.be.an.array;
-    expect(actual.backingServers[0]).to.exist;
-    const expectedEnvName = Object.keys(serviceConfig.environments)[0];
-    const expectedEnv = serviceConfig.environments[expectedEnvName];
-    expect(actual.backingServers[0].secret).to.equal(expectedEnv.secret);
-    expect(actual.backingServers[0].name).to.equal(expectedEnvName);
-
-    if (isFlexInternal) {
-      expect(actual.backingServers[0].host).to.exist;
-    } else {
-      expect(actual.backingServers[0].host).to.equal(expectedEnv.host);
-    }
-
-    done();
-  });
-};
-
-service.assertFlexServiceStatus = function assertFlexServiceStatus(id, expectedVersion, expectedStatus, done) {
-  ApiService.services.status(id, (err, actual) => {
-    if (err) {
-      return done(err);
-    }
-
-    try {
-      expect(actual.version, 'Version').to.exist;
-      expect(actual.version).to.equal(expectedVersion);
-      if (expectedStatus) {
-        expect(actual.status).to.equal(expectedStatus);
-      }
-    } catch (ex) {
-      return done(ex);
-    }
-
-    done();
-  });
-};
-
-service.assertFlexServiceStatusRetryable = function assertFlexServiceStatusRetryable(id, expectedVersion, expectedStatus, done) {
-  async.retry(
-    { times: 9, interval: 20000 }, // 9 times every 20 sec
-    (next) => {
-      service.assertFlexServiceStatus(id, expectedVersion, expectedStatus, next);
-    },
-    done
-  );
-};
-
-service.assertRapidDataService = function (id, serviceConfig, serviceName, done) {
-  ApiService.services.get(id, (err, actual) => {
-    if (err) {
-      return done(err);
-    }
-
-    try {
-      const expected = serviceConfig;
-      expect(actual.type).to.equal(ConfigFiles.ConfigToBackendServiceType[serviceConfig.type]);
-      if (expected.description) {
-        expect(actual.description).to.equal(expected.description);
-      } else {
-        expect(actual.description).to.not.exist;
-      }
-
-
-      // assert env-related settings
-      expect(actual.backingServers).to.be.an.array;
-      expect(actual.backingServers.length).to.equal(1);
-
-      const actualDefaultEnv = actual.backingServers[0];
-      const envName = Object.keys(serviceConfig.environments)[0];
-      const srvEnv = serviceConfig.environments[envName];
-
-      const expectedEnvWoMapping = getObjectByOmitting(srvEnv, ['mapping']);
-      const actualEnvWoMapping = getObjectByOmitting(actualDefaultEnv, ['_id', 'mapping', 'name']);
-      expect(actualEnvWoMapping).to.deep.equal(expectedEnvWoMapping);
-
-      // assert mapping
-      const envId = actualDefaultEnv._id;
-      const expectedDefEnvMapping = clonedeep(srvEnv.mapping);
-      if (expectedDefEnvMapping) {
-        Object.keys(expectedDefEnvMapping).forEach((serviceObjectName) => {
-          expectedDefEnvMapping[serviceObjectName].backingServer = envId;
-        });
-      }
-
-      expect(actualDefaultEnv.mapping).to.deep.equal(expectedDefEnvMapping);
-    } catch (ex) {
-      return done(ex);
-    }
-
-    done();
-  });
 };
 
 const org = {};

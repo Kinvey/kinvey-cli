@@ -29,7 +29,7 @@ module.exports = () => {
     execCmdWoMocks(`app delete ${appName} --no-prompt`, null, done);
   });
 
-  it('modifying settings and envs and creating envs should succeed', (done) => {
+  it('modifying settings, envs and services, and creating envs and services should succeed', (done) => {
     const internalCollList = EnvHelper.buildValidInternalCollectionsList(2, false);
     const internalConfigColls = ConfigManagementHelper.common.buildConfigEntityFromList(internalCollList);
     const basicEnvWithInternalCollsOnly = {
@@ -38,20 +38,59 @@ module.exports = () => {
       collections: internalConfigColls
     };
 
+    const initialServiceName = randomStrings.plainString();
+    const initialService = {
+      schemaVersion: '1.0.0',
+      type: 'flex-external',
+      description: 'Test service',
+      environments: {
+        dev: {
+          secret: '123',
+          host: 'https://swapi.co/api'
+        }
+      }
+    };
+
     const initialConfig = {
       schemaVersion: '1.0.0',
       configType: 'application',
       environments: {
         Prod: basicEnvWithInternalCollsOnly,
         Test: basicEnvWithInternalCollsOnly
+      },
+      services: {
+        [initialServiceName]: initialService
       }
     };
 
+    const additionalServiceName = randomStrings.plainString();
     const modifiedConfig = cloneDeep(initialConfig);
     modifiedConfig.settings = {
       sessionTimeoutInSeconds: 90
     };
-    modifiedConfig.environments.newEnv = basicEnvWithInternalCollsOnly;
+    modifiedConfig.environments.newEnv = {
+      schemaVersion: '1.0.0',
+      customEndpoints: {
+        myEndpoint: {
+          type: 'external',
+          service: additionalServiceName,
+          handlerName: 'someHandler'
+        }
+      }
+    };
+
+    modifiedConfig.services[initialServiceName].description = 'Updated service description';
+    modifiedConfig.services[additionalServiceName] = {
+      schemaVersion: '1.0.0',
+      type: 'flex-external',
+      description: 'Test service',
+      environments: {
+        dev: {
+          secret: '567',
+          host: 'https://swapi.co/api'
+        }
+      }
+    };
 
     appName = randomStrings.appName();
     let appId;
@@ -75,7 +114,7 @@ module.exports = () => {
           config: modifiedConfig,
           id: appId,
           expectedName: appName,
-          collList: internalCollList
+          collListPerEnv: { Prod: internalCollList, Test: internalCollList, newEnv: [] }
         };
         AppHelper.assertApp(options, next);
       }

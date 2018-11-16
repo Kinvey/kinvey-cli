@@ -31,6 +31,8 @@ const fixtureServices = require('./fixtures/datalinks.json');
 const fixtureInternalFlexService = require('./fixtures/internal-flex-service.json');
 const fixtureSvcEnvs = require('./fixtures/svc-envs-one.json');
 const fixtureServicesStatuses = require('./fixtures/datalinks-status-response.json');
+const fixtureSites = require('./fixtures/sites');
+const fixtureSiteEnvs = require('./fixtures/site-envs-one');
 const fixtureJob = require('./fixtures/job.json');
 const fixtureJobs = require('./fixtures/jobs.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
@@ -49,6 +51,11 @@ const serviceNotFound = {
 const svcEnvNotFound = {
   code: 'ServiceEnvironmentNotFound',
   description: 'The specified service environment could not be found.'
+};
+
+const siteNotFound = {
+  code: 'SiteNotFound',
+  description: 'The specified website could not be found.'
 };
 
 let server;
@@ -84,6 +91,9 @@ function build(
     svcEnvs = fixtureSvcEnvs,
     orgs = fixtureOrgs,
     apps = fixtureApps,
+    sites = fixtureSites,
+    site = fixtureSites[0],
+    siteEnvs = fixtureSiteEnvs,
     service = fixtureInternalFlexService,
     updatedSvcEnv = null,
     envVars = null,
@@ -298,7 +308,44 @@ function build(
       return res.sendStatus(204);
     }
 
-    res.status(404).send(serviceNotFound);
+    res.status(404).send(siteNotFound);
+  });
+
+
+  // SITES
+  app.post(`/${versionPart}/sites/:id/environments`, (req, res) => {
+    const id = req.params.id;
+    if (!sites.find(x => x.id === id)) {
+      return res.status(404).send(siteNotFound);
+    }
+
+    if (!req.body || req.body.name !== 'Default') {
+      return res.status(400).send(`CLI sent bad body: ${JSON.stringify(req.body, null, 2)}`);
+    }
+
+    res.status(201).send(siteEnvs[0]);
+  });
+
+  app.delete(`/${versionPart}/sites/:id`, (req, res) => {
+    const id = req.params.id;
+    if (!sites.find(x => x.id === id)) {
+      return res.status(404).send(siteNotFound);
+    }
+
+    res.sendStatus(204);
+  });
+
+  app.get(`/${versionPart}/sites`, (req, res) => {
+    res.send(sites);
+  });
+
+  app.post(`/${versionPart}/sites`, (req, res) => {
+    const body = req.body;
+    if (!body || body.name !== site.name) {
+      return res.status(400).send(`CLI sent bad body: ${JSON.stringify(body, null, 2)}`);
+    }
+
+    res.status(201).send(site);
   });
 
 

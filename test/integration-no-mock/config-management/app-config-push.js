@@ -26,7 +26,7 @@ module.exports = () => {
   let appName;
 
   afterEach('remove app', (done) => {
-    execCmdWoMocks(`app delete ${appName} --no-prompt`, null, done);
+    execCmdWoMocks(`app delete --app ${appName} --no-prompt`, null, done);
   });
 
   it('modifying settings, envs and services, and creating envs and services should succeed', (done) => {

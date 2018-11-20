@@ -35,7 +35,7 @@ module.exports = () => {
   after('remove app and services', (done) => {
     async.series([
       (next) => {
-        execCmdWoMocks(`app delete ${appName} --no-prompt`, null, next);
+        execCmdWoMocks(`app delete --app ${appName} --no-prompt`, null, next);
       },
       (next) => {
         async.each(

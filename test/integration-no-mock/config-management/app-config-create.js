@@ -82,6 +82,45 @@ module.exports = () => {
       ], done);
     });
 
+    it('2 envs (containing internal colls only) none of which is the default should succeed', (done) => {
+      const config = {
+        schemaVersion: '1.0.0',
+        configType: 'application',
+        environments: {
+          Prod: basicEnvWithInternalCollsOnly,
+          Test: basicEnvWithInternalCollsOnly
+        }
+      };
+
+      const orgIdentifier = 'CliOrg';
+      appName = randomStrings.appName();
+      let appId;
+
+      async.series([
+        (next) => {
+          AppHelper.createFromConfig(appName, config, orgIdentifier, (err, id) => {
+            if (err) {
+              return next(err);
+            }
+
+            appId = id;
+            next();
+          });
+        },
+        (next) => {
+          const options = {
+            config,
+            orgIdentifier,
+            id: appId,
+            expectedName: appName,
+            collListPerEnv: { Prod: internalCollList, Test: internalCollList },
+            expectOrg: true
+          };
+          AppHelper.assertApp(options, next);
+        }
+      ], done);
+    });
+
     it('settings and 1 env (containing external colls) should succeed', (done) => {
       const svcOne = randomStrings.plainString();
       const svcTwo = randomStrings.plainString();
@@ -193,42 +232,6 @@ module.exports = () => {
             config,
             id: appId,
             expectedName: appName
-          };
-          AppHelper.assertApp(options, next);
-        }
-      ], done);
-    });
-
-    it('2 envs (containing internal colls only) none of which is the default should succeed', (done) => {
-      const config = {
-        schemaVersion: '1.0.0',
-        configType: 'application',
-        environments: {
-          Prod: basicEnvWithInternalCollsOnly,
-          Test: basicEnvWithInternalCollsOnly
-        }
-      };
-
-      appName = randomStrings.appName();
-      let appId;
-
-      async.series([
-        (next) => {
-          AppHelper.createFromConfig(appName, config, null, (err, id) => {
-            if (err) {
-              return next(err);
-            }
-
-            appId = id;
-            next();
-          });
-        },
-        (next) => {
-          const options = {
-            config,
-            id: appId,
-            expectedName: appName,
-            collListPerEnv: { Prod: internalCollList, Test: internalCollList }
           };
           AppHelper.assertApp(options, next);
         }

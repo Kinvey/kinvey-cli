@@ -178,6 +178,7 @@ describe(baseCmd, () => {
             .respond('\n')
             .when(Prompt.selectService)
             .respond(Keys.downArrow)
+            .respond(Keys.downArrow)
             .respond('\n');
 
           runSupposeSequence(sequence, (error, exitCode) => {
@@ -334,6 +335,7 @@ describe(baseCmd, () => {
             .when(Prompt.selectOrganization)
             .respond('\n')
             .when(Prompt.selectService)
+            .respond(Keys.downArrow)
             .respond(Keys.downArrow)
             .respond('\n');
 

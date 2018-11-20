@@ -71,6 +71,8 @@ function build(
     orgs = fixtureOrgs,
     apps = fixtureApps,
     service = fixtureInternalFlexService,
+    updatedService = null,
+    envVars = null,
     envs = fixtureEnvs,
     colls = fixtureCollections,
     jobType = 'recycleDataLink',
@@ -184,6 +186,20 @@ function build(
     res.send(fixtureServices);
   });
 
+  app.put(`/${versionPart}/data-links/:id`, (req, res) => {
+    const id = req.params.id;
+    const wantedService = fixtureServices.find(x => x.id === id);
+    if (!wantedService) {
+      return res.status(404);
+    }
+
+    if (!isEqual(req.body, updatedService)) {
+      return res.status(400).send(req.body);
+    }
+
+    return res.send(req.body);
+  });
+
   app.delete(`/${versionPart}/data-links/:id`, (req, res) => {
     const id = req.params.id;
     if (id === service.id) {
@@ -238,8 +254,10 @@ function build(
 
   app.post(`/${versionPart}/${domainType}/${domainEntityId}/data-links`, (req, res) => {
     const body = req.body;
+    const envVarsDiffer = (envVars && !isEqual(body.backingServers[0].environmentVariables, envVars)) ||
+      (!envVars && body.backingServers[0].environmentVariables);
     if (!body.name || body.name !== service.name || body.type !== service.type || !Array.isArray(body.backingServers)
-      || !body.backingServers[0] || !body.backingServers[0].secret) {
+      || !body.backingServers[0] || !body.backingServers[0].secret || envVarsDiffer) {
       return res.sendStatus(400);
     }
 

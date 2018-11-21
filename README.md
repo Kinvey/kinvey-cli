@@ -76,13 +76,25 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
     Sets the specified organization as active. You can specify an organization by ID or name.
     
-* `app create <name>`
+* `org export <file>`
+    
+    Exports to a file the specified org or the active one.
+    
+    * `--org <organization>`
+               
+        Specifies a Kinvey organization by ID or name.
+    
+* `app create <name> [file]`
 
     Creates an application. You can specify an organization ID or name if you want to create the app within the context of an organization.
     
     * `--org <organization>`
                
         Specifies a Kinvey organization by ID or name.
+
+* `app push <file>`
+    
+    Applies app configuration file to the specified app or to the active one.
     
 * `app list`
 
@@ -99,6 +111,14 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 * `app use <app>`
 
     Sets the specified application as active. You can specify an application by ID or name.
+    
+* `app export <file>`
+
+    Exports to a file the specified app or the active one.
+
+    * `--app <application>`
+               
+            Specifies a Kinvey app by ID or name.
     
 * `app delete`
 
@@ -120,13 +140,17 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
        
       Specifies a Kinvey app by ID or name.
       
-* `env push <file> [env]`
+* `appenv push <file>`
 
     Applies configuration (defined in file) to the specified environment or to the active one if you don't specify an environment. You can specify an environment by ID or name. By default, the command searches inside the active application but you can specify a different application using `--app`.
     
     * `--app <application>`
            
         Specifies a Kinvey app by ID or name.
+        
+    * `--env <environment>`
+              
+        Specifies a Kinvey app environment by ID or name.
     
 * `appenv show`
 
@@ -146,6 +170,18 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     * `--app <application>`
        
+        Specifies a Kinvey app by ID or name.
+
+* `appenv export <file>`
+    
+    Exports to a file the specified app environment or the active one.
+    
+    * `--env <environment>`
+              
+        Specifies a Kinvey app environment by ID or name.
+        
+    * `--app <application>`
+           
         Specifies a Kinvey app by ID or name.
     
 * `appenv delete`
@@ -216,9 +252,21 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
                 
       Specifies a Kinvey organization by ID or name.
 
-* `service push <serviceId> <file>`
+* `service push <file>`
 
     Applies a service configuration file to the specified service.
+    
+    * `--service <service>`
+        
+        Specifies service ID.
+
+* `service export <file>`
+
+    Exports the specified service to a file.
+    
+    * `--service <service>`
+        
+        Specifies service ID.
 
 * `flex init`
 
@@ -598,19 +646,19 @@ Kinvey CLI supports the usage of configuration files (JSON format) to enable con
 The environment configuration file can be used to create a brand new environment or to modify an existing one. It is easiest to generate the file by 'exporting' an existent environment and making the necessary modifications. To export an environment run:
  
  ```
-kinvey env export <file> [env]
+kinvey appenv export <file> [--env <env>] [--app <app>]
 ```
 
 Alternatively, the environment template beneath can be used and modified as needed.
 
 To create an environment from a configuration file run:
  ```
-kinvey env create <envName> [file-path] [--app AppNameOrId]
+kinvey appenv create <envName> [file-path] [--app <AppNameOrID>]
 ```
 
 To apply a configuration file to an existent environment run:
  ```
-kinvey env push <file-path> [envName] [--app AppNameOrId]
+kinvey appenv push <file-path> [--env <env>] [--app <app>]
 ```
 
 Before an environment config file gets applied a check will be executed to verify JSON is valid and parameter values are allowed. If the check passes successfully, Kinvey CLI will start applying the changes. In the case of a new environment it will simply try to create all the entities described in the file. 
@@ -840,7 +888,7 @@ Either `--app` or `--org` option must be set. The service will be accessible onl
 
 To apply a configuration file to an existent service run:
  ```
-kinvey service push <serviceId> <file-path>
+kinvey service push <file-path> (--service <service-ID>)
 ``` 
 
 When a new internal flex service is created the CLI will attempt a deploy if `sourcePath` is set. 

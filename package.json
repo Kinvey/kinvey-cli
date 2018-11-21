@@ -1,7 +1,7 @@
 {
   "name": "kinvey-cli",
   "version": "4.1.0-alpha.2",
-  "description": "Command-line utility for managing Kinvey accounts including Flex, apps, and collections",
+  "description": "Command-line utility for managing various aspects of your Kinvey account",
   "keywords": [
     "Kinvey"
   ],

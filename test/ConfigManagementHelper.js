@@ -86,7 +86,7 @@ service.modifyFromConfig = function modifyServiceFromConfig(serviceId, serviceCo
     (next) => {
       const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
       const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-      const cmd = `service push ${serviceId} ${filePath} --output json --verbose`;
+      const cmd = `service push --service ${serviceId} ${filePath} --output json --verbose`;
       passConfigFileToCli(cmd, serviceConfig, filePath, next);
     }
   ], (err, results) => {
@@ -97,7 +97,7 @@ service.modifyFromConfig = function modifyServiceFromConfig(serviceId, serviceCo
 service.exportConfig = function exportConfig({ serviceId, relativePath = '' }, done) {
   const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
   const filePath = path.join(TestsHelper.ConfigFilesDir, relativePath, fileName);
-  const cmd = `service export ${filePath} ${serviceId} --output json`;
+  const cmd = `service export ${filePath} --service ${serviceId} --output json`;
   TestsHelper.execCmdWoMocks(cmd, null, (err) => {
     if (err) {
       return done(err);
@@ -281,7 +281,7 @@ env.modifyFromConfig = function modifyEnvFromConfig(config, envIdentifier, appId
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
   let cmd = `appenv push ${filePath} --output json`;
   if (envIdentifier) {
-    cmd = `${cmd} ${envIdentifier}`;
+    cmd = `${cmd} --env ${envIdentifier}`;
   }
 
   if (appIdentifier) {
@@ -296,7 +296,7 @@ env.exportEnv = function (envIdentifier, appIdentifier, done) {
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
   let cmd = `appenv export ${filePath} --output json`;
   if (envIdentifier) {
-    cmd = `${cmd} ${envIdentifier}`;
+    cmd = `${cmd} --env ${envIdentifier}`;
   }
 
   if (appIdentifier) {
@@ -803,7 +803,7 @@ app.modifyFromConfig = function modifyFromConfig(appIdentifier, appConfig, done)
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
   let cmd = `app push ${filePath} --output json`;
   if (appIdentifier) {
-    cmd += ` ${appIdentifier}`;
+    cmd += ` --app ${appIdentifier}`;
   }
   passConfigFileToCli(cmd, appConfig, filePath, done);
 };
@@ -940,7 +940,7 @@ org.exportOrg = function exportOrg(orgIdentifier, done) {
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
   let cmd = `org export ${filePath} --output json`;
   if (orgIdentifier) {
-    cmd = `${cmd} ${orgIdentifier}`;
+    cmd = `${cmd} --org ${orgIdentifier}`;
   }
 
   TestsHelper.execCmdWoMocks(cmd, null, (err) => {

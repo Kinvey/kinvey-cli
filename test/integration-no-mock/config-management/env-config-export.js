@@ -26,7 +26,7 @@ module.exports = () => {
   });
 
   after('remove app', (done) => {
-    execCmdWoMocks(`app delete ${appName} --no-prompt`, null, done);
+    execCmdWoMocks(`app delete --app ${appName} --no-prompt`, null, done);
   });
 
   it('with collections, hooks, endpoints, push settings, groups, roles should succeed', (done) => {

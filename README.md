@@ -220,6 +220,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
         Specifies environment variables to set. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
         
+    * `--runtime <node6|node8|node10>`
+    
+        Specifies runtime environment.
+        
 * `flex deploy`
 
    Deploys the current project to the Kinvey FlexService Runtime, using the current service, which is the one you initiated last on the current profile. To use a different service, specify its service ID.
@@ -236,6 +240,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
         Specifies environment variables to set. If any of the variables already exist on the server, they are overwritten without prompt. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
     
+    * `--runtime <node6|node8|node10>`
+        
+        Specifies runtime environment.
+    
 * `flex job [id]`
 
    Shows the job status of a deploy/recycle command. If you don't specify an `id`, the command returns the status of the most recent `flex deploy` or `flex recycle` command.
@@ -248,7 +256,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
         
         Specifies service ID.
        
-   `flex show`
+* `flex show`
    
    Shows info about the current Flex service, which is the one you initiated last on the current profile. To get info for a different service, specify its service ID.
             
@@ -294,7 +302,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex update`
 
-    Updates environment variables of the current Flex Service, which is the one you initiated last on the current profile. To specify a different service, use `--service`.
+    Updates environment variables and/or runtime environment of the current Flex Service, which is the one you initiated last on the current profile. To specify a different service, use `--service`. The command causes restart/rebuild of the service
 
     * `--service <service>`
             
@@ -307,6 +315,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     * `--set-vars <environment variables>`
         
         Specifies environment variables to set. If any of the variables already exist on the server, they are overwritten without prompt. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
+
+    * `--runtime <node6|node8|node10>`
+        
+        Specifies runtime environment.
 
 * `flex recycle`
    

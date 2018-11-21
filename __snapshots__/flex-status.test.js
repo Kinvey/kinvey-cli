@@ -152,14 +152,13 @@ key                value
 -----------------  -------------------------------------
 status             UPDATING                             
 version            1.4.2                                
-runtime            UNKNOWN                              
 id                 1234567                              
 requestedAt        replaced_value
 deployerEmail      davy.jones@mail.com                  
 deployerName       Davy Jones                           
 deploymentStatus   RUNNING                              
 deploymentVersion  1.4.3                                
-deploymentRuntime  FLEX-RUNTIME-NODE10                  
+deploymentRuntime  node10                               
 
 
 `
@@ -178,14 +177,14 @@ key                value
 -----------------  -------------------------------------
 status             ONLINE                               
 version            1.4.2                                
-runtime            FLEX-RUNTIME-NODE8                   
+runtime            node8                                
 id                 123456                               
 requestedAt        replaced_value
 deployerEmail      davy.jones@mail.com                  
 deployerName       Davy Jones                           
 deploymentStatus   COMPLETED                            
 deploymentVersion  1.4.3                                
-deploymentRuntime  FLEX-RUNTIME-NODE10                  
+deploymentRuntime  node10                               
 
 
 `

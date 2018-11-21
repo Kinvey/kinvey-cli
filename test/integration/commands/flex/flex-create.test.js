@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { AppOptionsName, AuthOptionsNames, FlexOptionsNames, Namespace, OrgOptionsName } = require('./../../../../lib/Constants');
+const { APIRuntime, AppOptionsName, AuthOptionsNames, CLIRuntime, FlexOptionsNames, Namespace, OrgOptionsName } = require('./../../../../lib/Constants');
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureOrg = require('./../../../fixtures/org.json');
 const fixtureUser = require('./../../../fixtures/user.json');
@@ -64,8 +64,18 @@ describe(baseCmd, () => {
       testServiceCreate(options, defaultFlags, serviceName, { envVars: { KEY_1: 'value1', KEY_2: 'value2' } }, done);
     });
 
+    it('with a name, secret, basic env vars, runtime and app should succeed and output default format', (done) => {
+      const options = Object.assign({ [FlexOptionsNames.ENV_VARS]: 'KEY_1=value1', [FlexOptionsNames.RUNTIME]: CLIRuntime.NODE8 }, optionsForSecretAndApp);
+      testServiceCreate(options, defaultFlags, serviceName, { envVars: { KEY_1: 'value1' }, runtime: APIRuntime.NODE8 }, done);
+    });
+
     it('with a name, app and invalid env vars should fail', (done) => {
       const options = Object.assign({ [FlexOptionsNames.ENV_VARS]: 'KEY_1=value1,KEY_2=[3,5]' }, optionsForApp);
+      testServiceCreate(options, defaultFlags, serviceName, null, done);
+    });
+
+    it('with a name, app and invalid runtime should fail', (done) => {
+      const options = Object.assign({ [FlexOptionsNames.RUNTIME]: 'node8.11.1' }, optionsForApp);
       testServiceCreate(options, defaultFlags, serviceName, null, done);
     });
 

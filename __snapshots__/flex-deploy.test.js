@@ -32,6 +32,8 @@ Options:
                                             list of key-value pairs
                                             (key1=value1,key2=value2) or in JSON
                                             format.
+  --runtime                                 Runtime environment
+                                  [string] [choices: "node6", "node8", "node10"]
 
 This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: service.
 
@@ -76,6 +78,8 @@ Options:
                                             list of key-value pairs
                                             (key1=value1,key2=value2) or in JSON
                                             format.
+  --runtime                                 Runtime environment
+                                  [string] [choices: "node6", "node8", "node10"]
 
 This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: service.
 

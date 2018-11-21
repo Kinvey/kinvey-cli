@@ -178,7 +178,8 @@ Commands:
   kinvey flex show           Show info for a service
   kinvey flex list           List Internal Flex Services for an app or org
   kinvey flex logs           Retrieve and display Internal Flex Service logs
-  kinvey flex update         Update environment variables
+  kinvey flex update         Update environment variables and runtime. Causes
+                             restart/rebuild of the service
   kinvey flex recycle        Recycle the Service
   kinvey flex delete         Delete service
   kinvey flex clear          Clear project settings

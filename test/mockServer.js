@@ -326,6 +326,15 @@ function build(
     res.status(201).send(siteEnvs[0]);
   });
 
+  app.get(`/${versionPart}/sites/:id/environments`, (req, res) => {
+    const id = req.params.id;
+    if (!sites.find(x => x.id === id)) {
+      return res.status(404).send(siteNotFound);
+    }
+
+    res.status(200).send(siteEnvs);
+  });
+
   app.delete(`/${versionPart}/sites/:id`, (req, res) => {
     const id = req.params.id;
     if (!sites.find(x => x.id === id)) {

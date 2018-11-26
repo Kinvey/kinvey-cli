@@ -24,12 +24,12 @@ exports['website list using active profile when there are sites should output JS
       "name": "a0"
     },
     {
-      "id": "0205f37e08d545cb9c88ad48b4397acc",
-      "name": "b0"
-    },
-    {
       "id": "b85fe52ca1434d148b5c5f8199fceb9e",
       "name": "a1"
+    },
+    {
+      "id": "0205f37e08d545cb9c88ad48b4397acc",
+      "name": "b0"
     }
   ]
 }
@@ -46,8 +46,8 @@ Count: 3
 id                                name
 --------------------------------  ----
 9caf90c31c4449f195a1a40acc979cf0  a0  
-0205f37e08d545cb9c88ad48b4397acc  b0  
 b85fe52ca1434d148b5c5f8199fceb9e  a1  
+0205f37e08d545cb9c88ad48b4397acc  b0  
 
 
 
@@ -68,8 +68,8 @@ Count: 3
 id                                name
 --------------------------------  ----
 9caf90c31c4449f195a1a40acc979cf0  a0  
-0205f37e08d545cb9c88ad48b4397acc  b0  
 b85fe52ca1434d148b5c5f8199fceb9e  a1  
+0205f37e08d545cb9c88ad48b4397acc  b0  
 
 
 

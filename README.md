@@ -220,6 +220,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
         Specifies environment variables to set. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
         
+    * `--runtime <node6|node8|node10>`
+    
+        Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection).
+        
 * `flex deploy`
 
    Deploys the current project to the Kinvey FlexService Runtime, using the current service, which is the one you initiated last on the current profile. To use a different service, specify its service ID.
@@ -236,6 +240,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
         Specifies environment variables to set. If any of the variables already exist on the server, they are overwritten without prompt. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
     
+    * `--runtime <node6|node8|node10>`
+        
+        Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection).
+    
 * `flex job [id]`
 
    Shows the job status of a deploy/recycle command. If you don't specify an `id`, the command returns the status of the most recent `flex deploy` or `flex recycle` command.
@@ -248,7 +256,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
         
         Specifies service ID.
        
-   `flex show`
+* `flex show`
    
    Shows info about the current Flex service, which is the one you initiated last on the current profile. To get info for a different service, specify its service ID.
             
@@ -294,7 +302,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex update`
 
-    Updates environment variables of the current Flex Service, which is the one you initiated last on the current profile. To specify a different service, use `--service`.
+    Updates environment variables and/or runtime environment of the current Flex Service, which is the one you initiated last on the current profile. To specify a different service, use `--service`. The command causes restart/rebuild of the service.
 
     * `--service <service>`
             
@@ -307,6 +315,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     * `--set-vars <environment variables>`
         
         Specifies environment variables to set. If any of the variables already exist on the server, they are overwritten without prompt. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
+
+    * `--runtime <node6|node8|node10>`
+        
+        Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection).
 
 * `flex recycle`
    
@@ -461,7 +473,7 @@ kinvey flex init
 
 Through a series of prompts, this command will ask you for a domain in which to operate (app or organization) and a Flex Service to deploy to.
 
-Finally, you are ready to deploy your node.js project as a Flex Service.
+Finally, you are ready to deploy your Node.js project as a Flex Service.
 
     kinvey flex deploy
     
@@ -540,6 +552,16 @@ The JSON output format is suitable for cases where the output must be handled pr
     "result": [result]
 }
 ```
+
+## Flex Runtime Version Selection
+
+Flex projects that you deploy run server-side on the Flex Runtime which represents a preconfigured Node.js environment. When creating a project and later when running it, you can select a Node.js version for the project to run on using the `--runtime` option.
+
+The runtime selection is limited to the major Node.js version. You can choose to run your project on the 6.x, 8.x, or 10.x branch but the minor and patch versions are always determined by the Flex Runtime.
+
+Kinvey makes its best to provide the [latest LTS](https://github.com/nodejs/Release#release-schedule) versions of the 6.x, 8.x, and 10.x branches. The frequent updates mean that the version that you start developing on may be replaced by the time you are ready to deploy the final version of your project.
+
+After you deploy a Flex project, it remains on the same Node.js version until you upgrade it to a new major version or Kinvey decides to upgrade the project's runtime to a more recent minor and patch version because of security or efficiency reasons.
 
 ## Proxy Settings
 

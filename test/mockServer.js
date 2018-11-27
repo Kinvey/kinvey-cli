@@ -88,6 +88,7 @@ function build(
     updatedSvcEnv = null,
     envVars = null,
     envs = fixtureEnvs,
+    runtime = null,
     colls = fixtureCollections,
     jobType = 'recycleService',
     serviceLogsQuery = {},
@@ -228,9 +229,10 @@ function build(
       return res.sendStatus(400);
     }
 
+    const runtimesDiffer = runtime != body.runtime;
     const envVarsDiffer = (envVars && !isEqual(body.environmentVariables, envVars)) ||
       (!envVars && body.environmentVariables);
-    if (!body.name || !body.secret || envVarsDiffer) {
+    if (!body.name || !body.secret || envVarsDiffer || runtimesDiffer) {
       return res.sendStatus(400);
     }
 
@@ -339,6 +341,8 @@ function build(
     res.send({ job: 'idOfJobThatIsRecyclingTheService' });
   });
 
+
+  // ENVS BY APP
   app.get(`/${versionPart}/apps/:id/environments`, (req, res) => {
     const id = req.params.id;
     const wantedApp = apps.find(x => x.id === id);

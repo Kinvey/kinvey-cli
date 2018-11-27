@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.0.1 (2018-11-21)
+* Add runtime environment support for internal flex services
+
 ## 4.0.0 (2018-11-08)
 * Add commands:
     * organizations-related: `org list`, `org show`, `org use`

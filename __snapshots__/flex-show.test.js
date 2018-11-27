@@ -30,6 +30,7 @@ key                          value
 ---------------------------  --------------------------------
 svcEnvName                   dev                             
 svcEnvId                     642dd1efe3d92e0180317487b29c6e88
+runtime                      node8                           
 secret                       123                             
 serviceName                  TestKinveyDatalink              
 app                          555594ffb9e7473781ad4cebdfd55555

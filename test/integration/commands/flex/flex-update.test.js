@@ -15,7 +15,7 @@
 
 const cloneDeep = require('lodash.clonedeep');
 
-const { AuthOptionsNames, FlexOptionsNames, Namespace } = require('./../../../../lib/Constants');
+const { APIRuntime, AuthOptionsNames, CLIRuntime, FlexOptionsNames, Namespace } = require('./../../../../lib/Constants');
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureService = require('./../../../fixtures/internal-flex-service.json');
@@ -104,6 +104,23 @@ describe(baseCmd, () => {
 
       it('with both set and replace env vars should fail', (done) => {
         const options = Object.assign({ [FlexOptionsNames.ENV_VARS_SET]: 'KEY_1=value1', [FlexOptionsNames.ENV_VARS_REPLACE]: 'KEY_2=value2' }, optionsForProfile);
+        testFlexUpdate(options, defaultFlags, null, done);
+      });
+
+      it('with valid runtime should succeed', (done) => {
+        const options = Object.assign({ [FlexOptionsNames.RUNTIME]: CLIRuntime.NODE10 }, optionsForProfile);
+        const updatedSvcEnv = cloneDeep(fixtureSvcEnvOneEnvVar);
+        updatedSvcEnv.runtime = APIRuntime.NODE10;
+        delete updatedSvcEnv.id;
+        const apiOptions = {
+          updatedSvcEnv,
+          svcEnvs: fixtureSvcEnvs
+        };
+        testFlexUpdate(options, defaultFlags, apiOptions, done);
+      });
+
+      it('with invalid runtime should fail', (done) => {
+        const options = Object.assign({ [FlexOptionsNames.RUNTIME]: '6.9.1' }, optionsForProfile);
         testFlexUpdate(options, defaultFlags, null, done);
       });
     });

@@ -14,7 +14,8 @@
  */
 
 const { FlexOptionsNames, Namespace } = require('./../../../../lib/Constants');
-const fixtureServiceOneEnvVar = require('./../../../fixtures/internal-flex-service-one-env-var.json');
+const fixtureServices = require('./../../../fixtures/datalinks.json');
+const fixtureSvcEnvsSeveral = require('./../../../fixtures/svc-envs-several.json');
 const { buildCmd, execCmdWithAssertion, setup, testers } = require('../../../TestsHelper');
 
 const baseCmd = `${Namespace.FLEX} show`;
@@ -54,13 +55,16 @@ describe(baseCmd, () => {
         setup.clearProjectSetup(null, done);
       });
 
-      it('without service as option should succeed', (done) => {
+      it('without service and svc env as options should succeed', (done) => {
         testFlexShow(null, defaultFlags, null, done);
       });
 
-      it('with service as option should succeed', (done) => {
-        const options = { [FlexOptionsNames.SERVICE_ID]: fixtureServiceOneEnvVar.id };
-        testFlexShow(options, defaultFlags, null, done);
+      it('with service and svc env as options should succeed', (done) => {
+        const options = {
+          [FlexOptionsNames.SERVICE_ID]: fixtureServices[fixtureServices.length - 1].id,
+          [FlexOptionsNames.SVC_ENV]: 'stg4'
+        };
+        testFlexShow(options, defaultFlags, { svcEnvs: fixtureSvcEnvsSeveral }, done);
       });
     });
   });

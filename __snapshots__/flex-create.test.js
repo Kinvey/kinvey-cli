@@ -29,6 +29,8 @@ Options:
   --app                                     App ID/name                 [string]
   --org                                     Org ID/name                 [string]
   --secret                                  Shared secret               [string]
+  --env                                     Service environment name
+                                               [string] [default: "Development"]
   --vars, --set-vars                        Environment variables. Specify
                                             either as comma-separated list of
                                             key-value pairs
@@ -72,6 +74,8 @@ Options:
   --app                                     App ID/name                 [string]
   --org                                     Org ID/name                 [string]
   --secret                                  Shared secret               [string]
+  --env                                     Service environment name
+                                               [string] [default: "Development"]
   --vars, --set-vars                        Environment variables. Specify
                                             either as comma-separated list of
                                             key-value pairs
@@ -89,11 +93,13 @@ exports['flex create with active profile with a name, secret, basic env vars and
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
-[debug] Request:  POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
-[debug] Response: POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 201
-Created service: 12378kdl2. Secret: 789
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  POST http://localhost:3234/v3/services
+[debug] Response: POST http://localhost:3234/v3/services 201
+[debug] Request:  POST http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: POST http://localhost:3234/v3/services/12378kdl2/environments 201
+Created service: 12378kdl2. Secret: 123
 
 `
 
@@ -101,11 +107,13 @@ exports['flex create with active profile with a name, secret, basic env vars, ru
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
-[debug] Request:  POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
-[debug] Response: POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 201
-Created service: 12378kdl2. Secret: 789
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  POST http://localhost:3234/v3/services
+[debug] Response: POST http://localhost:3234/v3/services 201
+[debug] Request:  POST http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: POST http://localhost:3234/v3/services/12378kdl2/environments 201
+Created service: 12378kdl2. Secret: 123
 
 `
 
@@ -113,7 +121,7 @@ exports['flex create with active profile with a name, secret, complex env vars a
 {
   "result": {
     "id": "12378kdl2",
-    "secret": "789"
+    "secret": "123"
   }
 }
 
@@ -148,6 +156,8 @@ Options:
   --app                                     App ID/name                 [string]
   --org                                     Org ID/name                 [string]
   --secret                                  Shared secret               [string]
+  --env                                     Service environment name
+                                               [string] [default: "Development"]
   --vars, --set-vars                        Environment variables. Specify
                                             either as comma-separated list of
                                             key-value pairs
@@ -189,6 +199,8 @@ Options:
   --app                                     App ID/name                 [string]
   --org                                     Org ID/name                 [string]
   --secret                                  Shared secret               [string]
+  --env                                     Service environment name
+                                               [string] [default: "Development"]
   --vars, --set-vars                        Environment variables. Specify
                                             either as comma-separated list of
                                             key-value pairs
@@ -202,7 +214,7 @@ Not enough non-option arguments: got 0, need at least 1
 `
 
 exports['flex create with active profile without a secret should succeed 1'] = `
-Created service: 12378kdl2. Secret: 789
+Created service: 12378kdl2. Secret: auto-generated
 
 `
 
@@ -217,13 +229,15 @@ exports['flex create with one-time session with name, secret and org should succ
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v2/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v2/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
-[debug] Request:  POST http://localhost:3234/v2/organizations/f71b0d5e60684b48b8265e7fa50302b9/data-links
-[debug] Response: POST http://localhost:3234/v2/organizations/f71b0d5e60684b48b8265e7fa50302b9/data-links 201
+[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  POST http://localhost:3234/v3/services
+[debug] Response: POST http://localhost:3234/v3/services 201
+[debug] Request:  POST http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: POST http://localhost:3234/v3/services/12378kdl2/environments 201
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-Created service: 12378kdl2. Secret: 789
+Created service: 12378kdl2. Secret: 123
 
 `

@@ -1,0 +1,9 @@
+{
+  "name": "stg4",
+  "host": "k8s-4415a2a3a26193gb72a4",
+  "secret": "666666e6642c3418398f982666",
+  "id": "0de22ffb3f2243ec8138170844envVar",
+  "environmentVariables": {
+    "MY_ENV": "stg4"
+  }
+}

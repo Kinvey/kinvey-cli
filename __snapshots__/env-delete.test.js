@@ -36,13 +36,13 @@ exports['appenv delete with profile when active app is not set using existent en
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
 [debug] Using environment: Development
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
-[debug] Request:  DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M 204
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M 204
 Deleted environment: kid_Sy4yRNV_M
 
 `
@@ -51,13 +51,13 @@ exports['appenv delete with profile when active app is not set using existent en
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: TestApp
-[debug] Request:  GET http://localhost:3234/v2/apps
-[debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Request:  GET http://localhost:3234/v3/apps
+[debug] Response: GET http://localhost:3234/v3/apps 200
 [debug] Using environment: Development
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
-[debug] Request:  DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M 204
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M 204
 Deleted environment: kid_Sy4yRNV_M
 
 `
@@ -100,13 +100,13 @@ exports['appenv delete with profile when active app is set active env is not set
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
 [debug] Using environment: kid_Sy4yRNV_M
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M 200
-[debug] Request:  DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M 204
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M 200
+[debug] Request:  DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M 204
 {
   "result": {
     "id": "kid_Sy4yRNV_M"
@@ -119,13 +119,13 @@ exports['appenv delete with profile when active app is set active env is not set
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
 [debug] Using environment: kid_Sy4yRNV_M
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M 200
-[debug] Request:  DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M 204
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M 200
+[debug] Request:  DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M 204
 Deleted environment: kid_Sy4yRNV_M
 
 `
@@ -134,8 +134,8 @@ exports['appenv delete with profile when active app is set active env is not set
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: noSuchApp
-[debug] Request:  GET http://localhost:3234/v2/apps
-[debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Request:  GET http://localhost:3234/v3/apps
+[debug] Response: GET http://localhost:3234/v3/apps 200
 [error] NotFound: Could not find application with identifier 'noSuchApp'.
 
 `
@@ -144,13 +144,13 @@ exports['appenv delete with profile when active app is set active env is not set
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
 [debug] Using environment: Development
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
-[debug] Request:  DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M 204
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M 204
 Deleted environment: kid_Sy4yRNV_M
 
 `
@@ -159,13 +159,13 @@ exports['appenv delete with profile when active app is set active env is not set
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
 [debug] Using environment: kid_JjJJjg2cN
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_JjJJjg2cN
-[debug] Response: GET http://localhost:3234/v2/environments/kid_JjJJjg2cN 404
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_JjJJjg2cN
+[debug] Response: GET http://localhost:3234/v3/environments/kid_JjJJjg2cN 404
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [error] NotFound: Could not find environment with identifier 'kid_JjJJjg2cN'.
 
 `
@@ -174,11 +174,11 @@ exports['appenv delete with profile when active app is set active env is not set
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
 [debug] Using environment: noSuchName
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [error] NotFound: Could not find environment with identifier 'noSuchName'.
 
 `
@@ -187,13 +187,13 @@ exports['appenv delete with profile when active app is set active env is set wit
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
 [debug] Using environment: kid_JjJJjg2cN
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_JjJJjg2cN
-[debug] Response: GET http://localhost:3234/v2/environments/kid_JjJJjg2cN 404
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_JjJJjg2cN
+[debug] Response: GET http://localhost:3234/v3/environments/kid_JjJJjg2cN 404
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [error] NotFound: Could not find environment with identifier 'kid_JjJJjg2cN'.
 
 `
@@ -202,10 +202,10 @@ exports['appenv delete with profile when active app is set active env is set wit
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using environment: kid_Sy4yRNV_M
-[debug] Request:  GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: GET http://localhost:3234/v2/environments/kid_Sy4yRNV_M 200
-[debug] Request:  DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M 204
+[debug] Request:  GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: GET http://localhost:3234/v3/environments/kid_Sy4yRNV_M 200
+[debug] Request:  DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M 204
 [debug] Writing contents to file globalSetupPath
 [debug] Removed active env: kid_Sy4yRNV_M.
 Deleted environment: kid_Sy4yRNV_M
@@ -218,13 +218,13 @@ exports['appenv delete without profile with credentials as options, existent app
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Using application: TestApp
-[debug] Request:  GET http://localhost:3234/v2/apps
-[debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Request:  GET http://localhost:3234/v3/apps
+[debug] Response: GET http://localhost:3234/v3/apps 200
 [debug] Using environment: Development
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
-[debug] Request:  DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M
-[debug] Response: DELETE http://localhost:3234/v2/environments/kid_Sy4yRNV_M 204
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M
+[debug] Response: DELETE http://localhost:3234/v3/environments/kid_Sy4yRNV_M 204
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

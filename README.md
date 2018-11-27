@@ -620,11 +620,11 @@ If problems persist, contact [Kinvey](http://support.kinvey.com).
 
 Kinvey CLI version 4.1.0 introduces support for environments inside Flex services coinciding with the release of this feature on the backend. When upgrading from a previous Kinvey CLI version, have the following caveats in mind:
 
-- The `flex init` interactive command prompts for service environment selection in version 4.1.0 and later.
+- The `flex init` interactive command prompts for service environment selection in version 4.1.0 and later if the service contains multiple environments.
 - Node.js projects configured with `flex init` with a Kinvey CLI version predating 4.1.0 do not contain a service environment ID. Therefore:
     - We recommend rerunning the `flex init` command on these projects.
     - Flex commands targeting the current service will continue to work as long as the service has a single environment.
-    - Flex commands targeting the current service will error out if you create additional environments inside the service.
+    - Flex commands targeting the current service will error out if you create additional environments inside the service and don't include `--env`.
 - Flex commands specifying a particular service using `--service` must include `--env` if the service has multiple environments. You can omit `--env` if the service has a single environment.
 
 ## Changelog

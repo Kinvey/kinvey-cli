@@ -29,7 +29,7 @@ Options:
   --app                                     App ID/name                 [string]
   --org                                     Org ID/name                 [string]
   --secret                                  Shared secret               [string]
-  --env                                     Service environment name/ID [string]
+  --env                                     Service environment name    [string]
   --vars, --set-vars                        Environment variables. Specify
                                             either as comma-separated list of
                                             key-value pairs
@@ -73,7 +73,7 @@ Options:
   --app                                     App ID/name                 [string]
   --org                                     Org ID/name                 [string]
   --secret                                  Shared secret               [string]
-  --env                                     Service environment name/ID [string]
+  --env                                     Service environment name    [string]
   --vars, --set-vars                        Environment variables. Specify
                                             either as comma-separated list of
                                             key-value pairs
@@ -154,7 +154,7 @@ Options:
   --app                                     App ID/name                 [string]
   --org                                     Org ID/name                 [string]
   --secret                                  Shared secret               [string]
-  --env                                     Service environment name/ID [string]
+  --env                                     Service environment name    [string]
   --vars, --set-vars                        Environment variables. Specify
                                             either as comma-separated list of
                                             key-value pairs
@@ -196,7 +196,7 @@ Options:
   --app                                     App ID/name                 [string]
   --org                                     Org ID/name                 [string]
   --secret                                  Shared secret               [string]
-  --env                                     Service environment name/ID [string]
+  --env                                     Service environment name    [string]
   --vars, --set-vars                        Environment variables. Specify
                                             either as comma-separated list of
                                             key-value pairs

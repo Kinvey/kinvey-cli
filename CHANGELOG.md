@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.0 (2018-11-27)
+* Migrate to v3 API
+* Add service environments functionality in flex namespace
+
 ## 4.0.1 (2018-11-21)
 * Add runtime environment support for internal flex services
 

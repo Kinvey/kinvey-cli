@@ -3,6 +3,10 @@
     "name": "dev",
     "host": "k8s-4415a2a3a26193gb72a9",
     "secret": "123",
-    "id": "642dd1efe3d92e0180317487b29c6e88"
+    "id": "642dd1efe3d92e0180317487b29c6e88",
+    "runtime": "flex-runtime-node8",
+    "environmentVariables": {
+      "MY_ENV": "dev"
+    }
   }
 ]

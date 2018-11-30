@@ -85,7 +85,10 @@ function build(
     orgs = fixtureOrgs,
     apps = fixtureApps,
     service = fixtureInternalFlexService,
+    updatedSvcEnv = null,
+    envVars = null,
     envs = fixtureEnvs,
+    runtime = null,
     colls = fixtureCollections,
     jobType = 'recycleService',
     serviceLogsQuery = {},
@@ -173,10 +176,17 @@ function build(
     res.send(status.status);
   });
 
-  app.get(`/${versionPart}/services/:id/logs`, (req, res) => {
+  app.get(`/${versionPart}/services/:id/environments/:envId/logs`, (req, res) => {
     const id = req.params.id;
-    if (id !== fixtureInternalDataLink.id) {
+    const service = fixtureServices.find(x => x.id === id);
+    if (!service) {
       return res.status(404).send(serviceNotFound);
+    }
+
+    const envId = req.params.envId;
+    const status = svcEnvs.find(x => x.id === envId);
+    if (!status) {
+      return res.status(404).send(svcEnvNotFound);
     }
 
     const query = req.query;
@@ -185,6 +195,22 @@ function build(
     }
 
     res.send(fixtureLogs);
+  });
+
+  app.get(`/${versionPart}/services/:id/environments/:envId`, (req, res) => {
+    const id = req.params.id;
+    const wantedService = fixtureServices.find(x => x.id === id);
+    if (!wantedService) {
+      return res.status(404).send(serviceNotFound);
+    }
+
+    const envId = req.params.envId;
+    const svcEnv = svcEnvs.find(x => x.id === envId);
+    if (!svcEnv) {
+      return res.status(404).send(svcEnvNotFound);
+    }
+
+    res.send(svcEnv);
   });
 
   app.get(`/${versionPart}/services/:id/environments`, (req, res) => {
@@ -199,12 +225,38 @@ function build(
 
   app.post(`/${versionPart}/services/:id/environments`, (req, res) => {
     const body = req.body;
-    if (!body.name || !body.secret) {
+    if (!body) {
+      return res.sendStatus(400);
+    }
+
+    const runtimesDiffer = runtime != body.runtime;
+    const envVarsDiffer = (envVars && !isEqual(body.environmentVariables, envVars)) ||
+      (!envVars && body.environmentVariables);
+    if (!body.name || !body.secret || envVarsDiffer || runtimesDiffer) {
       return res.sendStatus(400);
     }
 
     const result = Object.assign({ id: fixtureSvcEnv.id }, body);
     res.status(201).send(result);
+  });
+
+  app.put(`/${versionPart}/services/:id/environments/:envId`, (req, res) => {
+    const id = req.params.id;
+    const wantedService = fixtureServices.find(x => x.id === id);
+    if (!wantedService) {
+      return res.status(404).send(serviceNotFound);
+    }
+
+    const svcEnvId = req.params.envId;
+    if (!svcEnvs.find(x => x.id === svcEnvId)) {
+      return res.status(404).send(svcEnvNotFound);
+    }
+
+    if (!isEqual(req.body, updatedSvcEnv)) {
+      return res.status(400).send(req.body);
+    }
+
+    return res.send(req.body);
   });
 
   app.get(`/${versionPart}/services/:id`, (req, res) => {
@@ -251,6 +303,7 @@ function build(
     res.status(404).send(serviceNotFound);
   });
 
+
   // JOBS
   app.get(`/${versionPart}/jobs/:id`, (req, res) => {
     const id = req.params.id;
@@ -287,6 +340,7 @@ function build(
 
     res.send({ job: 'idOfJobThatIsRecyclingTheService' });
   });
+
 
   // ENVS BY APP
   app.get(`/${versionPart}/apps/:id/environments`, (req, res) => {

@@ -45,12 +45,13 @@ Created application: 885f5d307afd4168bebca1a64f815c1e
 `
 
 exports['app create without a name should fail 1'] = `
-kinvey app create <name>
+kinvey app create <name> [file]
 
 Create an application
 
 Positionals:
   name  App name                                                      [required]
+  file  Path to an application configuration file
 
 Options:
   --version                                 Show version number        [boolean]

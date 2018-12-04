@@ -201,13 +201,13 @@ describe(`${baseCmd}`, () => {
             function messUpPackageSetup(next) {
               // kinvey-flex-sdk must be included in the dependencies
               const invalidPackageContent = { dependencies: {} };
-              writeJSON(pathPackageJSON, invalidPackageContent, next);
+              writeJSON({ file: pathPackageJSON, data: invalidPackageContent }, next);
             }
           ], done);
         });
 
         after('restorePackageSetup', (done) => {
-          writeJSON(pathPackageJSON, initialPackageSetup, done);
+          writeJSON({ file: pathPackageJSON, data: initialPackageSetup }, done);
         });
 
         it('should fail', (done) => {

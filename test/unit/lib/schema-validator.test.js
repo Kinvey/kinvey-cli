@@ -17,6 +17,8 @@ const snapshot = require('snap-shot-it');
 
 const { ConfigType } = require('../../../lib/Constants');
 const SchemaValidator = require('../../../lib/SchemaValidator');
+const validAppAllOptions = require('../../fixtures/config-files/app-valid-all-options.json');
+const invalidApp = require('../../fixtures/config-files/app-invalid.json');
 const validEnvAllOptions = require('../../fixtures/config-files/env-valid-all-options.json');
 const validEnvSomeOptions = require('../../fixtures/config-files/env-valid-some-options.json');
 const invalidEnv = require('../../fixtures/config-files/env-invalid.json');
@@ -124,6 +126,31 @@ describe('schema validator', () => {
 
     it('with invalid rapid data (sharepoint) should fail', (done) => {
       SchemaValidator.validate(ConfigType.SERVICE, invalidRapidDataSpSomeOptions, null, (err) => {
+        expect(err).to.exist;
+        expect(err.name).to.equal('ValidationError');
+
+        const actualMsg = err.message.replace(/\r\n/g, '\n');
+        try {
+          snapshot(actualMsg);
+        } catch (ex) {
+          return done(ex);
+        }
+
+        done();
+      });
+    });
+  });
+
+  describe('app', () => {
+    it('with valid app with all options and some envs should succeed', (done) => {
+      SchemaValidator.validate(ConfigType.APP, validAppAllOptions, null, (err) => {
+        expect(err).to.not.exist;
+        done();
+      });
+    });
+
+    it('with invalid app should fail', (done) => {
+      SchemaValidator.validate(ConfigType.APP, invalidApp, null, (err) => {
         expect(err).to.exist;
         expect(err.name).to.equal('ValidationError');
 

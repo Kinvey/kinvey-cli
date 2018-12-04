@@ -1,10 +1,25 @@
 # Changelog
 
-# 4.1.0-alpha.2
+## 4.1.1 (2018-11-29)
+* Preserve existing env vars on `flex deploy --set-vars <env variables>` 
+
+## 4.1.0 (2018-11-27)
+* Migrate to v3 API
+* Add service environments functionality in flex namespace
+
+## 4.1.0-alpha.3
+* Add `org export` to export organizations
+* Ensure `export` creates non-existing directories
+* App functionality to create/modify app from config file
+* Add `app export` command to export applications
+* Support all service types for `service export`
+* Specify entity identifiers as options
+
+## 4.1.0-alpha.2
+* Add `service export` command to export a flex service to config file
+* Output logs properly when log message is an object
 * Prompt for 2FA token on 'profile login' if required
 * Rearrange logs
-* Output logs properly when log message is an object
-* Add `service export` command to export a flex service to config file
 
 ## 4.1.0-alpha.1
 * Add support for groups in env config file
@@ -13,13 +28,6 @@
 ## 4.1.0-alpha.0
 * Add functionality to create/modify env from config file
 * Add functionality to export env to config file
-
-## 4.1.1 (2018-11-29)
-* Preserve existing env vars on `flex deploy --set-vars <env variables>` 
-
-## 4.1.0 (2018-11-27)
-* Migrate to v3 API
-* Add service environments functionality in flex namespace
 
 ## 4.0.1 (2018-11-21)
 * Add runtime environment support for internal flex services

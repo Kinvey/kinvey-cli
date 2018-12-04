@@ -175,6 +175,7 @@ exports['flex create with active profile without an app and org should fail 1'] 
 
 `
 
+
 exports['flex create with active profile without a name should fail 1'] = `
 kinvey flex create <name>
 

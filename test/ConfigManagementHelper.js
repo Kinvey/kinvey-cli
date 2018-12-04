@@ -30,7 +30,7 @@ let ConfigManagementHelper = {};
 function passConfigFileToCli(cmd, configContent, filePath, done) {
   async.series([
     (next) => {
-      writeJSON(filePath, configContent, next);
+      writeJSON({ file: filePath, data: configContent }, next);
     },
     (next) => {
       TestsHelper.execCmdWoMocks(cmd, null, (err, data) => {
@@ -51,6 +51,173 @@ function passConfigFileToCli(cmd, configContent, filePath, done) {
     done(null, results.pop());
   });
 }
+
+const service = {};
+service.createPackageJsonForFlexProject = function createPackageJsonForFlexProject(pkgJson, done) {
+  if (!pkgJson) {
+    return setImmediate(done);
+  }
+
+  const projectPath = path.join(process.cwd(), 'test/integration-no-mock/flex-project');
+  writeJSON({ file: path.join(projectPath, 'package.json'), data: pkgJson }, done);
+};
+
+service.createFromConfig = function createServiceFromConfig(serviceName, serviceConfig, serviceDomain, appOrOrgIdentifier, pkgJson, done) {
+  async.series([
+    (next) => {
+      service.createPackageJsonForFlexProject(pkgJson, next);
+    },
+    (next) => {
+      const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+      const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+      const cmd = `service create ${serviceName} ${filePath} --${serviceDomain} ${appOrOrgIdentifier} --output json`;
+      passConfigFileToCli(cmd, serviceConfig, filePath, next);
+    }
+  ], (err, results) => {
+    done(err, results.pop());
+  });
+};
+
+service.modifyFromConfig = function modifyServiceFromConfig(serviceId, serviceConfig, pkgJson, done) {
+  async.series([
+    (next) => {
+      service.createPackageJsonForFlexProject(pkgJson, next);
+    },
+    (next) => {
+      const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+      const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+      const cmd = `service push --service ${serviceId} ${filePath} --output json --verbose`;
+      passConfigFileToCli(cmd, serviceConfig, filePath, next);
+    }
+  ], (err, results) => {
+    done(err, results.pop());
+  });
+};
+
+service.exportConfig = function exportConfig({ serviceId, relativePath = '' }, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, relativePath, fileName);
+  const cmd = `service export ${filePath} --service ${serviceId} --output json`;
+  TestsHelper.execCmdWoMocks(cmd, null, (err) => {
+    if (err) {
+      return done(err);
+    }
+
+    fs.readFile(filePath, null, (err, data) => {
+      if (err) {
+        return done(err);
+      }
+
+      done(null, JSON.parse(data));
+    });
+  });
+};
+
+service.assertFlexService = function assertFlexService(id, serviceConfig, serviceName, done) {
+  ApiService.services.get(id, (err, actual) => {
+    if (err) {
+      return done(err);
+    }
+
+    expect(serviceName).to.equal(actual.name);
+    expect(serviceConfig.description).to.equal(actual.description);
+
+    const isFlexInternal = serviceConfig.type === 'flex-internal';
+    const expectedType = isFlexInternal ? 'internal' : 'external';
+    expect(actual.type).to.equal(expectedType);
+
+    expect(actual.backingServers).to.be.an.array;
+    expect(actual.backingServers[0]).to.exist;
+    const expectedEnvName = Object.keys(serviceConfig.environments)[0];
+    const expectedEnv = serviceConfig.environments[expectedEnvName];
+    expect(actual.backingServers[0].secret).to.equal(expectedEnv.secret);
+    expect(actual.backingServers[0].name).to.equal(expectedEnvName);
+
+    if (isFlexInternal) {
+      expect(actual.backingServers[0].host).to.exist;
+    } else {
+      expect(actual.backingServers[0].host).to.equal(expectedEnv.host);
+    }
+
+    done();
+  });
+};
+
+service.assertFlexServiceStatus = function assertFlexServiceStatus(id, expectedVersion, expectedStatus, done) {
+  ApiService.services.status(id, (err, actual) => {
+    if (err) {
+      return done(err);
+    }
+
+    try {
+      expect(actual.version, 'Version').to.exist;
+      expect(actual.version).to.equal(expectedVersion);
+      if (expectedStatus) {
+        expect(actual.status.toLowerCase()).to.equal(expectedStatus.toLowerCase());
+      }
+    } catch (ex) {
+      return done(ex);
+    }
+
+    done();
+  });
+};
+
+service.assertFlexServiceStatusRetryable = function assertFlexServiceStatusRetryable(id, expectedVersion, expectedStatus, done) {
+  async.retry(
+    { times: 9, interval: 20000 }, // 9 times every 20 sec
+    (next) => {
+      service.assertFlexServiceStatus(id, expectedVersion, expectedStatus, next);
+    },
+    done
+  );
+};
+
+service.assertRapidDataService = function (id, serviceConfig, serviceName, done) {
+  ApiService.services.get(id, (err, actual) => {
+    if (err) {
+      return done(err);
+    }
+
+    try {
+      const expected = serviceConfig;
+      expect(actual.type).to.equal(ConfigFiles.ConfigToBackendServiceType[serviceConfig.type]);
+      if (expected.description) {
+        expect(actual.description).to.equal(expected.description);
+      } else {
+        expect(actual.description).to.not.exist;
+      }
+
+
+      // assert env-related settings
+      expect(actual.backingServers).to.be.an.array;
+      expect(actual.backingServers.length).to.equal(1);
+
+      const actualDefaultEnv = actual.backingServers[0];
+      const envName = Object.keys(serviceConfig.environments)[0];
+      const srvEnv = serviceConfig.environments[envName];
+
+      const expectedEnvWoMapping = getObjectByOmitting(srvEnv, ['mapping']);
+      const actualEnvWoMapping = getObjectByOmitting(actualDefaultEnv, ['_id', 'mapping', 'name']);
+      expect(actualEnvWoMapping).to.deep.equal(expectedEnvWoMapping);
+
+      // assert mapping
+      const envId = actualDefaultEnv._id;
+      const expectedDefEnvMapping = clonedeep(srvEnv.mapping);
+      if (expectedDefEnvMapping) {
+        Object.keys(expectedDefEnvMapping).forEach((serviceObjectName) => {
+          expectedDefEnvMapping[serviceObjectName].backingServer = envId;
+        });
+      }
+
+      expect(actualDefaultEnv.mapping).to.deep.equal(expectedDefEnvMapping);
+    } catch (ex) {
+      return done(ex);
+    }
+
+    done();
+  });
+};
 
 const env = {};
 env.buildSettings = function buildSettings() {
@@ -550,9 +717,6 @@ env.assertExportedEntitiesWithCode = function assertExportedEntitiesWithCode(exp
 };
 
 env.assertExportedRoles = function assertExportedRoles(expected, actual, done) {
-  // TODO: cli-135 Remove next line when role names bug is fixed
-  return setImmediate(done);
-  /* eslint-disable */
   const expectedRoleNames = Object.keys(expected);
   const actualRoleNames = Object.keys(actual);
   const expectedCount = expectedRoleNames.length;
@@ -560,13 +724,13 @@ env.assertExportedRoles = function assertExportedRoles(expected, actual, done) {
 
   for (let i = 0; i < expectedCount; i += 1) {
     const expectedRole = Object.assign({ name: expectedRoleNames[i] }, expected[expectedRoleNames[i]]);
-    const actualRole = actualRoleNames.find(x => x === expectedRole.name);
-    if (!actualRole) {
+    const actualRoleName = actualRoleNames.find(x => x === expectedRole.name);
+    if (!actualRoleName) {
       return done(new Error(`Failed to find role with name '${expectedRole.name}'.`));
     }
 
-    expect(actualRole.description).to.equal(expectedRole.description);
-    expect(actualRole.name).to.equal(expectedRole.name || expectedRoleNames[i]);
+    const actualRole = actual[actualRoleName];
+    expect(actualRole).to.deep.equal(actualRole);
   }
 
   done();
@@ -625,6 +789,139 @@ app.createInTestsOrg = function (data, done) {
   });
 };
 
+app.createFromConfig = function createAppFromConfig(appName, appConfig, orgIdentifier, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  let cmd = `app create ${appName} ${filePath} --output json`;
+  if (orgIdentifier) {
+    cmd += ` --org ${orgIdentifier}`;
+  }
+  passConfigFileToCli(cmd, appConfig, filePath, done);
+};
+
+app.modifyFromConfig = function modifyFromConfig(appIdentifier, appConfig, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  let cmd = `app push ${filePath} --output json`;
+  if (appIdentifier) {
+    cmd += ` --app ${appIdentifier}`;
+  }
+  passConfigFileToCli(cmd, appConfig, filePath, done);
+};
+
+app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, expectOrg, collListPerEnv }, done) {
+  let actualApp;
+  let assertEnvsDetails = true;
+
+  async.series([
+    (next) => {
+      ApiService.apps.get(id, (err, data) => {
+        if (err) {
+          return next(err);
+        }
+
+        actualApp = data;
+        expect(actualApp.name).to.equal(expectedName);
+
+        if (expectOrg) {
+          expect(actualApp.organizationId).to.exist;
+        } else {
+          expect(actualApp.organizationId).to.not.exist;
+        }
+
+        // assert settings
+        if (!isEmpty(config.settings) && !isEmpty(config.settings.realtime)) {
+          expect(actualApp.realtime.enabled).to.equal(config.settings.realtime.enabled);
+        } else {
+          expect(actualApp.realtime).to.not.exist;
+        }
+
+
+        if (config.settings && config.settings.sessionTimeoutInSeconds) {
+          expect(actualApp.sessionTimeoutInSeconds).to.equal(config.settings.sessionTimeoutInSeconds);
+        }
+
+        // assert env count
+        const expEnvsCount = isEmpty(config.environments) ? 1 : (Object.keys(config.environments).length);
+        expect(actualApp.environments.length).to.equal(expEnvsCount);
+
+        if (isEmpty(config.environments)) { // then only the default env ('Development') is created
+          assertEnvsDetails = false;
+        }
+
+        next();
+      });
+    },
+    (next) => {
+      if (!assertEnvsDetails) {
+        return setImmediate(next);
+      }
+
+      const configEnvNames = Object.keys(config.environments);
+      async.eachSeries(
+        configEnvNames,
+        (currName, cb) => {
+          const configEnv = config.environments[currName];
+          const actualEnv = actualApp.environments.find(x => x.name.toLowerCase() === currName.toLowerCase());
+          if (!actualEnv) {
+            return cb(new Error(`Failed to find env '${currName}'`));
+          }
+
+          env.assertEnvOnly(configEnv, actualEnv.id, currName, (err) => {
+            if (err) {
+              return cb(err);
+            }
+
+            env.assertCollections(actualEnv.id, collListPerEnv[currName], collListPerEnv[currName].length + 2, null, cb);
+          });
+        },
+        next
+      );
+    },
+    (next) => {
+      ApiService.services.getAllByApp(actualApp.id, (err, data) => {
+        if (err) {
+          return next(err);
+        }
+
+        const actualServices = [];
+        data.forEach((x) => {
+          if (x.access.writers.apps && x.access.writers.apps.find(appId => appId === actualApp.id)) {
+            actualServices.push(x);
+          }
+        });
+
+        const expectedServices = config.services;
+        if (!expectedServices) {
+          expect(actualServices.length).to.equal(0);
+          return setImmediate(next);
+        }
+
+        const expServiceNames = Object.keys(expectedServices);
+        async.eachSeries(
+          expServiceNames,
+          (currName, cb) => {
+            const actualService = actualServices.find(x => x.name === currName);
+            if (!actualService) {
+              return cb(new Error(`Failed to find actual service with name '${currName}'.`));
+            }
+
+            const actualId = actualService.id;
+            const serviceConfig = expectedServices[currName];
+            const actualType = actualService.type;
+            if (actualType === 'internal' || actualType === 'external') {
+              service.assertFlexService(actualId, serviceConfig, currName, cb);
+            } else {
+              service.assertRapidDataService(actualId, serviceConfig, currName, cb);
+            }
+          },
+          next
+        );
+      });
+    }
+  ], done);
+};
+
 const roles = {};
 roles.buildValidRolesList = function buildValidRolesList(count) {
   const result = [];
@@ -638,52 +935,15 @@ roles.buildValidRolesList = function buildValidRolesList(count) {
   return result;
 };
 
-const service = {};
-service.createPackageJsonForFlexProject = function createPackageJsonForFlexProject(pkgJson, done) {
-  if (!pkgJson) {
-    return setImmediate(done);
-  }
-
-  const projectPath = path.join(process.cwd(), 'test/integration-no-mock/flex-project');
-  writeJSON(path.join(projectPath, 'package.json'), pkgJson, done);
-};
-
-service.createFromConfig = function createServiceFromConfig(serviceName, serviceConfig, serviceDomain, appOrOrgIdentifier, pkgJson, done) {
-  async.series([
-    (next) => {
-      service.createPackageJsonForFlexProject(pkgJson, next);
-    },
-    (next) => {
-      const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
-      const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-      const cmd = `service create ${serviceName} ${filePath} --${serviceDomain} ${appOrOrgIdentifier} --output json`;
-      passConfigFileToCli(cmd, serviceConfig, filePath, next);
-    }
-  ], (err, results) => {
-    done(err, results.pop());
-  });
-};
-
-service.modifyFromConfig = function modifyServiceFromConfig(serviceId, serviceConfig, pkgJson, done) {
-  async.series([
-    (next) => {
-      service.createPackageJsonForFlexProject(pkgJson, next);
-    },
-    (next) => {
-      const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
-      const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-      const cmd = `service push --service ${serviceId} ${filePath} --output json --verbose`;
-      passConfigFileToCli(cmd, serviceConfig, filePath, next);
-    }
-  ], (err, results) => {
-    done(err, results.pop());
-  });
-};
-
-service.exportConfig = function exportConfig(serviceId, done) {
+const org = {};
+org.exportOrg = function exportOrg(orgIdentifier, done) {
   const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-  const cmd = `service export ${filePath} --service ${serviceId} --output json`;
+  let cmd = `org export ${filePath} --output json`;
+  if (orgIdentifier) {
+    cmd = `${cmd} --org ${orgIdentifier}`;
+  }
+
   TestsHelper.execCmdWoMocks(cmd, null, (err) => {
     if (err) {
       return done(err);
@@ -852,13 +1112,27 @@ testHooks.removeService = function removeService(id, done) {
   ApiService.services.remove(id, done);
 };
 
+org.assertSettings = function assertSettings(actual) {
+  expect(actual.schemaVersion).to.exist;
+  expect(actual.configType).to.equal('organization');
+
+  const exportedSettings = actual.settings;
+  expect(exportedSettings).to.be.an('object').and.not.empty;
+  expect(exportedSettings.security).to.be.an('object');
+  expect(exportedSettings.security.requireApprovals).to.be.a('boolean');
+  expect(exportedSettings.security.requireEmailVerification).to.be.a('boolean');
+  expect(exportedSettings.security.requireTwoFactorAuth).to.be.a('boolean');
+};
+
 ConfigManagementHelper = {
   app,
   env,
+  org,
   roles,
   service,
   common: {
-    buildConfigEntityFromList
+    buildConfigEntityFromList,
+    EndpointsRelatedTestsTimeout: 65000
   },
   testHooks
 };

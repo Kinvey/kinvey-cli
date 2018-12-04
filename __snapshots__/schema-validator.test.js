@@ -30,5 +30,13 @@ exports['schema validator service with invalid rapid data (sharepoint) should fa
 
 exports['schema validator service with invalid rapid data (wrong type) should fail 1'] = `
 
-	type: "type" must be one of [flex-internal, flex-external, rest, sharepoint, salesforce, mssql, sap, progressData, dataDirect]
+	type: "type" must be one of [flex-internal, flex-external, rest, sharepoint, salesforce, mssql, sap, progressData, dataDirect, rapid-health]
+`
+
+exports['schema validator app with invalid app should fail 1'] = `
+
+	settings.realtime: "realtime" must be an object
+	settings.sessionTimeoutInSeconds: "sessionTimeoutInSeconds" must be a number
+	environments.dev.schemaVersion: "schemaVersion" is required
+	environments.dev.collections.colle0.type: "type" is required
 `

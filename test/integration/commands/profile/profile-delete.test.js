@@ -129,7 +129,7 @@ describe('profile delete', () => {
           profiles: {}
         };
 
-        writeJSON(testsConfig.paths.session, globalSetup, next);
+        writeJSON({ file: testsConfig.paths.session, data: globalSetup }, next);
       },
       function deleteProfile(next) {
         const cmd = `${baseCmd} nonExistentProfileName --verbose`;

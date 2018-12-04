@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "configType": "application",
+  "settings": {
+    "realtime": {
+      "enabled": true
+    },
+    "sessionTimeoutInSeconds": 120
+  },
+  "environments": {
+    "dev": {
+      "schemaVersion": "1.0.0",
+      "settings": {
+        "apiVersion": 3,
+        "emailVerification": {
+          "auto": true,
+          "required": true
+        }
+      },
+      "collections": {
+        "colle0": {
+          "type": "internal",
+          "permissions": "full"
+        }
+      }
+    },
+    "prod": {
+      "schemaVersion": "1.0.0",
+      "settings": {
+        "emailVerification": {
+          "auto": false,
+          "required": true
+        }
+      }
+    }
+  }
+}

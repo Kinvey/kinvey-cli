@@ -300,11 +300,22 @@ const services = {
     makeRequest({ url }, done);
   },
   getAllByOrg: (id, done) => {
-    const url = buildUrl(`organizations/${id}/data-links`);
+    const url = `${buildUrl('services')}?organizationId=${id}`;
     makeRequest({ url }, done);
   },
-  getAllByApp: (id, done) => {
-    const url = buildUrl(`apps/${id}/data-links`);
+  getAllByApp: (app, done) => {
+    let url = buildUrl('services');
+
+    if (!isempty(app)) {
+      const queryParamName = app.security ? 'organizationId' : 'appId';
+      let query = `${queryParamName}=${app.id}`;
+      if (app.organizationId) {
+        query = `${query}&&organizationId=${app.organizationId}`;
+      }
+
+      url = `${url}?${query}`;
+    }
+
     makeRequest({ url }, done);
   },
   remove: (id, done) => {

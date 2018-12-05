@@ -113,36 +113,6 @@ service.exportConfig = function exportConfig({ serviceId, relativePath = '' }, d
   });
 };
 
-service.assertFlexService = function assertFlexService(id, serviceConfig, serviceName, done) {
-  ApiService.services.get(id, (err, actual) => {
-    if (err) {
-      return done(err);
-    }
-
-    expect(serviceName).to.equal(actual.name);
-    expect(serviceConfig.description).to.equal(actual.description);
-
-    const isFlexInternal = serviceConfig.type === 'flex-internal';
-    const expectedType = isFlexInternal ? 'internal' : 'external';
-    expect(actual.type).to.equal(expectedType);
-
-    expect(actual.backingServers).to.be.an.array;
-    expect(actual.backingServers[0]).to.exist;
-    const expectedEnvName = Object.keys(serviceConfig.environments)[0];
-    const expectedEnv = serviceConfig.environments[expectedEnvName];
-    expect(actual.backingServers[0].secret).to.equal(expectedEnv.secret);
-    expect(actual.backingServers[0].name).to.equal(expectedEnvName);
-
-    if (isFlexInternal) {
-      expect(actual.backingServers[0].host).to.exist;
-    } else {
-      expect(actual.backingServers[0].host).to.equal(expectedEnv.host);
-    }
-
-    done();
-  });
-};
-
 service.assertFlexServiceStatus = function assertFlexServiceStatus(id, expectedVersion, expectedStatus, done) {
   ApiService.services.status(id, (err, actual) => {
     if (err) {
@@ -879,7 +849,7 @@ app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, ex
       );
     },
     (next) => {
-      ApiService.services.getAllByApp(actualApp.id, (err, data) => {
+      ApiService.services.getAllByApp(actualApp, (err, data) => {
         if (err) {
           return next(err);
         }
@@ -908,12 +878,7 @@ app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, ex
 
             const actualId = actualService.id;
             const serviceConfig = expectedServices[currName];
-            const actualType = actualService.type;
-            if (actualType === 'internal' || actualType === 'external') {
-              service.assertFlexService(actualId, serviceConfig, currName, cb);
-            } else {
-              service.assertRapidDataService(actualId, serviceConfig, currName, cb);
-            }
+            service.assertService(actualId, serviceConfig, currName, cb);
           },
           next
         );

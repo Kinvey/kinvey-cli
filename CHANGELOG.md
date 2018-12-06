@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.1.1 (2018-11-29)
+* Preserve existing env vars on `flex deploy --set-vars <env variables>` 
+
 ## 4.1.0 (2018-11-27)
 * Migrate to v3 API
 * Add service environments functionality in flex namespace

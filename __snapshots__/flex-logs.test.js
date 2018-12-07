@@ -1,38 +1,27 @@
-exports['flex logs without query by specifying a profile and existent serviceId without query should succeed 1'] = `
+exports['flex logs with query with invalid start timestamp and nothing else should fail 1'] = `
 [debug] Checking for package updates
-[debug] Using profile 'profileToGetLogs'
+[debug] Using profile 'profileToSetAsActive'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
-Count: 5
-
-containerId   timestamp                 threshold  message                                                
-------------  ------------------------  ---------  -------------------------------------------------------
-3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...
-3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/rc.local...                           
-3864f1602739  2017-08-30T08:06:49.595Z  null       *** Runit started as PID 11                            
-3864f1602739  2017-08-30T08:06:49.595Z  warn       *** Booting runit daemon...                            
-3864f1602739  2017-08-30T08:06:49.595Z  info       {"name":"test","num":10}                               
-
-
+[error] InvalidParameter: Logs 'from' flag invalid (ISO-8601 timestamp expected)
 
 `
 
-exports['flex logs without query by specifying a profile and non-existent serviceId should fail 1'] = `
+exports['flex logs with query with invalid timestamps (\'from\' not before \'to\') and nothing else should fail 1'] = `
 [debug] Checking for package updates
-[debug] Using profile 'profileToGetLogs'
+[debug] Using profile 'profileToSetAsActive'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12serviceIdThatDoesntExist/logs
-[debug] Response: GET http://localhost:3234/v2/data-links/12serviceIdThatDoesntExist/logs 404
-[error] DataLinkNotFound: The specified data link could not be found.
+[error] InvalidParameter: 'from' timestamp must be before 'to' timestamp.
 
 `
 
-exports['flex logs without query by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
+exports['flex logs with query with valid start timestamp and nothing else should succeed 1'] = `
 [debug] Checking for package updates
-[debug] Using profile 'profileToGetLogs'
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
+[debug] Using profile 'profileToSetAsActive'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?from=2017-08-30T08:06:49.594Z
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?from=2017-08-30T08:06:49.594Z 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -47,11 +36,22 @@ containerId   timestamp                 threshold  message
 
 `
 
-exports['flex logs without query by specifying a profile when invalid project is set with existent serviceId as an option should succeed 1'] = `
+exports['flex logs with query with valid timestamps and invalid paging should fail 1'] = `
 [debug] Checking for package updates
-[debug] Using profile 'profileToGetLogs'
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
+[debug] Using profile 'profileToSetAsActive'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[error] InvalidParameter: Logs 'page' flag invalid (non-zero integer expected)
+
+`
+
+exports['flex logs with query with valid timestamps and valid paging should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToSetAsActive'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49&limit=5&page=3
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49&limit=5&page=3 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -66,33 +66,69 @@ containerId   timestamp                 threshold  message
 
 `
 
-exports['flex logs without query by specifying a profile when project is not set without serviceId as an option should fail 1'] = `
-kinvey flex logs
+exports['flex logs with query with valid timestamps and without paging should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToSetAsActive'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49.000Z
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49.000Z 200
+Count: 5
 
-Retrieve and display Internal Flex Service logs
+containerId   timestamp                 threshold  message                                                
+------------  ------------------------  ---------  -------------------------------------------------------
+3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...
+3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/rc.local...                           
+3864f1602739  2017-08-30T08:06:49.595Z  null       *** Runit started as PID 11                            
+3864f1602739  2017-08-30T08:06:49.595Z  warn       *** Booting runit daemon...                            
+3864f1602739  2017-08-30T08:06:49.595Z  info       {"name":"test","num":10}                               
 
-Options:
-  --version                 Show version number                        [boolean]
-  --email                   E-mail address of your Kinvey account       [string]
-  --password                Password of your Kinvey account             [string]
-  --2fa, --2Fa              Two-factor authentication token             [string]
-  --instanceId              Instance ID                                 [string]
-  --profile                 Profile to use                              [string]
-  --output                  Output format             [string] [choices: "json"]
-  --silent                  Do not output anything                     [boolean]
-  --suppress-version-check  Do not check for package updates           [boolean]
-  --verbose                 Output debug messages                      [boolean]
-  --no-color                Disable colors                             [boolean]
-  -h, --help                Show help                                  [boolean]
-  --serviceId               Service ID                                  [string]
-  --from                    Fetch log entries starting from provided timestamp
-                                                                        [string]
-  --to                      Fetch log entries up to provided timestamp  [string]
-  --page                    Page (non-zero integer, default=1)          [number]
-  --number, -n              Number of entries to fetch, i.e. page size (non-zero
-                            integer, default=100, max=2000)             [number]
 
-This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: serviceId.
+
+`
+
+exports['flex logs with query without timestamps and page but with valid size should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToSetAsActive'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?limit=35
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?limit=35 200
+Count: 5
+
+containerId   timestamp                 threshold  message                                                
+------------  ------------------------  ---------  -------------------------------------------------------
+3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...
+3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/rc.local...                           
+3864f1602739  2017-08-30T08:06:49.595Z  null       *** Runit started as PID 11                            
+3864f1602739  2017-08-30T08:06:49.595Z  warn       *** Booting runit daemon...                            
+3864f1602739  2017-08-30T08:06:49.595Z  info       {"name":"test","num":10}                               
+
+
+
+`
+
+exports['flex logs with query without timestamps and valid paging should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToSetAsActive'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?limit=5&page=3
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs?limit=5&page=3 200
+Count: 5
+
+containerId   timestamp                 threshold  message                                                
+------------  ------------------------  ---------  -------------------------------------------------------
+3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...
+3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/rc.local...                           
+3864f1602739  2017-08-30T08:06:49.595Z  null       *** Runit started as PID 11                            
+3864f1602739  2017-08-30T08:06:49.595Z  warn       *** Booting runit daemon...                            
+3864f1602739  2017-08-30T08:06:49.595Z  info       {"name":"test","num":10}                               
+
+
 
 `
 
@@ -100,8 +136,10 @@ exports['flex logs without query by not specifying profile nor credentials when 
 [debug] Checking for package updates
 [debug] Using profile 'flexLogsProfile'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -116,7 +154,7 @@ containerId   timestamp                 threshold  message
 
 `
 
-exports['flex logs without query by not specifying profile nor credentials when one profile and existent serviceId should succeed and output JSON 1'] = `
+exports['flex logs without query by not specifying profile nor credentials when one profile and existent serviceId without svc env (when one) should succeed and output JSON 1'] = `
 {
   "result": [
     {
@@ -168,40 +206,47 @@ kinvey flex logs
 Retrieve and display Internal Flex Service logs
 
 Options:
-  --version                 Show version number                        [boolean]
-  --email                   E-mail address of your Kinvey account       [string]
-  --password                Password of your Kinvey account             [string]
-  --2fa, --2Fa              Two-factor authentication token             [string]
-  --instanceId              Instance ID                                 [string]
-  --profile                 Profile to use                              [string]
-  --output                  Output format             [string] [choices: "json"]
-  --silent                  Do not output anything                     [boolean]
-  --suppress-version-check  Do not check for package updates           [boolean]
-  --verbose                 Output debug messages                      [boolean]
-  --no-color                Disable colors                             [boolean]
-  -h, --help                Show help                                  [boolean]
-  --serviceId               Service ID                                  [string]
-  --from                    Fetch log entries starting from provided timestamp
+  --version                                 Show version number        [boolean]
+  --email                                   E-mail address of your Kinvey
+                                            account                     [string]
+  --password                                Password of your Kinvey account
                                                                         [string]
-  --to                      Fetch log entries up to provided timestamp  [string]
-  --page                    Page (non-zero integer, default=1)          [number]
-  --number, -n              Number of entries to fetch, i.e. page size (non-zero
-                            integer, default=100, max=2000)             [number]
+  --2fa, --2Fa                              Two-factor authentication token
+                                                                        [string]
+  --instance-id, --instanceId               Instance ID                 [string]
+  --profile                                 Profile to use              [string]
+  --output                                  Output format
+                                                      [string] [choices: "json"]
+  --silent                                  Do not output anything     [boolean]
+  --suppress-version-check,                 Do not check for package updates
+  --suppressVersionCheck                                               [boolean]
+  --verbose                                 Output debug messages      [boolean]
+  --no-color, --noColor                     Disable colors             [boolean]
+  -h, --help                                Show help                  [boolean]
+  --service                                 Service ID                  [string]
+  --env                                     Service environment name/ID [string]
+  --from                                    Fetch log entries starting from
+                                            provided timestamp          [string]
+  --to                                      Fetch log entries up to provided
+                                            timestamp                   [string]
+  --page                                    Page (non-zero integer, default=1)
+                                                                        [number]
+  --number, -n                              Number of entries to fetch, i.e.
+                                            page size (non-zero integer,
+                                            default=100, max=2000)      [number]
 
 You must be authenticated.
 
 `
 
-exports['flex logs without query by specifying credentials as options when valid and existent serviceId should succeed 1'] = `
+exports['flex logs without query by specifying a profile and existent serviceId without svc env (when one) without query should succeed 1'] = `
 [debug] Checking for package updates
-[debug] Logging in user: janeyDoe@mail.com
-[debug] Request:  POST http://localhost:3234/session
-[debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs 200
-[debug] Request:  DELETE http://localhost:3234/session
-[debug] Response: DELETE http://localhost:3234/session 204
-[debug] Logged out current user.
+[debug] Using profile 'profileToGetLogs'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs 200
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -216,21 +261,106 @@ containerId   timestamp                 threshold  message
 
 `
 
-exports['flex logs without query by specifying credentials as options when valid and non-existent serviceId should fail 1'] = `
+exports['flex logs without query by specifying a profile and existent serviceId without svc env (when several) without query should fail 1'] = `
 [debug] Checking for package updates
-[debug] Logging in user: janeyDoe@mail.com
-[debug] Request:  POST http://localhost:3234/session
-[debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/data-links/12serviceIdThatDoesntExist/logs
-[debug] Response: GET http://localhost:3234/v2/data-links/12serviceIdThatDoesntExist/logs 404
-[debug] Request:  DELETE http://localhost:3234/session
-[debug] Response: DELETE http://localhost:3234/session 204
-[debug] Logged out current user.
-[error] DataLinkNotFound: The specified data link could not be found.
+[debug] Using profile 'profileToGetLogs'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[error] TooManySvcEnvs: You should choose an environment: dev, prod, stg0, stg1, stg2, stg3, stg4
 
 `
 
-exports['flex logs without query by specifying credentials as options when invalid and existent serviceId should fail 1'] = `
+exports['flex logs without query by specifying a profile and non-existent serviceId should fail 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToGetLogs'
+[debug] Project configuration file not found: 'projectSetupPath'.
+[debug] Request:  GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/environments
+[debug] Response: GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/environments 404
+[error] ServiceNotFound: The specified service could not be found.
+
+`
+
+exports['flex logs without query by specifying a profile when invalid project is set with existent serviceId without svc env (when one) as an option should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToGetLogs'
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs 200
+Count: 5
+
+containerId   timestamp                 threshold  message                                                
+------------  ------------------------  ---------  -------------------------------------------------------
+3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...
+3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/rc.local...                           
+3864f1602739  2017-08-30T08:06:49.595Z  null       *** Runit started as PID 11                            
+3864f1602739  2017-08-30T08:06:49.595Z  warn       *** Booting runit daemon...                            
+3864f1602739  2017-08-30T08:06:49.595Z  info       {"name":"test","num":10}                               
+
+
+
+`
+
+exports['flex logs without query by specifying a profile when project is not set without serviceId and svc env as options should fail 1'] = `
+kinvey flex logs
+
+Retrieve and display Internal Flex Service logs
+
+Options:
+  --version                                 Show version number        [boolean]
+  --email                                   E-mail address of your Kinvey
+                                            account                     [string]
+  --password                                Password of your Kinvey account
+                                                                        [string]
+  --2fa, --2Fa                              Two-factor authentication token
+                                                                        [string]
+  --instance-id, --instanceId               Instance ID                 [string]
+  --profile                                 Profile to use              [string]
+  --output                                  Output format
+                                                      [string] [choices: "json"]
+  --silent                                  Do not output anything     [boolean]
+  --suppress-version-check,                 Do not check for package updates
+  --suppressVersionCheck                                               [boolean]
+  --verbose                                 Output debug messages      [boolean]
+  --no-color, --noColor                     Disable colors             [boolean]
+  -h, --help                                Show help                  [boolean]
+  --service                                 Service ID                  [string]
+  --env                                     Service environment name/ID [string]
+  --from                                    Fetch log entries starting from
+                                            provided timestamp          [string]
+  --to                                      Fetch log entries up to provided
+                                            timestamp                   [string]
+  --page                                    Page (non-zero integer, default=1)
+                                                                        [number]
+  --number, -n                              Number of entries to fetch, i.e.
+                                            page size (non-zero integer,
+                                            default=100, max=2000)      [number]
+
+This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: service.
+
+`
+
+exports['flex logs without query by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToGetLogs'
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs 200
+Count: 5
+
+containerId   timestamp                 threshold  message                                                
+------------  ------------------------  ---------  -------------------------------------------------------
+3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...
+3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/rc.local...                           
+3864f1602739  2017-08-30T08:06:49.595Z  null       *** Runit started as PID 11                            
+3864f1602739  2017-08-30T08:06:49.595Z  warn       *** Booting runit daemon...                            
+3864f1602739  2017-08-30T08:06:49.595Z  info       {"name":"test","num":10}                               
+
+
+
+`
+
+exports['flex logs without query by specifying credentials as options when invalid and existent serviceId without svc env (when one) should fail 1'] = `
 [debug] Checking for package updates
 [debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
@@ -239,12 +369,32 @@ exports['flex logs without query by specifying credentials as options when inval
 
 `
 
-exports['flex logs with query with valid timestamps and valid paging should succeed 1'] = `
+exports['flex logs without query by specifying credentials as options when valid and existent serviceId with invalid svc env should fail 1'] = `
 [debug] Checking for package updates
-[debug] Using profile 'profileToSetAsActive'
-[debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49&limit=5&page=3
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49&limit=5&page=3 200
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+[error] NotFound: Could not find service environment with identifier 'noSuchEnv'.
+
+`
+
+exports['flex logs without query by specifying credentials as options when valid and existent serviceId with valid svc env should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/0de22ffb3f2243ec8138170844envVar/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/0de22ffb3f2243ec8138170844envVar/logs 200
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -259,12 +409,18 @@ containerId   timestamp                 threshold  message
 
 `
 
-exports['flex logs with query with valid timestamps and without paging should succeed 1'] = `
+exports['flex logs without query by specifying credentials as options when valid and existent serviceId without svc env (when one) should succeed 1'] = `
 [debug] Checking for package updates
-[debug] Using profile 'profileToSetAsActive'
-[debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49.000Z
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z&to=2017-09-02T08:06:49.000Z 200
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/logs 200
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
 Count: 5
 
 containerId   timestamp                 threshold  message                                                
@@ -279,86 +435,16 @@ containerId   timestamp                 threshold  message
 
 `
 
-exports['flex logs with query with valid timestamps and invalid paging should fail 1'] = `
+exports['flex logs without query by specifying credentials as options when valid and non-existent serviceId without svc env (when one) should fail 1'] = `
 [debug] Checking for package updates
-[debug] Using profile 'profileToSetAsActive'
-[debug] Project configuration file not found: 'projectSetupPath'.
-[error] InvalidParameter: Logs 'page' flag invalid (non-zero integer expected)
-
-`
-
-exports['flex logs with query with valid start timestamp and nothing else should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'profileToSetAsActive'
-[debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?from=2017-08-30T08:06:49.594Z 200
-Count: 5
-
-containerId   timestamp                 threshold  message                                                
-------------  ------------------------  ---------  -------------------------------------------------------
-3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...
-3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/rc.local...                           
-3864f1602739  2017-08-30T08:06:49.595Z  null       *** Runit started as PID 11                            
-3864f1602739  2017-08-30T08:06:49.595Z  warn       *** Booting runit daemon...                            
-3864f1602739  2017-08-30T08:06:49.595Z  info       {"name":"test","num":10}                               
-
-
-
-`
-
-exports['flex logs with query with invalid start timestamp and nothing else should fail 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'profileToSetAsActive'
-[debug] Project configuration file not found: 'projectSetupPath'.
-[error] InvalidParameter: Logs 'from' flag invalid (ISO-8601 timestamp expected)
-
-`
-
-exports['flex logs with query with invalid timestamps (\'from\' not before \'to\') and nothing else should fail 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'profileToSetAsActive'
-[debug] Project configuration file not found: 'projectSetupPath'.
-[error] InvalidParameter: 'from' timestamp must be before 'to' timestamp.
-
-`
-
-exports['flex logs with query without timestamps and valid paging should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'profileToSetAsActive'
-[debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=5&page=3
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=5&page=3 200
-Count: 5
-
-containerId   timestamp                 threshold  message                                                
-------------  ------------------------  ---------  -------------------------------------------------------
-3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...
-3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/rc.local...                           
-3864f1602739  2017-08-30T08:06:49.595Z  null       *** Runit started as PID 11                            
-3864f1602739  2017-08-30T08:06:49.595Z  warn       *** Booting runit daemon...                            
-3864f1602739  2017-08-30T08:06:49.595Z  info       {"name":"test","num":10}                               
-
-
-
-`
-
-exports['flex logs with query without timestamps and page but with valid size should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'profileToSetAsActive'
-[debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=35
-[debug] Response: GET http://localhost:3234/v2/data-links/12378kdl2/logs?limit=35 200
-Count: 5
-
-containerId   timestamp                 threshold  message                                                
-------------  ------------------------  ---------  -------------------------------------------------------
-3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/my_init.d/00_regen_ssh_host_keys.sh...
-3864f1602739  2017-08-30T08:06:49.594Z  null       *** Running /etc/rc.local...                           
-3864f1602739  2017-08-30T08:06:49.595Z  null       *** Runit started as PID 11                            
-3864f1602739  2017-08-30T08:06:49.595Z  warn       *** Booting runit daemon...                            
-3864f1602739  2017-08-30T08:06:49.595Z  info       {"name":"test","num":10}                               
-
-
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/environments
+[debug] Response: GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/environments 404
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+[error] ServiceNotFound: The specified service could not be found.
 
 `

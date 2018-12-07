@@ -20,7 +20,7 @@ module.exports = {
   host: 'https://manage.kinvey.com/',
   logFetchDefault: 100,
   logFetchLimit: 2000,
-  defaultSchemaVersion: 2,
+  defaultSchemaVersion: 3,
   artifacts: ['.git', '.svn', 'node_modules', 'output.log'],
   timeout: 10 * 1000,
   flexProjectUploadTimeout: 30 * 1000,

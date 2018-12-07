@@ -41,8 +41,7 @@ function testFlexRecycle(profileName, options, serviceId, validUser, done) {
     allOptions[FlexOptionsNames.SERVICE_ID] = serviceId;
   }
 
-  const positionalArgs = null;
-  const cmd = buildCmd(baseCmd, positionalArgs, allOptions, [CommonOptionsNames.VERBOSE]);
+  const cmd = buildCmd(baseCmd, null, allOptions, [CommonOptionsNames.VERBOSE]);
   execCmdWithAssertion(cmd, null, apiOptions, true, true, false, null, done);
 }
 
@@ -88,6 +87,10 @@ describe(baseCmd, () => {
       testFlexRecycle(profileToUse, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, defaultServiceId, validUserOne, done);
     });
 
+    it('and existent serviceId plus non-existent svcEnv should fail', (done) => {
+      testFlexRecycle(profileToUse, { [FlexOptionsNames.SVC_ENV]: 'nonExistentEnv' }, defaultServiceId, validUserOne, done);
+    });
+
     it('and non-existent serviceId should fail', (done) => {
       testFlexRecycle(profileToUse, null, nonExistentServiceId, validUserOne, done);
     });
@@ -99,6 +102,10 @@ describe(baseCmd, () => {
 
       it('without serviceId as an option should succeed', (done) => {
         testFlexRecycle(profileToUse, null, null, validUserOne, done);
+      });
+
+      it('without serviceId as an option but with non-existent svcEnv should fail', (done) => {
+        testFlexRecycle(profileToUse, { [FlexOptionsNames.SVC_ENV]: 'nonExistentEnv' }, null, validUserOne, done);
       });
 
       after((done) => {

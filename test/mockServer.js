@@ -18,6 +18,7 @@ const bodyParser = require('body-parser');
 const isEqual = require('lodash.isequal');
 
 const { HTTPMethod, ServiceStatus } = require('./../lib/Constants');
+const { isEmpty } = require('./../lib/Utils');
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApps = require('./fixtures/apps.json');
 const fixtureApp = require('./fixtures/app.json');
@@ -27,15 +28,28 @@ const fixtureCollections = require('./fixtures/collections.json');
 const fixtureCollection = require('./fixtures/collection.json');
 const fixtureOrgs = require('./fixtures/orgs.json');
 const fixtureServices = require('./fixtures/datalinks.json');
+const fixtureInternalFlexService = require('./fixtures/internal-flex-service.json');
+const fixtureSvcEnvs = require('./fixtures/svc-envs-one.json');
 const fixtureServicesStatuses = require('./fixtures/datalinks-status-response.json');
 const fixtureJob = require('./fixtures/job.json');
 const fixtureJobs = require('./fixtures/jobs.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureLogs = require('./fixtures/logs.json');
 
+const fixtureSvcEnv = fixtureSvcEnvs[0];
+
 const testsConfig = require('./TestsConfig');
 
 const existentUserOne = fixtureUser.existentOne;
+
+const serviceNotFound = {
+  code: 'ServiceNotFound',
+  description: 'The specified service could not be found.'
+};
+const svcEnvNotFound = {
+  code: 'ServiceEnvironmentNotFound',
+  description: 'The specified service environment could not be found.'
+};
 
 let server;
 
@@ -67,16 +81,21 @@ function build(
     token = fixtureUser.token,
     nonExistentUser = fixtureUser.nonexistent,
     serviceStatus = ServiceStatus.ONLINE,
+    svcEnvs = fixtureSvcEnvs,
     orgs = fixtureOrgs,
     apps = fixtureApps,
+    service = fixtureInternalFlexService,
+    updatedSvcEnv = null,
+    envVars = null,
     envs = fixtureEnvs,
+    runtime = null,
     colls = fixtureCollections,
-    jobType = 'recycleDataLink',
+    jobType = 'recycleService',
     serviceLogsQuery = {},
-    domainType = 'apps',
+    domainType = 'appId', // appId, organizationId
     domainEntityId = fixtureApp.id,
     require2FAToken = false,
-    twoFactorToken
+    twoFactorToken = fixtureUser.validTwoFactorToken
   },
   done
 ) {
@@ -141,27 +160,33 @@ function build(
   app.delete('/session', (req, res) => res.sendStatus(204));
 
   // SERVICES
-  app.get(`/${versionPart}/data-links/:id/status`, (req, res) => {
+  app.get(`/${versionPart}/services/:id/environments/:envId/status`, (req, res) => {
     const id = req.params.id;
-
-    const datalinkStatus = fixtureServicesStatuses.find(dl => dl.id === id);
-    if (!datalinkStatus) {
-      return res.status(404).send({
-        code: 'DataLinkNotFound',
-        description: 'The specified data link could not be found.'
-      });
+    const service = fixtureServices.find(x => x.id === id);
+    if (!service) {
+      return res.status(404).send(serviceNotFound);
     }
 
-    res.send(datalinkStatus.status);
+    const envId = req.params.envId;
+    const status = fixtureServicesStatuses.find(dl => dl.id === envId);
+    if (!status) {
+      return res.status(404).send(svcEnvNotFound);
+    }
+
+    res.send(status.status);
   });
 
-  app.get(`/${versionPart}/data-links/:id/logs`, (req, res) => {
+  app.get(`/${versionPart}/services/:id/environments/:envId/logs`, (req, res) => {
     const id = req.params.id;
-    if (id !== fixtureInternalDataLink.id) {
-      return res.status(404).send({
-        code: 'DataLinkNotFound',
-        description: 'The specified data link could not be found.'
-      });
+    const service = fixtureServices.find(x => x.id === id);
+    if (!service) {
+      return res.status(404).send(serviceNotFound);
+    }
+
+    const envId = req.params.envId;
+    const status = svcEnvs.find(x => x.id === envId);
+    if (!status) {
+      return res.status(404).send(svcEnvNotFound);
     }
 
     const query = req.query;
@@ -172,15 +197,112 @@ function build(
     res.send(fixtureLogs);
   });
 
-  app.get(`/${versionPart}/data-links/:id`, (req, res) => {
+  app.get(`/${versionPart}/services/:id/environments/:envId`, (req, res) => {
     const id = req.params.id;
-    if (id) {
-      const wantedService = fixtureServices.find(x => x.id === id);
-      return res.send(wantedService);
+    const wantedService = fixtureServices.find(x => x.id === id);
+    if (!wantedService) {
+      return res.status(404).send(serviceNotFound);
+    }
+
+    const envId = req.params.envId;
+    const svcEnv = svcEnvs.find(x => x.id === envId);
+    if (!svcEnv) {
+      return res.status(404).send(svcEnvNotFound);
+    }
+
+    res.send(svcEnv);
+  });
+
+  app.get(`/${versionPart}/services/:id/environments`, (req, res) => {
+    const id = req.params.id;
+    const wantedService = fixtureServices.find(x => x.id === id);
+    if (!wantedService) {
+      return res.status(404).send(serviceNotFound);
+    }
+
+    res.send(svcEnvs);
+  });
+
+  app.post(`/${versionPart}/services/:id/environments`, (req, res) => {
+    const body = req.body;
+    if (!body) {
+      return res.sendStatus(400);
+    }
+
+    const runtimesDiffer = runtime != body.runtime;
+    const envVarsDiffer = (envVars && !isEqual(body.environmentVariables, envVars)) ||
+      (!envVars && body.environmentVariables);
+    if (!body.name || !body.secret || envVarsDiffer || runtimesDiffer) {
+      return res.sendStatus(400);
+    }
+
+    const result = Object.assign({ id: fixtureSvcEnv.id }, body);
+    res.status(201).send(result);
+  });
+
+  app.put(`/${versionPart}/services/:id/environments/:envId`, (req, res) => {
+    const id = req.params.id;
+    const wantedService = fixtureServices.find(x => x.id === id);
+    if (!wantedService) {
+      return res.status(404).send(serviceNotFound);
+    }
+
+    const svcEnvId = req.params.envId;
+    if (!svcEnvs.find(x => x.id === svcEnvId)) {
+      return res.status(404).send(svcEnvNotFound);
+    }
+
+    if (!isEqual(req.body, updatedSvcEnv)) {
+      return res.status(400).send(req.body);
+    }
+
+    return res.send(req.body);
+  });
+
+  app.get(`/${versionPart}/services/:id`, (req, res) => {
+    const id = req.params.id;
+    const wantedService = fixtureServices.find(x => x.id === id);
+    if (wantedService) {
+      res.send(wantedService);
+    } else {
+      res.status(404).send(serviceNotFound);
+    }
+  });
+
+  app.get(`/${versionPart}/services`, (req, res) => {
+    const query = req.query;
+    const unexpectedQueryIsSent = !domainType && !isEmpty(query);
+    const queryIsWrong = domainType && Object.keys(query)[0] !== domainType;
+    if (unexpectedQueryIsSent || queryIsWrong) {
+      return res.status(400).send({ description: `CLI sent bad query: ${JSON.stringify(query)}. Expected: ${domainType}: ${domainEntityId}` });
+    }
+
+    if (domainType && query[domainType] !== domainEntityId) {
+      return res.send([]);
     }
 
     res.send(fixtureServices);
   });
+
+  app.post(`/${versionPart}/services`, (req, res) => {
+    const body = req.body;
+    if (!body.name || body.name !== service.name || body.type !== service.type) {
+      return res.sendStatus(400);
+    }
+
+    res.status(201).send(service);
+  });
+
+
+  app.delete(`/${versionPart}/services/:id`, (req, res) => {
+    const id = req.params.id;
+    if (id === service.id) {
+      return res.sendStatus(204);
+    }
+
+    res.status(404).send(serviceNotFound);
+  });
+
 
   // JOBS
   app.get(`/${versionPart}/jobs/:id`, (req, res) => {
@@ -202,13 +324,15 @@ function build(
 
   app.post(`/${versionPart}/jobs`, (req, res) => {
     const body = req.body;
-    const isAsExpected = body && body.type === jobType && body.params && body.params.dataLinkId === fixtureInternalDataLink.id;
+    const isAsExpected = body && body.type === jobType && body.params && body.params.serviceId === fixtureInternalDataLink.id
+      && svcEnvs.find(x => x.id === body.params.serviceEnvironmentId);
     if (!isAsExpected) {
-      if (body.params.dataLinkId !== fixtureInternalDataLink.id) {
-        return res.status(404).send({
-          code: 'DataLinkNotFound',
-          description: 'The specified data link could not be found.'
-        });
+      if (body.params.serviceId !== fixtureInternalDataLink.id) {
+        return res.status(404).send(serviceNotFound);
+      }
+
+      if (!svcEnvs.find(x => x.id === body.params.serviceEnvironmentId)) {
+        return res.status(404).send(svcEnvNotFound);
       }
 
       return res.status(400).send({ description: `CLI has constructed bad job: ${JSON.stringify(body)}` });
@@ -217,10 +341,6 @@ function build(
     res.send({ job: 'idOfJobThatIsRecyclingTheService' });
   });
 
-  // SERVICES BY APP/ORG
-  app.get(`/${versionPart}/${domainType}/${domainEntityId}/data-links`, (req, res) => {
-    res.send(fixtureServices);
-  });
 
   // ENVS BY APP
   app.get(`/${versionPart}/apps/:id/environments`, (req, res) => {
@@ -373,7 +493,10 @@ function build(
   app.get(`/${versionPart}/organizations/:id`, (req, res) => {
     const id = req.params.id;
     if (id) {
-      return res.send(orgs.find(x => x.id === id));
+      const wantedOrg = orgs.find(x => x.id === id);
+      if (wantedOrg) {
+        return res.send(wantedOrg);
+      }
     }
 
     res.status(404).send({

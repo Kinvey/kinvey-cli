@@ -27,6 +27,8 @@ const mockServer = require('../../../mockServer');
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureOrg = require('./../../../fixtures/org.json');
 const fixtureServices = require('./../../../fixtures/datalinks.json');
+const fixtureSvcEnvsOne = require('./../../../fixtures/svc-envs-one.json');
+const fixtureSvcEnvsSeveral = require('./../../../fixtures/svc-envs-several.json');
 
 const baseCmd = Command.FLEX_INIT;
 const outputFile = testsConfig.paths.supposeDebug;
@@ -45,7 +47,8 @@ const Prompt = {
   selectAppOrOrg: new RegExp(PromptMessages.INPUT_DOMAIN),
   selectOrganization: new RegExp(PromptMessages.INPUT_ORG),
   selectApp: new RegExp(PromptMessages.INPUT_APP),
-  selectService: new RegExp(PromptMessages.INPUT_SPECIFIC_SERVICE)
+  selectService: new RegExp(PromptMessages.INPUT_SPECIFIC_SERVICE),
+  selectSvcEnv: new RegExp(PromptMessages.INPUT_SPECIFIC_SVC_ENV)
 };
 
 const Keys = {
@@ -59,9 +62,11 @@ const defaultService = fixtureServices.find(x => x.name === defaultDataLinkName)
 const secondDataLinkName = 'TestSecondKinveyDatalink';
 const secondService = fixtureServices.find(x => x.name === secondDataLinkName);
 
-const appProjectFlex = assertions.buildExpectedProject(DomainTypes.APP, fixtureApp.id, defaultService.id, defaultService.name);
+const defaultSvcEnvId = fixtureSvcEnvsOne[0].id;
+
+const appProjectFlex = assertions.buildExpectedProject(DomainTypes.APP, fixtureApp.id, defaultService.id, defaultService.name, defaultSvcEnvId);
 const expectedAppProject = assertions.buildExpectedProjectSetup(defaultProfileName, appProjectFlex);
-const orgProjectFlex = assertions.buildExpectedProject(DomainTypes.ORG, fixtureOrg.id, secondService.id, secondService.name);
+const orgProjectFlex = assertions.buildExpectedProject(DomainTypes.ORG, fixtureOrg.id, secondService.id, secondService.name, defaultSvcEnvId);
 const expectedOrgProject = assertions.buildExpectedProjectSetup(defaultProfileName, orgProjectFlex);
 
 
@@ -119,7 +124,7 @@ describe(baseCmd, () => {
     it('with one not active valid profile should succeed', (done) => {
       setup.createProfiles(defaultProfileName, (err) => {
         expect(err).to.not.exist;
-        mockServer(null, (err, server) => {
+        mockServer({ domainType: 'appId' }, (err, server) => {
           expect(err).to.not.exist;
           ms = server;
           const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
@@ -133,7 +138,7 @@ describe(baseCmd, () => {
     it('with one active valid profile should succeed', (done) => {
       setup.setActiveProfile(defaultProfileName, true, (err) => {
         expect(err).to.not.exist;
-        mockServer(null, (err, server) => {
+        mockServer({ domainType: 'appId' }, (err, server) => {
           expect(err).to.not.exist;
           ms = server;
           const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
@@ -145,10 +150,57 @@ describe(baseCmd, () => {
       });
     });
 
+    it('with one active valid profile and a few svc envs to choose from should succeed', (done) => {
+      setup.setActiveProfile(defaultProfileName, true, (err) => {
+        expect(err).to.not.exist;
+        mockServer({ domainType: 'appId', svcEnvs: fixtureSvcEnvsSeveral }, (err, server) => {
+          expect(err).to.not.exist;
+          ms = server;
+          const sequence = suppose(nodeCommand, defaultFlexInitOptions, defaultEnvWithDebug)
+            .when(Prompt.selectAppOrOrg)
+            .respond('\n')
+            .when(Prompt.selectApp)
+            .respond(Keys.downArrow)
+            .respond('\n')
+            .when(Prompt.selectService)
+            .respond('\n')
+            .when(Prompt.selectSvcEnv)
+            .respond(Keys.downArrow)
+            .respond('\n');
+
+          const svcEnvId = fixtureSvcEnvsSeveral[1].id;
+          const expectedFlexNs = assertions.buildExpectedProject(DomainTypes.APP, fixtureApp.id, defaultService.id, defaultService.name, svcEnvId);
+          const expectedProjectSetup = assertions.buildExpectedProjectSetup(defaultProfileName, expectedFlexNs);
+
+          runSupposeSequence(sequence, (error, exitCode) => {
+            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedProjectSetup, outputFile, flexInitSuccessMessage, done);
+          });
+        });
+      });
+    });
+
+    it('with one active valid profile and no svc envs to choose from should fail', (done) => {
+      setup.setActiveProfile(defaultProfileName, true, (err) => {
+        expect(err).to.not.exist;
+        mockServer({ domainType: 'appId', svcEnvs: [] }, (err, server) => {
+          expect(err).to.not.exist;
+          ms = server;
+
+          const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
+
+          runSupposeSequence(sequence, (error, exitCode) => {
+            const expErrMsg = Errors.NoScvEnvFound.MESSAGE;
+            assertions.assertSupposeError(error, exitCode, expErrMsg, 1);
+            done();
+          });
+        });
+      });
+    });
+
     it('with one active valid profile and only apps to choose from should succeed', (done) => {
       setup.setActiveProfile(defaultProfileName, true, (err) => {
         expect(err).to.not.exist;
-        mockServer({ orgs: [] }, (err, server) => {
+        mockServer({ orgs: [], domainType: 'appId' }, (err, server) => {
           expect(err).to.not.exist;
 
           ms = server;
@@ -169,7 +221,7 @@ describe(baseCmd, () => {
     it('with one active valid profile and only orgs to choose from should succeed', (done) => {
       setup.setActiveProfile(defaultProfileName, true, (err) => {
         expect(err).to.not.exist;
-        mockServer({ apps: [], domainType: 'organizations', domainEntityId: fixtureOrg.id }, (err, server) => {
+        mockServer({ apps: [], domainType: 'organizationId', domainEntityId: fixtureOrg.id }, (err, server) => {
           expect(err).to.not.exist;
 
           ms = server;
@@ -177,6 +229,7 @@ describe(baseCmd, () => {
             .when(Prompt.selectOrganization)
             .respond('\n')
             .when(Prompt.selectService)
+            .respond(Keys.downArrow)
             .respond(Keys.downArrow)
             .respond('\n');
 
@@ -192,7 +245,7 @@ describe(baseCmd, () => {
         expect(err).to.not.exist;
         setup.setActiveProfile(defaultProfileName, true, (err) => {
           expect(err).to.not.exist;
-          mockServer(null, (err, server) => {
+          mockServer({ domainType: 'appId' }, (err, server) => {
             expect(err).to.not.exist;
             ms = server;
             const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
@@ -210,7 +263,7 @@ describe(baseCmd, () => {
         expect(err).to.not.exist;
         setup.setActiveProfile(secondValidProfileName, true, (err) => {
           expect(err).to.not.exist;
-          mockServer(null, (err, server) => {
+          mockServer({ domainType: 'appId' }, (err, server) => {
             expect(err).to.not.exist;
             ms = server;
             const profileOptions = buildProfileOptions(defaultFlexInitOptions, defaultProfileName);
@@ -234,7 +287,7 @@ describe(baseCmd, () => {
         expect(err).to.not.exist;
         setup.setActiveProfile(secondValidProfileName, true, (err) => {
           expect(err).to.not.exist;
-          mockServer(null, (err, server) => {
+          mockServer({ domainType: 'appId' }, (err, server) => {
             expect(err).to.not.exist;
             ms = server;
             const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, envWithProfileVar);
@@ -257,7 +310,7 @@ describe(baseCmd, () => {
         expect(err).to.not.exist;
         setup.setActiveProfile(secondValidProfileName, true, (err) => {
           expect(err).to.not.exist;
-          mockServer(null, (err, server) => {
+          mockServer({ domainType: 'appId' }, (err, server) => {
             expect(err).to.not.exist;
             ms = server;
 
@@ -320,7 +373,7 @@ describe(baseCmd, () => {
   });
 
   describe('Organization Level Services', () => {
-    const orgOptions = { domainType: 'organizations', domainEntityId: fixtureOrg.id };
+    const orgOptions = { domainType: 'organizationId', domainEntityId: fixtureOrg.id };
 
     it('with one not active valid profile should succeed', (done) => {
       setup.createProfiles(defaultProfileName, (err) => {
@@ -334,6 +387,7 @@ describe(baseCmd, () => {
             .when(Prompt.selectOrganization)
             .respond('\n')
             .when(Prompt.selectService)
+            .respond(Keys.downArrow)
             .respond(Keys.downArrow)
             .respond('\n');
 

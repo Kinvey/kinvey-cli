@@ -116,7 +116,7 @@ describe(baseCmd, () => {
         execCmdWithAssertion(cmd, null, null, true, true, false, null, done);
       });
 
-      it.skip('with active items should succeed', (done) => {
+      it('with active items should succeed', (done) => {
         async.series([
           (next) => {
             const cmd = `${Namespace.APP} use ${fixtureApp.id} --verbose`;

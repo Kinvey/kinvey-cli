@@ -1,5 +1,34 @@
 # Changelog
 
+## 4.1.1 (2018-11-29)
+* Preserve existing env vars on `flex deploy --set-vars <env variables>` 
+
+## 4.1.0 (2018-11-27)
+* Migrate to v3 API
+* Add service environments functionality in flex namespace
+
+## 4.0.1 (2018-11-21)
+* Add runtime environment support for internal flex services
+
+## 4.0.0 (2018-11-08)
+* Add commands:
+    * organizations-related: `org list`, `org show`, `org use`
+    * applications-related: `app create`, `app list`, `app show`, `app use`, `app delete`
+    * app environments-related: `appenv create`, `appenv list`, `appenv show`, `appenv use`, `appenv delete`
+    * collections-related: `coll create`, `coll list`, `coll delete`
+* Add `org` option to `app create`
+* Add `flex create` command to create internal flex services
+* Add `flex clear` command to clear project settings
+* Add environment variables for internal flex services
+* Repurpose the `flex delete` command to delete internal flex services
+* Ask for confirmation on app/appenv/coll/flex delete
+* Fail on unsupported hyphenated option or flag
+* Update production dependencies (moment.js, request.js)
+* Update dev dependencies
+* Show help on `kinvey <namespace>`
+* Fix `flex deploy` to work with local setup
+* Fix `profile login` to update only token
+
 ## 3.1.2
 * Enhance `flex status` output
 

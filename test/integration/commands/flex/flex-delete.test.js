@@ -13,72 +13,115 @@
  * contents is a violation of applicable laws.
  */
 
-const { CommonOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
-const { assertions, buildCmd, execCmdWithAssertion, setup, testTooManyArgs } = require('../../../TestsHelper');
+const async = require('async');
+const deepCopy = require('lodash.clonedeep');
+
+const { ActiveItemType, AppOptionsName, AuthOptionsNames, CommonOptionsNames, DomainTypes, FlexOptionsNames, Namespace } = require('./../../../../lib/Constants');
+const { assertions, buildCmd, execCmdWithAssertion, setup, testers } = require('../../../TestsHelper');
+const fixtureApp = require('./../../../fixtures/app.json');
+const fixtureUser = require('./../../../fixtures/user.json');
+const fixtureService = require('./../../../fixtures/internal-flex-service.json');
 
 const baseCmd = 'flex delete';
 
-describe(`${baseCmd}`, () => {
+function testServiceDelete(options, flags, serviceId, expectedProjectConfig, done) {
+  options = options || {};
+  if (serviceId) {
+    options[FlexOptionsNames.SERVICE_ID] = serviceId;
+  }
+  testers.execCmdWithIdentifier(baseCmd, options, flags, null, null, (err) => {
+    expect(err).to.not.exist;
+    assertions.assertProjectSetup(expectedProjectConfig, null, done);
+  });
+}
+
+describe(baseCmd, () => {
+  const jsonOptions = testers.getJsonOptions();
+  const defaultFlagsPlusNoPrompt = testers.getDefaultFlags();
+  defaultFlagsPlusNoPrompt.push(CommonOptionsNames.NO_PROMPT);
+
   before((done) => {
-    setup.clearProjectSetup(null, done);
+    setup.clearAllSetup(done);
   });
 
   after((done) => {
-    setup.clearProjectSetup(null, done);
+    setup.clearAllSetup(done);
   });
 
-  describe('when project is not set', () => {
-    it('should succeed and output default format', (done) => {
-      const cmd = buildCmd(baseCmd, null, null, [CommonOptionsNames.VERBOSE]);
-
-      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
-        expect(err).to.not.exist;
-
-        assertions.assertProjectSetup(null, null, (err) => {
-          expect(err).to.not.exist;
-          done();
-        });
-      });
+  describe('when active profile is set and project config is set', () => {
+    const activeProfile = 'activeProfile';
+    const nonActiveProfile = 'nonActiveProfile';
+    const allProfiles = [activeProfile, nonActiveProfile];
+    const projectConfig = assertions.buildExpectedProject(DomainTypes.APP, fixtureApp.id, fixtureService.id, fixtureService.name);
+    const fullConfig = Object.assign({}, {
+      activeProfile: { flex: deepCopy(projectConfig) },
+      nonActiveProfile: { flex: deepCopy(projectConfig) }
     });
 
-    it('should succeed and output JSON', (done) => {
-      const cmd = buildCmd(baseCmd, null, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, [CommonOptionsNames.VERBOSE]);
+    beforeEach((done) => {
+      async.series([
+        (next) => {
+          setup.createProfiles(allProfiles, next);
+        },
+        (next) => {
+          setup.setActiveProfile(activeProfile, false, next);
+        },
+        (next) => {
+          async.eachSeries(
+            allProfiles,
+            (profile, cb) => {
+              setup.createProjectSetup(profile, projectConfig, cb);
+            },
+            next
+          );
+        }
+      ], done);
+    });
 
-      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
-        expect(err).to.not.exist;
+    afterEach((done) => {
+      setup.clearAllSetup(done);
+    });
 
-        assertions.assertProjectSetup(null, null, (err) => {
-          expect(err).to.not.exist;
-          done();
-        });
-      });
+    it('without explicit profile and serviceId should succeed', (done) => {
+      const expectedConfig = deepCopy(fullConfig);
+      delete expectedConfig.activeProfile.flex.serviceId;
+      delete expectedConfig.activeProfile.flex.serviceName;
+      testServiceDelete(null, defaultFlagsPlusNoPrompt, null, expectedConfig, done);
+    });
+
+    it('with explicit profile and without serviceId should succeed', (done) => {
+      const expectedConfig = deepCopy(fullConfig);
+      delete expectedConfig.nonActiveProfile.flex.serviceId;
+      delete expectedConfig.nonActiveProfile.flex.serviceName;
+      const options = Object.assign({}, jsonOptions, { [AuthOptionsNames.PROFILE]: nonActiveProfile });
+      testServiceDelete(options, defaultFlagsPlusNoPrompt, null, expectedConfig, done);
+    });
+
+    it('without explicit profile and with non-existent serviceId should fail', (done) => {
+      const nonExistentServiceId = '124';
+      testServiceDelete(null, defaultFlagsPlusNoPrompt, nonExistentServiceId, fullConfig, done);
+    });
+
+    it('when one-time session and existent serviceId should succeed', (done) => {
+      const serviceId = fixtureService.id;
+      const options = {
+        [AuthOptionsNames.EMAIL]: fixtureUser.existent.email,
+        [AuthOptionsNames.PASSWORD]: fixtureUser.existent.password
+      };
+      // project config should not be altered if one-time session
+      testServiceDelete(options, defaultFlagsPlusNoPrompt, serviceId, fullConfig, done);
     });
   });
 
-  describe('when project is set', () => {
-    before((done) => {
-      setup.createProjectSetup('testName', null, done);
-    });
+  describe('when profiles nor project config are set', () => {
+    it('when one-time session and existent serviceId should succeed', (done) => {
+      const serviceId = fixtureService.id;
+      const options = {
+        [AuthOptionsNames.EMAIL]: fixtureUser.existent.email,
+        [AuthOptionsNames.PASSWORD]: fixtureUser.existent.password
+      };
 
-    after((done) => {
-      setup.clearProjectSetup(null, done);
-    });
-
-    it('should succeed', (done) => {
-      const cmd = buildCmd(baseCmd, null, null, [CommonOptionsNames.VERBOSE]);
-
-      execCmdWithAssertion(cmd, null, null, true, true, false, null, (err) => {
-        expect(err).to.not.exist;
-
-        assertions.assertProjectSetup(null, null, (err) => {
-          expect(err).to.not.exist;
-          done();
-        });
-      });
-    });
-
-    it('with too many args should fail', (done) => {
-      testTooManyArgs(baseCmd, 1, done);
+      testServiceDelete(options, defaultFlagsPlusNoPrompt, serviceId, null, done);
     });
   });
 });

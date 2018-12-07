@@ -29,6 +29,7 @@ const { isEmpty, isNullOrUndefined, readJSON, writeJSON } = require('../lib/Util
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApp = require('./fixtures/app.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
+const fixtureSvcEnv = require('./fixtures/svc-envs-one.json')[0];
 const testsConfig = require('./TestsConfig');
 const mockServer = require('./mockServer');
 
@@ -114,7 +115,7 @@ TestsHelper.assertions = {
   assertProjectSetup(expected, path, done) {
     path = path || projectPath;
     readJSON(path, (err, actual) => {
-      if (err) {
+      if (err && err.code !== 'ENOENT') {
         return done(err);
       }
 
@@ -129,12 +130,13 @@ TestsHelper.assertions = {
     });
   },
 
-  buildExpectedProject(domain, domainEntityId, serviceId, serviceName, schemaVersion = testsConfig.defaultSchemaVersion) {
+  buildExpectedProject(domain, domainEntityId, serviceId, serviceName, svcEnvId = fixtureSvcEnv.id, schemaVersion = testsConfig.defaultSchemaVersion) {
     return {
       domain,
       domainEntityId,
       serviceId,
       serviceName,
+      svcEnvId,
       schemaVersion
     };
   },
@@ -341,7 +343,7 @@ TestsHelper.setup = {
     });
   },
 
-  setActiveItemOnProfile(profileName, entityType, activeItem, path, done) {
+  setActiveItemOnProfile(profileName, activeItemType, activeItem, path, done) {
     path = path || globalSetupPath;
     TestsHelper.setup._readGlobalSetupForProfile(profileName, path, (err, setup) => {
       if (err) {
@@ -352,7 +354,7 @@ TestsHelper.setup = {
         setup.profiles[profileName].active = {};
       }
 
-      setup.profiles[profileName].active[entityType] = activeItem;
+      setup.profiles[profileName].active[activeItemType] = activeItem;
       writeJSON(path, setup, done);
     });
   },
@@ -384,7 +386,8 @@ TestsHelper.setup = {
           domainEntityId: fixtureApp.id,
           serviceId: fixtureInternalDataLink.id,
           serviceName: fixtureInternalDataLink.name,
-          schemaVersion: 2
+          svcEnvId: fixtureSvcEnv.id,
+          schemaVersion: 3
         }
       };
       data[key] = flex;
@@ -604,7 +607,7 @@ TestsHelper.execCmdWithAssertion = function (cliCmd, cmdOptions, apiOptions, sna
         finalOutput = finalOutput.replace(/\r\n/g, '\n');
 
         // replace a given text/regex if an object with 'oldValue' and 'newValue' fields is submitted.
-        if (replacementObject && typeof replacementObject === 'object') {
+        if (replacementObject && typeof replacementObject === 'object' && finalOutput.match(replacementObject.oldValue)) {
           const matchedText = finalOutput.match(replacementObject.oldValue)[0];
           finalOutput = finalOutput.replace(matchedText, replacementObject.newValue);
         }

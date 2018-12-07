@@ -1,45 +1,70 @@
-exports['flex delete when project is not set should succeed and output default format 1'] = `
+exports['flex delete when active profile is set and project config is set without explicit profile and serviceId should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'activeProfile'
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2 200
+[debug] Request:  DELETE http://localhost:3234/v3/services/12378kdl2
+[debug] Response: DELETE http://localhost:3234/v3/services/12378kdl2 204
 [debug] Writing contents to file projectSetupPath
-Project data cleared. Run kinvey flex init to get started.
+[debug] Deleted service from project settings.
+Deleted service: 12378kdl2
 
 `
 
-exports['flex delete when project is not set should succeed and output JSON 1'] = `
+exports['flex delete when active profile is set and project config is set with explicit profile and without serviceId should succeed 1'] = `
 [debug] Checking for package updates
+[debug] Using profile 'nonActiveProfile'
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2 200
+[debug] Request:  DELETE http://localhost:3234/v3/services/12378kdl2
+[debug] Response: DELETE http://localhost:3234/v3/services/12378kdl2 204
 [debug] Writing contents to file projectSetupPath
+[debug] Deleted service from project settings.
 {
-  "result": null
+  "result": {
+    "id": "12378kdl2"
+  }
 }
 
 `
 
-exports['flex delete when project is set should succeed 1'] = `
+exports['flex delete when active profile is set and project config is set without explicit profile and with non-existent serviceId should fail 1'] = `
 [debug] Checking for package updates
-[debug] Writing contents to file projectSetupPath
-Project data cleared. Run kinvey flex init to get started.
+[debug] Using profile 'activeProfile'
+[debug] Request:  GET http://localhost:3234/v3/services/124
+[debug] Response: GET http://localhost:3234/v3/services/124 200
+[error] NotFound: Could not find internal flex service with identifier '124'.
 
 `
 
-exports['flex delete when project is set with too many args should fail 1'] = `
-kinvey flex delete
+exports['flex delete when active profile is set and project config is set when one-time session and existent serviceId should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2 200
+[debug] Request:  DELETE http://localhost:3234/v3/services/12378kdl2
+[debug] Response: DELETE http://localhost:3234/v3/services/12378kdl2 204
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+Deleted service: 12378kdl2
 
-Delete project settings
+`
 
-Options:
-  --version                 Show version number                        [boolean]
-  --email                   E-mail address of your Kinvey account       [string]
-  --password                Password of your Kinvey account             [string]
-  --2fa, --2Fa              Two-factor authentication token             [string]
-  --instanceId              Instance ID                                 [string]
-  --profile                 Profile to use                              [string]
-  --output                  Output format             [string] [choices: "json"]
-  --silent                  Do not output anything                     [boolean]
-  --suppress-version-check  Do not check for package updates           [boolean]
-  --verbose                 Output debug messages                      [boolean]
-  --no-color                Disable colors                             [boolean]
-  -h, --help                Show help                                  [boolean]
-
-Too many non-option arguments: got 1, maximum of 0
+exports['flex delete when profiles nor project config are set when one-time session and existent serviceId should succeed 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2 200
+[debug] Request:  DELETE http://localhost:3234/v3/services/12378kdl2
+[debug] Response: DELETE http://localhost:3234/v3/services/12378kdl2 204
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+Deleted service: 12378kdl2
 
 `

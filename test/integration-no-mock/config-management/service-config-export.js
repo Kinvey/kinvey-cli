@@ -37,6 +37,11 @@ module.exports = () => {
         dev: {
           secret: '123',
           host: 'https://swapi.co/api'
+        },
+        prod: {
+          secret: '1234',
+          host: 'https://swapi.co',
+          description: 'production svc env'
         }
       }
     };
@@ -54,11 +59,7 @@ module.exports = () => {
     });
 
     after('remove service', (done) => {
-      if (!serviceId) {
-        return setImmediate(done);
-      }
-
-      ApiService.services.remove(serviceId, (err) => {
+      ConfigManagementHelper.testHooks.removeService(serviceId, (err) => {
         serviceId = null;
         done(err);
       });
@@ -71,8 +72,7 @@ module.exports = () => {
           return done(err);
         }
 
-        const expected = getObjectByOmitting(externalFlexSrvConfig, ['host']);
-        expect(exported).to.deep.equal(expected);
+        expect(exported).to.deep.equal(externalFlexSrvConfig);
         done();
       });
     });
@@ -113,11 +113,7 @@ module.exports = () => {
     });
 
     after('remove service', (done) => {
-      if (!serviceId) {
-        return setImmediate(done);
-      }
-
-      ApiService.services.remove(serviceId, (err) => {
+      ConfigManagementHelper.testHooks.removeService(serviceId, (err) => {
         serviceId = null;
         done(err);
       });
@@ -208,7 +204,7 @@ module.exports = () => {
     });
 
     after('remove service', (done) => {
-      ApiService.services.remove(serviceId, (err) => {
+      ConfigManagementHelper.testHooks.removeService(serviceId, (err) => {
         serviceId = null;
         done(err);
       });

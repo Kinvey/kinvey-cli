@@ -13,6 +13,7 @@
       "type": "external",
       "permissions": "full",
       "service": "serviceName",
+      "serviceEnvironment": "svcEnvName",
       "serviceObject": "CoolCollection"
     },
     "collection2": {
@@ -65,12 +66,14 @@
         "type": "external",
         "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}",
         "service": "serviceName",
+        "serviceEnvironment": "svcEnvName",
         "handlerName": "bizLogix"
       },
       "onPreFetch": {
         "type": "external",
         "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}",
         "service": "serviceName",
+        "serviceEnvironment": "svcEnvName",
         "handlerName": "bizLogix"
       }
     }
@@ -88,6 +91,7 @@
       "type": "external",
       "codeFile": "./my-scheduled-code.js",
       "service": "serviceName",
+      "serviceEnvironment": "svcEnvName",
       "handlerName": "bizLogix",
       "schedule": {
         "start": "2018-04-04T16:35:00Z"

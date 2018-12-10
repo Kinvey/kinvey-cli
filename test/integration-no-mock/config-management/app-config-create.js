@@ -125,8 +125,8 @@ module.exports = () => {
       const svcOne = randomStrings.plainString();
       const svcTwo = randomStrings.plainString();
       const externalCollList = [
-        ConfigManagementHelper.env.buildExternalCollection(svcOne, 'MyCollection', randomStrings.collName()),
-        ConfigManagementHelper.env.buildExternalCollection(svcTwo, 'MyCollection', randomStrings.collName())
+        ConfigManagementHelper.env.buildExternalCollection(svcOne, 'dev', 'MyCollection', randomStrings.collName()),
+        ConfigManagementHelper.env.buildExternalCollection(svcTwo, 'dev', 'MyCollection', randomStrings.collName())
       ];
       const configColls = ConfigManagementHelper.common.buildConfigEntityFromList(externalCollList);
       const envUsingServices = {

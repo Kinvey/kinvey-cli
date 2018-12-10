@@ -64,6 +64,7 @@ module.exports = () => {
     };
 
     const additionalServiceName = randomStrings.plainString();
+    const additionalSvcEnvName = 'dev';
     const modifiedConfig = cloneDeep(initialConfig);
     modifiedConfig.settings = {
       sessionTimeoutInSeconds: 90
@@ -74,6 +75,7 @@ module.exports = () => {
         myEndpoint: {
           type: 'external',
           service: additionalServiceName,
+          serviceEnvironment: additionalSvcEnvName,
           handlerName: 'someHandler'
         }
       }
@@ -85,7 +87,7 @@ module.exports = () => {
       type: 'flex-external',
       description: 'Test service',
       environments: {
-        dev: {
+        [additionalSvcEnvName]: {
           secret: '567',
           host: 'https://swapi.co/api'
         }

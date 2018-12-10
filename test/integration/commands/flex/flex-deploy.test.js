@@ -18,7 +18,7 @@ const yargs = require('yargs');
 
 const path = require('path');
 
-const { AuthOptionsNames } = require('./../../../../lib/Constants');
+const { AuthOptionsNames, FlexOptionsNames, ServiceOptionsNames } = require('./../../../../lib/Constants');
 const FlexController = require('./../../../../lib/flex/FlexController');
 const ServicesService = require('./../../../../lib/service/ServicesService');
 const CLIManager = require('./../../../../lib/CLIManager');
@@ -31,6 +31,7 @@ const { execCmdWithAssertion, setup } = require('../../../TestsHelper');
 const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureInternalDataLink = require('./../../../fixtures/kinvey-dlc.json');
 const fixtureApp = require('./../../../fixtures/app.json');
+const fixtureSvcEnvs = require('./../../../fixtures/svc-envs-one.json');
 
 const existentUserOne = fixtureUser.existentOne;
 const tokenOne = fixtureUser.tokenOne;
@@ -48,7 +49,7 @@ function testFlexDeploy(profileName, optionsForCredentials, validUser, done) {
   }
 
   const apiOptions = {
-    jobType: 'deployDataLink'
+    jobType: 'deployService'
   };
   if (!isEmpty(validUser)) {
     apiOptions.token = validUser.token;
@@ -100,7 +101,7 @@ describe(`${baseCmd}`, () => {
     before((done) => {
       async.series([
         (next) => {
-          setup.createProfile(activeProfile, existentUserOne.email, existentUserOne.password, next);
+          setup.createProfile(activeProfile, null, null, next);
         },
         (next) => {
           setup.setActiveProfile(activeProfile, false, next);
@@ -115,6 +116,70 @@ describe(`${baseCmd}`, () => {
 
       afterEach('clearProjectSetup', (done) => {
         setup.clearProjectSetup(null, done);
+      });
+
+      describe("and user's project is valid", () => {
+        /* it('should succeed', (done) => {
+          testFlexDeploy(activeProfile, null, validUserOne, done);
+        }); */
+
+        it('should succeed', (done) => {
+          const setup = new Setup(testsConfig.paths.session);
+          const manager = new CLIManager({ setup, config: testsConfig, logger, commandsManager: yargs });
+          manager.sendRequest = function stubSendRequest(options, done) {
+            const mockReq = {
+              on: () => {},
+              once: () => {},
+              send: () => {
+                const svcEnvsEnd = Endpoints.serviceEnvs(testsConfig.defaultSchemaVersion, fixtureInternalDataLink.id);
+                if (options.endpoint === Endpoints.session()) {
+                  return done(null, { email: validUserOne.email, token: tokenOne });
+                } else if (options.endpoint === svcEnvsEnd) {
+                  return done(null, fixtureSvcEnvs);
+                } else if (options.endpoint === Endpoints.serviceStatus(testsConfig.defaultSchemaVersion, fixtureInternalDataLink.id, fixtureSvcEnvs[0].id)) {
+                  return done(null, { status: 'NEW' });
+                } else if (options.endpoint === Endpoints.jobs(testsConfig.defaultSchemaVersion)) {
+                  const formData = options.formData;
+                  const headers = options.headers;
+                  if (isEmpty(headers) || headers['Transfer-Encoding'] !== 'chunked') {
+                    return done(new Error('Bad headers.'));
+                  }
+
+                  if (isEmpty(formData) || formData.type !== 'deployService' || isEmpty(formData.params) || formData.params.version === '0.6.2') {
+                    return done(new Error('Bad form data type or params.'));
+                  }
+
+                  const isOK = !isEmpty(formData.file) && !isEmpty(formData.file.options) && formData.file.options.contentType === 'application/tar';
+                  if (!isOK) {
+                    return done(new Error('Bad form data file.'));
+                  }
+
+
+                  return done(null, { job: '123' });
+                }
+
+                done(new Error('CLI made a bad request.'));
+              }
+            };
+            mockReq.send();
+            return mockReq;
+          };
+
+          const servicesService = new ServicesService(manager);
+          const ctrl = new FlexController({ cliManager: manager, servicesService });
+
+          const options = {
+            [AuthOptionsNames.EMAIL]: existentUserOne.email,
+            [AuthOptionsNames.PASSWORD]: existentUserOne.password,
+            [FlexOptionsNames.SERVICE_ID]: fixtureInternalDataLink.id,
+            _: ['flex', 'deploy']
+          };
+          ctrl.preProcessOptions(options);
+          ctrl.deploy(options, (err) => {
+            expect(err).to.not.exist;
+            done();
+          });
+        });
       });
 
       describe("and user's project is invalid", () => {

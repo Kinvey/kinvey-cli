@@ -138,7 +138,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     * `--app <application>`
        
-      Specifies a Kinvey app by ID or name.
+        Specifies a Kinvey app by ID or name.
       
 * `appenv push <file>`
 
@@ -270,11 +270,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex init`
 
-   Configures Kinvey CLI to work with a specific Flex Service through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Information within the file is saved per profile. Each successive execution in the same directory overwrites the respective profile section in the configuration file. This command requires that either an active profile is set or a profile is specified using the `--profile` option. Profile data options such as `--email`, `--password`, and `--instanceId` are ignored if specified. 
+   Configures Kinvey CLI to work with a specific Flex service and service environment combination through prompts. This command is designed to be executed in a Node.js project directory where it creates a `.kinvey` configuration file. Information within the file is saved per profile. Each successive execution in the same directory overwrites the respective profile section in the configuration file. This command requires that either an active profile is set or a profile is specified using the `--profile` option. Profile data options such as `--email`, `--password`, and `--instanceId` are ignored if specified. 
 
 * `flex create <service_name>`
 
-    Creates an internal flex service with the specified name. You need to specify a domain (application or organization) using the `--app` or `--org` option.
+    Creates an internal flex service with the specified name along with a service environment. You need to specify a domain (application or organization) using the `--app` or `--org` option.
 
     * `--app <application>`
            
@@ -287,6 +287,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     * `--secret <secret>`
      
         Specifies a shared secret of your choice (minimum 2 characters, no leading or trailing whitespaces). If you skip this option, a random shared secret is generated for you. In the latter case, Kinvey CLI will pass the secret automatically to the Flex Runtime and print it on the screen for your information.
+       
+    * `--env <service environment name>`
+    
+        Specifies a name for the default service environment that will be created with the service. The name will be set to Development if you omit this option.
         
     * `--vars, --set-vars <environment variables>`
     
@@ -298,11 +302,15 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
         
 * `flex deploy`
 
-   Deploys the current project to the Kinvey FlexService Runtime, using the current service, which is the one you initiated last on the current profile. To use a different service, specify its service ID.
+   Deploys the current project to the Kinvey FlexService Runtime, using the current service and service environment combination, which is the one you initiated last on the current profile. To use a different service, specify its service ID.
 
     * `--service <service>`
     
         Specifies service ID.
+        
+    * `--env <service environment>`
+    
+        Specifies a service environment by ID or name.
         
     * `--replace-vars <environment variables>`
     
@@ -322,23 +330,31 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex status`
 
-   Displays the health of the current Flex Service, which is the one you initiated last on the current profile. To get the status of a different service, specify its service ID.
+   Displays the health of the current Flex service and service environment combination, which is the one you initiated last on the current profile. To get the status of a different service, specify its service ID.
 
     * `--service <service>`
         
         Specifies service ID.
+        
+    * `--env <service environment>`
+        
+        Specifies a service environment by ID or name.
        
 * `flex show`
    
-   Shows info about the current Flex service, which is the one you initiated last on the current profile. To get info for a different service, specify its service ID.
+   Shows info about a service environment.
             
     * `--service <service>`
             
         Specifies service ID.
+         
+    * `--env <service environment>`
+        
+        Specifies a service environment by ID or name.
             
 * `flex list`
 
-   Lists all Flex Services for a domain (app or organization), excluding external Flex Services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services within the domain you've configured as part of running `flex init`. In addition to the global options, this command supports the following options:
+   Lists all Flex services for a domain (app or organization), excluding external Flex services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services within the domain you've configured as part of running `flex init`. In addition to the global options, this command supports the following options:
 
    * `--domain <app|org>`
    
@@ -350,11 +366,15 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex logs`
 
-   Retrieves and displays logs for the current Flex Service, which is the one you initiated last on the current profile. To get logs for a different service, specify its service ID. Log calls return 100 entries by default and can return up to 2,000 entries. Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`. Combine with the paging and limiting options to narrow down your search. Logs for external Flex Services are not returned. In addition to the global options, this command supports the following options:
+   Retrieves and displays logs for the current Flex service environment. Log calls return 100 entries by default and can return up to 2,000 entries. Logs are displayed in the following format: `<runtime id> <timestamp> - <message>`. Combine with the paging and limiting options to narrow down your search. Logs for external Flex Services are not returned. In addition to the global options, this command supports the following options:
 
     * `--service <service>`
         
         Specifies service ID.
+        
+    * `--env <service environment>`
+        
+        Specifies a service environment by ID or name.
             
    * `--from`
 
@@ -374,11 +394,15 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex update`
 
-    Updates environment variables and/or runtime environment of the current Flex Service, which is the one you initiated last on the current profile. To specify a different service, use `--service`. The command causes restart/rebuild of the service.
+    Updates environment variables and/or runtime environment of the current Flex service environment, which is the one you initiated last on the current profile. To specify a different service, use `--service`. The command causes restart/rebuild of the service.
 
     * `--service <service>`
             
         Specifies service ID.
+        
+    * `--env <service environment>`
+        
+        Specifies a service environment by ID or name.
         
     * `--replace-vars <environment variables>`
         
@@ -394,15 +418,19 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex recycle`
    
-   Recycles the current Flex Service, which is the one you initiated last on the current profile. To recycle a different service, specify its service ID.
+   Recycles the current Flex service environment, which is the one you initiated last on the current profile. To recycle a different service, specify its service ID.
 
     * `--service <service>`
             
         Specifies service ID.
+        
+    * `--env <service environment>`
+        
+        Specifies a service environment by ID or name.
             
 * `flex delete`
 
-    Deletes the current Flex Service, which is the one you initiated last on the current profile. To delete a different service, specify its service ID. You will be prompted for confirmation unless you set the `--no-prompt` flag.
+    Deletes the current Flex service, including all service environments inside it. The current service is the one you initiated last on the current profile. To delete a different service, specify its service ID. You will be prompted for confirmation unless you set the `--no-prompt` flag.
     
     * `--service <service>`
             
@@ -939,6 +967,8 @@ The following service template can be used and modified as needed:
 
 Run any command with the `--verbose` flag to receive more detailed information about a command execution.
 
+### Caveats
+
 Kinvey CLI is a subject to the following caveats:
 
 - The CLI has a 10-second request timeout when communicating with the backend for initialization which may cause a connection error in some rare cases. Retrying the command remedies the problem in many cases.
@@ -949,6 +979,17 @@ Kinvey CLI is a subject to the following caveats:
 - Running the CLI from Git Bash on Windows is known to cause issues ranging from failing commands to complete inability to start. Use Windows Command Prompt instead.
 
 If problems persist, contact [Kinvey](http://support.kinvey.com).
+
+### Support for Service Environments
+
+Kinvey CLI version 4.1.0 introduces support for environments inside Flex services coinciding with the release of this feature on the backend. When upgrading from a previous Kinvey CLI version, have the following caveats in mind:
+
+- The `flex init` interactive command prompts for service environment selection in version 4.1.0 and later if the service contains multiple environments.
+- Node.js projects configured with `flex init` with a Kinvey CLI version predating 4.1.0 do not contain a service environment ID. Therefore:
+    - We recommend rerunning the `flex init` command on these projects.
+    - Flex commands targeting the current service will continue to work as long as the service has a single environment.
+    - Flex commands targeting the current service will error out if you create additional environments inside the service and don't include `--env`.
+- Flex commands specifying a particular service using `--service` must include `--env` if the service has multiple environments. You can omit `--env` if the service has a single environment.
 
 ## Changelog
 

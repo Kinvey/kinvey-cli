@@ -65,14 +65,17 @@ exports['flex list by specifying a profile and valid options (app and id) should
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/services
+[debug] Response: GET http://localhost:3234/v3/services 200
 Count: 3
 
 id                                name                    
 --------------------------------  ------------------------
 12378kdl2                         TestKinveyDatalink      
-0de22ffb3f2243ec8138170844envVar  TestKinveyService       
+334d6ab3df5e4af1a13ec011c12d0208  TestKinveyService       
 12389kd89                         TestSecondKinveyDatalink
 
 
@@ -83,8 +86,11 @@ exports['flex list by specifying a profile and valid options (org and id) should
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v2/organizations/885f5d307afd4168bebca1a64f815c1e/data-links
-[debug] Response: GET http://localhost:3234/v2/organizations/885f5d307afd4168bebca1a64f815c1e/data-links 200
+[debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
+[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v3/services
+[debug] Response: GET http://localhost:3234/v3/services 200
 {
   "result": [
     {
@@ -92,7 +98,7 @@ exports['flex list by specifying a profile and valid options (org and id) should
       "name": "TestKinveyDatalink"
     },
     {
-      "id": "0de22ffb3f2243ec8138170844envVar",
+      "id": "334d6ab3df5e4af1a13ec011c12d0208",
       "name": "TestKinveyService"
     },
     {
@@ -107,14 +113,17 @@ exports['flex list by specifying a profile and valid options (org and id) should
 exports['flex list by specifying a profile when invalid project is set with valid options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/services
+[debug] Response: GET http://localhost:3234/v3/services 200
 Count: 3
 
 id                                name                    
 --------------------------------  ------------------------
 12378kdl2                         TestKinveyDatalink      
-0de22ffb3f2243ec8138170844envVar  TestKinveyService       
+334d6ab3df5e4af1a13ec011c12d0208  TestKinveyService       
 12389kd89                         TestSecondKinveyDatalink
 
 
@@ -124,14 +133,17 @@ id                                name
 exports['flex list by specifying a profile when valid project is set without options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/services
+[debug] Response: GET http://localhost:3234/v3/services 200
 Count: 3
 
 id                                name                    
 --------------------------------  ------------------------
 12378kdl2                         TestKinveyDatalink      
-0de22ffb3f2243ec8138170844envVar  TestKinveyService       
+334d6ab3df5e4af1a13ec011c12d0208  TestKinveyService       
 12389kd89                         TestSecondKinveyDatalink
 
 
@@ -152,12 +164,13 @@ exports['flex list by specifying credentials as options when valid and non-exist
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/apps/123I_DONT_EXIST/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/123I_DONT_EXIST/data-links 404
+[debug] Using application: 123I_DONT_EXIST
+[debug] Request:  GET http://localhost:3234/v3/apps
+[debug] Response: GET http://localhost:3234/v3/apps 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-[error] GeneralError: 
+[error] NotFound: Could not find application with identifier '123I_DONT_EXIST'.
 
 `
 
@@ -166,8 +179,11 @@ exports['flex list by specifying credentials as options when valid and valid opt
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/data-links 200
+[debug] Using application: 885f5d307afd4168bebca1a64f815c1e
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  GET http://localhost:3234/v3/services
+[debug] Response: GET http://localhost:3234/v3/services 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -176,7 +192,7 @@ Count: 3
 id                                name                    
 --------------------------------  ------------------------
 12378kdl2                         TestKinveyDatalink      
-0de22ffb3f2243ec8138170844envVar  TestKinveyService       
+334d6ab3df5e4af1a13ec011c12d0208  TestKinveyService       
 12389kd89                         TestSecondKinveyDatalink
 
 

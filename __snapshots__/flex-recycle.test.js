@@ -2,8 +2,10 @@ exports['flex recycle by not specifying profile nor credentials when one profile
 [debug] Checking for package updates
 [debug] Using profile 'flexStatusProfile'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  POST http://localhost:3234/v2/jobs
-[debug] Response: POST http://localhost:3234/v2/jobs 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  POST http://localhost:3234/v3/jobs
+[debug] Response: POST http://localhost:3234/v3/jobs 200
 [debug] Writing contents to file projectSetupPath
 [debug] Saved job ID to project settings.
 Recycle initiated. Job: idOfJobThatIsRecyclingTheService
@@ -34,16 +36,28 @@ Options:
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
   --service                                 Service ID                  [string]
+  --env                                     Service environment name/ID [string]
 
 You must be authenticated.
+
+`
+
+exports['flex recycle by specifying a profile and existent serviceId plus non-existent svcEnv should fail 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToRecycleService'
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[error] NotFound: Could not find service environment with identifier 'nonExistentEnv'.
 
 `
 
 exports['flex recycle by specifying a profile and existent serviceId should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToRecycleService'
-[debug] Request:  POST http://localhost:3234/v2/jobs
-[debug] Response: POST http://localhost:3234/v2/jobs 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  POST http://localhost:3234/v3/jobs
+[debug] Response: POST http://localhost:3234/v3/jobs 200
 [debug] Writing contents to file projectSetupPath
 [debug] Saved job ID to project settings.
 {
@@ -58,8 +72,10 @@ exports['flex recycle by specifying a profile and existent serviceId should succ
 [debug] Checking for package updates
 [debug] Using profile 'profileToRecycleService'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  POST http://localhost:3234/v2/jobs
-[debug] Response: POST http://localhost:3234/v2/jobs 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  POST http://localhost:3234/v3/jobs
+[debug] Response: POST http://localhost:3234/v3/jobs 200
 [debug] Writing contents to file projectSetupPath
 [debug] Saved job ID to project settings.
 Recycle initiated. Job: idOfJobThatIsRecyclingTheService
@@ -69,28 +85,39 @@ Recycle initiated. Job: idOfJobThatIsRecyclingTheService
 exports['flex recycle by specifying a profile and non-existent serviceId should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToRecycleService'
-[debug] Request:  POST http://localhost:3234/v2/jobs
-[debug] Response: POST http://localhost:3234/v2/jobs 404
-[error] DataLinkNotFound: The specified data link could not be found.
+[debug] Request:  GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/environments
+[debug] Response: GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/environments 404
+[error] ServiceNotFound: The specified service could not be found.
 
 `
 
 exports['flex recycle by specifying a profile when invalid project is set with existent serviceId as an option should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToRecycleService'
-[debug] Request:  POST http://localhost:3234/v2/jobs
-[debug] Response: POST http://localhost:3234/v2/jobs 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  POST http://localhost:3234/v3/jobs
+[debug] Response: POST http://localhost:3234/v3/jobs 200
 [debug] Writing contents to file projectSetupPath
 [debug] Saved job ID to project settings.
 Recycle initiated. Job: idOfJobThatIsRecyclingTheService
 
 `
 
+exports['flex recycle by specifying a profile when valid project is set without serviceId as an option but with non-existent svcEnv should fail 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToRecycleService'
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[error] NotFound: Could not find service environment with identifier 'nonExistentEnv'.
+
+`
+
 exports['flex recycle by specifying a profile when valid project is set without serviceId as an option should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToRecycleService'
-[debug] Request:  POST http://localhost:3234/v2/jobs
-[debug] Response: POST http://localhost:3234/v2/jobs 200
+[debug] Request:  POST http://localhost:3234/v3/jobs
+[debug] Response: POST http://localhost:3234/v3/jobs 200
 [debug] Writing contents to file projectSetupPath
 [debug] Saved job ID to project settings.
 Recycle initiated. Job: idOfJobThatIsRecyclingTheService
@@ -111,8 +138,10 @@ exports['flex recycle by specifying credentials as options when valid and existe
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  POST http://localhost:3234/v2/jobs
-[debug] Response: POST http://localhost:3234/v2/jobs 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  POST http://localhost:3234/v3/jobs
+[debug] Response: POST http://localhost:3234/v3/jobs 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -125,11 +154,11 @@ exports['flex recycle by specifying credentials as options when valid and non-ex
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  POST http://localhost:3234/v2/jobs
-[debug] Response: POST http://localhost:3234/v2/jobs 404
+[debug] Request:  GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/environments
+[debug] Response: GET http://localhost:3234/v3/services/12serviceIdThatDoesntExist/environments 404
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-[error] DataLinkNotFound: The specified data link could not be found.
+[error] ServiceNotFound: The specified service could not be found.
 
 `

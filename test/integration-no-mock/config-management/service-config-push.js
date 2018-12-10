@@ -28,11 +28,7 @@ module.exports = () => {
   let serviceId;
 
   afterEach('remove service', (done) => {
-    if (!serviceId) {
-      return setImmediate(done);
-    }
-
-    ApiService.services.remove(serviceId, (err) => {
+    ConfigManagementHelper.testHooks.removeService(serviceId, (err) => {
       serviceId = null;
       done(err);
     });
@@ -86,7 +82,7 @@ module.exports = () => {
           ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, null, next);
         },
         (next) => {
-          ConfigManagementHelper.service.assertFlexService(serviceId, modifiedServiceConfig, serviceName, next);
+          ConfigManagementHelper.service.assertService(serviceId, modifiedServiceConfig, serviceName, next);
         }
       ], done);
     });
@@ -131,7 +127,7 @@ module.exports = () => {
           ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, null, next);
         },
         (next) => {
-          ConfigManagementHelper.service.assertFlexService(serviceId, modifiedServiceConfig, serviceName, next);
+          ConfigManagementHelper.service.assertService(serviceId, modifiedServiceConfig, serviceName, next);
         }
       ], done);
     });
@@ -178,16 +174,16 @@ module.exports = () => {
         },
         (next) => {
           // ensure initial flex project is deployed, otherwise the second deploy can fail
-          ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, initialPkgJson.version, 'ONLINE', next);
+          ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, null, initialPkgJson.version, 'ONLINE', next);
         },
         (next) => {
           ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, modifiedPkgJson, next);
         },
         (next) => {
-          ConfigManagementHelper.service.assertFlexService(serviceId, modifiedServiceConfig, serviceName, next);
+          ConfigManagementHelper.service.assertService(serviceId, modifiedServiceConfig, serviceName, next);
         },
         (next) => {
-          ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, modifiedPkgJson.version, null, next);
+          ConfigManagementHelper.service.assertFlexServiceStatusRetryable(serviceId, null, modifiedPkgJson.version, null, next);
         }
       ], done);
     });
@@ -258,7 +254,7 @@ module.exports = () => {
           ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, null, next);
         },
         (next) => {
-          ConfigManagementHelper.service.assertRapidDataService(serviceId, modifiedServiceConfig, serviceName, next);
+          ConfigManagementHelper.service.assertService(serviceId, modifiedServiceConfig, serviceName, next);
         }
       ], done);
     });
@@ -336,7 +332,7 @@ module.exports = () => {
           ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, null, next);
         },
         (next) => {
-          ConfigManagementHelper.service.assertRapidDataService(serviceId, modifiedServiceConfig, serviceName, next);
+          ConfigManagementHelper.service.assertService(serviceId, modifiedServiceConfig, serviceName, next);
         }
       ], done);
     });

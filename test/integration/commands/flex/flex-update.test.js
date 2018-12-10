@@ -19,7 +19,8 @@ const { APIRuntime, AuthOptionsNames, CLIRuntime, FlexOptionsNames, Namespace } 
 const fixtureApp = require('./../../../fixtures/app.json');
 const fixtureUser = require('./../../../fixtures/user.json');
 const fixtureService = require('./../../../fixtures/internal-flex-service.json');
-const fixtureServiceOneEnvVar = require('./../../../fixtures/internal-flex-service-one-env-var.json');
+const fixtureSvcEnvs = require('./../../../fixtures/svc-envs-several.json');
+const fixtureSvcEnvOneEnvVar = require('./../../../fixtures/svc-env-one-env-var.json');
 const { buildCmd, buildOptions, execCmdWithAssertion, setup, testers } = require('../../../TestsHelper');
 
 const baseCmd = `${Namespace.FLEX} update`;
@@ -55,8 +56,9 @@ describe(baseCmd, () => {
           {
             domain: 'app',
             domainEntityId: fixtureApp.id,
-            serviceId: fixtureServiceOneEnvVar.id,
-            serviceName: fixtureServiceOneEnvVar.name,
+            serviceId: fixtureService.id,
+            serviceName: fixtureService.name,
+            svcEnvId: fixtureSvcEnvOneEnvVar.id,
             schemaVersion: 2
           },
           done
@@ -70,11 +72,13 @@ describe(baseCmd, () => {
       it('with valid basic env vars (replace) should succeed and output default format', (done) => {
         const options = Object.assign({ [FlexOptionsNames.ENV_VARS_REPLACE]: 'KEY_1=value1,KEY_2=value2' }, optionsForProfile);
         const envVars = { KEY_1: 'value1', KEY_2: 'value2' };
-        const updatedService = cloneDeep(fixtureServiceOneEnvVar);
-        updatedService.backingServers[0].environmentVariables = envVars;
+        const updatedSvcEnv = cloneDeep(fixtureSvcEnvOneEnvVar);
+        delete updatedSvcEnv.id;
+        updatedSvcEnv.environmentVariables = envVars;
         const apiOptions = {
           envVars,
-          updatedService
+          updatedSvcEnv,
+          svcEnvs: fixtureSvcEnvs
         };
         testFlexUpdate(options, defaultFlags, apiOptions, done);
       });
@@ -82,11 +86,13 @@ describe(baseCmd, () => {
       it('with valid basic env vars (set) should succeed and output JSON format', (done) => {
         const options = Object.assign({ [FlexOptionsNames.ENV_VARS_SET]: 'KEY_1=value1,KEY_2=value2' }, optionsForProfile, jsonOptions);
         const envVars = { KEY_1: 'value1', KEY_2: 'value2' };
-        const updatedService = cloneDeep(fixtureServiceOneEnvVar);
-        updatedService.backingServers[0].environmentVariables = Object.assign({}, updatedService.backingServers[0].environmentVariables, envVars);
+        const updatedSvcEnv = cloneDeep(fixtureSvcEnvOneEnvVar);
+        delete updatedSvcEnv.id;
+        updatedSvcEnv.environmentVariables = Object.assign({}, updatedSvcEnv.environmentVariables, envVars);
         const apiOptions = {
           envVars,
-          updatedService
+          updatedSvcEnv,
+          svcEnvs: fixtureSvcEnvs
         };
         testFlexUpdate(options, defaultFlags, apiOptions, done);
       });
@@ -103,9 +109,13 @@ describe(baseCmd, () => {
 
       it('with valid runtime should succeed', (done) => {
         const options = Object.assign({ [FlexOptionsNames.RUNTIME]: CLIRuntime.NODE10 }, optionsForProfile);
-        const updatedService = cloneDeep(fixtureServiceOneEnvVar);
-        updatedService.backingServers[0].runtime = APIRuntime.NODE10;
-        const apiOptions = { updatedService };
+        const updatedSvcEnv = cloneDeep(fixtureSvcEnvOneEnvVar);
+        updatedSvcEnv.runtime = APIRuntime.NODE10;
+        delete updatedSvcEnv.id;
+        const apiOptions = {
+          updatedSvcEnv,
+          svcEnvs: fixtureSvcEnvs
+        };
         testFlexUpdate(options, defaultFlags, apiOptions, done);
       });
 
@@ -124,14 +134,23 @@ describe(baseCmd, () => {
         setup.clearProjectSetup(null, done);
       });
 
-      it('with existent service as an option and single env var (set) should succeed', (done) => {
-        const options = Object.assign({ [FlexOptionsNames.ENV_VARS_SET]: 'MY_KEY_1=3.5', [FlexOptionsNames.SERVICE_ID]: fixtureServiceOneEnvVar.id }, optionsForProfile);
+      it('with existent service and svc env as options and single env var (set) should succeed', (done) => {
+        const options = Object.assign(
+          {
+            [FlexOptionsNames.ENV_VARS_SET]: 'MY_KEY_1=3.5',
+            [FlexOptionsNames.SERVICE_ID]: fixtureService.id,
+            [FlexOptionsNames.SVC_ENV]: fixtureSvcEnvOneEnvVar.name
+          },
+          optionsForProfile
+        );
         const envVars = { MY_KEY_1: '3.5' };
-        const updatedService = cloneDeep(fixtureServiceOneEnvVar);
-        updatedService.backingServers[0].environmentVariables = Object.assign({}, updatedService.backingServers[0].environmentVariables, envVars);
+        const updatedSvcEnv = cloneDeep(fixtureSvcEnvOneEnvVar);
+        delete updatedSvcEnv.id;
+        updatedSvcEnv.environmentVariables = Object.assign({}, updatedSvcEnv.environmentVariables, envVars);
         const apiOptions = {
           envVars,
-          updatedService
+          updatedSvcEnv,
+          svcEnvs: fixtureSvcEnvs
         };
         testFlexUpdate(options, defaultFlags, apiOptions, done);
       });
@@ -148,23 +167,31 @@ describe(baseCmd, () => {
       token: fixtureUser.tokenOne
     };
 
-    it('without service should fail', (done) => {
+    it('without service and svc env should fail', (done) => {
       const options = buildOptions(null, credsOptions, { [FlexOptionsNames.ENV_VARS_SET]: 'KEY_1=value1' });
       testFlexUpdate(options, defaultFlags, apiOptionsUser, done);
     });
 
-    it('with service and valid complex env vars (set) should succeed', (done) => {
+    it('with service but without svc env (when many) should fail', (done) => {
+      const options = buildOptions(null, credsOptions, { [FlexOptionsNames.ENV_VARS_SET]: 'KEY_1=value1', [FlexOptionsNames.SERVICE_ID]: fixtureService.id });
+      const apiOptions = Object.assign({ svcEnvs: fixtureSvcEnvs }, apiOptionsUser);
+      testFlexUpdate(options, defaultFlags, apiOptions, done);
+    });
+
+    it('with service, svc env and valid complex env vars (set) should succeed', (done) => {
       const options = buildOptions(
         null,
         credsOptions,
         {
           [FlexOptionsNames.ENV_VARS_SET]: '"{\\"KEY_1\\": [1, 2, \\"three\\"], \\"KEY_2\\": \\"3.5\\"}"',
-          [FlexOptionsNames.SERVICE_ID]: fixtureServiceOneEnvVar.id
+          [FlexOptionsNames.SERVICE_ID]: fixtureService.id,
+          [FlexOptionsNames.SVC_ENV]: fixtureSvcEnvOneEnvVar.id
         });
       const envVars = { KEY_1: JSON.stringify([1, 2, 'three']), KEY_2: JSON.stringify(3.5) };
-      const updatedService = cloneDeep(fixtureServiceOneEnvVar);
-      updatedService.backingServers[0].environmentVariables = Object.assign({}, updatedService.backingServers[0].environmentVariables, envVars);
-      const apiOptions = Object.assign({}, apiOptionsUser, { envVars, updatedService });
+      const updatedSvcEnv = cloneDeep(fixtureSvcEnvOneEnvVar);
+      delete updatedSvcEnv.id;
+      updatedSvcEnv.environmentVariables = Object.assign({}, updatedSvcEnv.environmentVariables, envVars);
+      const apiOptions = Object.assign({}, apiOptionsUser, { envVars, updatedSvcEnv, svcEnvs: fixtureSvcEnvs });
       testFlexUpdate(options, defaultFlags, apiOptions, done);
     });
   });

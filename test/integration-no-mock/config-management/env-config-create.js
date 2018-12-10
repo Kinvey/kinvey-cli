@@ -318,9 +318,10 @@ module.exports = () => {
   it('external collections, external hooks, external endpoints should succeed', function (done) {
     this.timeout(ConfigManagementHelper.common.EndpointsRelatedTestsTimeout);
     const serviceName = randomStrings.plainString();
+    const svcEnvName = 'dev';
     const collList = [
-      ConfigManagementHelper.env.buildExternalCollection(serviceName, 'MyCollection', randomStrings.collName()),
-      ConfigManagementHelper.env.buildExternalCollection(serviceName, 'MyCollection', randomStrings.collName())
+      ConfigManagementHelper.env.buildExternalCollection(serviceName, svcEnvName, 'MyCollection', randomStrings.collName()),
+      ConfigManagementHelper.env.buildExternalCollection(serviceName, svcEnvName, 'MyCollection', randomStrings.collName())
     ];
 
     const collHooks = {
@@ -328,6 +329,7 @@ module.exports = () => {
         onPreSave: {
           type: 'external',
           service: serviceName,
+          serviceEnvironment: svcEnvName,
           handlerName: 'someHandler'
         }
       }
@@ -337,6 +339,7 @@ module.exports = () => {
       myEndpoint: {
         type: 'external',
         service: serviceName,
+        serviceEnvironment: svcEnvName,
         handlerName: 'someHandler',
         schedule: {
           start: moment().add(1, 'month').toISOString(),
@@ -364,7 +367,7 @@ module.exports = () => {
           type: 'flex-internal',
           description: 'Test service',
           environments: {
-            dev: {
+            [svcEnvName]: {
               secret: '123',
               sourcePath: path.join(process.cwd(), 'test/integration-no-mock/flex-project')
             }

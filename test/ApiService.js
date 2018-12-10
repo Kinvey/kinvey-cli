@@ -161,7 +161,7 @@ function getIdPartFromId(id) {
 }
 
 function getSchemaVersion(isBaasRequest) {
-  return isBaasRequest ? '' : '/v2';
+  return isBaasRequest ? '' : '/v3';
 }
 
 function buildUrl(relativeUrl, id, isBaasRequest) {
@@ -296,15 +296,26 @@ const push = {
 
 const services = {
   get: (id, done) => {
-    const url = buildUrl('data-links', id);
+    const url = buildUrl('services', id);
     makeRequest({ url }, done);
   },
   getAllByOrg: (id, done) => {
-    const url = buildUrl(`organizations/${id}/data-links`);
+    const url = `${buildUrl('services')}?organizationId=${id}`;
     makeRequest({ url }, done);
   },
-  getAllByApp: (id, done) => {
-    const url = buildUrl(`apps/${id}/data-links`);
+  getAllByApp: (app, done) => {
+    let url = buildUrl('services');
+
+    if (!isempty(app)) {
+      const queryParamName = app.security ? 'organizationId' : 'appId';
+      let query = `${queryParamName}=${app.id}`;
+      if (app.organizationId) {
+        query = `${query}&&organizationId=${app.organizationId}`;
+      }
+
+      url = `${url}?${query}`;
+    }
+
     makeRequest({ url }, done);
   },
   remove: (id, done) => {
@@ -312,11 +323,18 @@ const services = {
       return setImmediate(() => { done(new Error('Cannot remove a service without an ID.')); });
     }
 
-    const url = buildUrl('data-links', id);
+    const url = buildUrl('services', id);
     makeRequest({ url, method: 'DELETE' }, done);
   },
-  status: (id, done) => {
-    const url = buildUrl(`data-links${getIdPartFromId(id)}/status`);
+  status: (id, svcEnvId, done) => {
+    const url = buildUrl(`services${getIdPartFromId(id)}/environments${getIdPartFromId(svcEnvId)}/status`);
+    makeRequest({ url }, done);
+  }
+};
+
+const svcEnvs = {
+  get: (serviceId, svcEnvId, done) => {
+    const url = buildUrl(`services/${serviceId}/environments`, svcEnvId);
     makeRequest({ url }, done);
   }
 };
@@ -331,6 +349,7 @@ module.exports = {
   push,
   roles,
   services,
+  svcEnvs,
   general: {
     authenticate,
     makeRequest

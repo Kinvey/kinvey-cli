@@ -7,7 +7,7 @@ const globalSetupPath = path.join(os.homedir(), '.kinvey-cli-tests');
 const TestsConfig = {
   port,
   host,
-  defaultSchemaVersion: 2,
+  defaultSchemaVersion: 3,
   paths: {
     project: path.join(process.cwd(), 'test/integration/project', '.kinvey'),
     package: path.join(process.cwd(), 'test/integration/project'),

@@ -22,6 +22,7 @@ Options:
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
   --service                                 Service ID                  [string]
+  --env                                     Service environment name/ID [string]
   --replace-vars, --replaceVars             Environment variables (replaces all
                                             already existing). Specify either as
                                             comma-separated list of key-value
@@ -68,6 +69,7 @@ Options:
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
   --service                                 Service ID                  [string]
+  --env                                     Service environment name/ID [string]
   --replace-vars, --replaceVars             Environment variables (replaces all
                                             already existing). Specify either as
                                             comma-separated list of key-value

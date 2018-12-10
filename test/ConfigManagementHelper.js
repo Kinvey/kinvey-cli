@@ -23,7 +23,7 @@ const moment = require('moment');
 const ApiService = require('./ApiService');
 const { BackendCollectionPermission, CollectionHook, ConfigFiles } = require('./../lib/Constants');
 const TestsHelper = require('./TestsHelper');
-const { getObjectByOmitting, isEmpty, writeJSON } = require('./../lib/Utils');
+const { getObjectByOmitting, isEmpty, isNullOrUndefined, writeJSON } = require('./../lib/Utils');
 
 let ConfigManagementHelper = {};
 
@@ -110,36 +110,6 @@ service.exportConfig = function exportConfig({ serviceId, relativePath = '' }, d
 
       done(null, JSON.parse(data));
     });
-  });
-};
-
-service.assertFlexService = function assertFlexService(id, serviceConfig, serviceName, done) {
-  ApiService.services.get(id, (err, actual) => {
-    if (err) {
-      return done(err);
-    }
-
-    expect(serviceName).to.equal(actual.name);
-    expect(serviceConfig.description).to.equal(actual.description);
-
-    const isFlexInternal = serviceConfig.type === 'flex-internal';
-    const expectedType = isFlexInternal ? 'internal' : 'external';
-    expect(actual.type).to.equal(expectedType);
-
-    expect(actual.backingServers).to.be.an.array;
-    expect(actual.backingServers[0]).to.exist;
-    const expectedEnvName = Object.keys(serviceConfig.environments)[0];
-    const expectedEnv = serviceConfig.environments[expectedEnvName];
-    expect(actual.backingServers[0].secret).to.equal(expectedEnv.secret);
-    expect(actual.backingServers[0].name).to.equal(expectedEnvName);
-
-    if (isFlexInternal) {
-      expect(actual.backingServers[0].host).to.exist;
-    } else {
-      expect(actual.backingServers[0].host).to.equal(expectedEnv.host);
-    }
-
-    done();
   });
 };
 
@@ -242,7 +212,7 @@ env.buildInternalCollection = function buildInternalCollection(name, permissions
   };
 };
 
-env.buildExternalCollection = function buildExternalCollection(serviceName, serviceObject, collName, permissions) {
+env.buildExternalCollection = function buildExternalCollection(serviceName, svcEnvIdentifier, serviceObject, collName, permissions) {
   collName = collName || TestsHelper.randomStrings.collName();
   permissions = permissions || 'shared';
 
@@ -251,6 +221,7 @@ env.buildExternalCollection = function buildExternalCollection(serviceName, serv
     type: 'external',
     permissions,
     service: serviceName,
+    serviceEnvironment: svcEnvIdentifier,
     serviceObject
   };
 };
@@ -878,7 +849,7 @@ app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, ex
       );
     },
     (next) => {
-      ApiService.services.getAllByApp(actualApp.id, (err, data) => {
+      ApiService.services.getAllByApp(actualApp, (err, data) => {
         if (err) {
           return next(err);
         }
@@ -907,12 +878,7 @@ app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, ex
 
             const actualId = actualService.id;
             const serviceConfig = expectedServices[currName];
-            const actualType = actualService.type;
-            if (actualType === 'internal' || actualType === 'external') {
-              service.assertFlexService(actualId, serviceConfig, currName, cb);
-            } else {
-              service.assertRapidDataService(actualId, serviceConfig, currName, cb);
-            }
+            service.assertService(actualId, serviceConfig, currName, cb);
           },
           next
         );
@@ -958,6 +924,159 @@ org.exportOrg = function exportOrg(orgIdentifier, done) {
   });
 };
 
+service.assertFlexSvcEnv = function assertFlexSvcEnv(actual, expected, serviceType) {
+  expect(actual).to.be.an('object').that.is.not.empty;
+
+  const isFlexInternal = serviceType === 'internal';
+  if (isFlexInternal) {
+    expect(actual.host).to.exist;
+  } else {
+    expect(actual.host).to.equal(expected.host);
+  }
+
+  expect(actual.description).to.equal(expected.description);
+  expect(actual.secret).to.equal(expected.secret);
+};
+
+service.assertSvcEnvs = function assertSvcEnvs(actualService, config, done) {
+  config = config || {};
+  ApiService.svcEnvs.get(actualService.id, null, (err, actual) => {
+    if (err) {
+      return done(err);
+    }
+
+    const expSvcEnvsNames = Object.keys(config);
+    const expSvcEnvsCount = expSvcEnvsNames.length;
+    expect(actual.length).to.equal(expSvcEnvsCount);
+
+    const isFlex = actualService.type === 'internal' || actualService.type === 'external';
+
+    for (const expName of expSvcEnvsNames) {
+      const actualSvcEnv = actual.find(x => x.name === expName);
+      if (!actualSvcEnv) {
+        return done(new Error(`Could not find svc env with name '${expName}'.`));
+      }
+
+      const expSvcEnv = config[expName];
+      if (isFlex) {
+        service.assertFlexSvcEnv(actualSvcEnv, expSvcEnv, actualService.type);
+      } else {
+        service.assertRapidDataSvcEnv(actualSvcEnv, Object.assign({ name: expName }, expSvcEnv));
+      }
+    }
+
+    done();
+  });
+};
+
+service.assertService = function assertService(id, serviceConfig, serviceName, done) {
+  let actualService;
+
+  async.series([
+    (next) => {
+      ApiService.services.get(id, (err, actual) => {
+        if (err) {
+          return done(err);
+        }
+
+        actualService = actual;
+        expect(serviceName).to.equal(actual.name);
+        if (isNullOrUndefined(serviceConfig.description)) {
+          expect(actual.description).to.be.null;
+        } else {
+          expect(actual.description).to.equal(serviceConfig.description);
+        }
+
+        expect(actual.type).to.equal(ConfigFiles.ConfigToBackendServiceType[serviceConfig.type]);
+
+        next();
+      });
+    },
+    (next) => {
+      service.assertSvcEnvs(actualService, serviceConfig.environments, next);
+    }
+  ], done);
+};
+
+service.getDefaultSvcEnvId = function getDefaultSvcEnvId(serviceId, done) {
+  ApiService.svcEnvs.get(serviceId, null, (err, data) => {
+    if (err) {
+      return done(err);
+    }
+
+    if (isEmpty(data)) {
+      return done(new Error('No svc environments found.'));
+    }
+
+    done(null, data[0].id);
+  });
+};
+
+service.assertFlexServiceStatus = function assertFlexServiceStatus(id, svcEnvId, expectedVersion, expectedStatus, done) {
+  ApiService.services.status(id, svcEnvId, (err, actual) => {
+    if (err) {
+      return done(err);
+    }
+
+    try {
+      expect(actual.version, 'Version').to.exist;
+      expect(actual.version).to.equal(expectedVersion);
+      if (expectedStatus) {
+        expect(actual.status.toLowerCase()).to.equal(expectedStatus.toLowerCase());
+      }
+    } catch (ex) {
+      return done(ex);
+    }
+
+    done();
+  });
+};
+
+service.assertFlexServiceStatusRetryable = function assertFlexServiceStatusRetryable(id, svcEnvId, expectedVersion, expectedStatus, done) {
+  async.series([
+    (next) => {
+      if (svcEnvId) {
+        return setImmediate(next);
+      }
+
+      service.getDefaultSvcEnvId(id, (err, envId) => {
+        if (err) {
+          return next(err);
+        }
+
+        svcEnvId = envId;
+        next();
+      });
+    },
+    (next) => {
+      async.retry(
+        { times: 9, interval: 20000 }, // 6 times every 20 sec
+        (cb) => {
+          service.assertFlexServiceStatus(id, svcEnvId, expectedVersion, expectedStatus, cb);
+        },
+        next
+      );
+    }
+  ], done);
+};
+
+service.assertRapidDataSvcEnv = function assertRapidDataSvcEnv(actual, expected) {
+  expect(actual.description).to.equal(expected.description);
+
+  const actualEnvWoId = getObjectByOmitting(actual, ['id']);
+  expect(actualEnvWoId).to.deep.equal(expected);
+};
+
+const testHooks = {};
+testHooks.removeService = function removeService(id, done) {
+  if (!id) {
+    console.log('Skipping service removal as service ID is not set.');
+    return setImmediate(done);
+  }
+
+  ApiService.services.remove(id, done);
+};
+
 org.assertSettings = function assertSettings(actual) {
   expect(actual.schemaVersion).to.exist;
   expect(actual.configType).to.equal('organization');
@@ -979,7 +1098,8 @@ ConfigManagementHelper = {
   common: {
     buildConfigEntityFromList,
     EndpointsRelatedTestsTimeout: 65000
-  }
+  },
+  testHooks
 };
 
 module.exports = ConfigManagementHelper;

@@ -2,10 +2,10 @@ exports['appenv create when active app is set with a name should succeed and out
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
-[debug] Request:  POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  POST http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: POST http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 {
   "result": {
     "id": "kid_Sy4yRNV_M"
@@ -18,10 +18,10 @@ exports['appenv create when active app is set with a name should succeed and out
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 885f5d307afd4168bebca1a64f815c1e
-[debug] Request:  GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e
-[debug] Response: GET http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e 200
-[debug] Request:  POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e
+[debug] Response: GET http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e 200
+[debug] Request:  POST http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: POST http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 Created environment: kid_Sy4yRNV_M
 
 `
@@ -58,10 +58,10 @@ exports['appenv create when active app is set with non-existent app id should ta
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: 173783d46f3d4bffb1c581d5b203fc7c
-[debug] Request:  GET http://localhost:3234/v2/apps/173783d46f3d4bffb1c581d5b203fc7c
-[debug] Response: GET http://localhost:3234/v2/apps/173783d46f3d4bffb1c581d5b203fc7c 404
-[debug] Request:  GET http://localhost:3234/v2/apps
-[debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Request:  GET http://localhost:3234/v3/apps/173783d46f3d4bffb1c581d5b203fc7c
+[debug] Response: GET http://localhost:3234/v3/apps/173783d46f3d4bffb1c581d5b203fc7c 404
+[debug] Request:  GET http://localhost:3234/v3/apps
+[debug] Response: GET http://localhost:3234/v3/apps 200
 [error] NotFound: Could not find application with identifier '173783d46f3d4bffb1c581d5b203fc7c'.
 
 `
@@ -70,8 +70,8 @@ exports['appenv create when active app is set with non-existent app name should 
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using application: iJustDoNotExist
-[debug] Request:  GET http://localhost:3234/v2/apps
-[debug] Response: GET http://localhost:3234/v2/apps 200
+[debug] Request:  GET http://localhost:3234/v3/apps
+[debug] Response: GET http://localhost:3234/v3/apps 200
 [error] NotFound: Could not find application with identifier 'iJustDoNotExist'.
 
 `
@@ -115,10 +115,10 @@ exports['appenv create when one-time session with existent app name should succe
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Using application: TestApp
-[debug] Request:  GET http://localhost:3234/v2/apps
-[debug] Response: GET http://localhost:3234/v2/apps 200
-[debug] Request:  POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments
-[debug] Response: POST http://localhost:3234/v2/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
+[debug] Request:  GET http://localhost:3234/v3/apps
+[debug] Response: GET http://localhost:3234/v3/apps 200
+[debug] Request:  POST http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments
+[debug] Response: POST http://localhost:3234/v3/apps/885f5d307afd4168bebca1a64f815c1e/environments 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

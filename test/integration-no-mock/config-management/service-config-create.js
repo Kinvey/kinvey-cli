@@ -195,6 +195,33 @@ module.exports = () => {
         }
       ], done);
     });
+
+    it('internal without any svc envs should succeed', (done) => {
+      const serviceConfig = {
+        configType: 'service',
+        schemaVersion: '1.0.0',
+        type: 'flex-internal',
+        description: 'Test service'
+      };
+
+      const serviceName = randomStrings.plainString();
+
+      async.series([
+        (next) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, serviceConfig, 'org', 'CliOrg', null, (err, id) => {
+            if (err) {
+              return next(err);
+            }
+
+            serviceId = id;
+            next();
+          });
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertService(serviceId, serviceConfig, serviceName, next);
+        }
+      ], done);
+    });
   });
 
   describe('rapid data', () => {

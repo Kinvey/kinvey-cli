@@ -89,6 +89,13 @@ module.exports = () => {
         dev: {
           secret: '123',
           sourcePath: projectPath
+        },
+        prod: {
+          secret: 'prod secret',
+          runtime: 'node8',
+          environmentVariables: {
+            MY_VAR: 'some value'
+          }
         }
       }
     };
@@ -137,6 +144,7 @@ module.exports = () => {
 
         const expected = cloneDeep(internalFlexSrvConfig);
         delete expected.environments[Object.keys(expected.environments)[0]].sourcePath;
+        expected.environments.dev.runtime = 'node6'; // the backend sets a default runtime
         expect(exported).to.deep.equal(expected);
         done();
       });

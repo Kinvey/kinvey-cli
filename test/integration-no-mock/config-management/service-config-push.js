@@ -132,6 +132,58 @@ module.exports = () => {
       ], done);
     });
 
+    it('modifying runtime, env vars and secret on internal flex service with 2 svc envs should succeed', (done) => {
+      const initialServiceConfig = {
+        configType: 'service',
+        schemaVersion: '1.0.0',
+        type: 'flex-internal',
+        description: 'Test service',
+        environments: {
+          dev: {
+            secret: '123'
+          },
+          prod: {
+            secret: 'prod secret',
+            environmentVariables: {
+              _KEY_ZERO: '0'
+            }
+          }
+        }
+      };
+
+      const modifiedServiceConfig = cloneDeep(initialServiceConfig);
+      modifiedServiceConfig.environments.dev.secret = 'dev secret';
+      modifiedServiceConfig.environments.prod.runtime = 'node10';
+      modifiedServiceConfig.environments.prod.environmentVariables._KEY_ZERO = 'zero';
+
+      const serviceName = randomStrings.plainString();
+      const pkgJson = {
+        version: '1.0.0',
+        dependencies: {
+          'kinvey-flex-sdk': '3.0.0'
+        }
+      };
+
+      async.series([
+        (next) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, initialServiceConfig, 'org', 'CliOrg', pkgJson, (err, id) => {
+            if (err) {
+              return next(err);
+            }
+
+            serviceId = id;
+            next();
+          });
+        },
+        (next) => {
+          ConfigManagementHelper.service.modifyFromConfig(serviceId, modifiedServiceConfig, null, next);
+        },
+        (next) => {
+          ConfigManagementHelper.service.assertService(serviceId, modifiedServiceConfig, serviceName, next);
+        }
+      ], done);
+    });
+
     it('modifying secret and bumping local version on internal flex service should succeed', function (done) {
       this.timeout(250000);
 

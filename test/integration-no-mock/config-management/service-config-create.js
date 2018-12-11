@@ -158,7 +158,12 @@ module.exports = () => {
         environments: {
           dev: {
             secret: '123',
-            sourcePath: projectPath
+            sourcePath: projectPath,
+            runtime: 'node8',
+            environmentVariables: {
+              FIRST_VAR: 'first',
+              SECOND_VAR: '2'
+            }
           }
         }
       };

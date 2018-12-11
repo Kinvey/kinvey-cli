@@ -21,7 +21,7 @@ const clonedeep = require('lodash.clonedeep');
 const moment = require('moment');
 
 const ApiService = require('./ApiService');
-const { BackendCollectionPermission, CollectionHook, ConfigFiles } = require('./../lib/Constants');
+const { APIRuntimeToCLIRuntime, BackendCollectionPermission, CollectionHook, ConfigFiles } = require('./../lib/Constants');
 const TestsHelper = require('./TestsHelper');
 const { getObjectByOmitting, isEmpty, isNullOrUndefined, writeJSON } = require('./../lib/Utils');
 
@@ -936,6 +936,11 @@ service.assertFlexSvcEnv = function assertFlexSvcEnv(actual, expected, serviceTy
 
   expect(actual.description).to.equal(expected.description);
   expect(actual.secret).to.equal(expected.secret);
+  expect(actual.environmentVariables).to.deep.equal(expected.environmentVariables);
+
+  if (expected.runtime) {
+    expect(APIRuntimeToCLIRuntime[actual.runtime]).to.equal(expected.runtime);
+  }
 };
 
 service.assertSvcEnvs = function assertSvcEnvs(actualService, config, done) {

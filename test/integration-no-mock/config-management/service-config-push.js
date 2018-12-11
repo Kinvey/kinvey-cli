@@ -157,16 +157,10 @@ module.exports = () => {
       modifiedServiceConfig.environments.prod.environmentVariables._KEY_ZERO = 'zero';
 
       const serviceName = randomStrings.plainString();
-      const pkgJson = {
-        version: '1.0.0',
-        dependencies: {
-          'kinvey-flex-sdk': '3.0.0'
-        }
-      };
 
       async.series([
         (next) => {
-          ConfigManagementHelper.service.createFromConfig(serviceName, initialServiceConfig, 'org', 'CliOrg', pkgJson, (err, id) => {
+          ConfigManagementHelper.service.createFromConfig(serviceName, initialServiceConfig, 'org', 'CliOrg', null, (err, id) => {
             if (err) {
               return next(err);
             }

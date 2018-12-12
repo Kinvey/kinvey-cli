@@ -52,6 +52,26 @@ function passConfigFileToCli(cmd, configContent, filePath, done) {
   });
 }
 
+function exportEntityAsJson(cmd, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  const finalCmd = `${cmd} ${filePath} --output json`;
+
+  TestsHelper.execCmdWoMocks(finalCmd, null, (err) => {
+    if (err) {
+      return done(err);
+    }
+
+    fs.readFile(filePath, null, (err, data) => {
+      if (err) {
+        return done(err);
+      }
+
+      done(null, JSON.parse(data));
+    });
+  });
+}
+
 const service = {};
 service.createPackageJsonForFlexProject = function createPackageJsonForFlexProject(pkgJson, done) {
   if (!pkgJson) {
@@ -887,6 +907,15 @@ app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, ex
   ], done);
 };
 
+app.exportApp = function exportApp(appIdentifier, done) {
+  let cmd = 'app export';
+  if (appIdentifier) {
+    cmd = `${cmd} --app ${appIdentifier}`;
+  }
+
+  exportEntityAsJson(cmd, done);
+};
+
 const roles = {};
 roles.buildValidRolesList = function buildValidRolesList(count) {
   const result = [];
@@ -902,26 +931,12 @@ roles.buildValidRolesList = function buildValidRolesList(count) {
 
 const org = {};
 org.exportOrg = function exportOrg(orgIdentifier, done) {
-  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
-  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-  let cmd = `org export ${filePath} --output json`;
+  let cmd = 'org export';
   if (orgIdentifier) {
     cmd = `${cmd} --org ${orgIdentifier}`;
   }
 
-  TestsHelper.execCmdWoMocks(cmd, null, (err) => {
-    if (err) {
-      return done(err);
-    }
-
-    fs.readFile(filePath, null, (err, data) => {
-      if (err) {
-        return done(err);
-      }
-
-      done(null, JSON.parse(data));
-    });
-  });
+  exportEntityAsJson(cmd, done);
 };
 
 service.assertFlexSvcEnv = function assertFlexSvcEnv(actual, expected, serviceType) {

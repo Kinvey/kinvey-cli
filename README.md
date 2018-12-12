@@ -17,7 +17,7 @@ Kinvey CLI is a utility for managing various aspects of your Kinvey account from
 
 * Deploying and managing FlexServices running on the Kinvey FlexService Runtime
 * Creating, listing, and deleting applications
-* Creating, listing, and deleting app environments
+* Creating, listing, cloning, and deleting app environments
 * Creating, listing, and deleting collections
 
 ## Installation
@@ -139,6 +139,18 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     * `--app <application>`
        
         Specifies a Kinvey app by ID or name.
+
+* `appenv clone <target>`
+
+    Clones the specified environment or the active one if you don't specify an environment to the target environment.
+
+    * `--env <environment>`
+          
+        Specifies a Kinvey app environment by ID or name.
+    
+    * `--app <application>`
+       
+      Specifies a Kinvey app by ID or name.
     
 * `appenv delete`
 

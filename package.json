@@ -1,6 +1,6 @@
 {
   "name": "kinvey-cli",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "Utility for managing various aspects of your Kinvey account",
   "keywords": [
     "Kinvey"
@@ -11,7 +11,8 @@
   "author": "Kinvey, Inc.",
   "contributors": [
     "Mark van Seventer <mark@kinvey.com>",
-    "Sam Levin <sam@kinvey.com>"
+    "Sam Levin <sam@kinvey.com>",
+    "Tim Williamson <timothy.williamson@progress.com>"
   ],
   "bin": {
     "kinvey": "./bin/kinvey"

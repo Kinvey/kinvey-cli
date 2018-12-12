@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.2 (2018-12-08)
+* Add commands:
+    * app environments-related: `appenv clone`
+
 ## 4.1.1 (2018-11-29)
 * Preserve existing env vars on `flex deploy --set-vars <env variables>` 
 

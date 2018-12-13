@@ -373,7 +373,7 @@ env.assertCollections = function assertCollections(envId, collList, expCollCount
       return done(err);
     }
 
-    expect(actualColls.length).to.equal(expCollCount);
+    expect(actualColls.length, 'Collections count').to.equal(expCollCount);
 
     const expectedPermissionsPerColl = env.buildExpectedPermissionsPerColl(collList, rolesNameIdPairs);
     const collsFromConfigCount = collList.length;

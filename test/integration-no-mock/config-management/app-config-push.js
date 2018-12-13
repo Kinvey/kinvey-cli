@@ -55,8 +55,8 @@ module.exports = () => {
       schemaVersion: '1.0.0',
       configType: 'application',
       environments: {
-        Prod: basicEnvWithInternalCollsOnly,
-        Test: basicEnvWithInternalCollsOnly
+        Prod: cloneDeep(basicEnvWithInternalCollsOnly),
+        Test: cloneDeep(basicEnvWithInternalCollsOnly)
       },
       services: {
         [initialServiceName]: initialService
@@ -69,6 +69,12 @@ module.exports = () => {
     modifiedConfig.settings = {
       sessionTimeoutInSeconds: 90
     };
+
+    // add a collection to an existing env
+    const collListToAdd = EnvHelper.buildValidInternalCollectionsList(1, false);
+    const modifiedCollList = [...collListToAdd, ...internalCollList];
+    const modifiedColls = ConfigManagementHelper.common.buildConfigEntityFromList(modifiedCollList);
+    modifiedConfig.environments.Prod.collections = modifiedColls;
     modifiedConfig.environments.newEnv = {
       schemaVersion: '1.0.0',
       customEndpoints: {
@@ -116,7 +122,7 @@ module.exports = () => {
           config: modifiedConfig,
           id: appId,
           expectedName: appName,
-          collListPerEnv: { Prod: internalCollList, Test: internalCollList, newEnv: [] }
+          collListPerEnv: { Prod: modifiedCollList, Test: internalCollList, newEnv: [] }
         };
         AppHelper.assertApp(options, next);
       }

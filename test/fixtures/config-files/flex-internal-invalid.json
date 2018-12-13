@@ -5,7 +5,8 @@
   "environments": {
     "dev": {
       "secret": "123",
-      "host": "https://swapi.co/api"
+      "host": "https://swapi.co/api",
+      "runtime": "node8.11.1"
     }
   }
 }

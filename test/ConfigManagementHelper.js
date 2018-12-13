@@ -21,7 +21,7 @@ const clonedeep = require('lodash.clonedeep');
 const moment = require('moment');
 
 const ApiService = require('./ApiService');
-const { BackendCollectionPermission, CollectionHook, ConfigFiles } = require('./../lib/Constants');
+const { APIRuntimeToCLIRuntime, BackendCollectionPermission, CollectionHook, ConfigFiles } = require('./../lib/Constants');
 const TestsHelper = require('./TestsHelper');
 const { getObjectByOmitting, isEmpty, isNullOrUndefined, writeJSON } = require('./../lib/Utils');
 
@@ -49,6 +49,26 @@ function passConfigFileToCli(cmd, configContent, filePath, done) {
     }
 
     done(null, results.pop());
+  });
+}
+
+function exportEntityAsJson(cmd, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  const finalCmd = `${cmd} ${filePath} --output json`;
+
+  TestsHelper.execCmdWoMocks(finalCmd, null, (err) => {
+    if (err) {
+      return done(err);
+    }
+
+    fs.readFile(filePath, null, (err, data) => {
+      if (err) {
+        return done(err);
+      }
+
+      done(null, JSON.parse(data));
+    });
   });
 }
 
@@ -353,7 +373,7 @@ env.assertCollections = function assertCollections(envId, collList, expCollCount
       return done(err);
     }
 
-    expect(actualColls.length).to.equal(expCollCount);
+    expect(actualColls.length, 'Collections count').to.equal(expCollCount);
 
     const expectedPermissionsPerColl = env.buildExpectedPermissionsPerColl(collList, rolesNameIdPairs);
     const collsFromConfigCount = collList.length;
@@ -887,6 +907,15 @@ app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, ex
   ], done);
 };
 
+app.exportApp = function exportApp(appIdentifier, done) {
+  let cmd = 'app export';
+  if (appIdentifier) {
+    cmd = `${cmd} --app ${appIdentifier}`;
+  }
+
+  exportEntityAsJson(cmd, done);
+};
+
 const roles = {};
 roles.buildValidRolesList = function buildValidRolesList(count) {
   const result = [];
@@ -902,26 +931,12 @@ roles.buildValidRolesList = function buildValidRolesList(count) {
 
 const org = {};
 org.exportOrg = function exportOrg(orgIdentifier, done) {
-  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
-  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-  let cmd = `org export ${filePath} --output json`;
+  let cmd = 'org export';
   if (orgIdentifier) {
     cmd = `${cmd} --org ${orgIdentifier}`;
   }
 
-  TestsHelper.execCmdWoMocks(cmd, null, (err) => {
-    if (err) {
-      return done(err);
-    }
-
-    fs.readFile(filePath, null, (err, data) => {
-      if (err) {
-        return done(err);
-      }
-
-      done(null, JSON.parse(data));
-    });
-  });
+  exportEntityAsJson(cmd, done);
 };
 
 service.assertFlexSvcEnv = function assertFlexSvcEnv(actual, expected, serviceType) {
@@ -936,6 +951,11 @@ service.assertFlexSvcEnv = function assertFlexSvcEnv(actual, expected, serviceTy
 
   expect(actual.description).to.equal(expected.description);
   expect(actual.secret).to.equal(expected.secret);
+  expect(actual.environmentVariables).to.deep.equal(expected.environmentVariables);
+
+  if (expected.runtime) {
+    expect(APIRuntimeToCLIRuntime[actual.runtime]).to.equal(expected.runtime);
+  }
 };
 
 service.assertSvcEnvs = function assertSvcEnvs(actualService, config, done) {

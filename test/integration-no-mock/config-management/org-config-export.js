@@ -111,7 +111,8 @@ module.exports = () => {
       description: 'Test service',
       environments: {
         dev: {
-          secret: '123'
+          secret: '123',
+          runtime: 'node10'
         }
       }
     };

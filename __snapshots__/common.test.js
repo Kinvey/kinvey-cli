@@ -106,6 +106,8 @@ Commands:
   kinvey appenv show           Show detailed info for a specified environment or
                                for the active one
   kinvey appenv use <env>      Set the active environment
+  kinvey appenv clone <target> Clone a specified environment or the active one
+                               into the target one
   kinvey appenv delete         Delete a specified environment or the active one
 
 Options:

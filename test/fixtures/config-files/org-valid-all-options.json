@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0.0",
+  "configType": "organization",
+  "settings": {
+    "security": {
+      "requireApprovals": true,
+      "requireEmailVerification": true,
+      "requireTwoFactorAuth": false
+    }
+  },
+  "applications": {
+    "TestApp": {
+      "schemaVersion": "1.0.0",
+      "settings": {
+        "realtime": {
+          "enabled": true
+        },
+        "sessionTimeoutInSeconds": 120
+      },
+      "environments": {
+        "dev": {
+          "schemaVersion": "1.0.0",
+          "settings": {
+            "apiVersion": 3,
+            "emailVerification": {
+              "auto": true,
+              "required": true
+            }
+          },
+          "collections": {
+            "colle0": {
+              "type": "internal",
+              "permissions": "full"
+            }
+          }
+        },
+        "prod": {
+          "schemaVersion": "1.0.0",
+          "settings": {
+            "emailVerification": {
+              "auto": false,
+              "required": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "services": {
+    "TestInternalFlexService": {
+      "schemaVersion": "1.0.0",
+      "type": "flex-internal",
+      "description": "test deploy0",
+      "environments": {
+        "dev": {
+          "secret": "123"
+        }
+      }
+    },
+    "TestExternalFlexService": {
+      "schemaVersion": "1.0.0",
+      "configType": "service",
+      "type": "flex-external",
+      "description": "test",
+      "environments": {
+        "dev": {
+          "secret": "123",
+          "host": "https://swapi.co/api"
+        },
+        "prod": {
+          "secret": "456",
+          "host": "https://swapi.co/api"
+        }
+      }
+    }
+  }
+}

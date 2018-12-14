@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "configType": "organization",
+  "settings": {
+    "security": {
+      "requireApprovals": true,
+      "requireTwoFactorAuth": false
+    }
+  },
+  "applications": {
+  }
+}

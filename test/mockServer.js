@@ -355,8 +355,9 @@ function build(
           break;
         default:
       }
+    } else {
+      return res.status(400).send({ description: `CLI has constructed bad job: ${JSON.stringify(body)}` });
     }
-    return res.status(400).send({ description: `CLI has constructed bad job: ${JSON.stringify(body)}` });
   });
 
 

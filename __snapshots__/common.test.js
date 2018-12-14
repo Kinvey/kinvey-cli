@@ -270,3 +270,38 @@ Options:
 
 
 `
+
+exports['common incomplete commands namespace (website) only should show help 1'] = `
+kinvey website
+
+Manage websites. Run 'kinvey website -h' for details.
+
+Commands:
+  kinvey website create <name>  Create a website
+  kinvey website list           List websites
+  kinvey website show           Show detailed info for the specified website
+  kinvey website deploy         Deploy your website
+  kinvey website status         Status of the specified website
+  kinvey website delete         Delete the specified website
+
+Options:
+  --version                                 Show version number        [boolean]
+  --email                                   E-mail address of your Kinvey
+                                            account                     [string]
+  --password                                Password of your Kinvey account
+                                                                        [string]
+  --2fa, --2Fa                              Two-factor authentication token
+                                                                        [string]
+  --instance-id, --instanceId               Instance ID                 [string]
+  --profile                                 Profile to use              [string]
+  --output                                  Output format
+                                                      [string] [choices: "json"]
+  --silent                                  Do not output anything     [boolean]
+  --suppress-version-check,                 Do not check for package updates
+  --suppressVersionCheck                                               [boolean]
+  --verbose                                 Output debug messages      [boolean]
+  --no-color, --noColor                     Disable colors             [boolean]
+  -h, --help                                Show help                  [boolean]
+
+
+`

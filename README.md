@@ -372,6 +372,54 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    When executed in a Node.js project directory, this command removes the current Flex Service configuration from the project.
 
+* `website create <name>`
+
+    Create a website.
+    
+* `website list`
+
+    List websites.
+    
+* `website show`
+
+    Shows info for the specified website.
+    
+    * `--website <website>`
+    
+        Website ID/name. Required.
+
+* `website deploy`
+
+    Deploy your website.
+    
+    * `--website <website>`
+    
+        Website ID/name. Required.
+        
+    * `--path <path>`
+    
+        Path to file or directory.
+        
+* `website status`
+
+    Status of the specified website.
+    
+    * `--website <website>`
+        
+        Website ID/name. Required.
+
+* `website delete`
+
+    Deletes the specified website.
+    
+    * `--website <website>`
+        
+        Website ID/name. Required.
+        
+    * `--no-prompt`
+        
+        Do not ask for confirmation.
+
 * `help`
 
    Prints general usage instructions. For detailed command usage instruction, use the `--help` option with the command.

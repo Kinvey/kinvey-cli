@@ -12,7 +12,7 @@
 * Ensure `export` creates non-existing directories
 * App functionality to create/modify app from config file
 * Add `app export` command to export applications
-* Support all service types for `service export`
+* Support rapid data and flex service types for `service export`
 * Specify entity identifiers as options
 
 ## 4.1.0-alpha.2

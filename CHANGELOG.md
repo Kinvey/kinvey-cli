@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.0-alpha.0 (2018-12-14)
+* Config management related logic uses v3 API
+* Support service environments in service config files
+* Support runtime and envrionment variables in flex service config files
+* Fix 'app push' to update properly env metadata
+
 ## 4.1.1 (2018-11-29)
 * Preserve existing env vars on `flex deploy --set-vars <env variables>` 
 

@@ -6,15 +6,15 @@ exports['flex status by not specifying profile nor credentials when one profile 
 [debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
 [debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
 [debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
-key            value                                 
--------------  --------------------------------------
-status         ONLINE                                
-version        1.4.2                                 
-id             12378kdl2                             
-svcEnvId       662dd1efe3d92e0180317487b29c6e66      
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+id             12378kdl2                            
+svcEnvId       662dd1efe3d92e0180317487b29c6e66     
 requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                   
-deployerName   Davy Jones                            
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
 
 
 `
@@ -67,15 +67,15 @@ exports['flex status by specifying a profile existent serviceId and existent svc
 [debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
 [debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status
 [debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status 200
-key            value                                 
--------------  --------------------------------------
-status         ONLINE                                
-version        1.4.2                                 
-id             12378kdl2                             
-svcEnvId       642dd1efe3d92e0180317487b29c6e88      
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+id             12378kdl2                            
+svcEnvId       642dd1efe3d92e0180317487b29c6e88     
 requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                   
-deployerName   Davy Jones                            
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
 
 
 `
@@ -112,15 +112,15 @@ exports['flex status by specifying a profile when invalid project is set with ex
 [debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
 [debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
 [debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
-key            value                                 
--------------  --------------------------------------
-status         ONLINE                                
-version        1.4.2                                 
-id             12378kdl2                             
-svcEnvId       662dd1efe3d92e0180317487b29c6e66      
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+id             12378kdl2                            
+svcEnvId       662dd1efe3d92e0180317487b29c6e66     
 requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                   
-deployerName   Davy Jones                            
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
 
 
 `
@@ -130,16 +130,16 @@ exports['flex status by specifying a profile when valid project is set without s
 [debug] Using profile 'profileToGetServiceStatus'
 [debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status
 [debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status 200
-key            value                                 
--------------  --------------------------------------
-status         ONLINE                                
-version        1.4.2                                 
-name           TestKinveyDatalink                    
-id             12378kdl2                             
-svcEnvId       642dd1efe3d92e0180317487b29c6e88      
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+name           TestKinveyDatalink                   
+id             12378kdl2                            
+svcEnvId       642dd1efe3d92e0180317487b29c6e88     
 requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                   
-deployerName   Davy Jones                            
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
 
 
 `
@@ -165,18 +165,18 @@ exports['flex status by specifying credentials as options when valid and existen
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-key                value                                 
------------------  --------------------------------------
-status             UPDATING                              
-version            1.4.2                                 
-id                 12378kdl2                             
-svcEnvId           1234567                               
+key                value                                
+-----------------  -------------------------------------
+status             UPDATING                             
+version            1.4.2                                
+id                 12378kdl2                            
+svcEnvId           1234567                              
 requestedAt        replaced_value
-deployerEmail      davy.jones@mail.com                   
-deployerName       Davy Jones                            
-deploymentStatus   RUNNING                               
-deploymentVersion  1.4.3                                 
-deploymentRuntime  node10                                
+deployerEmail      davy.jones@mail.com                  
+deployerName       Davy Jones                           
+deploymentStatus   RUNNING                              
+deploymentVersion  1.4.3                                
+deploymentRuntime  node10                               
 
 
 `
@@ -193,19 +193,19 @@ exports['flex status by specifying credentials as options when valid and existen
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-key                value                                 
------------------  --------------------------------------
-status             ONLINE                                
-version            1.4.2                                 
-runtime            node8                                 
-id                 12378kdl2                             
-svcEnvId           123456                                
+key                value                                
+-----------------  -------------------------------------
+status             ONLINE                               
+version            1.4.2                                
+runtime            node8                                
+id                 12378kdl2                            
+svcEnvId           123456                               
 requestedAt        replaced_value
-deployerEmail      davy.jones@mail.com                   
-deployerName       Davy Jones                            
-deploymentStatus   COMPLETED                             
-deploymentVersion  1.4.3                                 
-deploymentRuntime  node10                                
+deployerEmail      davy.jones@mail.com                  
+deployerName       Davy Jones                           
+deploymentStatus   COMPLETED                            
+deploymentVersion  1.4.3                                
+deploymentRuntime  node10                               
 
 
 `
@@ -222,15 +222,15 @@ exports['flex status by specifying credentials as options when valid and existen
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-key            value                                 
--------------  --------------------------------------
-status         ONLINE                                
-version        1.4.2                                 
-id             12378kdl2                             
-svcEnvId       662dd1efe3d92e0180317487b29c6e66      
+key            value                                
+-------------  -------------------------------------
+status         ONLINE                               
+version        1.4.2                                
+id             12378kdl2                            
+svcEnvId       662dd1efe3d92e0180317487b29c6e66     
 requestedAt    replaced_value
-deployerEmail  davy.jones@mail.com                   
-deployerName   Davy Jones                            
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
 
 
 `

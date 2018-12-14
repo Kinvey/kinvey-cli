@@ -72,6 +72,10 @@ describe(baseCmd, () => {
         done();
       });
     });
+
+    it('using existent target env name and existent env name and existent app name should fail', (done) => {
+      testEnvClone(null, defaultFlags, existentEnvName, fixtureApp.name, existentTargetEnvName, done);
+    });
   });
 
   describe('with profile', () => {

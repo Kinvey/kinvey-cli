@@ -299,3 +299,37 @@ Options:
 Not enough non-option arguments: got 0, need at least 1
 
 `
+
+exports['appenv clone without profile using existent target env name and existent env name and existent app name should fail 1'] = `
+[debug] Checking for package updates
+kinvey appenv clone <target>
+
+Clone a specified environment or the active one into the target one
+
+Positionals:
+  target  Target Env ID/name                                 [string] [required]
+
+Options:
+  --version                                 Show version number        [boolean]
+  --email                                   E-mail address of your Kinvey
+                                            account                     [string]
+  --password                                Password of your Kinvey account
+                                                                        [string]
+  --2fa, --2Fa                              Two-factor authentication token
+                                                                        [string]
+  --instance-id, --instanceId               Instance ID                 [string]
+  --profile                                 Profile to use              [string]
+  --output                                  Output format
+                                                      [string] [choices: "json"]
+  --silent                                  Do not output anything     [boolean]
+  --suppress-version-check,                 Do not check for package updates
+  --suppressVersionCheck                                               [boolean]
+  --verbose                                 Output debug messages      [boolean]
+  --no-color, --noColor                     Disable colors             [boolean]
+  -h, --help                                Show help                  [boolean]
+  --env                                     Env ID/name                 [string]
+  --app                                     App ID/name                 [string]
+
+You must be authenticated.
+
+`

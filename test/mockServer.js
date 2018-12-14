@@ -90,7 +90,8 @@ function build(
     envs = fixtureEnvs,
     runtime = null,
     colls = fixtureCollections,
-    jobType = 'recycleService',
+    recycleServiceJobType = 'recycleService',
+    cloneJobType = 'clone',
     serviceLogsQuery = {},
     domainType = 'appId', // appId, organizationId
     domainEntityId = fixtureApp.id,
@@ -324,21 +325,38 @@ function build(
 
   app.post(`/${versionPart}/jobs`, (req, res) => {
     const body = req.body;
-    const isAsExpected = body && body.type === jobType && body.params && body.params.serviceId === fixtureInternalDataLink.id
-      && svcEnvs.find(x => x.id === body.params.serviceEnvironmentId);
-    if (!isAsExpected) {
-      if (body.params.serviceId !== fixtureInternalDataLink.id) {
-        return res.status(404).send(serviceNotFound);
-      }
 
-      if (!svcEnvs.find(x => x.id === body.params.serviceEnvironmentId)) {
-        return res.status(404).send(svcEnvNotFound);
-      }
+    if (body && (body.type === cloneJobType || body.type === recycleServiceJobType) && body.params) {
+      switch (body.type) {
+        case cloneJobType:
+          if (!(body.params.data
+            && body.params.data.cloneAll
+            && fixtureEnvs.find(x => x.id === body.params.sourceEnvironmentId)
+            && fixtureEnvs.find(x => x.id === body.params.targetEnvironmentId)
+            && body.params.serviceEnvironmentMapping)) {
+            return res.status(400).send({ description: `CLI has constructed bad job: ${JSON.stringify(body)}` });
+          }
+          res.send({ jobId: 'idOfJobThatIsCloningTheEnvironment' });
+          break;
+        case recycleServiceJobType:
+          if (!(body.params.serviceId === fixtureInternalDataLink.id
+            && svcEnvs.find(x => x.id === body.params.serviceEnvironmentId))) {
+            if (body.params.serviceId !== fixtureInternalDataLink.id) {
+              return res.status(404).send(serviceNotFound);
+            }
 
-      return res.status(400).send({ description: `CLI has constructed bad job: ${JSON.stringify(body)}` });
+            if (!svcEnvs.find(x => x.id === body.params.serviceEnvironmentId)) {
+              return res.status(404).send(svcEnvNotFound);
+            }
+
+            return res.status(400).send({ description: `CLI has constructed bad job: ${JSON.stringify(body)}` });
+          }
+          res.send({ job: 'idOfJobThatIsRecyclingTheService' });
+          break;
+        default:
+      }
     }
-
-    res.send({ job: 'idOfJobThatIsRecyclingTheService' });
+    return res.status(400).send({ description: `CLI has constructed bad job: ${JSON.stringify(body)}` });
   });
 
 

@@ -101,14 +101,14 @@ exports['common incomplete commands namespace (appenv) only should show help 1']
 kinvey appenv <command> [args] [options]
 
 Commands:
-  kinvey appenv create <name>  Create an environment
-  kinvey appenv list           List environments per app
-  kinvey appenv show           Show detailed info for a specified environment or
-                               for the active one
-  kinvey appenv use <env>      Set the active environment
-  kinvey appenv clone <target> Clone a specified environment or the active one
-                               into the target one
-  kinvey appenv delete         Delete a specified environment or the active one
+  kinvey appenv create <name>   Create an environment
+  kinvey appenv list            List environments per app
+  kinvey appenv show            Show detailed info for a specified environment
+                                or for the active one
+  kinvey appenv use <env>       Set the active environment
+  kinvey appenv clone <target>  Clone a specified environment or the active one
+                                into the target one
+  kinvey appenv delete          Delete a specified environment or the active one
 
 Options:
   --version                                 Show version number        [boolean]

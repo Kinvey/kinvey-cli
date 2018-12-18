@@ -22,22 +22,22 @@ Kinvey CLI is a utility for managing various aspects of your Kinvey account from
 
 Contents:
 
-[Installation](#installation)
-[Usage](#usage)
-[Commands](#commands)
-[Global Options](#global-options)
-[Environment Variables](#environment-variables)
-[Getting Help](#getting-help)
-[Getting Started](#getting-started)
-[Managing Profiles](#managing-profiles)
-[Authenticating One-time Commands](#authenticating-one-time-commands)
-[Precedence of Configuration Options](#precedence-of-configuration-options)
-[Output Format](#output-format)
-[Flex Runtime Version Selection](#flex-runtime-version-selection)
-[Proxy Settings](#proxy-settings)
-[Troubleshooting](#troubleshooting)
-[Changelog](#changelog)
-[License](#license)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Commands](#commands)
+- [Global Options](#global-options)
+- [Environment Variables](#environment-variables)
+- [Getting Help](#getting-help)
+- [Getting Started](#getting-started)
+- [Managing Profiles](#managing-profiles)
+- [Authenticating One-time Commands](#authenticating-one-time-commands)
+- [Precedence of Configuration Options](#precedence-of-configuration-options)
+- [Output Format](#output-format)
+- [Flex Runtime Version Selection](#flex-runtime-version-selection)
+- [Proxy Settings](#proxy-settings)
+- [Troubleshooting](#troubleshooting)
+- [Changelog](#changelog)
+- [License](#license)
 
 
 

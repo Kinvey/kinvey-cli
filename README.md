@@ -20,6 +20,27 @@ Kinvey CLI is a utility for managing various aspects of your Kinvey account from
 * Creating, listing, and deleting app environments
 * Creating, listing, and deleting collections
 
+Contents:
+
+[Installation](#installation)
+[Usage](#usage)
+[Commands](#commands)
+[Global Options](#global-options)
+[Environment Variables](#environment-variables)
+[Getting Help](#getting-help)
+[Getting Started](#getting-started)
+[Managing Profiles](#managing-profiles)
+[Authenticating One-time Commands](#authenticating-one-time-commands)
+[Precedence of Configuration Options](#precedence-of-configuration-options)
+[Output Format](#output-format)
+[Flex Runtime Version Selection](#flex-runtime-version-selection)
+[Proxy Settings](#proxy-settings)
+[Troubleshooting](#troubleshooting)
+[Changelog](#changelog)
+[License](#license)
+
+
+
 ## Installation
 
 Kinvey CLI is distributed as an NPM package. After you install NPM, run the following command to download and install Kinvey CLI.

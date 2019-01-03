@@ -17,7 +17,6 @@ const path = require('path');
 
 const async = require('async');
 
-const ApiService = require('./../../ApiService');
 const ConfigManagementHelper = require('./../../ConfigManagementHelper');
 const { ConfigFilesDir, randomStrings } = require('./../../TestsHelper');
 
@@ -27,56 +26,7 @@ module.exports = () => {
   const wantedOrg = 'CliOrg';
 
   const removeAppsAndServices = (done) => {
-    let orgId;
-
-    async.waterfall([
-      (next) => {
-        ApiService.orgs.get(null, (err, orgs) => {
-          if (err) {
-            return next(err);
-          }
-
-          const testOrg = orgs.find(x => x.name === wantedOrg);
-          if (!testOrg) {
-            return next(new Error(`${wantedOrg} not found.`));
-          }
-
-          orgId = testOrg.id;
-
-          next(null, testOrg.id);
-        });
-      },
-      (id, next) => {
-        ApiService.apps.getByOrg(id, next);
-      },
-      (allApps, next) => {
-        async.each(
-          allApps,
-          (currApp, cb) => {
-            ApiService.apps.remove(currApp.id, (err) => {
-              if (err) {
-                return cb(err);
-              }
-
-              cb();
-            });
-          },
-          next
-        );
-      },
-      (next) => {
-        ApiService.services.getAllByOrg(orgId, next);
-      },
-      (services, next) => {
-        async.each(
-          services,
-          (currService, cb) => {
-            ApiService.services.remove(currService.id, cb);
-          },
-          next
-        );
-      }
-    ], done);
+    ConfigManagementHelper.org.removeAppsAndServices(wantedOrg, done);
   };
 
   after('remove apps and services', removeAppsAndServices);

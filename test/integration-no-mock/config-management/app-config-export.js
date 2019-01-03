@@ -225,22 +225,8 @@ module.exports = () => {
           });
         },
         (next) => {
-          // add the system collections
           const expectedConfig = Object.assign({}, appConfig);
-          Object.keys(expectedConfig.environments).forEach((appEnv) => {
-            expectedConfig.environments[appEnv].configType = 'environment';
-            const systemColls = ['_blob', 'user'];
-            if (!expectedConfig.environments[appEnv].collections) {
-              expectedConfig.environments[appEnv].collections = {};
-            }
-
-            systemColls.forEach((sysColl) => {
-              expectedConfig.environments[appEnv].collections[sysColl] = {
-                type: 'internal',
-                permissions: 'shared'
-              };
-            });
-          });
+          ConfigManagementHelper.app.addSystemCollsToEnvs(expectedConfig);
 
           // add default runtime for svc environments
           Object.keys(expectedConfig.services).forEach((svc) => {

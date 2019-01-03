@@ -60,6 +60,14 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    Deletes the specified profile or the active one if you don't specify a profile name.
 
+* `org push <file>`
+
+    Applies org configuration file to the specified org or to the active one.
+    
+    * `--org <organization>`
+               
+        Specifies a Kinvey organization by ID or name.
+
 * `org list`
 
     Lists all existing organizations within your Kinvey account.
@@ -675,9 +683,13 @@ Kinvey CLI supports the universal environment variables `HTTPS_PROXY` and `https
 
 Kinvey CLI supports the usage of configuration files (JSON format) to enable configuring certain aspects of the backend.
 
+**Organizations** can be modified by applying an organization configuration file. The file can contain applications and org-level services.
+
+**Applications** can be created and modified by applying an application configuration file. The file can contain app environments and app-level services.
+
 **Environments** can be created and modified by applying an environment configuration file. The file can contain: environment-related settings, collections, business logic, roles, push settings.
 
-**Services** can be created and modified by applying a service configuration file. Supported services: internal flex service, external flex service.
+**Services** can be created and modified by applying a service configuration file. Supported services: internal flex, external flex, REST, Sharepoint, Salesforce, MS SQL, SAP, ProgressData, DataDirect, Rapid health.
 
 ### Environment configuration file
 
@@ -726,6 +738,7 @@ If an error occurs, the CLI stops applying the file and outputs the error messag
       "type": "external",
       "permissions": "shared",
       "service": "awesomeService",
+      "serviceEnvironment": "development",
       "serviceObject": "awesomeServiceObject"
     }
   },
@@ -746,6 +759,7 @@ If an error occurs, the CLI stops applying the file and outputs the error messag
       "onPostSave": {
         "type": "external",
         "service": "awesomeService",
+        "serviceEnvironment": "development",
         "handlerName": "awesomeHandler"
       }
     }
@@ -762,6 +776,7 @@ If an error occurs, the CLI stops applying the file and outputs the error messag
     "anotherEndpoint": {
       "type": "external",
       "service": "awesomeService",
+      "serviceEnvironment": "development",
       "handlerName": "anotherHandler"
     }
   },
@@ -845,6 +860,8 @@ To specify the built-in **All users** role, use *all-users*.
 
 `collections.[collectionName].service` Service to connect the collection to. Either service name or ID. Collection type must be set to 'external'.
 
+`collections.[collectionName].serviceEnvironment` Service environment to connect the collection to. Collection type must be set to 'external'.
+
 `collections.[collectionName].serviceObject` Service object. Collection type must be set to 'external'.
 
 `commonCode` Common code functions. Optional. An object where each first-level property is the name of the common code script.
@@ -865,6 +882,8 @@ To specify the built-in **All users** role, use *all-users*.
 
 `collectionHooks.[collectionName].[hookName].service` Service to use. Collection hook type must be set to 'external'.
 
+`collectionHooks.[collectionName].[hookName].serviceEnvironment` Service environment to use. Collection hook type must be set to 'external'.
+
 `collectionHooks.[collectionName].[hookName].handlerName` Handler name. Collection hook type must be set to 'external'.
 
 `customEndpoints` Custom endpoints. Optional. Object where each first-level property is the name of an endpoint.
@@ -876,6 +895,8 @@ To specify the built-in **All users** role, use *all-users*.
 `customEndpoints.[endpointName].codeFile` Path to code - relative or absolute. Either `code` or `codeFile` can be set.
 
 `customEndpoints.[endpointName].service` Service to use. Endpoint type must be set to 'external'.
+
+`customEndpoints.[endpointName].serviceEnvironment` Service environment to use. Endpoint type must be set to 'external'.
 
 `customEndpoints.[endpointName].handlerName` Handler name. Endpoint type must be set to 'external'.
 
@@ -915,7 +936,7 @@ To specify the built-in **All users** role, use *all-users*.
 
 ### Service configuration file
 
-The service configuration file can be used to create a brand new internal or external flex service or to modify an existing one.
+The service configuration file can be used to create a brand new service or to modify an existing one (excluding Auth services).
 
 To create a service from a configuration file run:
  ```
@@ -942,8 +963,12 @@ The following service template can be used and modified as needed:
   "schemaVersion": "1.0.0",
   "configType": "service",
   "type": "flex-internal",
-  "secret": "123",
-  "description": "Some description here"
+  "environments": {
+    "dev": {
+      "secret": "123",
+      "description": "Some description here"
+    }
+  }
 }
 ```
 
@@ -953,15 +978,17 @@ The following service template can be used and modified as needed:
 
 `configType` *environment|service* The configuration type. Required.
 
-`type` *flex-internal|flex-external* Service type. Required.
- 
-`secret` Shared secret to use when communicating with the service.
+`type` *flex-internal|flex-external|rest|sharepoint|salesforce|mssql|sap|progressData|dataDirect|rapid-health* Service type. Required.
  
 `description` Service description. String. Optional.
  
-`host` URI pointing to the service server's location. Required when `type` is 'flex-external'.
+`environments` Service environments. Object where each first-level property is the name of a service environment. Optional.
+ 
+ `environments.[envName].secret` Shared secret to use when communicating with the service.
+ 
+`environments.[envName].host` URI pointing to the service server's location. Required when `type` is 'flex-external'.
 
-`sourcePath` Path to source code - relative or absolute. Optional. Applicable when `type` is 'flex-internal'.
+`environments.[envName].sourcePath` Path to source code - relative or absolute. Optional. Applicable when `type` is 'flex-internal'.
 
 ## Troubleshooting
 

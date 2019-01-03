@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+* Add `org push` to modify organizations from config file
+    
 ## 4.1.1 (2018-11-29)
 * Preserve existing env vars on `flex deploy --set-vars <env variables>` 
 

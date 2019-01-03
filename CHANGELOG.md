@@ -3,6 +3,12 @@
 ## Unreleased
 * Add `org push` to modify organizations from config file
     
+## 5.0.0-alpha.0 (2018-12-14)
+* Config management related logic uses v3 API
+* Support service environments in service config files
+* Support runtime and envrionment variables in flex service config files
+* Fix 'app push' to update properly env metadata
+
 ## 4.1.1 (2018-11-29)
 * Preserve existing env vars on `flex deploy --set-vars <env variables>` 
 
@@ -15,7 +21,7 @@
 * Ensure `export` creates non-existing directories
 * App functionality to create/modify app from config file
 * Add `app export` command to export applications
-* Support all service types for `service export`
+* Support rapid data and flex service types for `service export`
 * Specify entity identifiers as options
 
 ## 4.1.0-alpha.2

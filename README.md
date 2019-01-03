@@ -104,6 +104,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     Applies app configuration file to the specified app or to the active one.
     
+    * `--app <application>`
+               
+        Specifies a Kinvey app by ID or name.
+    
 * `app list`
 
     Lists all existing applications within your Kinvey account.

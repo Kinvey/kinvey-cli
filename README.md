@@ -970,7 +970,10 @@ The following service template can be used and modified as needed:
   "environments": {
     "dev": {
       "secret": "123",
-      "description": "Some description here"
+      "description": "Some description here",
+      "environmentVariables": {
+        "MY_KEY": "my value"
+      }
     }
   }
 }
@@ -993,6 +996,8 @@ The following service template can be used and modified as needed:
 `environments.[envName].host` URI pointing to the service server's location. Required when `type` is 'flex-external'.
 
 `environments.[envName].sourcePath` Path to source code - relative or absolute. Optional. Applicable when `type` is 'flex-internal'.
+
+`environments.[envName].environmentVariables` Environment variables. Object. Optional.
 
 ## Troubleshooting
 

@@ -1,13 +1,3 @@
 {
-  "extends": "eslint-config-kinvey-platform",
-  "env": {
-    "mocha": true,
-    "node": true
-  },
-  "globals": {
-    "expect": true
-  },
-  "rules":{
-    "no-param-reassign": 0
-  }
+  "extends": "kinvey-platform"
 }

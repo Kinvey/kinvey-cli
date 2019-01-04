@@ -525,7 +525,7 @@ function build(
 // build({});
 
 
-module.exports = (options, done) => {
-  options = options || {};
+module.exports = (originalOptions, done) => {
+  const options = originalOptions || {};
   return build(options, done);
 };

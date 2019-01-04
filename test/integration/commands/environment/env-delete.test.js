@@ -28,8 +28,8 @@ const activeProfile = 'activeProfile';
 const existentEnvId = fixtureEnv.id;
 const existentEnvName = fixtureEnv.name;
 
-function testEnvDelete(options, flags, envIdentifier, appIdentifier, done) {
-  options = options || {};
+function testEnvDelete(originalOptions, originalFlags, envIdentifier, appIdentifier, done) {
+  const options = originalOptions || {};
   const mergedOptions = Object.assign({}, options);
   if (appIdentifier) {
     mergedOptions[AppOptionsName.APP] = appIdentifier;
@@ -39,7 +39,7 @@ function testEnvDelete(options, flags, envIdentifier, appIdentifier, done) {
     mergedOptions[EnvOptionsName.ENV] = envIdentifier;
   }
 
-  flags = flags || [];
+  const flags = originalFlags || [];
   flags.push(CommonOptionsNames.NO_PROMPT);
   testers.execCmdWithIdentifier(baseCmd, mergedOptions, flags, null, null, done);
 }

@@ -25,8 +25,8 @@ const existentUser = fixtureUser.existent;
 
 const baseCmd = `${Namespace.ENV} list`;
 
-function testEnvList(options, flags, appIdentifier, validUser, done) {
-  options = options || {};
+function testEnvList(originalOptions, flags, appIdentifier, validUser, done) {
+  const options = originalOptions || {};
   const mergedOptions = Object.assign({}, options);
   if (appIdentifier) {
     mergedOptions[AppOptionsName.APP] = appIdentifier;

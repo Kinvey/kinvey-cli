@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+* Suggest command when token is expired
+* Use backend error when HTTP status code is 401
+* Apply Kinvey lint rules and fix lint errors
+
 ## 4.1.1 (2018-11-29)
 * Preserve existing env vars on `flex deploy --set-vars <env variables>` 
 

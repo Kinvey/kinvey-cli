@@ -28,10 +28,10 @@ const activeProfile = 'activeProfile';
 const appName = fixtureApp.name;
 const appId = fixtureApp.id;
 
-function testAppDelete(options, flags, appIdentifier, done) {
-  flags = flags || [];
+function testAppDelete(originalOptions, originalFlags, appIdentifier, done) {
+  const flags = originalFlags || [];
   flags.push(CommonOptionsNames.NO_PROMPT);
-  options = options || {};
+  const options = originalOptions || {};
   if (appIdentifier) {
     options[AppOptionsName.APP] = appIdentifier;
   }

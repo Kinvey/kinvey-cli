@@ -25,8 +25,8 @@ const baseCmd = `${Namespace.ENV} create`;
 const envName = fixtureEnv.name;
 const existentUser = fixtureUser.existent;
 
-function testEnvCreate(options, flags, name, appIdentifier, done) {
-  options = options || {};
+function testEnvCreate(originalOptions, flags, name, appIdentifier, done) {
+  const options = originalOptions || {};
   const mergedOptions = Object.assign({}, options);
   if (appIdentifier) {
     mergedOptions[AppOptionsName.APP] = appIdentifier;

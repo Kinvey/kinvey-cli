@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
+ * Copyright (c) 2018, Kinvey, Inc. All rights reserved.
  *
  * This software is licensed to you under the Kinvey terms of service located at
  * http://www.kinvey.com/terms-of-use. By downloading, accessing and/or using this
@@ -121,8 +121,8 @@ function build(
       const isAuth = isAuthenthicated(req.headers, token);
       if (!isAuth) {
         return res.status(401).send({
-          code: 'Unauthorized',
-          description: 'You need to be logged in to execute this request.'
+          code: 'InvalidCredentials',
+          description: 'Authorization token invalid or expired.'
         });
       }
     }
@@ -152,7 +152,10 @@ function build(
     } else if (email === existentUserOne.email && pass === existentUserOne.password) {
       return res.send({ email: existentUserOne.email, token: fixtureUser.tokenOne });
     } else if (email === nonExistentUser.email && pass === nonExistentUser.password) {
-      return res.send(401);
+      return res.status(401).send({
+        code: 'InvalidCredentials',
+        description: 'Invalid e-mail and/or password.'
+      });
     }
 
     const errRes = {
@@ -581,7 +584,7 @@ function build(
 // build({});
 
 
-module.exports = (options, done) => {
-  options = options || {};
+module.exports = (originalOptions, done) => {
+  const options = originalOptions || {};
   return build(options, done);
 };

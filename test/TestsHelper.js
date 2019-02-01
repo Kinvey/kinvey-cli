@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
+ * Copyright (c) 2018, Kinvey, Inc. All rights reserved.
  *
  * This software is licensed to you under the Kinvey terms of service located at
  * http://www.kinvey.com/terms-of-use. By downloading, accessing and/or using this
@@ -67,8 +67,8 @@ TestsHelper.assertions = {
    * @param path If null, uses the path from the tests config.
    * @param done
    */
-  assertGlobalSetup(expected, path, done) {
-    path = path || globalSetupPath;
+  assertGlobalSetup(expected, originalPath, done) {
+    const path = originalPath || globalSetupPath;
     readJSON(path, (err, actual) => {
       if (err) {
         return done(err);
@@ -85,8 +85,8 @@ TestsHelper.assertions = {
     });
   },
 
-  assertActiveItemsOnProfile(expected, profileName, path, done) {
-    path = path || globalSetupPath;
+  assertActiveItemsOnProfile(expected, profileName, originalPath, done) {
+    const path = originalPath || globalSetupPath;
     readJSON(path, (err, actual) => {
       if (err) {
         return done(err);
@@ -112,8 +112,8 @@ TestsHelper.assertions = {
     });
   },
 
-  assertProjectSetup(expected, path, done) {
-    path = path || projectPath;
+  assertProjectSetup(expected, originalPath, done) {
+    const path = originalPath || projectPath;
     readJSON(path, (err, actual) => {
       if (err && err.code !== 'ENOENT') {
         return done(err);
@@ -161,11 +161,8 @@ TestsHelper.assertions = {
 
     return profile;
   },
-  buildExpectedProfiles(profiles) {
-    if (!Array.isArray(profiles)) {
-      profiles = [profiles];
-    }
-
+  buildExpectedProfiles(originalProfiles) {
+    const profiles = Array.isArray(originalProfiles) ? originalProfiles : [originalProfiles];
     const result = {};
 
     profiles.forEach((p) => {
@@ -249,9 +246,9 @@ TestsHelper.env = {
 };
 
 TestsHelper.setup = {
-  createProfile(name, email, password, done) {
-    email = email || existentUser.email;
-    password = password || existentUser.password;
+  createProfile(name, originalEmail, originalPassword, done) {
+    const email = originalEmail || existentUser.email;
+    const password = originalPassword || existentUser.password;
 
     const cmd = `profile create ${name} --verbose --${AuthOptionsNames.EMAIL} ${email} --${AuthOptionsNames.PASSWORD} ${password}`;
 
@@ -275,10 +272,8 @@ TestsHelper.setup = {
     });
   },
 
-  createProfiles(names, done) {
-    if (!Array.isArray(names)) {
-      names = [names];
-    }
+  createProfiles(nameOrNames, done) {
+    const names = Array.isArray(nameOrNames) ? nameOrNames : [nameOrNames];
 
     async.eachSeries(
       names,
@@ -325,8 +320,8 @@ TestsHelper.setup = {
     ], done);
   },
 
-  _readGlobalSetupForProfile(profileName, path, done) {
-    path = path || globalSetupPath;
+  _readGlobalSetupForProfile(profileName, originalPath, done) {
+    const path = originalPath || globalSetupPath;
     let setup;
 
     readJSON(path, (err, actualSetup) => {
@@ -343,8 +338,8 @@ TestsHelper.setup = {
     });
   },
 
-  setActiveItemOnProfile(profileName, activeItemType, activeItem, path, done) {
-    path = path || globalSetupPath;
+  setActiveItemOnProfile(profileName, activeItemType, activeItem, originalPath, done) {
+    const path = originalPath || globalSetupPath;
     TestsHelper.setup._readGlobalSetupForProfile(profileName, path, (err, setup) => {
       if (err) {
         return done(err);
@@ -359,8 +354,8 @@ TestsHelper.setup = {
     });
   },
 
-  deleteProfileFromSetup(name, path, done) {
-    path = path || globalSetupPath;
+  deleteProfileFromSetup(name, originalPath, done) {
+    const path = originalPath || globalSetupPath;
     TestsHelper.setup._readGlobalSetupForProfile(name, path, (err, setup) => {
       delete setup.profiles[name];
       if (setup.active && setup.active.profile === name) {
@@ -374,12 +369,12 @@ TestsHelper.setup = {
   createProjectSetup(key, options, done) {
     const filePath = testsConfig.paths.project;
 
-    readJSON(filePath, (err, data) => {
+    readJSON(filePath, (err, result) => {
       if (err && err.code !== 'ENOENT') {
         return done(err);
       }
 
-      data = data || {};
+      const data = result || {};
       const flex = {
         flex: options || {
           domain: 'app',
@@ -396,18 +391,18 @@ TestsHelper.setup = {
     });
   },
 
-  clearGlobalSetup(path, done) {
-    path = path || globalSetupPath;
+  clearGlobalSetup(originalPath, done) {
+    const path = originalPath || globalSetupPath;
     writeJSON(path, '', done);
   },
 
-  clearSupposeDebugFile(path, done) {
-    path = path || supposeDebugPath;
+  clearSupposeDebugFile(originalPath, done) {
+    const path = originalPath || supposeDebugPath;
     writeJSON(path, '', done);
   },
 
-  _clearActiveItemsOnProfile(profileName, activeItemType, path, done) {
-    path = path || globalSetupPath;
+  _clearActiveItemsOnProfile(profileName, activeItemType, originalPath, done) {
+    const path = originalPath || globalSetupPath;
     TestsHelper.setup._readGlobalSetupForProfile(profileName, path, (err, setup) => {
       const clearAll = isNullOrUndefined(activeItemType);
       if (clearAll) {
@@ -432,8 +427,8 @@ TestsHelper.setup = {
     TestsHelper.setup._clearActiveItemsOnProfile(profileName, activeItemType, path, done);
   },
 
-  clearProjectSetup(path, done) {
-    path = path || projectPath;
+  clearProjectSetup(originalPath, done) {
+    const path = originalPath || projectPath;
     fs.unlink(path, (err) => {
       if (err) {
         if (err.code === 'ENOENT') {
@@ -513,8 +508,8 @@ TestsHelper.testTooManyArgs = function testTooManyArgs(baseCmd, additionalArgsCo
   });
 };
 
-TestsHelper.execCmd = function execCmd(cliCmd, options, done) {
-  options = options || {};
+TestsHelper.execCmd = function execCmd(cliCmd, originalOptions, done) {
+  const options = originalOptions || {};
   // options.env.PATH should always be set in order to run the tests in Travis
   if (options.env) {
     options.env.PATH = options.env.PATH || process.env.PATH;

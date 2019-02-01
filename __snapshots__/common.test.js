@@ -305,3 +305,9 @@ Options:
 
 
 `
+
+exports['common invalid credentials when token is expired should fail and suggest command 1'] = `
+[error] InvalidCredentials: Authorization token invalid or expired.
+Run 'kinvey profile login' to reauthenticate.
+
+`

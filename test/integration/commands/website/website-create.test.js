@@ -15,8 +15,9 @@
 
 const async = require('async');
 
-const { AuthOptionsNames } = require('./../../../../lib/Constants');
+const { AuthOptionsNames, OrgOptionsName } = require('./../../../../lib/Constants');
 const { setup, testers } = require('../../../TestsHelper');
+const fixtureOrg = require('./../../../fixtures/org.json');
 const fixtureSites = require('./../../../fixtures/sites.json');
 const fixtureUser = require('./../../../fixtures/user.json');
 
@@ -54,6 +55,16 @@ describe(baseCmd, () => {
 
     it('with a name should succeed and output default format', (done) => {
       testers.execCmdWithIdentifier(baseCmd, noCliOptions, defaultFlags, siteName, null, done);
+    });
+
+    it('with a name and org name should succeed and output default format', (done) => {
+      const options = { [OrgOptionsName.ORG]: `"${fixtureOrg.name}"` };
+      testers.execCmdWithIdentifier(baseCmd, options, defaultFlags, siteName, null, done);
+    });
+
+    it('with a name and org ID should succeed and output JSON', (done) => {
+      const options = Object.assign({ [OrgOptionsName.ORG]: fixtureOrg.id }, jsonOptions);
+      testers.execCmdWithIdentifier(baseCmd, options, defaultFlags, siteName, null, done);
     });
 
     it('with a name should succeed and output JSON', (done) => {

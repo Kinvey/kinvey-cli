@@ -21,15 +21,18 @@ exports['website list using active profile when there are sites should output JS
   "result": [
     {
       "id": "9caf90c31c4449f195a1a40acc979cf0",
-      "name": "a0"
+      "name": "a0",
+      "organizationId": "Not set"
     },
     {
       "id": "b85fe52ca1434d148b5c5f8199fceb9e",
-      "name": "a1"
+      "name": "a1",
+      "organizationId": "Not set"
     },
     {
       "id": "0205f37e08d545cb9c88ad48b4397acc",
-      "name": "b0"
+      "name": "b0",
+      "organizationId": "f71b0d5e60684b48b8265e7fa50302b9"
     }
   ]
 }
@@ -43,11 +46,11 @@ exports['website list using active profile when there are sites should output de
 [debug] Response: GET http://localhost:3234/v3/sites 200
 Count: 3
 
-id                                name
---------------------------------  ----
-9caf90c31c4449f195a1a40acc979cf0  a0  
-b85fe52ca1434d148b5c5f8199fceb9e  a1  
-0205f37e08d545cb9c88ad48b4397acc  b0  
+id                                name  organizationId                  
+--------------------------------  ----  --------------------------------
+9caf90c31c4449f195a1a40acc979cf0  a0    Not set                         
+b85fe52ca1434d148b5c5f8199fceb9e  a1    Not set                         
+0205f37e08d545cb9c88ad48b4397acc  b0    f71b0d5e60684b48b8265e7fa50302b9
 
 
 
@@ -65,11 +68,11 @@ exports['website list using one-time session when there are sites should output 
 [debug] Logged out current user.
 Count: 3
 
-id                                name
---------------------------------  ----
-9caf90c31c4449f195a1a40acc979cf0  a0  
-b85fe52ca1434d148b5c5f8199fceb9e  a1  
-0205f37e08d545cb9c88ad48b4397acc  b0  
+id                                name  organizationId                  
+--------------------------------  ----  --------------------------------
+9caf90c31c4449f195a1a40acc979cf0  a0    Not set                         
+b85fe52ca1434d148b5c5f8199fceb9e  a1    Not set                         
+0205f37e08d545cb9c88ad48b4397acc  b0    f71b0d5e60684b48b8265e7fa50302b9
 
 
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
+ * Copyright (c) 2018, Kinvey, Inc. All rights reserved.
  *
  * This software is licensed to you under the Kinvey terms of service located at
  * http://www.kinvey.com/terms-of-use. By downloading, accessing and/or using this
@@ -175,15 +175,23 @@ describe('Request', () => {
     });
 
     it('when response is 400 should return response and error', (done) => {
+      const backendErr = {
+        code: 'CannotDeleteEnvironment',
+        description: 'The specified environment cannot be deleted.'
+      };
       const noSuccessRes = {
-        statusCode: 401,
-        statusMessage: 'Unauthorized',
+        statusCode: 400,
+        body: backendErr,
         rawTrailers: [],
         upgrade: false
       };
       reqStub.yields(null, noSuccessRes);
       reqObj.send((err, res) => {
-        assertions.assertError(err, Errors.InvalidCredentials);
+        const expectedErr = {
+          name: backendErr.code,
+          message: backendErr.description
+        };
+        assertions.assertError(err, expectedErr);
         expect(res).to.deep.equal(noSuccessRes);
         done();
       });

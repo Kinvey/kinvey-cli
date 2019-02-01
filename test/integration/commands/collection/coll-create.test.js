@@ -29,8 +29,8 @@ const activeProfile = 'activeProfile';
 const existentEnvId = fixtureEnv.id;
 const existentEnvName = fixtureEnv.name;
 
-function testCollCreate(options, flags, envIdentifier, appIdentifier, done) {
-  options = options || {};
+function testCollCreate(originalOptions, flags, envIdentifier, appIdentifier, done) {
+  const options = originalOptions || {};
   const mergedOptions = Object.assign({}, options);
   if (appIdentifier) {
     mergedOptions[AppOptionsName.APP] = appIdentifier;

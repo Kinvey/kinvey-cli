@@ -27,8 +27,8 @@ const tokenOne = fixtureUser.tokenOne;
 const baseCmd = `${Namespace.APP} show`;
 const activeProfile = 'activeProfile';
 
-function testAppShow(options, flags, appIdentifier, validUser, done) {
-  options = options || {};
+function testAppShow(originalOptions, flags, appIdentifier, validUser, done) {
+  const options = originalOptions || {};
   if (appIdentifier) {
     options[AppOptionsName.APP] = appIdentifier;
   }

@@ -1,6 +1,6 @@
 {
   "name": "kinvey-cli",
-  "version": "4.4.0-alpha.0",
+  "version": "4.4.0-alpha.1",
   "description": "Utility for managing various aspects of your Kinvey account",
   "keywords": [
     "Kinvey"

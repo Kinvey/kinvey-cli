@@ -1,6 +1,7 @@
 # Changelog
 
-## Unreleased
+## 4.4.0-alpha.1 (2019-02-04)
+* Support websites in organizations
 * Suggest command when token is expired
 * Use backend error when HTTP status code is 401
 * Apply Kinvey lint rules and fix lint errors

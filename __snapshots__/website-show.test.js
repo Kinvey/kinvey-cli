@@ -12,6 +12,7 @@ id              9caf90c31c4449f195a1a40acc979cf0
 cdnUrl          https://d5su5ekfsbq8c.cloudfront.net                                                                     
 internalUrl     http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
 lastDeployedAt  2018-11-26T11:49:46.096Z                                                                                 
+organizationId  Not set                                                                                                  
 
 
 `
@@ -29,7 +30,8 @@ exports['website show using active profile with existent site name should succee
     "id": "9caf90c31c4449f195a1a40acc979cf0",
     "cdnUrl": "https://d5su5ekfsbq8c.cloudfront.net",
     "internalUrl": "http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54",
-    "lastDeployedAt": "2018-11-26T11:49:46.096Z"
+    "lastDeployedAt": "2018-11-26T11:49:46.096Z",
+    "organizationId": "Not set"
   }
 }
 
@@ -49,6 +51,7 @@ id              9caf90c31c4449f195a1a40acc979cf0
 cdnUrl          https://d5su5ekfsbq8c.cloudfront.net                                                                     
 internalUrl     http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
 lastDeployedAt  2018-11-26T11:49:46.096Z                                                                                 
+organizationId  Not set                                                                                                  
 
 
 `
@@ -110,6 +113,7 @@ id              9caf90c31c4449f195a1a40acc979cf0
 cdnUrl          https://d5su5ekfsbq8c.cloudfront.net                                                                     
 internalUrl     http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
 lastDeployedAt  2018-11-26T11:49:46.096Z                                                                                 
+organizationId  Not set                                                                                                  
 
 
 `

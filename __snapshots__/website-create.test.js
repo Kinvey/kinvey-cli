@@ -1,3 +1,35 @@
+exports['website create using active profile with a name and org ID should succeed and output JSON 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'activeProfile'
+[debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
+[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  POST http://localhost:3234/v3/sites
+[debug] Response: POST http://localhost:3234/v3/sites 201
+[debug] Request:  POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
+[debug] Response: POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 201
+{
+  "result": {
+    "id": "9caf90c31c4449f195a1a40acc979cf0"
+  }
+}
+
+`
+
+exports['website create using active profile with a name and org name should succeed and output default format 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'activeProfile'
+[debug] Using organization: My Team
+[debug] Request:  GET http://localhost:3234/v3/organizations
+[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  POST http://localhost:3234/v3/sites
+[debug] Response: POST http://localhost:3234/v3/sites 201
+[debug] Request:  POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
+[debug] Response: POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 201
+Created website: 9caf90c31c4449f195a1a40acc979cf0
+
+`
+
 exports['website create using active profile with a name should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
@@ -50,6 +82,7 @@ Options:
   --verbose                                 Output debug messages      [boolean]
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
+  --org                                     Org ID/name                 [string]
 
 Not enough non-option arguments: got 0, need at least 1
 
@@ -98,6 +131,7 @@ Options:
   --verbose                                 Output debug messages      [boolean]
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
+  --org                                     Org ID/name                 [string]
 
 You must be authenticated.
 

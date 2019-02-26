@@ -281,7 +281,9 @@ Commands:
   kinvey website list           List websites
   kinvey website show           Show detailed info for the specified website
   kinvey website deploy         Deploy your website
+  kinvey website publish        Publish your website
   kinvey website status         Status of the specified website
+  kinvey website unpublish      Unpublish your website
   kinvey website delete         Delete the specified website
 
 Options:

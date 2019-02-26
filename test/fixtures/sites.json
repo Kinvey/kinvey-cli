@@ -2,18 +2,28 @@
   {
     "name": "a0",
     "owner": "596df09e0ccd58ad7be06cdb",
-    "id": "9caf90c31c4449f195a1a40acc979cf0"
+    "id": "9caf90c31c4449f195a1a40acc979cf0",
+    "publishingOptions": {
+      "lastPublishedAt": "2018-12-26T11:49:46.096Z",
+      "environmentId": "8c204740466f4b8dabf114ee6a3e09d6",
+      "publicUrl": "https://a0.dev.kinvey.rocks"
+    },
+    "isPublished": true
   },
   {
     "name": "b0",
     "description": "b0 description",
     "owner": "596df09e0ccd58ad7be06cdb",
     "organizationId": "f71b0d5e60684b48b8265e7fa50302b9",
-    "id": "0205f37e08d545cb9c88ad48b4397acc"
+    "id": "0205f37e08d545cb9c88ad48b4397acc",
+    "publishingOptions": {},
+    "isPublished": false
   },
   {
     "name": "a1",
     "owner": "596df09e0ccd58ad7be06cdb",
-    "id": "b85fe52ca1434d148b5c5f8199fceb9e"
+    "id": "b85fe52ca1434d148b5c5f8199fceb9e",
+    "publishingOptions": {},
+    "isPublished": false
   }
 ]

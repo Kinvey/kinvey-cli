@@ -45,7 +45,7 @@ Contents:
 
 Kinvey CLI is distributed as an NPM package. After you install NPM, run the following command to download and install Kinvey CLI.
 
-    npm install -g kinvey-cli
+    npm install -g kinvey-cli@ea-websites
 
 ## Usage
 
@@ -423,11 +423,31 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
         
     * `--path <path>`
     
-        Path to file or directory.
+        Path to file or directory. Required.
+  
+* `website publish`
+
+    Publish your website - enable public access or change domain name.
+    
+    * `--website <website>`
+        
+        Website ID/name. Required.
+      
+    * `--domainName <domain-name>`
+            
+        Domain name. Required.
         
 * `website status`
 
     Status of the specified website.
+    
+    * `--website <website>`
+        
+        Website ID/name. Required.
+
+* `website unpublish`
+
+    Unpublish your website - disable public access.
     
     * `--website <website>`
         

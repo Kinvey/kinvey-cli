@@ -1,13 +1,17 @@
 # Changelog
 
+## Unreleased
+
 ## 4.4.0-alpha.1 (2019-02-04)
 * Support websites in organizations
-* Suggest command when token is expired
-* Use backend error when HTTP status code is 401
-* Apply Kinvey lint rules and fix lint errors
 
 ## 4.4.0-alpha.0 (2018-12-14)
 * Add initial websites support
+
+## 4.1.2 (2019-03-05)
+* Suggest command when token is expired
+* Use backend error when HTTP status code is 401
+* Apply Kinvey lint rules and fix lint errors
 
 ## 4.1.1 (2018-11-29)
 * Preserve existing env vars on `flex deploy --set-vars <env variables>` 

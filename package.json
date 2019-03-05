@@ -74,7 +74,7 @@
     "test-console": "1.0.0"
   },
   "engines": {
-    "node": ">=6.x.x"
+    "node": ">=6.9.1"
   },
   "os": [
     "darwin",

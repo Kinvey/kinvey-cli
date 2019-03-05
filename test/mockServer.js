@@ -340,6 +340,33 @@ function build(
     res.status(200).send(siteEnvs);
   });
 
+  app.post(`/${versionPart}/sites/:id/publish`, (req, res) => {
+    const body = req.body;
+    if (!body || !body.environmentId || body.type !== 'kinvey' || body.domainName !== site.name) {
+      return res.status(400).send(`CLI sent bad body: ${JSON.stringify(body, null, 2)}`);
+    }
+
+    const id = req.params.id;
+    if (!sites.find(x => x.id === id)) {
+      return res.status(404).send(siteNotFound);
+    }
+
+    res.status(200).send({
+      lastPublishedAt: '2018-12-26T11:49:46.096Z',
+      environmentId: '8c204740466f4b8dabf114ee6a3e09d6',
+      publicUrl: 'https://a0.dev.kinvey.rocks'
+    });
+  });
+
+  app.post(`/${versionPart}/sites/:id/unpublish`, (req, res) => {
+    const id = req.params.id;
+    if (!sites.find(x => x.id === id)) {
+      return res.status(404).send(siteNotFound);
+    }
+
+    res.sendStatus(204);
+  });
+
   app.delete(`/${versionPart}/sites/:id`, (req, res) => {
     const id = req.params.id;
     if (!sites.find(x => x.id === id)) {

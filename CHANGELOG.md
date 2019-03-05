@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 4.4.0-alpha.2 (2019-03-05)
+* Add commands: `website publish` and `website unpublish`
+* Adjust existing websites commands to backend changes
+
 ## 4.4.0-alpha.1 (2019-02-04)
 * Support websites in organizations
 

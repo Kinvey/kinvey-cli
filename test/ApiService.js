@@ -26,7 +26,7 @@ function getBaseUrl(isBaasRequest) {
   if (isBaasRequest && process.env.KINVEY_CLI_BAAS) {
     let host = `${process.env.KINVEY_CLI_BAAS}`;
     if (host.endsWith('/')) {
-      host = `${host.substring(0, host.length - 1)}/`;
+      host = `${host.substring(0, host.length - 1)}`;
     }
     return host;
   }
@@ -34,7 +34,7 @@ function getBaseUrl(isBaasRequest) {
   let instance = process.env.KINVEY_CLI_INSTANCE_ID;
   if (instance && instance.includes('localhost')) {
     if (instance.endsWith('/')) {
-      instance = `${instance.substring(0, instance.length - 1)}/`;
+      instance = `${instance.substring(0, instance.length - 1)}`;
     }
     return instance;
   }

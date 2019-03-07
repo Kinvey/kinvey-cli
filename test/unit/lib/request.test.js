@@ -79,7 +79,7 @@ describe('Request', () => {
           },
           json: true,
           method: HTTPMethod.GET,
-          url: `${user.host}${endpoint}`
+          url: `${user.host}/${endpoint}`
         }
       };
       const actualReqObj = new Request(user, options);
@@ -100,7 +100,7 @@ describe('Request', () => {
           headers: { [deviceInfoHeader]: cliVersion },
           json: true,
           method: HTTPMethod.GET,
-          url: `${user.host}${endpoint}`
+          url: `${user.host}/${endpoint}`
         }
       };
       const actualReqObj = new Request(user, options);
@@ -134,7 +134,7 @@ describe('Request', () => {
           json: true,
           method: HTTPMethod.POST,
           body: data,
-          url: `${user.host}${endpoint}`,
+          url: `${user.host}/${endpoint}`,
           timeout: 15000
         }
       };

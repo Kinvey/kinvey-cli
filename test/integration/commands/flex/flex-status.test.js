@@ -179,6 +179,12 @@ describe(baseCmd, () => {
       testFlexStatus(null, options, true, null, validUserForGettingStatus, replacementObject, done);
     });
 
+    it('when valid and existent serviceId should succeed and output any status from the backend', (done) => {
+      const svcEnvIdentifier = '2cdcc00e7c9047acbb9dbc56ec2e81a9';
+      const options = Object.assign({}, existentUserOne, { [FlexOptionsNames.SVC_ENV]: svcEnvIdentifier });
+      testFlexStatus(null, options, true, null, validUserForGettingStatus, replacementObject, done);
+    });
+
     it('when valid and existent serviceId plus non-existent svcEnv should fail', (done) => {
       const svcEnvIdentifierNonExistent = '123-non-existent';
       const options = Object.assign({}, existentUserOne, { [FlexOptionsNames.SVC_ENV]: svcEnvIdentifierNonExistent });

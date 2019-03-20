@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 4.1.3 (2019-03-20)
+* Show any 'status' value in all caps (`flex status`)
+
 ## 4.1.2 (2019-03-05)
 * Suggest command when token is expired
 * Use backend error when HTTP status code is 401

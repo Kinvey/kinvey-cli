@@ -5,15 +5,18 @@ exports['website show using active profile with existent site ID should succeed 
 [debug] Response: GET http://localhost:3234/v3/sites 200
 [debug] Request:  GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
 [debug] Response: GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 200
-key             value                                                                                                    
---------------  ---------------------------------------------------------------------------------------------------------
-name            a0                                                                                                       
-id              9caf90c31c4449f195a1a40acc979cf0                                                                         
-isPublished     true                                                                                                     
-publicUrl       https://a0.dev.kinvey.rocks                                                                              
-previewUrl      http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
-lastDeployedAt  2018-11-26T11:49:46.096Z                                                                                 
-organizationId  Not set                                                                                                  
+key                value                                                                                                    
+-----------------  ---------------------------------------------------------------------------------------------------------
+name               a0                                                                                                       
+id                 9caf90c31c4449f195a1a40acc979cf0                                                                         
+isPublished        true                                                                                                     
+publicUrl          https://a0.dev.kinvey.rocks                                                                              
+previewUrl         http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
+lastDeployedAt     2018-11-26T11:49:46.096Z                                                                                 
+organizationId     Not set                                                                                                  
+historyApiRouting  false                                                                                                    
+indexPage          index.html                                                                                               
+errorPage          error.html                                                                                               
 
 
 `
@@ -33,7 +36,10 @@ exports['website show using active profile with existent site name should succee
     "publicUrl": "https://a0.dev.kinvey.rocks",
     "previewUrl": "http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54",
     "lastDeployedAt": "2018-11-26T11:49:46.096Z",
-    "organizationId": "Not set"
+    "organizationId": "Not set",
+    "historyApiRouting": false,
+    "indexPage": "index.html",
+    "errorPage": "error.html"
   }
 }
 
@@ -46,15 +52,18 @@ exports['website show using active profile with existent site name should succee
 [debug] Response: GET http://localhost:3234/v3/sites 200
 [debug] Request:  GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
 [debug] Response: GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 200
-key             value                                                                                                    
---------------  ---------------------------------------------------------------------------------------------------------
-name            a0                                                                                                       
-id              9caf90c31c4449f195a1a40acc979cf0                                                                         
-isPublished     true                                                                                                     
-publicUrl       https://a0.dev.kinvey.rocks                                                                              
-previewUrl      http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
-lastDeployedAt  2018-11-26T11:49:46.096Z                                                                                 
-organizationId  Not set                                                                                                  
+key                value                                                                                                    
+-----------------  ---------------------------------------------------------------------------------------------------------
+name               a0                                                                                                       
+id                 9caf90c31c4449f195a1a40acc979cf0                                                                         
+isPublished        true                                                                                                     
+publicUrl          https://a0.dev.kinvey.rocks                                                                              
+previewUrl         http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
+lastDeployedAt     2018-11-26T11:49:46.096Z                                                                                 
+organizationId     Not set                                                                                                  
+historyApiRouting  false                                                                                                    
+indexPage          index.html                                                                                               
+errorPage          error.html                                                                                               
 
 
 `
@@ -109,15 +118,18 @@ exports['website show using one-time session with existent site identifier shoul
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-key             value                                                                                                    
---------------  ---------------------------------------------------------------------------------------------------------
-name            a0                                                                                                       
-id              9caf90c31c4449f195a1a40acc979cf0                                                                         
-isPublished     true                                                                                                     
-publicUrl       https://a0.dev.kinvey.rocks                                                                              
-previewUrl      http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
-lastDeployedAt  2018-11-26T11:49:46.096Z                                                                                 
-organizationId  Not set                                                                                                  
+key                value                                                                                                    
+-----------------  ---------------------------------------------------------------------------------------------------------
+name               a0                                                                                                       
+id                 9caf90c31c4449f195a1a40acc979cf0                                                                         
+isPublished        true                                                                                                     
+publicUrl          https://a0.dev.kinvey.rocks                                                                              
+previewUrl         http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
+lastDeployedAt     2018-11-26T11:49:46.096Z                                                                                 
+organizationId     Not set                                                                                                  
+historyApiRouting  false                                                                                                    
+indexPage          index.html                                                                                               
+errorPage          error.html                                                                                               
 
 
 `

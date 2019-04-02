@@ -15,8 +15,8 @@
 
 const async = require('async');
 
-const { AuthOptionsNames, OrgOptionsName } = require('./../../../../lib/Constants');
-const { setup, testers } = require('../../../TestsHelper');
+const { AuthOptionsNames, CommonOptionsNames, SitesOptionsNames, OrgOptionsName } = require('./../../../../lib/Constants');
+const { buildCmd, execCmdWithAssertion, setup, testers } = require('../../../TestsHelper');
 const fixtureOrg = require('./../../../fixtures/org.json');
 const fixtureSites = require('./../../../fixtures/sites.json');
 const fixtureUser = require('./../../../fixtures/user.json');
@@ -55,6 +55,29 @@ describe(baseCmd, () => {
 
     it('with a name should succeed and output default format', (done) => {
       testers.execCmdWithIdentifier(baseCmd, noCliOptions, defaultFlags, siteName, null, done);
+    });
+
+    it('with name, historyApiRouting and errorPage should fail', (done) => {
+      const cliOpts = {
+        [SitesOptionsNames.ROUTING]: true,
+        [SitesOptionsNames.ERROR_PAGE]: '404.html'
+      };
+      testers.execCmdWithIdentifier(baseCmd, cliOpts, defaultFlags, siteName, null, done);
+    });
+
+    it('with name, historyApiRouting and indexPage should succeed and output default format', (done) => {
+      const flags = [SitesOptionsNames.ROUTING, CommonOptionsNames.VERBOSE];
+      const cmd = buildCmd(baseCmd, [siteName], { [SitesOptionsNames.INDEX_PAGE]: 'main.html' }, flags);
+      const apiOpts = {
+        siteEnvBody: {
+          name: 'Default',
+          options: {
+            historyApiRouting: true,
+            indexPage: 'main.html'
+          }
+        }
+      };
+      execCmdWithAssertion(cmd, null, apiOpts, true, true, false, null, done);
     });
 
     it('with a name and org name should succeed and output default format', (done) => {

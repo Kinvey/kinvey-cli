@@ -32,6 +32,7 @@ const fixtureInternalFlexService = require('./fixtures/internal-flex-service.jso
 const fixtureSvcEnvs = require('./fixtures/svc-envs-one.json');
 const fixtureServicesStatuses = require('./fixtures/datalinks-status-response.json');
 const fixtureSites = require('./fixtures/sites');
+const fixtureSiteEnvBody = require('./fixtures/site-env-body');
 const fixtureSiteEnvs = require('./fixtures/site-envs-one');
 const fixtureJob = require('./fixtures/job.json');
 const fixtureJobs = require('./fixtures/jobs.json');
@@ -93,6 +94,7 @@ function build(
     apps = fixtureApps,
     sites = fixtureSites,
     site = fixtureSites[0],
+    siteEnvBody = fixtureSiteEnvBody,
     siteEnvs = fixtureSiteEnvs,
     service = fixtureInternalFlexService,
     updatedSvcEnv = null,
@@ -324,7 +326,7 @@ function build(
       return res.status(404).send(siteNotFound);
     }
 
-    if (!req.body || req.body.name !== 'Default') {
+    if (!isEqual(req.body, siteEnvBody)) {
       return res.status(400).send(`CLI sent bad body: ${JSON.stringify(req.body, null, 2)}`);
     }
 

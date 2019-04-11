@@ -16,6 +16,7 @@
 Kinvey CLI is a utility for managing various aspects of your Kinvey account from the command line. Its features include:
 
 * Deploying and managing FlexServices running on the Kinvey FlexService Runtime
+* Deploying and managing websites
 * Creating, listing, and deleting applications
 * Creating, listing, and deleting app environments
 * Creating, listing, and deleting collections
@@ -400,6 +401,18 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     * `--org <organization>`
                 
         Specifies a Kinvey organization by ID or name.
+        
+    * `--historyApiRouting`
+    
+        Enables server support for History API routing.
+        
+    * `--indexPage <index-page>`
+    
+        Specifies index page.
+        
+    * `--errorPage <error-page>`
+        
+        Specifies error page. Not allowed if `--historyApiRouting` is also specified.
     
 * `website list`
 

@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Add options to `website create`: `historyApiRouting`, `indexPage`, `errorPage`
 
 ## 4.4.0-alpha.2 (2019-03-05)
 * Add commands: `website publish` and `website unpublish`

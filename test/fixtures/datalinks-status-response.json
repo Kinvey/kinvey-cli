@@ -100,5 +100,18 @@
       },
       "version": "1.4.2"
     }
+  },
+  {
+    "id": "2cdcc00e7c9047acbb9dbc56ec2e81a9",
+    "status": {
+      "status": "test",
+      "requestedAt": "2017-11-06T03:42:31.970Z",
+      "deployUserInfo": {
+        "firstName": "Davy",
+        "lastName": "Jones",
+        "email": "davy.jones@mail.com"
+      },
+      "version": "1.4.2"
+    }
   }
 ]

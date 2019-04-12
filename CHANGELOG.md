@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 4.4.0-alpha.3 (2019-04-12)
 * Add options to `website create`: `historyApiRouting`, `indexPage`, `errorPage`
 
 ## 4.4.0-alpha.2 (2019-03-05)

@@ -1,3 +1,26 @@
+exports['website show using active profile with existent site ID (linked to org) should succeed and output default format 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'activeProfile'
+[debug] Request:  GET http://localhost:3234/v3/sites
+[debug] Response: GET http://localhost:3234/v3/sites 200
+[debug] Request:  GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc/environments
+[debug] Response: GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc/environments 200
+key                value                                                                                                    
+-----------------  ---------------------------------------------------------------------------------------------------------
+name               b0                                                                                                       
+id                 0205f37e08d545cb9c88ad48b4397acc                                                                         
+isPublished        false                                                                                                    
+publicUrl                                                                                                                   
+previewUrl         http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
+lastDeployedAt     2018-11-26T11:49:46.096Z                                                                                 
+historyApiRouting  false                                                                                                    
+indexPage          index.html                                                                                               
+errorPage          error.html                                                                                               
+org                f71b0d5e60684b48b8265e7fa50302b9                                                                         
+
+
+`
+
 exports['website show using active profile with existent site ID should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
@@ -13,11 +36,34 @@ isPublished        true
 publicUrl          https://a0.dev.kinvey.rocks                                                                              
 previewUrl         http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
 lastDeployedAt     2018-11-26T11:49:46.096Z                                                                                 
-organizationId     Not set                                                                                                  
 historyApiRouting  false                                                                                                    
 indexPage          index.html                                                                                               
 errorPage          error.html                                                                                               
+app                a555ac8b42ee40cbbaa19da1f2a3e493                                                                         
 
+
+`
+
+exports['website show using active profile with existent site name (linked to org) should succeed and output JSON 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'activeProfile'
+[debug] Request:  GET http://localhost:3234/v3/sites
+[debug] Response: GET http://localhost:3234/v3/sites 200
+[debug] Request:  GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc/environments
+[debug] Response: GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc/environments 200
+{
+  "result": {
+    "name": "b0",
+    "id": "0205f37e08d545cb9c88ad48b4397acc",
+    "isPublished": false,
+    "previewUrl": "http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54",
+    "lastDeployedAt": "2018-11-26T11:49:46.096Z",
+    "historyApiRouting": false,
+    "indexPage": "index.html",
+    "errorPage": "error.html",
+    "org": "f71b0d5e60684b48b8265e7fa50302b9"
+  }
+}
 
 `
 
@@ -36,10 +82,10 @@ exports['website show using active profile with existent site name should succee
     "publicUrl": "https://a0.dev.kinvey.rocks",
     "previewUrl": "http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54",
     "lastDeployedAt": "2018-11-26T11:49:46.096Z",
-    "organizationId": "Not set",
     "historyApiRouting": false,
     "indexPage": "index.html",
-    "errorPage": "error.html"
+    "errorPage": "error.html",
+    "app": "a555ac8b42ee40cbbaa19da1f2a3e493"
   }
 }
 
@@ -60,10 +106,10 @@ isPublished        true
 publicUrl          https://a0.dev.kinvey.rocks                                                                              
 previewUrl         http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
 lastDeployedAt     2018-11-26T11:49:46.096Z                                                                                 
-organizationId     Not set                                                                                                  
 historyApiRouting  false                                                                                                    
 indexPage          index.html                                                                                               
 errorPage          error.html                                                                                               
+app                a555ac8b42ee40cbbaa19da1f2a3e493                                                                         
 
 
 `
@@ -126,10 +172,10 @@ isPublished        true
 publicUrl          https://a0.dev.kinvey.rocks                                                                              
 previewUrl         http://kinvey-sites-development-kinveyus1.s3-website-us-east-1.amazonaws.com/fgdfgghjhjrtwetczxc34gdsfg54
 lastDeployedAt     2018-11-26T11:49:46.096Z                                                                                 
-organizationId     Not set                                                                                                  
 historyApiRouting  false                                                                                                    
 indexPage          index.html                                                                                               
 errorPage          error.html                                                                                               
+app                a555ac8b42ee40cbbaa19da1f2a3e493                                                                         
 
 
 `

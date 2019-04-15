@@ -2,6 +2,13 @@
   {
     "name": "a0",
     "owner": "596df09e0ccd58ad7be06cdb",
+    "access": {
+      "writers": {
+        "apps": [
+          "a555ac8b42ee40cbbaa19da1f2a3e493"
+        ]
+      }
+    },
     "id": "9caf90c31c4449f195a1a40acc979cf0",
     "publishingOptions": {
       "lastPublishedAt": "2018-12-26T11:49:46.096Z",

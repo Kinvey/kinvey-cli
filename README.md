@@ -396,7 +396,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `website create <name>`
 
-    Create a website. You can specify an organization ID or name if you want to create the website within the context of an organization.
+    Create a website. You need to specify an organization or an application.
+    
+    * `--app <application>`
+               
+        Specifies a Kinvey app by ID or name.
     
     * `--org <organization>`
                 

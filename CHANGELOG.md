@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 4.4.0-alpha.3 (2019-04-12)
 * Add options to `website create`: `historyApiRouting`, `indexPage`, `errorPage`
 
 ## 4.4.0-alpha.2 (2019-03-05)
@@ -12,6 +14,9 @@
 
 ## 4.4.0-alpha.0 (2018-12-14)
 * Add initial websites support
+
+## 4.1.3 (2019-03-20)
+* Show any 'status' value in all caps (`flex status`)
 
 ## 4.1.2 (2019-03-05)
 * Suggest command when token is expired

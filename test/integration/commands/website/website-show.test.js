@@ -68,6 +68,18 @@ describe(baseCmd, () => {
       execCmdWithAssertion(cmd, null, null, true, true, false, null, done);
     });
 
+    it('with existent site ID (linked to org) should succeed and output default format', (done) => {
+      const existentSiteId = fixtureSites[1].id;
+      const cmd = buildCmd(baseCmd, noPosArgs, { [SitesOptionsNames.SITE]: existentSiteId }, defaultFlags);
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, done);
+    });
+
+    it('with existent site name (linked to org) should succeed and output JSON', (done) => {
+      const cliOpts = Object.assign({ [SitesOptionsNames.SITE]: fixtureSites[1].name }, jsonOptions);
+      const cmd = buildCmd(baseCmd, noPosArgs, cliOpts, defaultFlags);
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, done);
+    });
+
     it('with non-existent site name should fail', (done) => {
       const cmd = buildCmd(baseCmd, noPosArgs, { [SitesOptionsNames.SITE]: 'nope' }, defaultFlags);
       execCmdWithAssertion(cmd, null, null, true, true, false, null, done);

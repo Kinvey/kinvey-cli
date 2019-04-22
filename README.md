@@ -247,7 +247,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
         
     * `--runtime <node6|node8|node10>`
     
-        Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection).
+        Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection). Defaults to the [Kinvey-recommended Node.js version](https://devcenter.kinvey.com/guides/flexservice-runtime#environment).
         
 * `flex deploy`
 
@@ -271,7 +271,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
     * `--runtime <node6|node8|node10>`
         
-        Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection).
+        Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection). Defaults to the [Kinvey-recommended Node.js version](https://devcenter.kinvey.com/guides/flexservice-runtime#environment).
     
 * `flex job [id]`
 
@@ -363,7 +363,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
     * `--runtime <node6|node8|node10>`
         
-        Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection).
+        Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection). Defaults to the [Kinvey-recommended Node.js version](https://devcenter.kinvey.com/guides/flexservice-runtime#environment).
 
 * `flex recycle`
    
@@ -608,7 +608,9 @@ Flex projects that you deploy run server-side on the Flex Runtime which represen
 
 The runtime selection is limited to the major Node.js version. You can choose to run your project on the 6.x, 8.x, or 10.x branch but the minor and patch versions are always determined by the Flex Runtime.
 
-Kinvey makes its best to provide the [latest LTS](https://github.com/nodejs/Release#release-schedule) versions of the 6.x, 8.x, and 10.x branches. The frequent updates mean that the version that you start developing on may be replaced by the time you are ready to deploy the final version of your project.
+New Flex services deploy on the [Kinvey-recommended Node.js version](https://devcenter.kinvey.com/guides/flexservice-runtime#environment) unless otherwise specified.
+
+Kinvey does its best to provide the [latest LTS](https://github.com/nodejs/Release#release-schedule) versions of the 6.x, 8.x, and 10.x branches. The frequent updates mean that the version that you start developing on may be replaced by the time you are ready to deploy the final version of your project.
 
 After you deploy a Flex project, it remains on the same Node.js version until you upgrade it to a new major version or Kinvey decides to upgrade the project's runtime to a more recent minor and patch version because of security or efficiency reasons.
 

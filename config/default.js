@@ -24,6 +24,7 @@ module.exports = {
   artifacts: ['.git', '.svn', 'node_modules', 'output.log'],
   timeout: 10 * 1000,
   flexProjectUploadTimeout: 30 * 1000,
+  siteUploadTimeout: 40 * 1000,
   paths: {
     project: path.join(process.cwd(), '.kinvey'),
     package: path.join(process.cwd()),

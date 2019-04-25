@@ -16,6 +16,7 @@
 Kinvey CLI is a utility for managing various aspects of your Kinvey account from the command line. Its features include:
 
 * Deploying and managing FlexServices running on the Kinvey FlexService Runtime
+* Deploying and managing websites
 * Creating, listing, and deleting applications
 * Creating, listing, and deleting app environments
 * Creating, listing, and deleting collections
@@ -392,6 +393,94 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 * `flex clear`
 
    When executed in a Node.js project directory, this command removes the current Flex Service configuration from the project.
+
+* `website create <name>`
+
+    Create a website. You need to specify an organization or an application.
+    
+    * `--app <application>`
+               
+        Specifies a Kinvey app by ID or name.
+    
+    * `--org <organization>`
+                
+        Specifies a Kinvey organization by ID or name.
+        
+    * `--historyApiRouting`
+    
+        Enables server support for History API routing.
+        
+    * `--indexPage <index-page>`
+    
+        Specifies index page.
+        
+    * `--errorPage <error-page>`
+        
+        Specifies error page. Not allowed if `--historyApiRouting` is also specified.
+    
+* `website list`
+
+    List websites.
+    
+* `website show`
+
+    Shows info for the specified website.
+    
+    * `--website <website>`
+    
+        Website ID/name. Required.
+
+* `website deploy`
+
+    Deploy your website.
+    
+    * `--website <website>`
+    
+        Website ID/name. Required.
+        
+    * `--path <path>`
+    
+        Path to file or directory. Required.
+  
+* `website publish`
+
+    Publish your website - enable public access or change domain name.
+    
+    * `--website <website>`
+        
+        Website ID/name. Required.
+      
+    * `--domainName <domain-name>`
+            
+        Domain name. Required.
+        
+* `website status`
+
+    Status of the specified website.
+    
+    * `--website <website>`
+        
+        Website ID/name. Required.
+
+* `website unpublish`
+
+    Unpublish your website - disable public access.
+    
+    * `--website <website>`
+        
+        Website ID/name. Required.
+
+* `website delete`
+
+    Deletes the specified website.
+    
+    * `--website <website>`
+        
+        Website ID/name. Required.
+        
+    * `--no-prompt`
+        
+        Do not ask for confirmation.
 
 * `help`
 

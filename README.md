@@ -246,7 +246,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
         Specifies environment variables to set. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
         
-    * `--runtime <node6|node8|node10>`
+    * `--runtime <node6|node8|node10|node12>`
     
         Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection). Defaults to the [Kinvey-recommended Node.js version](https://devcenter.kinvey.com/guides/flexservice-runtime#environment).
         
@@ -270,7 +270,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
         Specifies environment variables to set. If any of the variables already exist on the server, they are overwritten without prompt. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
     
-    * `--runtime <node6|node8|node10>`
+    * `--runtime <node6|node8|node10|node12>`
         
         Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection). Defaults to the [Kinvey-recommended Node.js version](https://devcenter.kinvey.com/guides/flexservice-runtime#environment).
     
@@ -362,7 +362,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
         
         Specifies environment variables to set. If any of the variables already exist on the server, they are overwritten without prompt. Specify either as a comma-separated list of key-value pairs (key1=value1,key2=value2) or in stringified JSON format.
 
-    * `--runtime <node6|node8|node10>`
+    * `--runtime <node6|node8|node10|node12>`
         
         Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection). Defaults to the [Kinvey-recommended Node.js version](https://devcenter.kinvey.com/guides/flexservice-runtime#environment).
 

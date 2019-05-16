@@ -15,6 +15,7 @@
 
 const sinon = require('sinon');
 
+const { EOL } = require('os');
 const fs = require('fs');
 const path = require('path');
 
@@ -98,8 +99,8 @@ describe('SiteEnvsService', () => {
       const expectedIndexPage = 'main.html';
       SiteEnvsService.buildFormData(pathToTarget, expectedIndexPage, null, (err) => {
         expect(err).to.exist;
-        expect(err.name).to.equal('PagesNotFound');
-        expect(err.message).to.equal(`One or more pages not found. Index page: '${expectedIndexPage}'.`);
+        expect(err.name).to.equal('FilesNotFound');
+        expect(err.message).to.equal(`Required file(s) not found.${EOL}\tIndex page: '${expectedIndexPage}'.`);
 
         done();
       });
@@ -110,8 +111,8 @@ describe('SiteEnvsService', () => {
       const expectedErrorPage = 'my-error.html';
       SiteEnvsService.buildFormData(pathToTarget, indexPageDefault, expectedErrorPage, (err) => {
         expect(err).to.exist;
-        expect(err.name).to.equal('PagesNotFound');
-        expect(err.message).to.equal(`One or more pages not found. Error page: '${expectedErrorPage}'.`);
+        expect(err.name).to.equal('FilesNotFound');
+        expect(err.message).to.equal(`Required file(s) not found.${EOL}\tError page: '${expectedErrorPage}'.`);
 
         done();
       });
@@ -123,8 +124,8 @@ describe('SiteEnvsService', () => {
       const expectedErrorPage = 'my-error.html';
       SiteEnvsService.buildFormData(pathToTarget, expectedIndexPage, expectedErrorPage, (err) => {
         expect(err).to.exist;
-        expect(err.name).to.equal('PagesNotFound');
-        const expErrMsg = `One or more pages not found. Index page: '${expectedIndexPage}'. Error page: '${expectedErrorPage}'.`;
+        expect(err.name).to.equal('FilesNotFound');
+        const expErrMsg = `Required file(s) not found.${EOL}\tIndex page: '${expectedIndexPage}'.${EOL}\tError page: '${expectedErrorPage}'.`;
         expect(err.message).to.equal(expErrMsg);
 
         done();

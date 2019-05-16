@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 4.5.0 (2019-05-16)
+* `website deploy` command improvements:
+    * verify files for index and/or error page are present
+    * add `--force` flag to force deploy
+* Add flex runtime version `node12`
+
 ## 4.4.0 (2019-04-25)
 * Add websites support:
     * `website create <name>`

@@ -441,6 +441,10 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     * `--path <path>`
     
         Path to file or directory. Required.
+        
+    * `--force`
+        
+        Skip client-side validation - deploy even if there are no files for index page and/or error page.
   
 * `website publish`
 
@@ -693,13 +697,11 @@ The JSON output format is suitable for cases where the output must be handled pr
 
 ## Flex Runtime Version Selection
 
-Flex projects that you deploy run server-side on the Flex Runtime which represents a preconfigured Node.js environment. When creating a project and later when running it, you can select a Node.js version for the project to run on using the `--runtime` option.
+Flex projects that you deploy run server-side on the Flex Runtime which represents a preconfigured Node.js environment. When creating a project and later when running it, you can select a Node.js version for the project to run on using the `--runtime` option. To see the available runtime versions, run `kinvey flex deploy --help`.
 
-The runtime selection is limited to the major Node.js version. You can choose to run your project on the 6.x, 8.x, or 10.x branch but the minor and patch versions are always determined by the Flex Runtime.
+The runtime selection is limited to the major Node.js version. The minor and patch versions are always determined by the Flex Runtime.
 
 New Flex services deploy on the [Kinvey-recommended Node.js version](https://devcenter.kinvey.com/guides/flexservice-runtime#environment) unless otherwise specified.
-
-Kinvey does its best to provide the [latest LTS](https://github.com/nodejs/Release#release-schedule) versions of the 6.x, 8.x, and 10.x branches. The frequent updates mean that the version that you start developing on may be replaced by the time you are ready to deploy the final version of your project.
 
 After you deploy a Flex project, it remains on the same Node.js version until you upgrade it to a new major version or Kinvey decides to upgrade the project's runtime to a more recent minor and patch version because of security or efficiency reasons.
 

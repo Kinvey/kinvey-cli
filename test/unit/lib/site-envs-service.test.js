@@ -15,6 +15,7 @@
 
 const sinon = require('sinon');
 
+const { EOL } = require('os');
 const fs = require('fs');
 const path = require('path');
 
@@ -23,6 +24,7 @@ const KinveyError = require('../../../lib/KinveyError');
 const { assertions } = require('../../TestsHelper');
 
 const sandbox = sinon.createSandbox({});
+const indexPageDefault = 'index.html';
 
 describe('SiteEnvsService', () => {
   describe('buildFormData', () => {
@@ -37,7 +39,7 @@ describe('SiteEnvsService', () => {
     it('with relative path to existent file should build correct form data', (done) => {
       const targetFile = 'index.html';
       const pathToTarget = `./test/fixtures/sites/${targetFile}`;
-      SiteEnvsService.buildFormData(pathToTarget, (err, actual) => {
+      SiteEnvsService.buildFormData(pathToTarget, targetFile, null, (err, actual) => {
         if (err) {
           return done(err);
         }
@@ -52,7 +54,7 @@ describe('SiteEnvsService', () => {
 
     it('with relative path to existent directory should build correct form data', (done) => {
       const pathToTarget = './test/fixtures/sites';
-      SiteEnvsService.buildFormData(pathToTarget, (err, actual) => {
+      SiteEnvsService.buildFormData(pathToTarget, indexPageDefault, null, (err, actual) => {
         if (err) {
           return done(err);
         }
@@ -69,7 +71,7 @@ describe('SiteEnvsService', () => {
 
     it('with relative path to non-existent directory should return error', (done) => {
       const pathToTarget = './test/fixtures/sites/no-such-dir';
-      SiteEnvsService.buildFormData(pathToTarget, (err) => {
+      SiteEnvsService.buildFormData(pathToTarget, indexPageDefault, null, (err) => {
         const expectedErr = new KinveyError('InvalidPath', `Path '${pathToTarget}' does not exist.`);
         assertions.assertError(err, expectedErr);
         done();
@@ -79,7 +81,7 @@ describe('SiteEnvsService', () => {
     it('with absolute path to existent file should build correct form data', (done) => {
       const targetFile = 'index.html';
       const pathToTarget = path.resolve(`./test/fixtures/sites/${targetFile}`);
-      SiteEnvsService.buildFormData(pathToTarget, (err, actual) => {
+      SiteEnvsService.buildFormData(pathToTarget, targetFile, null, (err, actual) => {
         if (err) {
           return done(err);
         }
@@ -87,6 +89,44 @@ describe('SiteEnvsService', () => {
         expect(actual).to.be.an('object');
         expect(actual).to.have.keys(targetFile);
         expect(actual[targetFile]).to.equal(pathToTarget);
+
+        done();
+      });
+    });
+
+    it('with valid path when indexPage is missing should return error', (done) => {
+      const pathToTarget = './test/fixtures/sites';
+      const expectedIndexPage = 'main.html';
+      SiteEnvsService.buildFormData(pathToTarget, expectedIndexPage, null, (err) => {
+        expect(err).to.exist;
+        expect(err.name).to.equal('FilesNotFound');
+        expect(err.message).to.equal(`Required file(s) not found.${EOL}\tIndex page: '${expectedIndexPage}'.`);
+
+        done();
+      });
+    });
+
+    it('with valid path when errorPage is missing should return error', (done) => {
+      const pathToTarget = './test/fixtures/sites';
+      const expectedErrorPage = 'my-error.html';
+      SiteEnvsService.buildFormData(pathToTarget, indexPageDefault, expectedErrorPage, (err) => {
+        expect(err).to.exist;
+        expect(err.name).to.equal('FilesNotFound');
+        expect(err.message).to.equal(`Required file(s) not found.${EOL}\tError page: '${expectedErrorPage}'.`);
+
+        done();
+      });
+    });
+
+    it('with valid path when both indexPage and errorPage are missing should return error', (done) => {
+      const pathToTarget = './test/fixtures/sites';
+      const expectedIndexPage = 'main.html';
+      const expectedErrorPage = 'my-error.html';
+      SiteEnvsService.buildFormData(pathToTarget, expectedIndexPage, expectedErrorPage, (err) => {
+        expect(err).to.exist;
+        expect(err.name).to.equal('FilesNotFound');
+        const expErrMsg = `Required file(s) not found.${EOL}\tIndex page: '${expectedIndexPage}'.${EOL}\tError page: '${expectedErrorPage}'.`;
+        expect(err.message).to.equal(expErrMsg);
 
         done();
       });

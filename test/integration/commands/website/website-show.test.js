@@ -80,6 +80,12 @@ describe(baseCmd, () => {
       execCmdWithAssertion(cmd, null, null, true, true, false, null, done);
     });
 
+    it('with existent site name (that exists twice) should fail', (done) => {
+      const cliOpts = Object.assign({ [SitesOptionsNames.SITE]: 'c0' });
+      const cmd = buildCmd(baseCmd, noPosArgs, cliOpts, defaultFlags);
+      execCmdWithAssertion(cmd, null, null, true, true, false, null, done);
+    });
+
     it('with non-existent site name should fail', (done) => {
       const cmd = buildCmd(baseCmd, noPosArgs, { [SitesOptionsNames.SITE]: 'nope' }, defaultFlags);
       execCmdWithAssertion(cmd, null, null, true, true, false, null, done);

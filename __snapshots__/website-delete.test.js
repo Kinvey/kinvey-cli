@@ -1,8 +1,8 @@
 exports['website delete using active profile with existent site ID should output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
+[debug] Request:  GET http://localhost:3234/v3/sites/b85fe52ca1434d148b5c5f8199fceb9e
+[debug] Response: GET http://localhost:3234/v3/sites/b85fe52ca1434d148b5c5f8199fceb9e 200
 [debug] Request:  DELETE http://localhost:3234/v3/sites/b85fe52ca1434d148b5c5f8199fceb9e
 [debug] Response: DELETE http://localhost:3234/v3/sites/b85fe52ca1434d148b5c5f8199fceb9e 204
 Deleted website: b85fe52ca1434d148b5c5f8199fceb9e
@@ -38,6 +38,8 @@ Deleted website: b85fe52ca1434d148b5c5f8199fceb9e
 exports['website delete using active profile with non-existent site ID when no sites at all should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
+[debug] Request:  GET http://localhost:3234/v3/sites/bbbfe52ca1434d148b5c5f8199999999
+[debug] Response: GET http://localhost:3234/v3/sites/bbbfe52ca1434d148b5c5f8199999999 404
 [debug] Request:  GET http://localhost:3234/v3/sites
 [debug] Response: GET http://localhost:3234/v3/sites 200
 [error] NotFound: Could not find website with identifier 'bbbfe52ca1434d148b5c5f8199999999'.

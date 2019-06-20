@@ -30,6 +30,14 @@ exports['website list using active profile when there are sites should output JS
     {
       "id": "0205f37e08d545cb9c88ad48b4397acc",
       "name": "b0"
+    },
+    {
+      "id": "c00cf33e08d555cb9c88ad48b4386ac3",
+      "name": "c0"
+    },
+    {
+      "id": "c11cf33e08d555cb9c88ad48b4386ab4",
+      "name": "c0"
     }
   ]
 }
@@ -41,13 +49,15 @@ exports['website list using active profile when there are sites should output de
 [debug] Using profile 'activeProfile'
 [debug] Request:  GET http://localhost:3234/v3/sites
 [debug] Response: GET http://localhost:3234/v3/sites 200
-Count: 3
+Count: 5
 
 id                                name
 --------------------------------  ----
 9caf90c31c4449f195a1a40acc979cf0  a0  
 b85fe52ca1434d148b5c5f8199fceb9e  a1  
 0205f37e08d545cb9c88ad48b4397acc  b0  
+c00cf33e08d555cb9c88ad48b4386ac3  c0  
+c11cf33e08d555cb9c88ad48b4386ab4  c0  
 
 
 
@@ -63,13 +73,15 @@ exports['website list using one-time session when there are sites should output 
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-Count: 3
+Count: 5
 
 id                                name
 --------------------------------  ----
 9caf90c31c4449f195a1a40acc979cf0  a0  
 b85fe52ca1434d148b5c5f8199fceb9e  a1  
 0205f37e08d545cb9c88ad48b4397acc  b0  
+c00cf33e08d555cb9c88ad48b4386ac3  c0  
+c11cf33e08d555cb9c88ad48b4386ab4  c0  
 
 
 

@@ -1,8 +1,8 @@
 exports['website publish using active profile with existent site id should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
+[debug] Request:  GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0
+[debug] Response: GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0 200
 [debug] Request:  GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
 [debug] Response: GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 200
 [debug] Request:  POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/publish

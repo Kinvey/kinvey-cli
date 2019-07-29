@@ -1,8 +1,8 @@
 exports['website show using active profile with existent site ID (linked to org) should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
+[debug] Request:  GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc
+[debug] Response: GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc 200
 [debug] Request:  GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc/environments
 [debug] Response: GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc/environments 200
 key                value                                                                                                    
@@ -24,8 +24,8 @@ org                f71b0d5e60684b48b8265e7fa50302b9
 exports['website show using active profile with existent site ID should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
+[debug] Request:  GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0
+[debug] Response: GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0 200
 [debug] Request:  GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
 [debug] Response: GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 200
 key                value                                                                                                    
@@ -64,6 +64,15 @@ exports['website show using active profile with existent site name (linked to or
     "org": "f71b0d5e60684b48b8265e7fa50302b9"
   }
 }
+
+`
+
+exports['website show using active profile with existent site name (that exists twice) should fail 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'activeProfile'
+[debug] Request:  GET http://localhost:3234/v3/sites
+[debug] Response: GET http://localhost:3234/v3/sites 200
+[error] TooManyFound: Found too many websites with identifier 'c0'.
 
 `
 

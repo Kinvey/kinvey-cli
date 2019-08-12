@@ -276,7 +276,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
 * `flex job [id]`
 
-   _Deprecated_ Shows the job status of a deploy/recycle command. If you don't specify an `id`, the command returns the status of the most recent `flex deploy` or `flex recycle` command. _Deprecation note: For backward compatibility, the command always returns COMPLETE when executed without an `id`. Use `flex status` to track the progress of deploy or recycle commands._
+   _Deprecated_ Shows the job status of a deploy/recycle command. If you don't specify an `id`, the command returns the status of the most recent `flex deploy` or `flex recycle` command. _Deprecation note: For backward compatibility, the server always returns COMPLETE when the command is executed for the most recent deploy/recycle. Use `flex status` to track the progress of deploy or recycle commands._
 
 * `flex status`
 

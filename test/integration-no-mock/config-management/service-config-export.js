@@ -144,7 +144,7 @@ module.exports = () => {
 
         const expected = cloneDeep(internalFlexSrvConfig);
         delete expected.environments[Object.keys(expected.environments)[0]].sourcePath;
-        expected.environments.dev.runtime = 'node6'; // the backend sets a default runtime
+        expected.environments.dev.runtime = 'node10'; // the backend sets a default runtime
         expect(exported).to.deep.equal(expected);
         done();
       });

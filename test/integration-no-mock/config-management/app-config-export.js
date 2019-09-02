@@ -245,7 +245,7 @@ module.exports = () => {
           // add default runtime for svc environments
           Object.keys(expectedConfig.services).forEach((svc) => {
             Object.keys(expectedConfig.services[svc].environments).forEach((svcEnv) => {
-              expectedConfig.services[svc].environments[svcEnv].runtime = 'node6';
+              expectedConfig.services[svc].environments[svcEnv].runtime = 'node10';
             });
           });
 

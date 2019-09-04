@@ -73,7 +73,7 @@ describe('common', () => {
   describe('invalid credentials', () => {
     before('set up profile', (done) => {
       const profile = assertions.buildExpectedProfile('testProfile', TestsConfig.host, 'test@mail.com', 'expiredToken');
-      writeJSON({ file: TestsConfig.paths.session, data: { profiles: profile }}, done);
+      writeJSON({ file: TestsConfig.paths.session, data: { profiles: profile } }, done);
     });
 
     after((done) => {

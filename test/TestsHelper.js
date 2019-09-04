@@ -538,7 +538,7 @@ TestsHelper.execCmdWoMocks = function execCmd(cliCmd, options, done) {
 
   const env = process.env;
   env.NODE_CONFIG = JSON.stringify(nodeConfig);
-  options = options || { env };
+  options = options || { env }; // eslint-disable-line no-param-reassign
 
   const fullCmd = `node ${path.join('bin', 'kinvey')} ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {

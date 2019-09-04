@@ -136,8 +136,8 @@ function makeRequest(options, done) {
 }
 
 function authenticate(email, password, done) {
-  email = email || process.env.KINVEY_CLI_EMAIL;
-  password = password || process.env.KINVEY_CLI_PASSWORD;
+  email = email || process.env.KINVEY_CLI_EMAIL; // eslint-disable-line no-param-reassign
+  password = password || process.env.KINVEY_CLI_PASSWORD; // eslint-disable-line no-param-reassign
 
   const body = {
     email,

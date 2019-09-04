@@ -85,7 +85,7 @@ exports['profile create with invalid credentials set as options should fail 1'] 
 [debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-[error] InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Invalid e-mail and/or password.
 
 `
 
@@ -95,7 +95,7 @@ exports['profile create with invalid credentials set as options when trying to o
 [debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-[error] InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Invalid e-mail and/or password.
 
 `
 

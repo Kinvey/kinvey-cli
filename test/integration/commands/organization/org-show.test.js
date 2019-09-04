@@ -27,8 +27,8 @@ const tokenOne = fixtureUser.tokenOne;
 const baseCmd = 'org show';
 const activeProfile = 'activeProfile';
 
-function testOrgShow(options, flags, orgIdentifier, validUser, done) {
-  options = options || {};
+function testOrgShow(originalOptions, flags, orgIdentifier, validUser, done) {
+  const options = originalOptions || {};
   if (orgIdentifier) {
     options[OrgOptionsName.ORG] = orgIdentifier;
   }

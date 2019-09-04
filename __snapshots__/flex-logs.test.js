@@ -267,7 +267,7 @@ exports['flex logs without query by specifying a profile and existent serviceId 
 [debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
 [debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
-[error] TooManySvcEnvs: You should choose an environment: dev, prod, stg0, stg1, stg2, stg3, stg4
+[error] TooManySvcEnvs: You should choose an environment: dev, prod, stg0, stg1, stg2, stg3, stg5, stg4
 
 `
 
@@ -365,7 +365,7 @@ exports['flex logs without query by specifying credentials as options when inval
 [debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-[error] InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Invalid e-mail and/or password.
 
 `
 

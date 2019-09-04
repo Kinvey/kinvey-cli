@@ -49,7 +49,7 @@ Options:
                                             (key1=value1,key2=value2) or in JSON
                                             format.
   --runtime                                 Runtime environment
-                                  [string] [choices: "node6", "node8", "node10"]
+                        [string] [choices: "node6", "node8", "node10", "node12"]
 
 Arguments replace-vars and set-vars are mutually exclusive
 
@@ -93,7 +93,7 @@ Options:
                                             (key1=value1,key2=value2) or in JSON
                                             format.
   --runtime                                 Runtime environment
-                                  [string] [choices: "node6", "node8", "node10"]
+                        [string] [choices: "node6", "node8", "node10", "node12"]
 
 Environment variables must be specified as comma-separated list (e.g. key1=value1,key2=value2) or in valid JSON format.
 
@@ -137,10 +137,10 @@ Options:
                                             (key1=value1,key2=value2) or in JSON
                                             format.
   --runtime                                 Runtime environment
-                                  [string] [choices: "node6", "node8", "node10"]
+                        [string] [choices: "node6", "node8", "node10", "node12"]
 
 Invalid values:
-  Argument: runtime, Given: "6.9.1", Choices: "node6", "node8", "node10"
+  Argument: runtime, Given: "6.9.1", Choices: "node6", "node8", "node10", "node12"
 
 `
 
@@ -191,7 +191,7 @@ exports['flex update by specifying credentials with service but without svc env 
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
-[error] TooManySvcEnvs: You should choose an environment: dev, prod, stg0, stg1, stg2, stg3, stg4
+[error] TooManySvcEnvs: You should choose an environment: dev, prod, stg0, stg1, stg2, stg3, stg5, stg4
 
 `
 
@@ -250,7 +250,7 @@ Options:
                                             (key1=value1,key2=value2) or in JSON
                                             format.
   --runtime                                 Runtime environment
-                                  [string] [choices: "node6", "node8", "node10"]
+                        [string] [choices: "node6", "node8", "node10", "node12"]
 
 This project is not configured. Use 'kinvey flex init' to get started. Alternatively, use options: service.
 

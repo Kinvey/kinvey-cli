@@ -9,6 +9,35 @@
 * Support runtime and envrionment variables in flex service config files
 * Fix 'app push' to update properly env metadata
 
+## 4.5.1 (2019-08-01)
+* Output error if identifier (e.g. `--app`) matches more than one entity
+* Update `lodash.merge` to `4.6.2`
+
+## 4.5.0 (2019-05-16)
+* `website deploy` command improvements:
+    * verify files for index and/or error page are present
+    * add `--force` flag to force deploy
+* Add flex runtime version `node12`
+
+## 4.4.0 (2019-04-25)
+* Add websites support:
+    * `website create <name>`
+    * `website show`
+    * `website list`
+    * `website deploy`
+    * `website publish`
+    * `website status`
+    * `website unpublish`
+    * `website delete`
+
+## 4.1.3 (2019-03-20)
+* Show any 'status' value in all caps (`flex status`)
+
+## 4.1.2 (2019-03-05)
+* Suggest command when token is expired
+* Use backend error when HTTP status code is 401
+* Apply Kinvey lint rules and fix lint errors
+
 ## 4.1.1 (2018-11-29)
 * Preserve existing env vars on `flex deploy --set-vars <env variables>` 
 

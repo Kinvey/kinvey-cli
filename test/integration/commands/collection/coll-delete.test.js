@@ -30,8 +30,8 @@ const existentEnvId = fixtureEnv.id;
 const existentEnvName = fixtureEnv.name;
 const validCollName = fixtureColl.name;
 
-function testCollCreate(options, flags, envIdentifier, appIdentifier, collName, done) {
-  options = options || {};
+function testCollCreate(originalOptions, originalFlags, envIdentifier, appIdentifier, collName, done) {
+  const options = originalOptions || {};
   const mergedOptions = Object.assign({}, options);
   if (appIdentifier) {
     mergedOptions[AppOptionsName.APP] = appIdentifier;
@@ -41,7 +41,7 @@ function testCollCreate(options, flags, envIdentifier, appIdentifier, collName, 
     mergedOptions[EnvOptionsName.ENV] = envIdentifier;
   }
 
-  flags = flags || [];
+  const flags = originalFlags || [];
   flags.push(CommonOptionsNames.NO_PROMPT);
   testers.execCmdWithIdentifier(baseCmd, mergedOptions, flags, collName, null, done);
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
+ * Copyright (c) 2018, Kinvey, Inc. All rights reserved.
  *
  * This software is licensed to you under the Kinvey terms of service located at
  * http://www.kinvey.com/terms-of-use. By downloading, accessing and/or using this
@@ -24,6 +24,7 @@ module.exports = {
   artifacts: ['.git', '.svn', 'node_modules', 'output.log'],
   timeout: 10 * 1000,
   flexProjectUploadTimeout: 30 * 1000,
+  siteUploadTimeout: 40 * 1000,
   paths: {
     project: path.join(process.cwd(), '.kinvey'),
     package: path.join(process.cwd()),

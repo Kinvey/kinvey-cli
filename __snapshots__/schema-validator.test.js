@@ -39,7 +39,7 @@ exports['schema validator org with invalid org should fail 1'] = `
 exports['schema validator service with invalid internal flex should fail 1'] = `
 
 	environments.dev.host: "host" is not allowed
-	environments.dev.runtime: "runtime" must be one of [node6, node8, node10]
+	environments.dev.runtime: "runtime" must be one of [node6, node8, node10, node12]
 `
 
 exports['schema validator service with invalid rapid data (sharepoint) should fail 1'] = `

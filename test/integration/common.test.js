@@ -16,9 +16,11 @@
 const async = require('async');
 
 const { ActiveItemType, Namespace } = require('./../../lib/Constants');
+const { writeJSON } = require('./../../lib/Utils');
 const fixtureApp = require('./../fixtures/app.json');
 const fixtureEnv = require('./../fixtures/env.json');
-const { buildCmd, execCmdWithAssertion, setup } = require('../TestsHelper');
+const TestsConfig = require('../TestsConfig');
+const { assertions, buildCmd, execCmdWithAssertion, setup } = require('../TestsHelper');
 
 describe('common', () => {
   before((done) => {
@@ -65,6 +67,21 @@ describe('common', () => {
       it(`namespace (${ns}) only should show help`, (done) => {
         execCmdWithAssertion(ns, null, null, true, true, false, null, done);
       });
+    });
+  });
+
+  describe('invalid credentials', () => {
+    before('set up profile', (done) => {
+      const profile = assertions.buildExpectedProfile('testProfile', TestsConfig.host, 'test@mail.com', 'expiredToken');
+      writeJSON({ file: TestsConfig.paths.session, data: { profiles: profile } }, done);
+    });
+
+    after((done) => {
+      setup.clearGlobalSetup(null, done);
+    });
+
+    it('when token is expired should fail and suggest command', (done) => {
+      execCmdWithAssertion('app list', null, null, true, true, true, null, done);
     });
   });
 });

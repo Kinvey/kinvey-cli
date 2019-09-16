@@ -36,6 +36,12 @@
     "id": "12389kd89"
   },
   {
+    "name": "stg5",
+    "host": "k8s-4415a2a3a26193gb72b9",
+    "secret": "123",
+    "id": "2cdcc00e7c9047acbb9dbc56ec2e81a9"
+  },
+  {
     "name": "stg4",
     "host": "k8s-4415a2a3a26193gb72a4",
     "secret": "666666e6642c3418398f982666",

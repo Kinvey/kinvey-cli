@@ -149,7 +149,7 @@ exports['flex status by specifying credentials as options when invalid and exist
 [debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 401
-[error] InvalidCredentials: Credentials are invalid. Please authenticate.
+[error] InvalidCredentials: Invalid e-mail and/or password.
 
 `
 
@@ -246,6 +246,31 @@ exports['flex status by specifying credentials as options when valid and existen
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
 [error] NotFound: Could not find service environment with identifier '123-non-existent'.
+
+`
+
+exports['flex status by specifying credentials as options when valid and existent serviceId should succeed and output any status from the backend 1'] = `
+[debug] Checking for package updates
+[debug] Logging in user: janeyDoe@mail.com
+[debug] Request:  POST http://localhost:3234/session
+[debug] Response: POST http://localhost:3234/session 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/2cdcc00e7c9047acbb9dbc56ec2e81a9/status
+[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/2cdcc00e7c9047acbb9dbc56ec2e81a9/status 200
+[debug] Request:  DELETE http://localhost:3234/session
+[debug] Response: DELETE http://localhost:3234/session 204
+[debug] Logged out current user.
+key            value                                
+-------------  -------------------------------------
+status         TEST                                 
+version        1.4.2                                
+id             12378kdl2                            
+svcEnvId       2cdcc00e7c9047acbb9dbc56ec2e81a9     
+requestedAt    replaced_value
+deployerEmail  davy.jones@mail.com                  
+deployerName   Davy Jones                           
+
 
 `
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017, Kinvey, Inc. All rights reserved.
+ * Copyright (c) 2018, Kinvey, Inc. All rights reserved.
  *
  * This software is licensed to you under the Kinvey terms of service located at
  * http://www.kinvey.com/terms-of-use. By downloading, accessing and/or using this
@@ -176,6 +176,12 @@ describe(baseCmd, () => {
     it('when valid and existent serviceId plus existent svcEnv should succeed (with missing runtime)', (done) => {
       const svcEnvIdentifierWithMissingRuntime = '1234567';
       const options = Object.assign({}, existentUserOne, { [FlexOptionsNames.SVC_ENV]: svcEnvIdentifierWithMissingRuntime });
+      testFlexStatus(null, options, true, null, validUserForGettingStatus, replacementObject, done);
+    });
+
+    it('when valid and existent serviceId should succeed and output any status from the backend', (done) => {
+      const svcEnvIdentifier = '2cdcc00e7c9047acbb9dbc56ec2e81a9';
+      const options = Object.assign({}, existentUserOne, { [FlexOptionsNames.SVC_ENV]: svcEnvIdentifier });
       testFlexStatus(null, options, true, null, validUserForGettingStatus, replacementObject, done);
     });
 

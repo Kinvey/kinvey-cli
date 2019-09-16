@@ -23,8 +23,8 @@
   "scripts": {
     "start": "./bin/kinvey",
     "prepublish": "./node_modules/.bin/dos2unix ./bin/kinvey",
-    "pretest": "npm run eslint",
-    "lint": "npm run eslint",
+    "pretest": "npm run lint",
+    "lint": "./node_modules/.bin/eslint config lib test",
     "test": "npm run test-unit && npm run test-integration",
     "test-unit": "./node_modules/.bin/mocha test/unit --NODE_CONFIG_DIR=./test/config",
     "test-integration-mock": "./node_modules/.bin/mocha test/integration",
@@ -51,9 +51,10 @@
     "lodash.isplainobject": "4.0.6",
     "lodash.isequal": "4.5.0",
     "lodash.isstring": "4.0.1",
-    "lodash.merge": "4.6.0",
     "lodash.pick": "4.4.0",
     "lodash.pickby": "4.6.0",
+    "lodash.merge": "4.6.2",
+    "lodash.omitby": "4.6.0",
     "lodash.sortby": "4.7.0",
     "moment": "2.22.1",
     "request": "2.87.0",
@@ -69,9 +70,9 @@
     "body-parser": "1.18.2",
     "chai": "3.3.0",
     "dos2unix-cli": "1.0.1",
-    "eslint": "4.17.0",
-    "eslint-config-kinvey-platform": "kinvey/eslint-kinvey-platform#v0.1.1",
-    "eslint-plugin-import": "2.8.0",
+    "eslint": "5.0.1",
+    "eslint-config-kinvey-platform": "kinvey/eslint-kinvey-platform#0.1.4",
+    "eslint-plugin-import": "2.13.0",
     "express": "4.16.2",
     "mocha": "5.0.4",
     "nyc": "13.1.0",
@@ -83,7 +84,7 @@
     "test-console": "1.0.0"
   },
   "engines": {
-    "node": ">=6.x.x"
+    "node": ">=6.9.1"
   },
   "os": [
     "darwin",

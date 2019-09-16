@@ -234,8 +234,8 @@ env.buildInternalCollection = function buildInternalCollection(name, permissions
 };
 
 env.buildExternalCollection = function buildExternalCollection(serviceName, svcEnvIdentifier, serviceObject, collName, permissions) {
-  collName = collName || TestsHelper.randomStrings.collName();
-  permissions = permissions || 'shared';
+  collName = collName || TestsHelper.randomStrings.collName(); // eslint-disable-line no-param-reassign
+  permissions = permissions || 'shared'; // eslint-disable-line no-param-reassign
 
   return {
     name: collName,
@@ -744,7 +744,7 @@ function buildConfigEntityFromList(list) {
 const app = {};
 app.createInTestsOrg = function (data, done) {
   let orgId;
-  data = data || {};
+  data = data || {}; // eslint-disable-line no-param-reassign
 
   async.series([
     (next) => {
@@ -1048,7 +1048,7 @@ service.assertFlexSvcEnv = function assertFlexSvcEnv(actual, expected, serviceTy
 };
 
 service.assertSvcEnvs = function assertSvcEnvs(actualService, config, done) {
-  config = config || {};
+  config = config || {}; // eslint-disable-line no-param-reassign
   ApiService.svcEnvs.get(actualService.id, null, (err, actual) => {
     if (err) {
       return done(err);
@@ -1153,7 +1153,7 @@ service.assertFlexServiceStatusRetryable = function assertFlexServiceStatusRetry
           return next(err);
         }
 
-        svcEnvId = envId;
+        svcEnvId = envId; // eslint-disable-line no-param-reassign
         next();
       });
     },

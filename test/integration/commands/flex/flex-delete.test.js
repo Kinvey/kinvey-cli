@@ -24,8 +24,8 @@ const fixtureService = require('./../../../fixtures/internal-flex-service.json')
 
 const baseCmd = 'flex delete';
 
-function testServiceDelete(options, flags, serviceId, expectedProjectConfig, done) {
-  options = options || {};
+function testServiceDelete(originalOptions, flags, serviceId, expectedProjectConfig, done) {
+  const options = originalOptions || {};
   if (serviceId) {
     options[FlexOptionsNames.SERVICE_ID] = serviceId;
   }

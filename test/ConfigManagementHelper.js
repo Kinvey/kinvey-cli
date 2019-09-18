@@ -23,6 +23,7 @@ const moment = require('moment');
 const ApiService = require('./ApiService');
 const { APIRuntimeToCLIRuntime, BackendCollectionPermission, CollectionHook, ConfigFiles } = require('./../lib/Constants');
 const TestsHelper = require('./TestsHelper');
+const ConfigFileProcessor = require('./../lib/ConfigFileProcessor');
 const { getObjectByOmitting, isEmpty, isNullOrUndefined, writeJSON } = require('./../lib/Utils');
 
 let ConfigManagementHelper = {};
@@ -916,6 +917,24 @@ app.exportApp = function exportApp(appIdentifier, done) {
   exportEntityAsJson(cmd, done);
 };
 
+// Add the system collections to an app configuration.
+app.addSystemCollsToEnvs = function addSystemCollsToEnvs(appConfig) {
+  Object.keys(appConfig.environments).forEach((appEnv) => {
+    appConfig.environments[appEnv].configType = 'environment';
+    const systemColls = ['_blob', 'user'];
+    if (!appConfig.environments[appEnv].collections) {
+      appConfig.environments[appEnv].collections = {};
+    }
+
+    systemColls.forEach((sysColl) => {
+      appConfig.environments[appEnv].collections[sysColl] = {
+        type: 'internal',
+        permissions: 'shared'
+      };
+    });
+  });
+};
+
 const roles = {};
 roles.buildValidRolesList = function buildValidRolesList(count) {
   const result = [];
@@ -937,6 +956,76 @@ org.exportOrg = function exportOrg(orgIdentifier, done) {
   }
 
   exportEntityAsJson(cmd, done);
+};
+
+org.modifyFromConfig = function modifyOrgFromConfig(orgIdentifier, orgConfig, done) {
+  const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
+  const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
+  let cmd = `org push ${filePath} --output json`;
+  if (orgIdentifier) {
+    cmd += ` --org ${orgIdentifier}`;
+  }
+  passConfigFileToCli(cmd, orgConfig, filePath, done);
+};
+
+org.removeAppsAndServices = function removeAppsAndServices(orgName, done) {
+  let orgId;
+
+  async.waterfall([
+    (next) => {
+      ApiService.orgs.get(null, (err, orgs) => {
+        if (err) {
+          return next(err);
+        }
+
+        const testOrg = orgs.find(x => x.name === orgName);
+        if (!testOrg) {
+          return next(new Error(`${orgName} not found.`));
+        }
+
+        orgId = testOrg.id;
+
+        next(null, testOrg.id);
+      });
+    },
+    (id, next) => {
+      ApiService.apps.getByOrg(id, next);
+    },
+    (allApps, next) => {
+      async.each(
+        allApps,
+        (currApp, cb) => {
+          ApiService.apps.remove(currApp.id, (err) => {
+            if (err) {
+              return cb(err);
+            }
+
+            cb();
+          });
+        },
+        next
+      );
+    },
+    (next) => {
+      ApiService.services.getAllByOrg(orgId, next);
+    },
+    (services, next) => {
+      async.each(
+        services,
+        (currService, cb) => {
+          ApiService.services.remove(currService.id, cb);
+        },
+        next
+      );
+    }
+  ], done);
+};
+
+org.addSystemCollsToAppEnvs = function addSystemCollsToAppEnvs(orgConfig) {
+  orgConfig.applications = orgConfig.applications || {};
+  Object.keys(orgConfig.applications).forEach((appName) => {
+    app.addSystemCollsToEnvs(orgConfig.applications[appName]);
+  });
 };
 
 service.assertFlexSvcEnv = function assertFlexSvcEnv(actual, expected, serviceType) {
@@ -1117,7 +1206,10 @@ ConfigManagementHelper = {
   service,
   common: {
     buildConfigEntityFromList,
-    EndpointsRelatedTestsTimeout: 65000
+    EndpointsRelatedTestsTimeout: 65000,
+    resolveFileRefs: function resolveFileRefs(obj, done) {
+      ConfigFileProcessor._processConfigFileValue(obj, TestsHelper.ConfigFilesDir, '', done);
+    }
   },
   testHooks
 };

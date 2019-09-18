@@ -212,6 +212,7 @@ kinvey org
 Manage organizations. Run 'kinvey org -h' for details.
 
 Commands:
+  kinvey org push <file>    Update an organization
   kinvey org list           List organizations
   kinvey org show           Show detailed info for a specified org or for the
                             active one

@@ -2,6 +2,7 @@
 
 ## Unreleased
 * Fix BAAS host slashes when backend runs on localhost
+* Add `org push` to modify organizations from config file
 
 ## 5.0.0-alpha.0 (2018-12-14)
 * Config management related logic uses v3 API

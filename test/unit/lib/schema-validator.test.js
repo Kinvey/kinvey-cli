@@ -17,6 +17,9 @@ const snapshot = require('snap-shot-it');
 
 const { ConfigType } = require('../../../lib/Constants');
 const SchemaValidator = require('../../../lib/SchemaValidator');
+const validOrgAllOptions = require('../../fixtures/config-files/org-valid-all-options.json');
+const validOrgSettingsOnly = require('../../fixtures/config-files/org-valid-settings-only.json');
+const invalidOrg = require('../../fixtures/config-files/org-invalid.json');
 const validAppAllOptions = require('../../fixtures/config-files/app-valid-all-options.json');
 const invalidApp = require('../../fixtures/config-files/app-invalid.json');
 const validEnvAllOptions = require('../../fixtures/config-files/env-valid-all-options.json');
@@ -151,6 +154,38 @@ describe('schema validator', () => {
 
     it('with invalid app should fail', (done) => {
       SchemaValidator.validate(ConfigType.APP, invalidApp, null, (err) => {
+        expect(err).to.exist;
+        expect(err.name).to.equal('ValidationError');
+
+        const actualMsg = err.message.replace(/\r\n/g, '\n');
+        try {
+          snapshot(actualMsg);
+        } catch (ex) {
+          return done(ex);
+        }
+
+        done();
+      });
+    });
+  });
+
+  describe('org', () => {
+    it('with valid org with all options, some apps and some services should succeed', (done) => {
+      SchemaValidator.validate(ConfigType.ORG, validOrgAllOptions, null, (err) => {
+        expect(err).to.not.exist;
+        done();
+      });
+    });
+
+    it('with valid org with some settings, empty apps and no services should succeed', (done) => {
+      SchemaValidator.validate(ConfigType.ORG, validOrgSettingsOnly, null, (err) => {
+        expect(err).to.not.exist;
+        done();
+      });
+    });
+
+    it('with invalid org should fail', (done) => {
+      SchemaValidator.validate(ConfigType.ORG, invalidOrg, null, (err) => {
         expect(err).to.exist;
         expect(err.name).to.equal('ValidationError');
 

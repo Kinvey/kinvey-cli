@@ -1,0 +1,42 @@
+{
+  "configType": "organization",
+  "settings": {
+    "requireApprovals": true,
+    "security": {
+      "requireApprovals": 1
+    }
+  },
+  "applications": {
+    "TestApp": {
+      "environments": {
+        "dev": {
+          "schemaVersion": "1.0.0",
+          "collections": {
+            "colle0": {
+              "permissions": "full"
+            }
+          }
+        }
+      },
+      "services": {
+        "TestExternalFlexService": {
+          "schemaVersion": "1.0.0",
+          "configType": "service",
+          "type": "flex-external",
+          "description": "test",
+          "environments": {
+            "dev": {
+              "secret": "123"
+            }
+          }
+        }
+      }
+    }
+  },
+  "services": {
+    "TestInternalFlexService": {
+      "type": "flex-internal",
+      "description": "test deploy0"
+    }
+  }
+}

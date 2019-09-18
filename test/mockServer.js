@@ -378,6 +378,16 @@ function build(
     res.sendStatus(204);
   });
 
+  app.get(`/${versionPart}/sites/:id`, (req, res) => {
+    const id = req.params.id;
+    const site = sites.find(x => x.id === id);
+    if (!site) {
+      return res.status(404).send(siteNotFound);
+    }
+
+    res.status(200).send(site);
+  });
+
   app.get(`/${versionPart}/sites`, (req, res) => {
     res.send(sites);
   });

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 4.5.1 (2019-08-01)
+* Output error if identifier (e.g. `--app`) matches more than one entity
+* Update `lodash.merge` to `4.6.2`
+
 ## 4.5.0 (2019-05-16)
 * `website deploy` command improvements:
     * verify files for index and/or error page are present

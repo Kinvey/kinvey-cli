@@ -20,15 +20,15 @@ const path = require('path');
 const { ConfigFilesDir } = require('./../../TestsHelper');
 
 const appConfigCreateTests = require('./app-config-create');
-const appConfigPushTests = require('./app-config-push');
+const appConfigApplyTests = require('./app-config-apply');
 const appConfigExportTests = require('./app-config-export');
 const envConfigCreateTests = require('./env-config-create');
-const envConfigPushTests = require('./env-config-push');
+const envConfigApplyTests = require('./env-config-apply');
 const envConfigExportTests = require('./env-config-export');
-const orgConfigPushTests = require('./org-config-push');
+const orgConfigApplyTests = require('./org-config-apply');
 const orgConfigExportTests = require('./org-config-export');
 const serviceConfigCreateTests = require('./service-config-create');
-const serviceConfigPushTests = require('./service-config-push');
+const serviceConfigApplyTests = require('./service-config-apply');
 const serviceConfigExportTests = require('./service-config-export');
 
 describe('Config management', () => {
@@ -84,23 +84,23 @@ describe('Config management', () => {
 
   describe('App config create', appConfigCreateTests);
 
-  describe('App config push', appConfigPushTests);
+  describe('App config apply', appConfigApplyTests);
 
   describe('App config export', appConfigExportTests);
 
   describe('Env config create', envConfigCreateTests);
 
-  describe('Env config push', envConfigPushTests);
+  describe('Env config apply', envConfigApplyTests);
 
   describe('Env config export', envConfigExportTests);
 
   describe('Service config create', serviceConfigCreateTests);
 
-  describe('Service config push', serviceConfigPushTests);
+  describe('Service config apply', serviceConfigApplyTests);
 
   describe('Service config export', serviceConfigExportTests);
 
-  describe('Org config push', orgConfigPushTests);
+  describe('Org config apply', orgConfigApplyTests);
 
   describe('Org config export', orgConfigExportTests);
 });

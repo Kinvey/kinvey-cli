@@ -107,7 +107,7 @@ service.modifyFromConfig = function modifyServiceFromConfig(serviceId, serviceCo
     (next) => {
       const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
       const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-      const cmd = `service push --service ${serviceId} --file ${filePath} --output json --verbose`;
+      const cmd = `service apply --service ${serviceId} --file ${filePath} --output json --verbose`;
       passConfigFileToCli(cmd, serviceConfig, filePath, next);
     }
   ], (err, results) => {
@@ -271,7 +271,7 @@ env.createFromConfig = function createEnvFromConfig(envName, env, appName, done)
 env.modifyFromConfig = function modifyEnvFromConfig(config, envIdentifier, appIdentifier, done) {
   const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-  let cmd = `appenv push --file ${filePath} --output json`;
+  let cmd = `appenv apply --file ${filePath} --output json`;
   if (envIdentifier) {
     cmd = `${cmd} --env ${envIdentifier}`;
   }
@@ -793,7 +793,7 @@ app.createFromConfig = function createAppFromConfig(appName, appConfig, orgIdent
 app.modifyFromConfig = function modifyFromConfig(appIdentifier, appConfig, done) {
   const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-  let cmd = `app push --file ${filePath} --output json`;
+  let cmd = `app apply --file ${filePath} --output json`;
   if (appIdentifier) {
     cmd += ` --app ${appIdentifier}`;
   }
@@ -961,7 +961,7 @@ org.exportOrg = function exportOrg(orgIdentifier, done) {
 org.modifyFromConfig = function modifyOrgFromConfig(orgIdentifier, orgConfig, done) {
   const fileName = `${TestsHelper.randomStrings.plainString(10)}.json`;
   const filePath = path.join(TestsHelper.ConfigFilesDir, fileName);
-  let cmd = `org push --file ${filePath} --output json`;
+  let cmd = `org apply --file ${filePath} --output json`;
   if (orgIdentifier) {
     cmd += ` --org ${orgIdentifier}`;
   }

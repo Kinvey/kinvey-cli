@@ -68,14 +68,14 @@ kinvey app
 Manage applications. Run 'kinvey app -h' for details.
 
 Commands:
-  kinvey app create <name> [file]  Create an application
-  kinvey app push <file>           Update an application
-  kinvey app list                  List applications
-  kinvey app show                  Show detailed info for a specified app or for
-                                   the active one
-  kinvey app use <app>             Set the active application
-  kinvey app export <file>         Export the specified app or the active one
-  kinvey app delete                Delete a specified app or the active one
+  kinvey app create <name>  Create an application
+  kinvey app push           Update an application
+  kinvey app list           List applications
+  kinvey app show           Show detailed info for a specified app or for the
+                            active one
+  kinvey app use <app>      Set the active application
+  kinvey app export         Export the specified app or the active one
+  kinvey app delete         Delete a specified app or the active one
 
 Options:
   --version                                 Show version number        [boolean]
@@ -103,15 +103,14 @@ exports['common incomplete commands namespace (appenv) only should show help 1']
 kinvey appenv <command> [args] [options]
 
 Commands:
-  kinvey appenv create <name> [file]  Create an environment
-  kinvey appenv push <file>           Update an environment
-  kinvey appenv list                  List environments per app
-  kinvey appenv show                  Show detailed info for a specified
-                                      environment or for the active one
-  kinvey appenv use <env>             Set the active environment
-  kinvey appenv delete                Delete a specified environment or the
-                                      active one
-  kinvey appenv export <file>         Export environment configuration to a file
+  kinvey appenv create <name>  Create an environment
+  kinvey appenv push           Update an environment
+  kinvey appenv list           List environments per app
+  kinvey appenv show           Show detailed info for a specified environment or
+                               for the active one
+  kinvey appenv use <env>      Set the active environment
+  kinvey appenv delete         Delete a specified environment or the active one
+  kinvey appenv export         Export environment configuration to a file
 
 Options:
   --version                                 Show version number        [boolean]
@@ -212,12 +211,12 @@ kinvey org
 Manage organizations. Run 'kinvey org -h' for details.
 
 Commands:
-  kinvey org push <file>    Update an organization
-  kinvey org list           List organizations
-  kinvey org show           Show detailed info for a specified org or for the
-                            active one
-  kinvey org use <org>      Set the active organization
-  kinvey org export <file>  Export the specified org or the active one
+  kinvey org push       Update an organization
+  kinvey org list       List organizations
+  kinvey org show       Show detailed info for a specified org or for the active
+                        one
+  kinvey org use <org>  Set the active organization
+  kinvey org export     Export the specified org or the active one
 
 Options:
   --version                                 Show version number        [boolean]
@@ -284,9 +283,9 @@ kinvey service
 Manage services. Run 'kinvey service -h' for details.
 
 Commands:
-  kinvey service create <name> <file>  Create a service
-  kinvey service push <file>           Update a service
-  kinvey service export <file>         Export a service
+  kinvey service create <name>  Create a service
+  kinvey service push           Update a service
+  kinvey service export         Export a service
 
 Options:
   --version                                 Show version number        [boolean]

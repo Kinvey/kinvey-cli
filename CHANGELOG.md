@@ -11,6 +11,9 @@
 * Support runtime and envrionment variables in flex service config files
 * Fix 'app push' to update properly env metadata
 
+## 4.5.2 (2019-09-19)
+* Validate files size when deploying websites
+
 ## 4.5.1 (2019-08-01)
 * Output error if identifier (e.g. `--app`) matches more than one entity
 * Update `lodash.merge` to `4.6.2`

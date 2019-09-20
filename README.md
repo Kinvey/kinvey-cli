@@ -870,7 +870,7 @@ kinvey appenv create <envName> (--file <file-path>) (--app <AppNameOrID>)
 
 To apply a configuration file to an existent environment run:
  ```
-kinvey appenv push [--file <file-path>] (-env <env>) (--app <app>)
+kinvey appenv apply [--file <file-path>] (-env <env>) (--app <app>)
 ```
 
 Before an environment config file gets applied a check will be executed to verify JSON is valid and parameter values are allowed. If the check passes successfully, Kinvey CLI will start applying the changes. In the case of a new environment it will simply try to create all the entities described in the file. 
@@ -1109,7 +1109,7 @@ Either `--app` or `--org` option must be set. The service will be accessible onl
 
 To apply a configuration file to an existent service run:
  ```
-kinvey service push <file-path> (--service <service-ID>)
+kinvey service apply [--file <file-path>] [--service <service-ID>]
 ``` 
 
 When a new internal flex service is created the CLI will attempt a deploy if `sourcePath` is set. 

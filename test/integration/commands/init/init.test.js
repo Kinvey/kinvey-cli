@@ -78,7 +78,7 @@ describe(initCommand, () => {
     email: new RegExp(buildPromptString(`${PromptMessages.INPUT_EMAIL} \\(${AuthOptionsNames.EMAIL}\\)`)),
     password: new RegExp(buildPromptString(PromptMessages.INPUT_PASSWORD)),
     instanceId: new RegExp(buildPromptString(escapeParentheses(PromptMessages.INPUT_HOST))),
-    profileName: new RegExp(buildPromptString(PromptMessages.INPUT_PROFILE)),
+    profileName: new RegExp(buildPromptString(escapeParentheses(PromptMessages.INPUT_PROFILE))),
     twoFactorAuthToken: new RegExp(buildPromptString(PromptMessages.INPUT_MFA_TOKEN)),
   };
 

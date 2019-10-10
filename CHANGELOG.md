@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Improve profile description 
 
 ## 4.5.2 (2019-09-19)
 * Validate files size when deploying websites

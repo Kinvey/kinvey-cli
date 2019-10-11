@@ -46,7 +46,7 @@ Contents:
 
 Kinvey CLI is distributed as an NPM package. After you install NPM, run the following command to download and install Kinvey CLI.
 
-    npm install -g kinvey-cli
+    npm install -g kinvey-cli@ea-config
 
 ## Usage
 

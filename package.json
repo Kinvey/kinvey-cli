@@ -1,6 +1,6 @@
 {
   "name": "kinvey-cli",
-  "version": "5.0.0-alpha.0",
+  "version": "5.0.0-alpha.1",
   "description": "Command-line utility for managing various aspects of your Kinvey account",
   "keywords": [
     "Kinvey"

@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+* Move file from positional argument to option
+* Rename push commands to apply
 
 ## 5.0.0-alpha.1 (2019-10-11)
 * Fix BAAS host slashes when backend runs on localhost

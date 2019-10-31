@@ -82,7 +82,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    Deletes the specified profile or the active one if you don't specify a profile name.
 
-* `org push`
+* `org apply`
 
     Applies org configuration file to the specified org or to the active one.
     
@@ -134,7 +134,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
             
             Specifies path to an application configuration file.
 
-* `app push`
+* `app apply`
     
     Applies app configuration file to the specified app or to the active one.
     
@@ -198,7 +198,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
             
         Specifies path to an app environment configuration file.
       
-* `appenv push`
+* `appenv apply`
 
     Applies configuration (defined in file) to the specified environment or to the active one if you don't specify an environment. You can specify an environment by ID or name. By default, the command searches inside the active application but you can specify a different application using `--app`.
     
@@ -322,7 +322,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
             
         Specifies path to a service configuration file. Required.
 
-* `service push`
+* `service apply`
 
     Applies a service configuration file to the specified service.
     

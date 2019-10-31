@@ -26,34 +26,6 @@ Created environment: kid_Sy4yRNV_M
 
 `
 
-exports['appenv create when active app is set without a name should fail 1'] = `
-kinvey appenv create <name> [file]
-
-Create an environment
-
-Positionals:
-  name  Env name                                                      [required]
-  file  Path to an environment configuration file
-
-Options:
-  --version                 Show version number                        [boolean]
-  --email                   E-mail address of your Kinvey account       [string]
-  --password                Password of your Kinvey account             [string]
-  --2fa, --2Fa              Two-factor authentication token             [string]
-  --instanceId              Instance ID                                 [string]
-  --profile                 Profile to use                              [string]
-  --output                  Output format             [string] [choices: "json"]
-  --silent                  Do not output anything                     [boolean]
-  --suppress-version-check  Do not check for package updates           [boolean]
-  --verbose                 Output debug messages                      [boolean]
-  --no-color                Disable colors                             [boolean]
-  -h, --help                Show help                                  [boolean]
-  --app                     App ID/name                                 [string]
-
-Not enough non-option arguments: got 0, need at least 1
-
-`
-
 exports['appenv create when active app is set with non-existent app id should take precedence and return error 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
@@ -77,13 +49,12 @@ exports['appenv create when active app is set with non-existent app name should 
 `
 
 exports['appenv create when active app is set without a name should fail 1'] = `
-kinvey appenv create <name> [file]
+kinvey appenv create <name>
 
 Create an environment
 
 Positionals:
   name  Env name                                                      [required]
-  file  Path to an environment configuration file
 
 Options:
   --version                                 Show version number        [boolean]
@@ -103,6 +74,8 @@ Options:
   --verbose                                 Output debug messages      [boolean]
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
+  --file                                    Path to an environment configuration
+                                            file
   --app                                     App ID/name                 [string]
 
 Not enough non-option arguments: got 0, need at least 1
@@ -128,13 +101,12 @@ Created environment: kid_Sy4yRNV_M
 
 exports['appenv create when one-time session without app identifier should fail 1'] = `
 [debug] Checking for package updates
-kinvey appenv create <name> [file]
+kinvey appenv create <name>
 
 Create an environment
 
 Positionals:
   name  Env name                                                      [required]
-  file  Path to an environment configuration file
 
 Options:
   --version                                 Show version number        [boolean]
@@ -154,6 +126,8 @@ Options:
   --verbose                                 Output debug messages      [boolean]
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
+  --file                                    Path to an environment configuration
+                                            file
   --app                                     App ID/name                 [string]
 
 Application is required. Please set active app or use the --app option.

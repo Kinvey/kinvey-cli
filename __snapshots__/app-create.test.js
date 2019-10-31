@@ -45,13 +45,12 @@ Created application: 885f5d307afd4168bebca1a64f815c1e
 `
 
 exports['app create without a name should fail 1'] = `
-kinvey app create <name> [file]
+kinvey app create <name>
 
 Create an application
 
 Positionals:
   name  App name                                                      [required]
-  file  Path to an application configuration file
 
 Options:
   --version                                 Show version number        [boolean]
@@ -71,6 +70,8 @@ Options:
   --verbose                                 Output debug messages      [boolean]
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
+  --file                                    Path to an application configuration
+                                            file
   --org                                     Org ID/name                 [string]
 
 Not enough non-option arguments: got 0, need at least 1

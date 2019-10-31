@@ -69,7 +69,7 @@ Manage applications. Run 'kinvey app -h' for details.
 
 Commands:
   kinvey app create <name>  Create an application
-  kinvey app push           Update an application
+  kinvey app apply          Apply an application configuration file
   kinvey app list           List applications
   kinvey app show           Show detailed info for a specified app or for the
                             active one
@@ -104,7 +104,7 @@ kinvey appenv <command> [args] [options]
 
 Commands:
   kinvey appenv create <name>  Create an environment
-  kinvey appenv push           Update an environment
+  kinvey appenv apply          Apply an environment configuration file
   kinvey appenv list           List environments per app
   kinvey appenv show           Show detailed info for a specified environment or
                                for the active one
@@ -211,7 +211,7 @@ kinvey org
 Manage organizations. Run 'kinvey org -h' for details.
 
 Commands:
-  kinvey org push       Update an organization
+  kinvey org apply      Apply an organization configuration file
   kinvey org list       List organizations
   kinvey org show       Show detailed info for a specified org or for the active
                         one
@@ -284,7 +284,7 @@ Manage services. Run 'kinvey service -h' for details.
 
 Commands:
   kinvey service create <name>  Create a service
-  kinvey service push           Update a service
+  kinvey service apply          Apply a service configuration file
   kinvey service export         Export a service
 
 Options:

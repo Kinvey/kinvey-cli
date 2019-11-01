@@ -50,7 +50,7 @@ kinvey app create <name>
 Create an application
 
 Positionals:
-  name  App name                                                      [required]
+  name  App name                                             [string] [required]
 
 Options:
   --version                                 Show version number        [boolean]

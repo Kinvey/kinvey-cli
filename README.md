@@ -851,7 +851,7 @@ Kinvey CLI supports the usage of configuration files (JSON format) to enable con
 
 **Environments** can be created and modified by applying an environment configuration file. The file can contain: environment-related settings, collections, business logic, roles, push settings.
 
-**Services** can be created and modified by applying a service configuration file. Supported services: internal flex, external flex, REST, Sharepoint, Salesforce, MS SQL, SAP, ProgressData, DataDirect, Rapid health.
+**Services** can be created and modified by applying a service configuration file. Supported services: internal flex, external flex, REST, Sharepoint, Salesforce, MS SQL, ProgressData, DataDirect, Rapid health.
 
 ### Environment configuration file
 
@@ -1143,7 +1143,7 @@ The following service template can be used and modified as needed:
 
 `configType` *environment|service* The configuration type. Required.
 
-`type` *flex-internal|flex-external|rest|sharepoint|salesforce|mssql|sap|progressData|dataDirect|rapid-health* Service type. Required.
+`type` *flex-internal|flex-external|rest|sharepoint|salesforce|mssql|progressData|dataDirect|rapid-health* Service type. Required.
  
 `description` Service description. String. Optional.
  

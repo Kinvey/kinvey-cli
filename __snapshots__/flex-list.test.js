@@ -87,8 +87,8 @@ exports['flex list by specifying a profile and valid options (org and id) should
 [debug] Using profile 'profileToGetServices'
 [debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v3/organizations
+[debug] Response: GET http://localhost:3234/v3/organizations 200
 [debug] Request:  GET http://localhost:3234/v3/services
 [debug] Response: GET http://localhost:3234/v3/services 200
 {

@@ -3,6 +3,12 @@
 ## Unreleased
 * Move file from positional argument to option
 * Rename push commands to apply
+* Allow creating app, app env or service with a name that contains only digits
+* Do not export the `serviceEnvironment` field on the serviceObject during `service export`
+* Fetch all orgs that a user can read
+* Do not export services of type custom
+* Remove support for SAP services as they are deprecated
+* Allow `insertMany` method for services
 
 ## 5.0.0-alpha.1 (2019-10-11)
 * Fix BAAS host slashes when backend runs on localhost

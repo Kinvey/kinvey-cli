@@ -54,7 +54,7 @@ kinvey appenv create <name>
 Create an environment
 
 Positionals:
-  name  Env name                                                      [required]
+  name  Env name                                             [string] [required]
 
 Options:
   --version                                 Show version number        [boolean]
@@ -106,7 +106,7 @@ kinvey appenv create <name>
 Create an environment
 
 Positionals:
-  name  Env name                                                      [required]
+  name  Env name                                             [string] [required]
 
 Options:
   --version                                 Show version number        [boolean]

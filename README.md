@@ -112,7 +112,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
 * `org export`
     
-    Exports to a file the specified org or the active one.
+    Exports to a file the specified org or the active one. The organization services and the organization apps along with their services are exported in separate configuration files in the respective 'applications' and 'services' directories.
     
     * `--org <organization>`
                
@@ -164,7 +164,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
 * `app export`
 
-    Exports to a file the specified app or the active one.
+    Exports to a file the specified app or the active one. Also exports the app environments and the app services in separate files in the corresponding 'environments' and 'services' directories
 
     * `--app <application>`
                
@@ -990,7 +990,7 @@ If an error occurs, the CLI stops applying the file and outputs the error messag
 
 `collections.[collectionName].type` *internal|external* If external, then the collection is backed by a flex service. Required.
 
-`collections.[collectionName].permissions` Collections permissions. Optional. Could be a string or an object. Allowed string values: private, full, shared, read-only. To specify roles, use an object in the following format:
+`collections.[collectionName].permissions` Collections permissions. Required. Could be a string or an object. Allowed string values: private, full, shared, read-only. To specify roles, use an object in the following format:
 ```
 "permissions": {
   [roleName]: {
@@ -1112,13 +1112,13 @@ To apply a configuration file to an existent service run:
 kinvey service apply [--file <file-path>] [--service <service-ID>]
 ``` 
 
-When a new internal flex service is created the CLI will attempt a deploy if `sourcePath` is set. 
+When a new internal flex service is created the CLI will attempt a deploy if `sourcePath` is set to the project root directory. 
 
 When an existent internal flex service is updated and `sourcePath` is set, the CLI will attempt to deploy only if the version defined in `package.json` is higher then the cloud version. Otherwise, deployment procedure will be skipped.
 
-#### Service sample config file
+The following service templates can be used and modified as needed:
 
-The following service template can be used and modified as needed:
+#### `flex-internal` service sample config file
 
 ```
 {
@@ -1137,6 +1137,98 @@ The following service template can be used and modified as needed:
 }
 ```
 
+#### `rest` service sample config file
+
+```
+{
+    "schemaVersion": "1.0.0",
+    "configType": "service",
+    "type": "rest",
+    "environments": {
+        "Default": {
+            "host": "http://www.test.com",
+            "authentication": {
+                "type": "None",
+                "credentials": {
+                    "mapTo": {
+                        "decode": false
+                    }
+                },
+                "loginOptions": {
+                    "type": "noLogin",
+                    "headers": {},
+                    "querystring": {},
+                    "body": {}
+                }
+            },
+            "connectionOptions": {
+                "strictSSL": false,
+                "rejectUnauthorized": false,
+                "headers": {},
+                "querystring": {}
+            },
+            "mapping": {
+                "users": {
+                    "sourceObject": {
+                        "primaryKey": {
+                            "type": "string",
+                            "name": "Id"
+                        },
+                        "endpoint": "/users",
+                        "httpMethod": "GET",
+                        "queryMapping": {
+                            "query": "header"
+                        },
+                        "querystring": {
+                            "query_param_name": "query_param_value"
+                        },
+                        "headers": {
+                            "header_name": "header_value"
+                        }
+                    },
+                    "fields": [
+                        {
+                            "kinveyFieldMapping": "username",
+                            "sourceFieldMapping": "username"
+                        },
+                        {
+                            "kinveyFieldMapping": "_id",
+                            "sourceFieldMapping": "userId"
+                        }
+                    ],
+                    "methods": {
+                        "getAll": {
+                            "isEnabled": true
+                        },
+                        "getById": {
+                            "isEnabled": false
+                        },
+                        "insert": {
+                            "isEnabled": true
+                        },
+                        "update": {
+                            "isEnabled": false
+                        },
+                        "deleteById": {
+                            "isEnabled": false
+                        },
+                        "deleteByQuery": {
+                            "isEnabled": false
+                        },
+                        "getCount": {
+                            "isEnabled": true
+                        },
+                        "getCountByQuery": {
+                            "isEnabled": false
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
 #### Allowed fields:
 
 `schemaVersion` The schema version the CLI supports. Required. Current: 1.0.0
@@ -1149,13 +1241,23 @@ The following service template can be used and modified as needed:
  
 `environments` Service environments. Object where each first-level property is the name of a service environment. Optional.
  
- `environments.[envName].secret` Shared secret to use when communicating with the service.
+ `environments.[envName].secret` Shared secret to use when communicating with the service. Аpplicable and required for 'flex-internal' and 'flex-external'
  
-`environments.[envName].host` URI pointing to the service server's location. Required when `type` is 'flex-external'.
+`environments.[envName].host` URI pointing to the service server's location. Required for all service types except 'flex-internal' and 'rapid-health'.
 
 `environments.[envName].sourcePath` Path to source code - relative or absolute. Optional. Applicable when `type` is 'flex-internal'.
 
-`environments.[envName].environmentVariables` Environment variables. Object. Optional.
+`environments.[envName].runtime` The nodejs version of the runtime. Optional. The value must be one of [node6, node8, node10, node12]. Applicable when `type` is 'flex-internal'.
+
+`environments.[envName].authentication` Authentication type and credentials. Object. Optional. Applicable for 'rest', 'sharepoint', 'salesforce', 'mssql', 'progressData', 'dataDirect' and 'rapid-health' service types
+
+`environments.[envName].connectionOptions` Connection options. Object. Optional. Applicable for 'rest', 'sharepoint', 'salesforce', 'mssql', 'progressData', 'dataDirect' and 'rapid-health' service types
+
+`environments.[envName].mapping` Contains the source object, the source fields mapping and the supported operations. Object. Optional. Applicable for 'rest', 'sharepoint', 'salesforce', 'mssql', 'progressData', 'dataDirect' and 'rapid-health' service types
+
+`environments.[envName].version` The version of the source server. Object. Optional. Applicable when `type` is 'sharepoint' or 'mssql'.
+
+`environments.[envName].environmentVariables` Environment variables. Object. Optional. Applicable when `type` is 'flex-internal'.
 
 ## Troubleshooting
 

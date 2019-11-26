@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "configType": "service",
-  "type": "sharepointy",
+  "type": "data-sharepointy",
   "environments": {
     "default": {
       "version": "online",

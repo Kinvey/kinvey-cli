@@ -1137,13 +1137,13 @@ The following service templates can be used and modified as needed:
 }
 ```
 
-#### `rest` service sample config file
+#### `data-rest` service sample config file
 
 ```
 {
     "schemaVersion": "1.0.0",
     "configType": "service",
-    "type": "rest",
+    "type": "data-rest",
     "environments": {
         "Default": {
             "host": "http://www.test.com",
@@ -1235,7 +1235,7 @@ The following service templates can be used and modified as needed:
 
 `configType` *environment|service* The configuration type. Required.
 
-`type` *flex-internal|flex-external|rest|sharepoint|salesforce|mssql|progressData|dataDirect|rapid-health* Service type. Required.
+`type` *flex-internal|flex-external|data-rest|data-sharepoint|data-salesforce|data-mssql|data-progress|data-direct|data-health* Service type. Required.
  
 `description` Service description. String. Optional.
  
@@ -1243,19 +1243,19 @@ The following service templates can be used and modified as needed:
  
  `environments.[envName].secret` Shared secret to use when communicating with the service. Аpplicable and required for 'flex-internal' and 'flex-external'
  
-`environments.[envName].host` URI pointing to the service server's location. Required for all service types except 'flex-internal' and 'rapid-health'.
+`environments.[envName].host` URI pointing to the service server's location. Required for all service types except 'flex-internal' and 'data-health'.
 
 `environments.[envName].sourcePath` Path to source code - relative or absolute. Optional. Applicable when `type` is 'flex-internal'.
 
 `environments.[envName].runtime` The nodejs version of the runtime. Optional. The value must be one of [node6, node8, node10, node12]. Applicable when `type` is 'flex-internal'.
 
-`environments.[envName].authentication` Authentication type and credentials. Object. Optional. Applicable for 'rest', 'sharepoint', 'salesforce', 'mssql', 'progressData', 'dataDirect' and 'rapid-health' service types
+`environments.[envName].authentication` Authentication type and credentials. Object. Optional. Applicable for 'data-rest', 'data-sharepoint', 'data-salesforce', 'data-mssql', 'data-progress', 'data-direct' and 'data-health' service types
 
-`environments.[envName].connectionOptions` Connection options. Object. Optional. Applicable for 'rest', 'sharepoint', 'salesforce', 'mssql', 'progressData', 'dataDirect' and 'rapid-health' service types
+`environments.[envName].connectionOptions` Connection options. Object. Optional. Applicable for 'data-rest', 'data-sharepoint', 'data-salesforce', 'data-mssql', 'data-progress', 'data-direct' and 'data-health' service types.
 
-`environments.[envName].mapping` Contains the source object, the source fields mapping and the supported operations. Object. Optional. Applicable for 'rest', 'sharepoint', 'salesforce', 'mssql', 'progressData', 'dataDirect' and 'rapid-health' service types
+`environments.[envName].mapping` Contains the source object, the source fields mapping and the supported operations. Object. Optional. Applicable for 'data-rest', 'data-sharepoint', 'data-salesforce', 'data-mssql', 'data-progress', 'data-direct' and 'data-health' service types.
 
-`environments.[envName].version` The version of the source server. Object. Optional. Applicable when `type` is 'sharepoint' or 'mssql'.
+`environments.[envName].version` The version of the source server. Object. Optional. Applicable when `type` is 'data-sharepoint' or 'data-mssql'.
 
 `environments.[envName].environmentVariables` Environment variables. Object. Optional. Applicable when `type` is 'flex-internal'.
 

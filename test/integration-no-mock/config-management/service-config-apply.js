@@ -241,7 +241,7 @@ module.exports = () => {
       const initialServiceConfig = {
         configType: 'service',
         schemaVersion: '1.0.0',
-        type: 'mssql',
+        type: 'data-mssql',
         environments: {
           dev: {
             version: '2008-r2',
@@ -310,7 +310,7 @@ module.exports = () => {
       const initialServiceConfig = {
         configType: 'service',
         schemaVersion: '1.0.0',
-        type: 'rest',
+        type: 'data-rest',
         environments: {
           dev: {
             connectionOptions: {

@@ -227,7 +227,7 @@ module.exports = () => {
   describe('rapid data', () => {
     it('sharepoint with one environment and mapping should succeed', (done) => {
       const serviceName = randomStrings.plainString();
-      const serviceType = 'sharepoint';
+      const serviceType = 'data-sharepoint';
       const srvEnv = {
         version: 'online',
         authentication: {
@@ -308,7 +308,7 @@ module.exports = () => {
       const serviceConfig = {
         configType: 'service',
         schemaVersion: '1.0.0',
-        type: 'salesforce',
+        type: 'data-salesforce',
         environments: {
           dev: srvEnv
         }
@@ -333,7 +333,7 @@ module.exports = () => {
 
     it('sharepoint with two environments and mapping should succeed', (done) => {
       const serviceName = randomStrings.plainString();
-      const serviceType = 'sharepoint';
+      const serviceType = 'data-sharepoint';
       const srvEnv = {
         version: 'online',
         authentication: {

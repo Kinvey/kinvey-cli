@@ -50,5 +50,5 @@ exports['schema validator service with invalid rapid data (sharepoint) should fa
 
 exports['schema validator service with invalid rapid data (wrong type) should fail 1'] = `
 
-	type: "type" must be one of [flex-internal, flex-external, rest, sharepoint, salesforce, mssql, progressData, dataDirect, rapid-health]
+	type: "type" must be one of [flex-internal, flex-external, data-rest, data-sharepoint, data-salesforce, data-mssql, data-progress, data-direct, data-health]
 `

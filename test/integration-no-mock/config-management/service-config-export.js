@@ -156,7 +156,7 @@ module.exports = () => {
     const serviceConfig = {
       configType: 'service',
       schemaVersion: '1.0.0',
-      type: 'rest',
+      type: 'data-rest',
       environments: {
         default: {
           connectionOptions: {

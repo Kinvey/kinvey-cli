@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "configType": "service",
+  "type": "flex-internal",
+  "description": "test deploy0",
+  "environments": {
+    "dev": {
+      "secret": "123",
+      "sourcePath": "./project-dir"
+    },
+    "prod": {
+      "secret": "456",
+      "description": "prod svc env",
+      "runtime": "node8",
+      "environmentVariables": {
+        "FIRST_VAR": "first"
+      }
+    }
+  }
+}

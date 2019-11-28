@@ -54,7 +54,7 @@ kinvey appenv create <name>
 Create an environment
 
 Positionals:
-  name  Env name                                                      [required]
+  name  Env name                                             [string] [required]
 
 Options:
   --version                                 Show version number        [boolean]
@@ -74,6 +74,8 @@ Options:
   --verbose                                 Output debug messages      [boolean]
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
+  --file                                    Path to an environment configuration
+                                            file
   --app                                     App ID/name                 [string]
 
 Not enough non-option arguments: got 0, need at least 1
@@ -104,7 +106,7 @@ kinvey appenv create <name>
 Create an environment
 
 Positionals:
-  name  Env name                                                      [required]
+  name  Env name                                             [string] [required]
 
 Options:
   --version                                 Show version number        [boolean]
@@ -124,6 +126,8 @@ Options:
   --verbose                                 Output debug messages      [boolean]
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
+  --file                                    Path to an environment configuration
+                                            file
   --app                                     App ID/name                 [string]
 
 Application is required. Please set active app or use the --app option.

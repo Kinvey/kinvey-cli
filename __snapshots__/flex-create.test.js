@@ -219,7 +219,7 @@ Created service: 12378kdl2. Secret: auto-generated
 `
 
 exports['flex create with active profile without an app and org should fail 1'] = `
-[error] Error: Either '--app' or '--org' option must be set.
+[error] Either '--app' or '--org' option must be set.
 
 `
 
@@ -229,8 +229,8 @@ exports['flex create with one-time session with name, secret and org should succ
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v3/organizations
+[debug] Response: GET http://localhost:3234/v3/organizations 200
 [debug] Request:  POST http://localhost:3234/v3/services
 [debug] Response: POST http://localhost:3234/v3/services 201
 [debug] Request:  POST http://localhost:3234/v3/services/12378kdl2/environments

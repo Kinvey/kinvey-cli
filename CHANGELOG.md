@@ -1,7 +1,27 @@
 # Changelog
 
 ## Unreleased
+* Move `file` from positional argument to option
+* Rename push commands to apply
+* Allow creating app, app env or service with a name that contains only digits
+* Do not export the `serviceEnvironment` field on the serviceObject during `service export`
+* Fetch all orgs that a user can read
+* Do not export services of type custom
+* Remove support for SAP services as they are deprecated
+* Allow `insertMany` method for services
 * Improve profile description 
+
+## 5.0.0-alpha.1 (2019-10-11)
+* Fix BAAS host slashes when backend runs on localhost
+* Add `org push` to modify organizations from config file
+* Fix config management by adjusting to services endpoints changes
+* Improve response error handling
+
+## 5.0.0-alpha.0 (2018-12-14)
+* Config management related logic uses v3 API
+* Support service environments in service config files
+* Support runtime and envrionment variables in flex service config files
+* Fix 'app push' to update properly env metadata
 
 ## 4.5.2 (2019-09-19)
 * Validate files size when deploying websites
@@ -41,6 +61,28 @@
 ## 4.1.0 (2018-11-27)
 * Migrate to v3 API
 * Add service environments functionality in flex namespace
+
+## 4.1.0-alpha.3
+* Add `org export` to export organizations
+* Ensure `export` creates non-existing directories
+* App functionality to create/modify app from config file
+* Add `app export` command to export applications
+* Support rapid data and flex service types for `service export`
+* Specify entity identifiers as options
+
+## 4.1.0-alpha.2
+* Add `service export` command to export a flex service to config file
+* Output logs properly when log message is an object
+* Prompt for 2FA token on 'profile login' if required
+* Rearrange logs
+
+## 4.1.0-alpha.1
+* Add support for groups in env config file
+* Fix env export issues
+
+## 4.1.0-alpha.0
+* Add functionality to create/modify env from config file
+* Add functionality to export env to config file
 
 ## 4.0.1 (2018-11-21)
 * Add runtime environment support for internal flex services

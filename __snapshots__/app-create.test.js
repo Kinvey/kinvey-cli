@@ -2,8 +2,8 @@ exports['app create with a name and existent org identifier (ID) should succeed 
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v3/organizations
+[debug] Response: GET http://localhost:3234/v3/organizations 200
 [debug] Request:  POST http://localhost:3234/v3/apps
 [debug] Response: POST http://localhost:3234/v3/apps 201
 Created application: 885f5d307afd4168bebca1a64f815c1e
@@ -50,7 +50,7 @@ kinvey app create <name>
 Create an application
 
 Positionals:
-  name  App name                                                      [required]
+  name  App name                                             [string] [required]
 
 Options:
   --version                                 Show version number        [boolean]
@@ -70,6 +70,8 @@ Options:
   --verbose                                 Output debug messages      [boolean]
   --no-color, --noColor                     Disable colors             [boolean]
   -h, --help                                Show help                  [boolean]
+  --file                                    Path to an application configuration
+                                            file
   --org                                     Org ID/name                 [string]
 
 Not enough non-option arguments: got 0, need at least 1

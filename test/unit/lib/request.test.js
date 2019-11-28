@@ -79,7 +79,7 @@ describe('Request', () => {
           },
           json: true,
           method: HTTPMethod.GET,
-          url: `${user.host}${endpoint}`
+          url: `${user.host}/${endpoint}`
         }
       };
       const actualReqObj = new Request(user, options);
@@ -100,7 +100,7 @@ describe('Request', () => {
           headers: { [deviceInfoHeader]: cliVersion },
           json: true,
           method: HTTPMethod.GET,
-          url: `${user.host}${endpoint}`
+          url: `${user.host}/${endpoint}`
         }
       };
       const actualReqObj = new Request(user, options);
@@ -134,7 +134,7 @@ describe('Request', () => {
           json: true,
           method: HTTPMethod.POST,
           body: data,
-          url: `${user.host}${endpoint}`,
+          url: `${user.host}/${endpoint}`,
           timeout: 15000
         }
       };
@@ -194,6 +194,75 @@ describe('Request', () => {
         assertions.assertError(err, expectedErr);
         expect(res).to.deep.equal(noSuccessRes);
         done();
+      });
+    });
+
+    const testCases = [
+      {
+        title: 'there is debug property (string)',
+        backendErr: {
+          code: 'SiteInternalError',
+          description: 'Some error.',
+          debug: 'Additional info.'
+        },
+        expectedErr: {
+          name: 'SiteInternalError',
+          message: 'Some error. Additional info.'
+        }
+      },
+      {
+        title: 'there is no debug property',
+        backendErr: {
+          code: 'CannotDeleteEnvironment',
+          description: 'The specified environment cannot be deleted.'
+        },
+        expectedErr: {
+          name: 'CannotDeleteEnvironment',
+          message: 'The specified environment cannot be deleted.'
+        }
+      },
+      {
+        title: 'there is debug property (Error)',
+        backendErr: {
+          code: 'SiteInternalError',
+          description: 'Some error.',
+          debug: new Error('Test error.')
+        },
+        expectedErr: {
+          name: 'SiteInternalError',
+          message: 'Some error. Test error.'
+        }
+      },
+      {
+        title: 'there is debug property (object)',
+        backendErr: {
+          code: 'SiteInternalError',
+          description: 'Some error.',
+          debug: {
+            someProperty: 'test'
+          }
+        },
+        expectedErr: {
+          name: 'SiteInternalError',
+          message: 'Some error. {"someProperty":"test"}'
+        }
+      }
+    ];
+
+    testCases.forEach((t) => {
+      it(`when response is 400 ${t.title} should return response and error`, (done) => {
+        const noSuccessRes = {
+          statusCode: 400,
+          body: t.backendErr,
+          rawTrailers: [],
+          upgrade: false
+        };
+        reqStub.yields(null, noSuccessRes);
+        reqObj.send((err, res) => {
+          assertions.assertError(err, t.expectedErr);
+          expect(res).to.deep.equal(noSuccessRes);
+          done();
+        });
       });
     });
 

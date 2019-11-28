@@ -46,7 +46,7 @@ Contents:
 
 Kinvey CLI is distributed as an NPM package. After you install NPM, run the following command to download and install Kinvey CLI.
 
-    npm install -g kinvey-cli
+    npm install -g kinvey-cli@ea-config
 
 ## Usage
 
@@ -82,6 +82,18 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
    Deletes the specified profile or the active one if you don't specify a profile name.
 
+* `org apply`
+
+    Applies org configuration file to the specified org or to the active one.
+    
+    * `--org <organization>`
+               
+        Specifies a Kinvey organization by ID or name.
+        
+    * `--file <file path>`
+        
+        Specifies path to an organization configuration file. Required.
+
 * `org list`
 
     Lists all existing organizations within your Kinvey account.
@@ -98,6 +110,18 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
     Sets the specified organization as active. You can specify an organization by ID or name.
     
+* `org export`
+    
+    Exports to a file the specified org or the active one. The organization services and the organization apps along with their services are exported in separate configuration files in the respective 'applications' and 'services' directories.
+    
+    * `--org <organization>`
+               
+        Specifies a Kinvey organization by ID or name.
+        
+    * `--file <file path>`
+            
+            Specifies path to file. Required.
+    
 * `app create <name>`
 
     Creates an application. You can specify an organization ID or name if you want to create the app within the context of an organization.
@@ -105,6 +129,22 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     * `--org <organization>`
                
         Specifies a Kinvey organization by ID or name.
+        
+    * `--file <file path>`
+            
+            Specifies path to an application configuration file.
+
+* `app apply`
+    
+    Applies app configuration file to the specified app or to the active one.
+    
+    * `--app <application>`
+               
+        Specifies a Kinvey app by ID or name.
+        
+    * `--file <file path>`
+            
+        Specifies path to an application configuration file. Required.
     
 * `app list`
 
@@ -121,6 +161,18 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 * `app use <app>`
 
     Sets the specified application as active. You can specify an application by ID or name.
+    
+* `app export`
+
+    Exports to a file the specified app or the active one. Also exports the app environments and the app services in separate files in the corresponding 'environments' and 'services' directories
+
+    * `--app <application>`
+               
+        Specifies a Kinvey app by ID or name.
+        
+    * `--file <file path>`
+            
+        Specifies path to file. Required.
     
 * `app delete`
 
@@ -141,6 +193,26 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     * `--app <application>`
        
         Specifies a Kinvey app by ID or name.
+        
+    * `--file <file path>`
+            
+        Specifies path to an app environment configuration file.
+      
+* `appenv apply`
+
+    Applies configuration (defined in file) to the specified environment or to the active one if you don't specify an environment. You can specify an environment by ID or name. By default, the command searches inside the active application but you can specify a different application using `--app`.
+    
+    * `--app <application>`
+           
+        Specifies a Kinvey app by ID or name.
+        
+    * `--env <environment>`
+              
+        Specifies a Kinvey app environment by ID or name.
+        
+    * `--file <file path>`
+            
+        Specifies path to an app environment configuration file. Required.
     
 * `appenv show`
 
@@ -161,6 +233,22 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     * `--app <application>`
        
         Specifies a Kinvey app by ID or name.
+
+* `appenv export`
+    
+    Exports to a file the specified app environment or the active one.
+    
+    * `--env <environment>`
+              
+        Specifies a Kinvey app environment by ID or name.
+        
+    * `--app <application>`
+           
+        Specifies a Kinvey app by ID or name.
+        
+    * `--file <file path>`
+            
+        Specifies path to file. Required.
     
 * `appenv delete`
 
@@ -217,6 +305,46 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     * `--no-prompt`
         
         Do not ask for confirmation.
+
+* `service create <name>`
+
+    Creates a service within an application or organization (either `--app` or `--org` must be specified).
+    
+    * `--app <application>`
+           
+      Specifies a Kinvey app by ID or name.
+      
+    * `--org <organization>`
+                
+      Specifies a Kinvey organization by ID or name.
+      
+    * `--file <file path>`
+            
+        Specifies path to a service configuration file. Required.
+
+* `service apply`
+
+    Applies a service configuration file to the specified service.
+    
+    * `--service <service>`
+        
+        Specifies service ID.
+        
+    * `--file <file path>`
+            
+        Specifies path to a service configuration file. Required.
+
+* `service export`
+
+    Exports the specified service to a file.
+    
+    * `--service <service>`
+        
+        Specifies service ID.
+        
+    * `--file <file path>`
+            
+        Specifies path to file. Required.
 
 * `flex init`
 
@@ -712,6 +840,424 @@ Kinvey CLI supports the universal environment variables `HTTPS_PROXY` and `https
 
     export HTTPS_PROXY=proxy.local
 
+
+## Configuration management
+
+Kinvey CLI supports the usage of configuration files (JSON format) to enable configuring certain aspects of the backend.
+
+**Organizations** can be modified by applying an organization configuration file. The file can contain applications and org-level services.
+
+**Applications** can be created and modified by applying an application configuration file. The file can contain app environments and app-level services.
+
+**Environments** can be created and modified by applying an environment configuration file. The file can contain: environment-related settings, collections, business logic, roles, push settings.
+
+**Services** can be created and modified by applying a service configuration file. Supported services: internal flex, external flex, REST, Sharepoint, Salesforce, MS SQL, ProgressData, DataDirect, Rapid health.
+
+### Environment configuration file
+
+The environment configuration file can be used to create a brand new environment or to modify an existing one. It is easiest to generate the file by 'exporting' an existent environment and making the necessary modifications. To export an environment run:
+ 
+ ```
+kinvey appenv export (--file <file-path>) [--env <env>] [--app <app>]
+```
+
+Alternatively, the environment template beneath can be used and modified as needed.
+
+To create an environment from a configuration file run:
+ ```
+kinvey appenv create <envName> (--file <file-path>) (--app <AppNameOrID>)
+```
+
+To apply a configuration file to an existent environment run:
+ ```
+kinvey appenv apply [--file <file-path>] (-env <env>) (--app <app>)
+```
+
+Before an environment config file gets applied a check will be executed to verify JSON is valid and parameter values are allowed. If the check passes successfully, Kinvey CLI will start applying the changes. In the case of a new environment it will simply try to create all the entities described in the file. 
+
+When the file is being applied to an existent environment then existent entities could be updated and new ones can be created. The CLI won't delete any entities even if they are not included in the file. Hence, if you want to create new endpoints but don't want to modify any existent collections for example, then you can exclude them from the configuration to have the file being applied faster.
+
+If an error occurs, the CLI stops applying the file and outputs the error message.
+
+#### Environment sample config file
+
+```
+{
+  "schemaVersion": "1.0.0",
+  "configType": "environment",
+  "settings": {
+    "apiVersion": 3,
+    "emailVerification": {
+      "required": false
+    }
+  },
+  "collections": {
+    "myCollection": {
+      "type": "internal",
+      "permissions": "shared"
+    },
+    "anotherCollection": {
+      "type": "external",
+      "permissions": "shared",
+      "service": "awesomeService",
+      "serviceEnvironment": "development",
+      "serviceObject": "awesomeServiceObject"
+    }
+  },
+  "commonCode": {
+    "my-common-code": {
+      "code": "var commonLogic = {};\ncommonLogic.print = function print(msg) {\n  console.log(msg);\n};"
+    },
+    "another-common-code": {
+      "codeFile": "./another-common-code.js"
+    }
+  },
+  "collectionHooks": {
+    "myCollection": {
+      "onPreSave": {
+        "type": "internal",
+        "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPostSave": {
+        "type": "external",
+        "service": "awesomeService",
+        "serviceEnvironment": "development",
+        "handlerName": "awesomeHandler"
+      }
+    }
+  },
+  "customEndpoints": {
+    "myEndpoint": {
+      "type": "internal",
+      "codeFile": "./my-endpoint.js",
+      "schedule": {
+        "start": "2019-07-22T16:35:00Z",
+        "interval": "5-minutes"
+      }
+    },
+    "anotherEndpoint": {
+      "type": "external",
+      "service": "awesomeService",
+      "serviceEnvironment": "development",
+      "handlerName": "anotherHandler"
+    }
+  },
+  "roles": {
+    "Intern": { "description": "Interns" },
+    "Employee": { "description": "Employees" }
+  },
+  "groups": {
+    "myGroup": {
+      "description": "Description here",
+      "groups": [ "otherGroup" ]
+    },
+    "otherGroup": {
+      "description": "Part of 'myGroup'"
+    }
+  },
+  "push": {
+  	"android": {
+  	  "senderId": "id123",
+  	  "apiKey": "key123"
+  	},
+  	"ios": {
+  	  "production": false,
+  	  "certificateFilePath": "./mycertdev.p12"
+  	}
+  }  
+}
+```
+
+#### Allowed fields:
+
+`schemaVersion` The schema version the CLI supports. Required. Current: 1.0.0
+
+`configType` *environment|service* The configuration type. Required.
+
+`settings` Environment settings. Optional.
+
+`settings.apiVersion` The default REST API version for this env.
+
+`settings.emailVerification` Options regarding email verification for users of this environment. Optional.
+                             
+`settings.emailVerification.required` *true|false* If true, users who have not verified their email will not be able to access the environment. Required.
+
+`settings.emailVerification.auto` *true|false* If true, automatically send a email verification request to all new users created within the environment. Optional.
+
+`settings.emailVerification.since` ISO-8601 date. If specified, any user created before this date will not need a verified email in order to access the environment. Optional.
+
+`collections` Environment collections. Optional. Object. Each first-level property is the name of a collection and contains an object describing this collection.
+
+`collections.[collectionName].type` *internal|external* If external, then the collection is backed by a flex service. Required.
+
+`collections.[collectionName].permissions` Collections permissions. Required. Could be a string or an object. Allowed string values: private, full, shared, read-only. To specify roles, use an object in the following format:
+```
+"permissions": {
+  [roleName]: {
+    [operation]: [accessType]
+  }
+}
+```
+where **operation** is one of: *create, read, update, delete*
+
+and **accessType** is one of: *never, always, grant, entity*
+
+To specify the built-in **All users** role, use *all-users*.
+ 
+ Example:
+
+```
+"permissions": {
+  "all-users": {
+    "read": "always"
+  },
+  "Employee": {
+    "create": "always",
+    "read": "always",
+    "update": "always",
+    "delete": "grant"
+  }
+}
+```
+
+`collections.[collectionName].service` Service to connect the collection to. Either service name or ID. Collection type must be set to 'external'.
+
+`collections.[collectionName].serviceEnvironment` Service environment to connect the collection to. Collection type must be set to 'external'.
+
+`collections.[collectionName].serviceObject` Service object. Collection type must be set to 'external'.
+
+`commonCode` Common code functions. Optional. An object where each first-level property is the name of the common code script.
+
+`commonCode.[commonCodeName].code` Code. Either `code` or `codeFile` must be set.
+ 
+`commonCode.[commonCodeName].codeFile` Path to code - relative or absolute. Either `code` or `codeFile` must be set.
+
+`collectionHooks` Collection hooks. Optional. An object where each first-level property is the name of a collection.
+
+`collectionHooks.[collectionName].[hookName]` *onPreSave|onPreFetch|onPreDelete|onPostSave|onPostFetch|onPostDelete* Hook type.
+ 
+`collectionHooks.[collectionName].[hookName].type` *internal|external* External if a service is involved. Required.  
+
+`collectionHooks.[collectionName].[hookName].code` Code. Either `code` or `codeFile` can be set.
+
+`collectionHooks.[collectionName].[hookName].codeFile` Path to code - relative or absolute. Either `code` or `codeFile` can be set.
+
+`collectionHooks.[collectionName].[hookName].service` Service to use. Collection hook type must be set to 'external'.
+
+`collectionHooks.[collectionName].[hookName].serviceEnvironment` Service environment to use. Collection hook type must be set to 'external'.
+
+`collectionHooks.[collectionName].[hookName].handlerName` Handler name. Collection hook type must be set to 'external'.
+
+`customEndpoints` Custom endpoints. Optional. Object where each first-level property is the name of an endpoint.
+
+`customEndpoints.[endpointName].type` *internal|external* External if a service is involved. Required. 
+
+`customEndpoints.[endpointName].code` Code. Either `code` or `codeFile` can be set.
+
+`customEndpoints.[endpointName].codeFile` Path to code - relative or absolute. Either `code` or `codeFile` can be set.
+
+`customEndpoints.[endpointName].service` Service to use. Endpoint type must be set to 'external'.
+
+`customEndpoints.[endpointName].serviceEnvironment` Service environment to use. Endpoint type must be set to 'external'.
+
+`customEndpoints.[endpointName].handlerName` Handler name. Endpoint type must be set to 'external'.
+
+`customEndpoints.[endpointName].schedule` Object describing how to schedule the endpoint. Optional.
+
+`customEndpoints.[endpointName].schedule.start` The code will be scheduled to start running at this date and time. ISO-8601 datetime. Required.
+
+`customEndpoints.[endpointName].schedule.interval` *weekly|daily|hourly|30-minutes|10-minutes|5-minutes|1-minute* At what intervals to execute the code. Optional.
+
+`roles` Roles. Optional. Object where each first-level property is the name of a role.
+
+`roles.[roleName].description` Role description. String. Optional.
+
+`groups` Groups. Optional. Object where each first-level property is the ID of a group. For example if the name is 'My group', then an appropriate ID could be 'myGroup' or 'my-group'.
+
+`groups.[groupId].name` Name. Optional.
+
+`groups.[groupId].description` Description. Optional.
+
+`groups.[groupId].groups` Nested groups. Optional. An array of other groups IDs.
+
+`push` Push notifications settings. Optional. Object.
+
+`push.android` Object describing Android settings. Optional.
+
+`push.android.senderId` Sender ID. Required.
+
+`push.android.apiKey` API Key. Required.
+
+`push.ios` Object describing iOS settings. Optional.
+
+`push.ios.production` *true|false* If false, then it is a development certificate. Required.
+
+`push.ios.certificateFilePath` Path to certificate - relative or absolute. Required.
+
+`push.ios.password` Certificate password. Optional.
+
+### Service configuration file
+
+The service configuration file can be used to create a brand new service or to modify an existing one (excluding Auth services).
+
+To create a service from a configuration file run:
+ ```
+kinvey service create <serviceName> <file-path> [--app AppNameOrId|--org OrgNameOrId]
+```
+
+Either `--app` or `--org` option must be set. The service will be accessible only to the chosen application or organization respectively.
+
+To apply a configuration file to an existent service run:
+ ```
+kinvey service apply [--file <file-path>] [--service <service-ID>]
+``` 
+
+When a new internal flex service is created the CLI will attempt a deploy if `sourcePath` is set to the project root directory. 
+
+When an existent internal flex service is updated and `sourcePath` is set, the CLI will attempt to deploy only if the version defined in `package.json` is higher then the cloud version. Otherwise, deployment procedure will be skipped.
+
+The following service templates can be used and modified as needed:
+
+#### `flex-internal` service sample config file
+
+```
+{
+  "schemaVersion": "1.0.0",
+  "configType": "service",
+  "type": "flex-internal",
+  "environments": {
+    "dev": {
+      "secret": "123",
+      "description": "Some description here",
+      "environmentVariables": {
+        "MY_KEY": "my value"
+      }
+    }
+  }
+}
+```
+
+#### `data-rest` service sample config file
+
+```
+{
+    "schemaVersion": "1.0.0",
+    "configType": "service",
+    "type": "data-rest",
+    "environments": {
+        "Default": {
+            "host": "http://www.test.com",
+            "authentication": {
+                "type": "None",
+                "credentials": {
+                    "mapTo": {
+                        "decode": false
+                    }
+                },
+                "loginOptions": {
+                    "type": "noLogin",
+                    "headers": {},
+                    "querystring": {},
+                    "body": {}
+                }
+            },
+            "connectionOptions": {
+                "strictSSL": false,
+                "rejectUnauthorized": false,
+                "headers": {},
+                "querystring": {}
+            },
+            "mapping": {
+                "users": {
+                    "sourceObject": {
+                        "primaryKey": {
+                            "type": "string",
+                            "name": "Id"
+                        },
+                        "endpoint": "/users",
+                        "httpMethod": "GET",
+                        "queryMapping": {
+                            "query": "header"
+                        },
+                        "querystring": {
+                            "query_param_name": "query_param_value"
+                        },
+                        "headers": {
+                            "header_name": "header_value"
+                        }
+                    },
+                    "fields": [
+                        {
+                            "kinveyFieldMapping": "username",
+                            "sourceFieldMapping": "username"
+                        },
+                        {
+                            "kinveyFieldMapping": "_id",
+                            "sourceFieldMapping": "userId"
+                        }
+                    ],
+                    "methods": {
+                        "getAll": {
+                            "isEnabled": true
+                        },
+                        "getById": {
+                            "isEnabled": false
+                        },
+                        "insert": {
+                            "isEnabled": true
+                        },
+                        "update": {
+                            "isEnabled": false
+                        },
+                        "deleteById": {
+                            "isEnabled": false
+                        },
+                        "deleteByQuery": {
+                            "isEnabled": false
+                        },
+                        "getCount": {
+                            "isEnabled": true
+                        },
+                        "getCountByQuery": {
+                            "isEnabled": false
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+#### Allowed fields:
+
+`schemaVersion` The schema version the CLI supports. Required. Current: 1.0.0
+
+`configType` *environment|service* The configuration type. Required.
+
+`type` *flex-internal|flex-external|data-rest|data-sharepoint|data-salesforce|data-mssql|data-progress|data-direct|data-health* Service type. Required.
+ 
+`description` Service description. String. Optional.
+ 
+`environments` Service environments. Object where each first-level property is the name of a service environment. Optional.
+ 
+ `environments.[envName].secret` Shared secret to use when communicating with the service. Аpplicable and required for 'flex-internal' and 'flex-external'
+ 
+`environments.[envName].host` URI pointing to the service server's location. Required for all service types except 'flex-internal' and 'data-health'.
+
+`environments.[envName].sourcePath` Path to source code - relative or absolute. Optional. Applicable when `type` is 'flex-internal'.
+
+`environments.[envName].runtime` The nodejs version of the runtime. Optional. The value must be one of [node6, node8, node10, node12]. Applicable when `type` is 'flex-internal'.
+
+`environments.[envName].authentication` Authentication type and credentials. Object. Optional. Applicable for 'data-rest', 'data-sharepoint', 'data-salesforce', 'data-mssql', 'data-progress', 'data-direct' and 'data-health' service types
+
+`environments.[envName].connectionOptions` Connection options. Object. Optional. Applicable for 'data-rest', 'data-sharepoint', 'data-salesforce', 'data-mssql', 'data-progress', 'data-direct' and 'data-health' service types.
+
+`environments.[envName].mapping` Contains the source object, the source fields mapping and the supported operations. Object. Optional. Applicable for 'data-rest', 'data-sharepoint', 'data-salesforce', 'data-mssql', 'data-progress', 'data-direct' and 'data-health' service types.
+
+`environments.[envName].version` The version of the source server. Object. Optional. Applicable when `type` is 'data-sharepoint' or 'data-mssql'.
+
+`environments.[envName].environmentVariables` Environment variables. Object. Optional. Applicable when `type` is 'flex-internal'.
 
 ## Troubleshooting
 

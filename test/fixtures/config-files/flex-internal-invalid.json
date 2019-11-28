@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "configType": "service",
+  "type": "flex-internal",
+  "environments": {
+    "dev": {
+      "secret": "123",
+      "host": "https://swapi.co/api",
+      "runtime": "node8.11.1"
+    }
+  }
+}

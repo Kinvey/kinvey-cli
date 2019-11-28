@@ -20,7 +20,7 @@ const path = require('path');
 
 const { AuthOptionsNames, FlexOptionsNames, ServiceOptionsNames } = require('./../../../../lib/Constants');
 const FlexController = require('./../../../../lib/flex/FlexController');
-const FlexService = require('./../../../../lib/flex/FlexService');
+const ServicesService = require('./../../../../lib/service/ServicesService');
 const CLIManager = require('./../../../../lib/CLIManager');
 const logger = require('./../../../../lib/logger');
 const Setup = require('./../../../../lib/Setup');
@@ -136,6 +136,8 @@ describe(`${baseCmd}`, () => {
                   return done(null, { email: validUserOne.email, token: tokenOne });
                 } else if (options.endpoint === svcEnvsEnd) {
                   return done(null, fixtureSvcEnvs);
+                } else if (options.endpoint === Endpoints.serviceStatus(testsConfig.defaultSchemaVersion, fixtureInternalDataLink.id, fixtureSvcEnvs[0].id)) {
+                  return done(null, { status: 'NEW' });
                 } else if (options.endpoint === Endpoints.jobs(testsConfig.defaultSchemaVersion)) {
                   const formData = options.formData;
                   const headers = options.headers;
@@ -163,8 +165,8 @@ describe(`${baseCmd}`, () => {
             return mockReq;
           };
 
-          const flexService = new FlexService(manager);
-          const ctrl = new FlexController({ cliManager: manager, flexService });
+          const servicesService = new ServicesService(manager);
+          const ctrl = new FlexController({ cliManager: manager, servicesService });
 
           const options = {
             [AuthOptionsNames.EMAIL]: existentUserOne.email,
@@ -199,13 +201,13 @@ describe(`${baseCmd}`, () => {
             function messUpPackageSetup(next) {
               // kinvey-flex-sdk must be included in the dependencies
               const invalidPackageContent = { dependencies: {} };
-              writeJSON(pathPackageJSON, invalidPackageContent, next);
+              writeJSON({ file: pathPackageJSON, data: invalidPackageContent }, next);
             }
           ], done);
         });
 
         after('restorePackageSetup', (done) => {
-          writeJSON(pathPackageJSON, initialPackageSetup, done);
+          writeJSON({ file: pathPackageJSON, data: initialPackageSetup }, done);
         });
 
         it('should fail', (done) => {

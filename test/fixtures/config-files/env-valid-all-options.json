@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "1.0.0",
+  "configType": "environment",
+  "settings": {
+    "apiVersion": 3,
+    "emailVerification": {
+      "auto": true,
+      "required": true
+    }
+  },
+  "collections": {
+    "colle0": {
+      "type": "external",
+      "permissions": "full",
+      "service": "serviceName",
+      "serviceEnvironment": "svcEnvName",
+      "serviceObject": "CoolCollection"
+    },
+    "collection2": {
+      "name": "colle2",
+      "type": "internal",
+      "permissions": "full"
+    },
+    "colle3": {
+      "type": "internal",
+      "permissions": {
+        "all-users": {
+          "create": "always",
+          "read": "always",
+          "update": "always",
+          "delete": "always"
+        },
+        "Sith": {
+          "create": "never",
+          "update": "never",
+          "delete": "never"
+        },
+        "Jedi": {
+          "create": "grant",
+          "update": "entity"
+        }
+      }
+    }
+  },
+  "commonCode": {
+    "my-common-code": {
+      "code": "var commonLogic = {};\ncommonLogic.print = function print(msg) {\n  console.log(msg);\n};"
+    },
+    "ext-common-code": {
+      "codeFile": "./my-common-code.js"
+    }
+  },
+  "collectionHooks": {
+    "colle2": {
+      "onPreSave": {
+        "type": "internal",
+        "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPostSave": {
+        "type": "internal",
+        "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}"
+      }
+    },
+    "colle0": {
+      "onPreSave": {
+        "type": "external",
+        "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}",
+        "service": "serviceName",
+        "serviceEnvironment": "svcEnvName",
+        "handlerName": "bizLogix"
+      },
+      "onPreFetch": {
+        "type": "external",
+        "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}",
+        "service": "serviceName",
+        "serviceEnvironment": "svcEnvName",
+        "handlerName": "bizLogix"
+      }
+    }
+  },
+  "customEndpoints": {
+    "end0": {
+      "type": "internal",
+      "codeFile": "./my-scheduled-code.js",
+      "schedule": {
+        "interval": "30-minutes",
+        "start": "2018-04-02T16:35:00Z"
+      }
+    },
+    "end1": {
+      "type": "external",
+      "codeFile": "./my-scheduled-code.js",
+      "service": "serviceName",
+      "serviceEnvironment": "svcEnvName",
+      "handlerName": "bizLogix",
+      "schedule": {
+        "start": "2018-04-04T16:35:00Z"
+      }
+    }
+  },
+  "roles": {
+    "Jedi": { "description": "presumably the good guys" },
+    "Sith": { "description": "presumably the bad guys" }
+  },
+  "groups": {
+    "alliance": {
+      "name": "Alliance",
+      "groups": [ "otherGroup" ]
+    }
+  },
+  "push": {
+    "android": {
+      "senderId": "id123",
+      "apiKey": "key123"
+    },
+    "ios": {
+      "production": false,
+      "certificateFilePath": "./mypushcertdev.p12",
+      "password": "ultraSecurePass"
+    }
+  }
+}

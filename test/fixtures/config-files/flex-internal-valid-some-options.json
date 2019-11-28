@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "1.0.0",
+  "configType": "service",
+  "type": "flex-internal",
+  "description": "test deploy0",
+  "environments": {
+    "dev": {
+      "secret": "123"
+    }
+  }
+}

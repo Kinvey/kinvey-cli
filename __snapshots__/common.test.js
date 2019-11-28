@@ -65,14 +65,16 @@ Unknown argument: test-option
 exports['common incomplete commands namespace (app) only should show help 1'] = `
 kinvey app
 
-Manage applications. Run 'kinvey app -h for details.
+Manage applications. Run 'kinvey app -h' for details.
 
 Commands:
   kinvey app create <name>  Create an application
+  kinvey app apply          Apply an application configuration file
   kinvey app list           List applications
   kinvey app show           Show detailed info for a specified app or for the
                             active one
   kinvey app use <app>      Set the active application
+  kinvey app export         Export the specified app or the active one
   kinvey app delete         Delete a specified app or the active one
 
 Options:
@@ -102,11 +104,13 @@ kinvey appenv <command> [args] [options]
 
 Commands:
   kinvey appenv create <name>  Create an environment
+  kinvey appenv apply          Apply an environment configuration file
   kinvey appenv list           List environments per app
   kinvey appenv show           Show detailed info for a specified environment or
                                for the active one
   kinvey appenv use <env>      Set the active environment
   kinvey appenv delete         Delete a specified environment or the active one
+  kinvey appenv export         Export environment configuration to a file
 
 Options:
   --version                                 Show version number        [boolean]
@@ -207,10 +211,12 @@ kinvey org
 Manage organizations. Run 'kinvey org -h' for details.
 
 Commands:
+  kinvey org apply      Apply an organization configuration file
   kinvey org list       List organizations
   kinvey org show       Show detailed info for a specified org or for the active
                         one
   kinvey org use <org>  Set the active organization
+  kinvey org export     Export the specified org or the active one
 
 Options:
   --version                                 Show version number        [boolean]
@@ -248,6 +254,38 @@ Commands:
   kinvey profile delete [name]  Delete a specified profile or the active one
   kinvey profile login [name]   Re-authenticate a profile. If no profile is
                                 specified, the active profile is used.
+
+Options:
+  --version                                 Show version number        [boolean]
+  --email                                   E-mail address of your Kinvey
+                                            account                     [string]
+  --password                                Password of your Kinvey account
+                                                                        [string]
+  --2fa, --2Fa                              Two-factor authentication token
+                                                                        [string]
+  --instance-id, --instanceId               Instance ID                 [string]
+  --profile                                 Profile to use              [string]
+  --output                                  Output format
+                                                      [string] [choices: "json"]
+  --silent                                  Do not output anything     [boolean]
+  --suppress-version-check,                 Do not check for package updates
+  --suppressVersionCheck                                               [boolean]
+  --verbose                                 Output debug messages      [boolean]
+  --no-color, --noColor                     Disable colors             [boolean]
+  -h, --help                                Show help                  [boolean]
+
+
+`
+
+exports['common incomplete commands namespace (service) only should show help 1'] = `
+kinvey service
+
+Manage services. Run 'kinvey service -h' for details.
+
+Commands:
+  kinvey service create <name>  Create a service
+  kinvey service apply          Apply a service configuration file
+  kinvey service export         Export a service
 
 Options:
   --version                                 Show version number        [boolean]

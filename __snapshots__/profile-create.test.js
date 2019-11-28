@@ -44,7 +44,8 @@ exports['profile create with insufficient info without password should fail 1'] 
 [debug] Logging in user: johnDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 422
-[error] ValidationError: Validation failed. Missing required property: password
+[error] ValidationError: Validation failed.
+	Field: password. Missing required property: password
 
 `
 

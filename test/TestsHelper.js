@@ -17,6 +17,7 @@ const async = require('async');
 const inquirer = require('inquirer');
 const snapshot = require('snap-shot-it');
 const stripAnsi = require('strip-ansi');
+const uuidv4 = require('uuid-v4');
 
 const childProcess = require('child_process');
 const fs = require('fs');
@@ -350,7 +351,7 @@ TestsHelper.setup = {
       }
 
       setup.profiles[profileName].active[activeItemType] = activeItem;
-      writeJSON(path, setup, done);
+      writeJSON({ file: path, data: setup }, done);
     });
   },
 
@@ -362,7 +363,7 @@ TestsHelper.setup = {
         delete setup.active.profile;
       }
 
-      writeJSON(path, setup, done);
+      writeJSON({ file: path, data: setup }, done);
     });
   },
 
@@ -387,18 +388,18 @@ TestsHelper.setup = {
       };
       data[key] = flex;
 
-      writeJSON(filePath, data, done);
+      writeJSON({ file: filePath, data }, done);
     });
   },
 
   clearGlobalSetup(originalPath, done) {
     const path = originalPath || globalSetupPath;
-    writeJSON(path, '', done);
+    writeJSON({ file: path, data: '' }, done);
   },
 
   clearSupposeDebugFile(originalPath, done) {
     const path = originalPath || supposeDebugPath;
-    writeJSON(path, '', done);
+    writeJSON({ file: path, data: '' }, done);
   },
 
   _clearActiveItemsOnProfile(profileName, activeItemType, originalPath, done) {
@@ -415,7 +416,7 @@ TestsHelper.setup = {
         delete setup.profiles[profileName].active[activeItemType];
       }
 
-      writeJSON(path, setup, done);
+      writeJSON({ file: path, data: setup }, done);
     });
   },
 
@@ -519,6 +520,25 @@ TestsHelper.execCmd = function execCmd(cliCmd, originalOptions, done) {
       NODE_CONFIG: JSON.stringify(testsConfig)
     };
   }
+
+  const fullCmd = `node ${path.join('bin', 'kinvey')} ${cliCmd}`;
+  return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
+    done(err, stdout, stderr);
+  });
+};
+
+TestsHelper.execCmdWoMocks = function execCmd(cliCmd, options, done) {
+  const nodeConfig = {
+    paths: {
+      project: path.join(process.cwd(), 'test/integration/project', '.kinvey'),
+      package: path.join(process.cwd(), 'test/integration/project'),
+      session: path.join(require('os').homedir(), '.kinvey-cli-tests')
+    }
+  };
+
+  const env = process.env;
+  env.NODE_CONFIG = JSON.stringify(nodeConfig);
+  options = options || { env }; // eslint-disable-line no-param-reassign
 
   const fullCmd = `node ${path.join('bin', 'kinvey')} ${cliCmd}`;
   return childProcess.exec(fullCmd, options, (err, stdout, stderr) => {
@@ -684,5 +704,14 @@ TestsHelper.testers.execCmdWithIdentifierAndActiveCheck = function execCmdWithId
     TestsHelper.assertions.assertActiveItemsOnProfile(expectedActive, profileName, null, done);
   });
 };
+
+TestsHelper.randomStrings = {
+  plainString: (length = 14) => (Math.random() + 1).toString(36).substr(0, length),
+  appName: (length = 12) => `CliApp${TestsHelper.randomStrings.plainString(length)}`.substr(0, length),
+  envName: (length = 12) => `CliEnv${TestsHelper.randomStrings.plainString(length)}`.substr(0, length),
+  collName: (length = 10) => `Coll${uuidv4()}`.substr(0, length)
+};
+
+TestsHelper.ConfigFilesDir = path.join(process.cwd(), 'test/config-files');
 
 module.exports = TestsHelper;

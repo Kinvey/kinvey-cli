@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0.0",
+  "configType": "service",
+  "type": "data-sharepoint",
+  "environments": {
+    "default": {
+      "version": "online",
+      "authentication": {
+        "type": "ServiceAccount",
+        "credentials": {
+          "username": "test@smth.onmicrosoft.com",
+          "password": "pass"
+        }
+      },
+      "host": "https://smth.sharepoint.com",
+      "mapping": {
+        "GroceriesObjectName": {
+          "sourceObject": {
+            "objectName": "Groceries"
+          },
+          "fields": [
+            {
+              "kinveyFieldMapping": "_id",
+              "sourceFieldMapping": "ID"
+            },
+            {
+              "kinveyFieldMapping": "title",
+              "sourceFieldMapping": "Title"
+            }
+          ],
+          "methods": {
+            "getAll": {
+              "isEnabled": true
+            },
+            "getById": {
+              "isEnabled": true
+            }
+          }
+        },
+        "ProductsObjectName": {
+          "sourceObject": {
+            "objectName": "Products"
+          },
+          "fields": [
+            {
+              "kinveyFieldMapping": "_id",
+              "sourceFieldMapping": "ID"
+            }
+          ],
+          "methods": {
+            "getAll": {
+              "isEnabled": true
+            },
+            "insert": {
+              "isEnabled": false
+            }
+          }
+        }
+      }
+    }
+  }
+}

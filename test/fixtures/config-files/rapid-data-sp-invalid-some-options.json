@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0",
+  "configType": "service",
+  "type": "data-sharepoint",
+  "environments": {
+    "default": {
+      "version": "online",
+      "authentication": {
+        "type": "ServiceAccountNope",
+        "credentials": {
+          "username": "test@smth.onmicrosoft.com",
+          "password": "pass"
+        }
+      }
+    }
+  }
+}

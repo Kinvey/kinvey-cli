@@ -1,8 +1,10 @@
 # Changelog
 
 ## Unreleased
+
+## 5.0.0 (2019-11-28)
 * Move `file` from positional argument to option
-* Rename push commands to apply
+* Rename `push` commands to `apply`
 * Allow creating app, app env or service with a name that contains only digits
 * Do not export the `serviceEnvironment` field on the serviceObject during `service export`
 * Fetch all orgs that a user can read

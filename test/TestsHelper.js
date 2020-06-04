@@ -29,6 +29,7 @@ const { isEmpty, isNullOrUndefined, readJSON, writeJSON } = require('../lib/Util
 
 const fixtureUser = require('./fixtures/user.json');
 const fixtureApp = require('./fixtures/app.json');
+const fixtureOrg = require('./fixtures/org.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureSvcEnv = require('./fixtures/svc-envs-one.json')[0];
 const testsConfig = require('./TestsConfig');
@@ -378,8 +379,8 @@ TestsHelper.setup = {
       const data = result || {};
       const flex = {
         flex: options || {
-          domain: 'app',
-          domainEntityId: fixtureApp.id,
+          domain: 'org',
+          domainEntityId: fixtureOrg.id,
           serviceId: fixtureInternalDataLink.id,
           serviceName: fixtureInternalDataLink.name,
           svcEnvId: fixtureSvcEnv.id,

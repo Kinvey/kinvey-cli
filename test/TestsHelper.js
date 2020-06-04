@@ -28,7 +28,6 @@ const logger = require('../lib/logger');
 const { isEmpty, isNullOrUndefined, readJSON, writeJSON } = require('../lib/Utils');
 
 const fixtureUser = require('./fixtures/user.json');
-const fixtureApp = require('./fixtures/app.json');
 const fixtureOrg = require('./fixtures/org.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureSvcEnv = require('./fixtures/svc-envs-one.json')[0];

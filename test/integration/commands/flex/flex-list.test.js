@@ -15,7 +15,7 @@
 
 const async = require('async');
 
-const { CommonOptionsNames, FlexOptionsNames, OutputFormat } = require('./../../../../lib/Constants');
+const { CommonOptionsNames, OrgOptionsName, OutputFormat } = require('./../../../../lib/Constants');
 const { isEmpty } = require('./../../../../lib/Utils');
 const { buildCmd, buildOptions, execCmdWithAssertion, setup } = require('../../../TestsHelper');
 
@@ -35,7 +35,6 @@ function testFlexList(profileName, optionsForCredentials, domain, domainEntityId
   const apiOptions = {};
 
   if (domain) {
-    options[FlexOptionsNames.DOMAIN_TYPE] = domain;
     if (domain === 'org') {
       apiOptions.domainType = 'organizationId';
     }
@@ -47,7 +46,7 @@ function testFlexList(profileName, optionsForCredentials, domain, domainEntityId
 
   if (domainEntityId) {
     apiOptions.domainEntityId = domainEntityId;
-    options[FlexOptionsNames.DOMAIN_ID] = domainEntityId;
+    options[OrgOptionsName.ORG] = domainEntityId;
   }
 
   if (!isEmpty(validUser)) {
@@ -65,8 +64,6 @@ function testFlexList(profileName, optionsForCredentials, domain, domainEntityId
 
 describe(baseCmd, () => {
   const nonExistentEntityId = '123I_DONT_EXIST';
-  const validDomain = 'app';
-  const validAppId = fixtureApp.id;
   const validOrgId = fixtureOrg.id;
 
   const validUserForListing = {
@@ -100,16 +97,12 @@ describe(baseCmd, () => {
       setup.deleteProfileFromSetup(profileToUse, null, done);
     });
 
-    it('and valid options (app and id) should succeed  and output default format', (done) => {
-      testFlexList(profileToUse, null, validDomain, validAppId, true, validUserForListing, null, done);
+    it('and valid options (org and id) should succeed  and output default format', (done) => {
+      testFlexList(profileToUse, null, 'org', validOrgId, true, validUserForListing, null, done);
     });
 
     it('and valid options (org and id) should succeed and output JSON', (done) => {
       testFlexList(profileToUse, null, 'org', validOrgId, true, validUserForListing, { [CommonOptionsNames.OUTPUT]: OutputFormat.JSON }, done);
-    });
-
-    it('and invalid domain with valid id should fail', (done) => {
-      testFlexList(profileToUse, null, 'invalidDomain', validAppId, false, validUserForListing, null, done);
     });
 
     describe('when valid project is set', () => {
@@ -123,7 +116,8 @@ describe(baseCmd, () => {
         const apiOptions = {
           token: validUserForListing.token,
           existentUser: { email: validUserForListing.email },
-          domainType: 'appId'
+          domainType: 'organizationId',
+          domainEntityId: fixtureOrg.id
         };
         execCmdWithAssertion(cmd, null, apiOptions, true, true, true, null, (err) => {
           expect(err).to.not.exist;
@@ -138,12 +132,12 @@ describe(baseCmd, () => {
 
     describe('when invalid project is set', () => {
       before((done) => {
-        setup.createProjectSetup(profileToUse, { domain: 'app', domainEntityId: nonExistentEntityId }, done);
+        setup.createProjectSetup(profileToUse, { domain: 'org', domainEntityId: nonExistentEntityId }, done);
       });
 
       it('with valid options should succeed', (done) => {
         // project contains non-existent domainEntityId; an existent one is provided as an option and it must be used
-        testFlexList(profileToUse, null, validDomain, validAppId, true, validUserForListing, null, done);
+        testFlexList(profileToUse, null, 'org', validOrgId, true, validUserForListing, null, done);
       });
 
       after((done) => {
@@ -172,15 +166,15 @@ describe(baseCmd, () => {
 
   describe('by specifying credentials as options', () => {
     it('when valid and valid options should succeed', (done) => {
-      testFlexList(null, existentUserOne, validDomain, validAppId, true, validUserForListing, null, done);
+      testFlexList(null, existentUserOne, 'org', validOrgId, true, validUserForListing, null, done);
     });
 
     it('when valid and non-existent id as option should fail', (done) => {
-      testFlexList(null, existentUserOne, validDomain, nonExistentEntityId, true, validUserForListing, null, done);
+      testFlexList(null, existentUserOne, 'org', nonExistentEntityId, true, validUserForListing, null, done);
     });
 
     it('when invalid and valid options should fail', (done) => {
-      testFlexList(null, nonExistentUser, validDomain, validAppId, true, validUserForListing, null, done);
+      testFlexList(null, nonExistentUser, 'org', validOrgId, true, validUserForListing, null, done);
     });
   });
 });

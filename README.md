@@ -124,7 +124,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
     
 * `app create <name>`
 
-    Creates an application. You can specify an organization ID or name if you want to create the app within the context of an organization.
+    Creates an application in the specified organization or in the active one.
     
     * `--org <organization>`
                
@@ -308,11 +308,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `service create <name>`
 
-    Creates a service within an application or organization (either `--app` or `--org` must be specified).
-    
-    * `--app <application>`
-           
-      Specifies a Kinvey app by ID or name.
+    Creates a service within an organization (either `--org <organization>`must be specified or active org must be set).
       
     * `--org <organization>`
                 
@@ -352,11 +348,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `flex create <service_name>`
 
-    Creates an internal flex service with the specified name along with a service environment. You need to specify a domain (application or organization) using the `--app` or `--org` option.
-
-    * `--app <application>`
-           
-        Specifies a Kinvey app by ID or name.
+    Creates an internal flex service with the specified name along with a service environment. You need to specify an organization using `--org <organization>` option or set an active one.
           
     * `--org <organization>`
             
@@ -432,15 +424,11 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
             
 * `flex list`
 
-   Lists all Flex services for a domain (app or organization), excluding external Flex services. Specify domain using `--domain` and then an app or organization ID using `--id`. If you skip the domain and ID options, the command lists the services within the domain you've configured as part of running `flex init`. In addition to the global options, this command supports the following options:
+   Lists all Flex services for a certain organization, excluding external Flex services. Specify an organization using `--org <organization>`. If you skip specifying the `--org` option, the command lists the services within the organization you've configured as part of running `flex init`. If the project is not configured, then the command uses the active organization. In addition to the global options, this command supports the following options:
 
-   * `--domain <app|org>`
-   
-        Specifies the domain type as either `app` for application or `org` for organization.
-   
-   * `--id <app or organization ID>`
-   
-        App or organization ID for use with `--domain <app|org>`.
+    * `--org <organization>`
+                
+        Specifies a Kinvey organization by ID or name.   
 
 * `flex logs`
 
@@ -524,11 +512,7 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
 
 * `website create <name>`
 
-    Create a website. You need to specify an organization or an application.
-    
-    * `--app <application>`
-               
-        Specifies a Kinvey app by ID or name.
+    Create a website. You need to specify an organization or set the active one.
     
     * `--org <organization>`
                 

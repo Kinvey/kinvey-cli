@@ -105,7 +105,8 @@ module.exports = () => {
 
     async.series([
       (next) => {
-        AppHelper.createFromConfig(appName, initialConfig, null, (err, id) => {
+        const orgIdentifier = 'CliOrg';
+        AppHelper.createFromConfig(appName, initialConfig, orgIdentifier, (err, id) => {
           if (err) {
             return next(err);
           }
@@ -122,7 +123,8 @@ module.exports = () => {
           config: modifiedConfig,
           id: appId,
           expectedName: appName,
-          collListPerEnv: { Prod: modifiedCollList, Test: internalCollList, newEnv: [] }
+          collListPerEnv: { Prod: modifiedCollList, Test: internalCollList, newEnv: [] },
+          expectOrg: true
         };
         AppHelper.assertApp(options, next);
       }

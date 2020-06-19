@@ -29,7 +29,6 @@ function testAppCreate(options, flags, name, done) {
 }
 
 describe(baseCmd, () => {
-  const jsonOptions = testers.getJsonOptions();
   const defaultFlags = testers.getDefaultFlags();
 
   before((done) => {
@@ -47,7 +46,7 @@ describe(baseCmd, () => {
     setup.clearGlobalSetup(null, done);
   });
 
-  it('with a name should succeed and output default format', (done) => {
+  it('with a name without org should fail', (done) => {
     testAppCreate(null, defaultFlags, appName, done);
   });
 
@@ -55,15 +54,12 @@ describe(baseCmd, () => {
     testAppCreate({ [OrgOptionsName.ORG]: JSON.stringify(fixtureOrg.name) }, defaultFlags, appName, done);
   });
 
-  it('with a name and existent org identifier (ID) should succeed', (done) => {
-    testAppCreate({ [OrgOptionsName.ORG]: fixtureOrg.id }, defaultFlags, appName, done);
-  });
-
-  it('with a name should succeed and output JSON', (done) => {
-    testAppCreate(jsonOptions, defaultFlags, appName, done);
+  it('with a name and existent org identifier (ID) should succeed and output JSON', (done) => {
+    const options = Object.assign(testers.getJsonOptions(), { [OrgOptionsName.ORG]: fixtureOrg.id });
+    testAppCreate(options, defaultFlags, appName, done);
   });
 
   it('without a name should fail', (done) => {
-    testAppCreate(null, defaultFlags, null, done);
+    testAppCreate({ [OrgOptionsName.ORG]: fixtureOrg.id }, defaultFlags, null, done);
   });
 });

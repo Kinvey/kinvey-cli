@@ -28,7 +28,7 @@ const logger = require('../lib/logger');
 const { isEmpty, isNullOrUndefined, readJSON, writeJSON } = require('../lib/Utils');
 
 const fixtureUser = require('./fixtures/user.json');
-const fixtureApp = require('./fixtures/app.json');
+const fixtureOrg = require('./fixtures/org.json');
 const fixtureInternalDataLink = require('./fixtures/kinvey-dlc.json');
 const fixtureSvcEnv = require('./fixtures/svc-envs-one.json')[0];
 const testsConfig = require('./TestsConfig');
@@ -355,6 +355,22 @@ TestsHelper.setup = {
     });
   },
 
+  unsetActiveItemOnProfile(profileName, activeItemType, originalPath, done) {
+    const path = originalPath || globalSetupPath;
+    TestsHelper.setup._readGlobalSetupForProfile(profileName, path, (err, setup) => {
+      if (err) {
+        return done(err);
+      }
+
+      if (!setup.profiles[profileName].active) {
+        return done();
+      }
+
+      delete setup.profiles[profileName].active[activeItemType];
+      writeJSON({ file: path, data: setup }, done);
+    });
+  },
+
   deleteProfileFromSetup(name, originalPath, done) {
     const path = originalPath || globalSetupPath;
     TestsHelper.setup._readGlobalSetupForProfile(name, path, (err, setup) => {
@@ -378,8 +394,8 @@ TestsHelper.setup = {
       const data = result || {};
       const flex = {
         flex: options || {
-          domain: 'app',
-          domainEntityId: fixtureApp.id,
+          domain: 'org',
+          domainEntityId: fixtureOrg.id,
           serviceId: fixtureInternalDataLink.id,
           serviceName: fixtureInternalDataLink.name,
           svcEnvId: fixtureSvcEnv.id,

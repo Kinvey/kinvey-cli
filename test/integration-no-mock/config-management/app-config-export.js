@@ -108,10 +108,6 @@ module.exports = () => {
       ], done);
     };
 
-    it('outside of an org with default env  should succeed', (done) => {
-      testForBasicAppWithDefaultEnv(null, done);
-    });
-
     it('inside an org with default env should succeed', (done) => {
       testForBasicAppWithDefaultEnv('CliOrg', done);
     });

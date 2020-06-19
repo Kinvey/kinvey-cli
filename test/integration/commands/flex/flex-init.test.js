@@ -44,9 +44,7 @@ const defaultEnvWithDebug = {
 };
 
 const Prompt = {
-  selectAppOrOrg: new RegExp(PromptMessages.INPUT_DOMAIN),
   selectOrganization: new RegExp(PromptMessages.INPUT_ORG),
-  selectApp: new RegExp(PromptMessages.INPUT_APP),
   selectService: new RegExp(PromptMessages.INPUT_SPECIFIC_SERVICE),
   selectSvcEnv: new RegExp(PromptMessages.INPUT_SPECIFIC_SVC_ENV)
 };
@@ -59,14 +57,10 @@ const Keys = {
 const defaultProfileName = 'flexListProfile';
 const defaultDataLinkName = 'TestKinveyDatalink';
 const defaultService = fixtureServices.find(x => x.name === defaultDataLinkName);
-const secondDataLinkName = 'TestSecondKinveyDatalink';
-const secondService = fixtureServices.find(x => x.name === secondDataLinkName);
 
 const defaultSvcEnvId = fixtureSvcEnvsOne[0].id;
 
-const appProjectFlex = assertions.buildExpectedProject(DomainTypes.APP, fixtureApp.id, defaultService.id, defaultService.name, defaultSvcEnvId);
-const expectedAppProject = assertions.buildExpectedProjectSetup(defaultProfileName, appProjectFlex);
-const orgProjectFlex = assertions.buildExpectedProject(DomainTypes.ORG, fixtureOrg.id, secondService.id, secondService.name, defaultSvcEnvId);
+const orgProjectFlex = assertions.buildExpectedProject(DomainTypes.ORG, fixtureOrg.id, defaultService.id, defaultService.name, defaultSvcEnvId);
 const expectedOrgProject = assertions.buildExpectedProjectSetup(defaultProfileName, orgProjectFlex);
 
 
@@ -83,9 +77,7 @@ const profileEnvVarName = EnvironmentVariables.PROFILE;
 
 const buildSupposeFlexInitSequence = (paramsArray, environment) => {
   const sequence = suppose(nodeCommand, paramsArray, environment)
-    .when(Prompt.selectAppOrOrg).respond('\n')
-    .when(Prompt.selectApp)
-    .respond(Keys.downArrow)
+    .when(Prompt.selectOrganization)
     .respond('\n')
     .when(Prompt.selectService)
     .respond('\n');
@@ -120,16 +112,18 @@ describe(baseCmd, () => {
     }
   });
 
-  describe('App Level Services', () => {
+  describe('Organization Level Services', () => {
+    const orgOptions = { domainType: 'organizationId', domainEntityId: fixtureOrg.id };
+
     it('with one not active valid profile should succeed', (done) => {
       setup.createProfiles(defaultProfileName, (err) => {
         expect(err).to.not.exist;
-        mockServer({ domainType: 'appId' }, (err, server) => {
+        mockServer(orgOptions, (err, server) => {
           expect(err).to.not.exist;
           ms = server;
           const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
           runSupposeSequence(sequence, (error, exitCode) => {
-            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
+            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedOrgProject, outputFile, flexInitSuccessMessage, done);
           });
         });
       });
@@ -138,13 +132,13 @@ describe(baseCmd, () => {
     it('with one active valid profile should succeed', (done) => {
       setup.setActiveProfile(defaultProfileName, true, (err) => {
         expect(err).to.not.exist;
-        mockServer({ domainType: 'appId' }, (err, server) => {
+        mockServer(orgOptions, (err, server) => {
           expect(err).to.not.exist;
           ms = server;
           const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
 
           runSupposeSequence(sequence, (error, exitCode) => {
-            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
+            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedOrgProject, outputFile, flexInitSuccessMessage, done);
           });
         });
       });
@@ -153,14 +147,11 @@ describe(baseCmd, () => {
     it('with one active valid profile and a few svc envs to choose from should succeed', (done) => {
       setup.setActiveProfile(defaultProfileName, true, (err) => {
         expect(err).to.not.exist;
-        mockServer({ domainType: 'appId', svcEnvs: fixtureSvcEnvsSeveral }, (err, server) => {
+        mockServer({ domainType: 'organizationId', domainEntityId: fixtureOrg.id, svcEnvs: fixtureSvcEnvsSeveral }, (err, server) => {
           expect(err).to.not.exist;
           ms = server;
           const sequence = suppose(nodeCommand, defaultFlexInitOptions, defaultEnvWithDebug)
-            .when(Prompt.selectAppOrOrg)
-            .respond('\n')
-            .when(Prompt.selectApp)
-            .respond(Keys.downArrow)
+            .when(Prompt.selectOrganization)
             .respond('\n')
             .when(Prompt.selectService)
             .respond('\n')
@@ -169,7 +160,7 @@ describe(baseCmd, () => {
             .respond('\n');
 
           const svcEnvId = fixtureSvcEnvsSeveral[1].id;
-          const expectedFlexNs = assertions.buildExpectedProject(DomainTypes.APP, fixtureApp.id, defaultService.id, defaultService.name, svcEnvId);
+          const expectedFlexNs = assertions.buildExpectedProject(DomainTypes.ORG, fixtureOrg.id, defaultService.id, defaultService.name, svcEnvId);
           const expectedProjectSetup = assertions.buildExpectedProjectSetup(defaultProfileName, expectedFlexNs);
 
           runSupposeSequence(sequence, (error, exitCode) => {
@@ -182,7 +173,7 @@ describe(baseCmd, () => {
     it('with one active valid profile and no svc envs to choose from should fail', (done) => {
       setup.setActiveProfile(defaultProfileName, true, (err) => {
         expect(err).to.not.exist;
-        mockServer({ domainType: 'appId', svcEnvs: [] }, (err, server) => {
+        mockServer({ domainType: 'organizationId', domainEntityId: fixtureOrg.id, svcEnvs: [] }, (err, server) => {
           expect(err).to.not.exist;
           ms = server;
 
@@ -197,44 +188,37 @@ describe(baseCmd, () => {
       });
     });
 
-    it('with one active valid profile and only apps to choose from should succeed', (done) => {
+    it('with one active valid profile and no services to choose from should fail', (done) => {
       setup.setActiveProfile(defaultProfileName, true, (err) => {
         expect(err).to.not.exist;
-        mockServer({ orgs: [], domainType: 'appId' }, (err, server) => {
+        mockServer({ domainType: 'organizationId', domainEntityId: 'withoutServices' }, (err, server) => {
           expect(err).to.not.exist;
-
           ms = server;
-          const sequence = suppose(nodeCommand, defaultFlexInitOptions, defaultEnvWithDebug)
-            .when(Prompt.selectApp)
-            .respond(Keys.downArrow)
-            .respond('\n')
-            .when(Prompt.selectService)
-            .respond('\n');
+
+          const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
 
           runSupposeSequence(sequence, (error, exitCode) => {
-            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
+            const expErrMsg = Errors.NoFlexServicesFound.MESSAGE;
+            assertions.assertSupposeError(error, exitCode, expErrMsg, 1);
+            done();
           });
         });
       });
     });
 
-    it('with one active valid profile and only orgs to choose from should succeed', (done) => {
+    it('with one active valid profile and no orgs to choose from should fail', (done) => {
       setup.setActiveProfile(defaultProfileName, true, (err) => {
         expect(err).to.not.exist;
-        mockServer({ apps: [], domainType: 'organizationId', domainEntityId: fixtureOrg.id }, (err, server) => {
+        mockServer({ orgs: [] }, (err, server) => {
           expect(err).to.not.exist;
-
           ms = server;
-          const sequence = suppose(nodeCommand, defaultFlexInitOptions, defaultEnvWithDebug)
-            .when(Prompt.selectOrganization)
-            .respond('\n')
-            .when(Prompt.selectService)
-            .respond(Keys.downArrow)
-            .respond(Keys.downArrow)
-            .respond('\n');
+
+          const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
 
           runSupposeSequence(sequence, (error, exitCode) => {
-            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedOrgProject, outputFile, flexInitSuccessMessage, done);
+            const expErrMsg = Errors.NoOrgsFound.MESSAGE;
+            assertions.assertSupposeError(error, exitCode, expErrMsg, 1);
+            done();
           });
         });
       });
@@ -245,13 +229,13 @@ describe(baseCmd, () => {
         expect(err).to.not.exist;
         setup.setActiveProfile(defaultProfileName, true, (err) => {
           expect(err).to.not.exist;
-          mockServer({ domainType: 'appId' }, (err, server) => {
+          mockServer(orgOptions, (err, server) => {
             expect(err).to.not.exist;
             ms = server;
             const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, defaultEnvWithDebug);
 
             runSupposeSequence(sequence, (error, exitCode) => {
-              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
+              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedOrgProject, outputFile, flexInitSuccessMessage, done);
             });
           });
         });
@@ -263,14 +247,14 @@ describe(baseCmd, () => {
         expect(err).to.not.exist;
         setup.setActiveProfile(secondValidProfileName, true, (err) => {
           expect(err).to.not.exist;
-          mockServer({ domainType: 'appId' }, (err, server) => {
+          mockServer(orgOptions, (err, server) => {
             expect(err).to.not.exist;
             ms = server;
             const profileOptions = buildProfileOptions(defaultFlexInitOptions, defaultProfileName);
             const sequence = buildSupposeFlexInitSequence(profileOptions, defaultEnvWithDebug);
 
             runSupposeSequence(sequence, (error, exitCode) => {
-              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
+              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedOrgProject, outputFile, flexInitSuccessMessage, done);
             });
           });
         });
@@ -287,13 +271,13 @@ describe(baseCmd, () => {
         expect(err).to.not.exist;
         setup.setActiveProfile(secondValidProfileName, true, (err) => {
           expect(err).to.not.exist;
-          mockServer({ domainType: 'appId' }, (err, server) => {
+          mockServer(orgOptions, (err, server) => {
             expect(err).to.not.exist;
             ms = server;
             const sequence = buildSupposeFlexInitSequence(defaultFlexInitOptions, envWithProfileVar);
 
             runSupposeSequence(sequence, (error, exitCode) => {
-              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
+              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedOrgProject, outputFile, flexInitSuccessMessage, done);
             });
           });
         });
@@ -310,7 +294,7 @@ describe(baseCmd, () => {
         expect(err).to.not.exist;
         setup.setActiveProfile(secondValidProfileName, true, (err) => {
           expect(err).to.not.exist;
-          mockServer({ domainType: 'appId' }, (err, server) => {
+          mockServer(orgOptions, (err, server) => {
             expect(err).to.not.exist;
             ms = server;
 
@@ -318,7 +302,7 @@ describe(baseCmd, () => {
             const sequence = buildSupposeFlexInitSequence(profileOptions, envWithProfileVar);
 
             runSupposeSequence(sequence, (error, exitCode) => {
-              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedAppProject, outputFile, flexInitSuccessMessage, done);
+              assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedOrgProject, outputFile, flexInitSuccessMessage, done);
             });
           });
         });
@@ -366,33 +350,6 @@ describe(baseCmd, () => {
           runSupposeSequence(sequence, (error, exitCode) => {
             assertions.assertSupposeError(error, exitCode, notFoundProfileErrorMessage, 1);
             done();
-          });
-        });
-      });
-    });
-  });
-
-  describe('Organization Level Services', () => {
-    const orgOptions = { domainType: 'organizationId', domainEntityId: fixtureOrg.id };
-
-    it('with one not active valid profile should succeed', (done) => {
-      setup.createProfiles(defaultProfileName, (err) => {
-        expect(err).to.not.exist;
-        mockServer(orgOptions, (err, server) => {
-          expect(err).to.not.exist;
-          ms = server;
-          const sequence = suppose(nodeCommand, defaultFlexInitOptions, defaultEnvWithDebug)
-            .when(Prompt.selectAppOrOrg)
-            .respond(Keys.downArrow).respond('\n')
-            .when(Prompt.selectOrganization)
-            .respond('\n')
-            .when(Prompt.selectService)
-            .respond(Keys.downArrow)
-            .respond(Keys.downArrow)
-            .respond('\n');
-
-          runSupposeSequence(sequence, (error, exitCode) => {
-            assertions.assertSuccessfulFlexInitSequence(error, exitCode, expectedOrgProject, outputFile, flexInitSuccessMessage, done);
           });
         });
       });

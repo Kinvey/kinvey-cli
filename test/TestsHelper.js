@@ -355,6 +355,22 @@ TestsHelper.setup = {
     });
   },
 
+  unsetActiveItemOnProfile(profileName, activeItemType, originalPath, done) {
+    const path = originalPath || globalSetupPath;
+    TestsHelper.setup._readGlobalSetupForProfile(profileName, path, (err, setup) => {
+      if (err) {
+        return done(err);
+      }
+
+      if (!setup.profiles[profileName].active) {
+        return done();
+      }
+
+      delete setup.profiles[profileName].active[activeItemType];
+      writeJSON({ file: path, data: setup }, done);
+    });
+  },
+
   deleteProfileFromSetup(name, originalPath, done) {
     const path = originalPath || globalSetupPath;
     TestsHelper.setup._readGlobalSetupForProfile(name, path, (err, setup) => {

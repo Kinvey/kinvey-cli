@@ -32,8 +32,8 @@ exports['flex list by specifying a profile and valid options (org and id) should
 [debug] Using profile 'profileToGetServices'
 [debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
 [debug] Request:  GET http://localhost:3234/v3/services
 [debug] Response: GET http://localhost:3234/v3/services 200
 Count: 3
@@ -80,8 +80,8 @@ exports['flex list by specifying a profile when invalid project is set with vali
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
 [debug] Request:  GET http://localhost:3234/v3/services
 [debug] Response: GET http://localhost:3234/v3/services 200
 Count: 3
@@ -96,12 +96,32 @@ id                                name
 
 `
 
-exports['flex list by specifying a profile when valid project is set without options should succeed 1'] = `
+exports['flex list by specifying a profile when valid project is set when active org is not set without options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v3/services
+[debug] Response: GET http://localhost:3234/v3/services 200
+Count: 3
+
+id                                name                    
+--------------------------------  ------------------------
+12378kdl2                         TestKinveyDatalink      
+334d6ab3df5e4af1a13ec011c12d0208  TestKinveyService       
+12389kd89                         TestSecondKinveyDatalink
+
+
+
+`
+
+exports['flex list by specifying a profile when valid project is set when active org is set should succeed using the org set in project setup 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'profileToGetServices'
+[debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
+[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
 [debug] Request:  GET http://localhost:3234/v3/services
 [debug] Response: GET http://localhost:3234/v3/services 200
 Count: 3
@@ -146,8 +166,8 @@ exports['flex list by specifying credentials as options when valid and valid opt
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
 [debug] Request:  GET http://localhost:3234/v3/services
 [debug] Response: GET http://localhost:3234/v3/services 200
 [debug] Request:  DELETE http://localhost:3234/session

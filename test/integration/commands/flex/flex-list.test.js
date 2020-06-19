@@ -110,23 +110,50 @@ describe(baseCmd, () => {
         setup.createProjectSetup(profileToUse, null, done);
       });
 
-      it('without options should succeed', (done) => {
-        const options = buildOptions(profileToUse);
-        const cmd = buildCmd(baseCmd, null, options, [[CommonOptionsNames.VERBOSE]]);
-        const apiOptions = {
-          token: validUserForListing.token,
-          existentUser: { email: validUserForListing.email },
-          domainType: 'organizationId',
-          domainEntityId: fixtureOrg.id
-        };
-        execCmdWithAssertion(cmd, null, apiOptions, true, true, true, null, (err) => {
-          expect(err).to.not.exist;
-          done();
+      after((done) => {
+        setup.clearProjectSetup(null, done);
+      });
+
+      describe('when active org is set', () => {
+        before('set non-existent active org', (done) => {
+          setup.setActiveItemOnProfile(profileToUse, 'org', 'noSuchOrg', null, done);
+        });
+
+        after('unset active org', (done) => {
+          setup.unsetActiveItemOnProfile(profileToUse, 'org', null, done);
+        });
+
+        it('should succeed using the org set in project setup', (done) => {
+          const options = buildOptions(profileToUse);
+          const cmd = buildCmd(baseCmd, null, options, [[CommonOptionsNames.VERBOSE]]);
+          const apiOptions = {
+            token: validUserForListing.token,
+            existentUser: { email: validUserForListing.email },
+            domainType: 'organizationId',
+            domainEntityId: fixtureOrg.id
+          };
+          execCmdWithAssertion(cmd, null, apiOptions, true, true, true, null, (err) => {
+            expect(err).to.not.exist;
+            done();
+          });
         });
       });
 
-      after((done) => {
-        setup.clearProjectSetup(null, done);
+      describe('when active org is not set', () => {
+        it('without options should succeed', (done) => {
+          const options = buildOptions(profileToUse);
+          const cmd = buildCmd(baseCmd, null, options, [[CommonOptionsNames.VERBOSE]]);
+          const apiOptions = {
+            token: validUserForListing.token,
+            existentUser: { email: validUserForListing.email },
+            domainType: 'organizationId',
+            domainEntityId: fixtureOrg.id
+          };
+          execCmdWithAssertion(cmd, null, apiOptions, true, true, true, null, (err) => {
+            expect(err).to.not.exist;
+            done();
+          });
+        });
       });
     });
 

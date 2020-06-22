@@ -34,14 +34,14 @@ function exportAppWithResolvedFileRefs(appIdentifier, done) {
 module.exports = () => {
   let appName;
 
-  afterEach('remove app', (done) => {
-    execCmdWoMocks(`app delete --app ${appName} --no-prompt`, null, (err) => {
-      appName = null;
-      done(err);
-    });
-  });
-
   describe('basic app', () => {
+    afterEach('remove app', (done) => {
+      execCmdWoMocks(`app delete --app ${appName} --no-prompt`, null, (err) => {
+        appName = null;
+        done(err);
+      });
+    });
+
     const testForBasicAppWithDefaultEnv = (orgIdentifier, done) => {
       let exportedApp;
       let appId;
@@ -126,38 +126,12 @@ module.exports = () => {
       );
     });
 
-    it('inside an org with own services and external collections should succeed', (done) => {
+    it('inside an org with org services and external collections should succeed', (done) => {
       let exportedApp;
       let appId;
       let appConfig;
 
-      const orgSvcEnvName = `orgEnv${randomStrings.plainString(4)}`;
-      const orgServiceName = `org${randomStrings.plainString()}`;
-
       async.series([
-        (next) => {
-          // create org-level service to verify later on that only app-level services are exported
-          const serviceConfig = {
-            configType: 'service',
-            schemaVersion: '1.0.0',
-            type: 'flex-internal',
-            description: 'Test service',
-            environments: {
-              [orgSvcEnvName]: {
-                secret: '123'
-              }
-            }
-          };
-
-          ConfigManagementHelper.service.createFromConfig(orgServiceName, serviceConfig, 'org', orgToUse, null, (err, id) => {
-            if (err) {
-              return next(err);
-            }
-
-            orgServicesToRemove.push(id);
-            next();
-          });
-        },
         (next) => {
           // create an app with external collections and a service
           const appServiceName = `app${randomStrings.plainString(6)}`;
@@ -222,14 +196,9 @@ module.exports = () => {
         },
         (next) => {
           const expectedConfig = Object.assign({}, appConfig);
+          // due to API changes services will be created on org level
+          expectedConfig.services = {};
           ConfigManagementHelper.app.addSystemCollsToEnvs(expectedConfig);
-
-          // add default runtime for svc environments
-          Object.keys(expectedConfig.services).forEach((svc) => {
-            Object.keys(expectedConfig.services[svc].environments).forEach((svcEnv) => {
-              expectedConfig.services[svc].environments[svcEnv].runtime = 'node10';
-            });
-          });
 
           expect(exportedApp).to.deep.equal(expectedConfig);
           next();

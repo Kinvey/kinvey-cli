@@ -91,12 +91,12 @@ exports['flex create with active profile with a name, secret, basic env vars and
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
-[debug] Request:  POST http://localhost:3234/v3/services
-[debug] Response: POST http://localhost:3234/v3/services 201
-[debug] Request:  POST http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: POST http://localhost:3234/v3/services/12378kdl2/environments 201
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  POST http://localhost:3234/v4/services
+[debug] Response: POST http://localhost:3234/v4/services 201
+[debug] Request:  POST http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: POST http://localhost:3234/v4/services/12378kdl2/environments 201
 Created service: 12378kdl2. Secret: 123
 
 `
@@ -105,12 +105,12 @@ exports['flex create with active profile with a name, secret, basic env vars, ru
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
-[debug] Request:  POST http://localhost:3234/v3/services
-[debug] Response: POST http://localhost:3234/v3/services 201
-[debug] Request:  POST http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: POST http://localhost:3234/v3/services/12378kdl2/environments 201
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  POST http://localhost:3234/v4/services
+[debug] Response: POST http://localhost:3234/v4/services 201
+[debug] Request:  POST http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: POST http://localhost:3234/v4/services/12378kdl2/environments 201
 Created service: 12378kdl2. Secret: 123
 
 `
@@ -220,12 +220,12 @@ exports['flex create with one-time session with name, secret and org should succ
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
-[debug] Request:  POST http://localhost:3234/v3/services
-[debug] Response: POST http://localhost:3234/v3/services 201
-[debug] Request:  POST http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: POST http://localhost:3234/v3/services/12378kdl2/environments 201
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  POST http://localhost:3234/v4/services
+[debug] Response: POST http://localhost:3234/v4/services 201
+[debug] Request:  POST http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: POST http://localhost:3234/v4/services/12378kdl2/environments 201
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

@@ -32,10 +32,10 @@ exports['flex list by specifying a profile and valid options (org and id) should
 [debug] Using profile 'profileToGetServices'
 [debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
-[debug] Request:  GET http://localhost:3234/v3/services
-[debug] Response: GET http://localhost:3234/v3/services 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v4/services
+[debug] Response: GET http://localhost:3234/v4/services 200
 Count: 3
 
 id                                name                    
@@ -53,10 +53,10 @@ exports['flex list by specifying a profile and valid options (org and id) should
 [debug] Using profile 'profileToGetServices'
 [debug] Project configuration file not found: 'projectSetupPath'.
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
-[debug] Request:  GET http://localhost:3234/v3/services
-[debug] Response: GET http://localhost:3234/v3/services 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v4/services
+[debug] Response: GET http://localhost:3234/v4/services 200
 {
   "result": [
     {
@@ -80,10 +80,10 @@ exports['flex list by specifying a profile when invalid project is set with vali
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
-[debug] Request:  GET http://localhost:3234/v3/services
-[debug] Response: GET http://localhost:3234/v3/services 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v4/services
+[debug] Response: GET http://localhost:3234/v4/services 200
 Count: 3
 
 id                                name                    
@@ -100,10 +100,10 @@ exports['flex list by specifying a profile when valid project is set when active
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
-[debug] Request:  GET http://localhost:3234/v3/services
-[debug] Response: GET http://localhost:3234/v3/services 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v4/services
+[debug] Response: GET http://localhost:3234/v4/services 200
 Count: 3
 
 id                                name                    
@@ -120,10 +120,10 @@ exports['flex list by specifying a profile when valid project is set when active
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServices'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
-[debug] Request:  GET http://localhost:3234/v3/services
-[debug] Response: GET http://localhost:3234/v3/services 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v4/services
+[debug] Response: GET http://localhost:3234/v4/services 200
 Count: 3
 
 id                                name                    
@@ -151,8 +151,8 @@ exports['flex list by specifying credentials as options when valid and non-exist
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Using organization: 123I_DONT_EXIST
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -166,10 +166,10 @@ exports['flex list by specifying credentials as options when valid and valid opt
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
-[debug] Request:  GET http://localhost:3234/v3/services
-[debug] Response: GET http://localhost:3234/v3/services 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v4/services
+[debug] Response: GET http://localhost:3234/v4/services 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

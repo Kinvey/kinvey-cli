@@ -2,8 +2,8 @@ exports['org use by not specifying a profile when one should use it with existen
 [debug] Checking for package updates
 [debug] Using profile 'orgProfile0'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
 [debug] Writing contents to file globalSetupPath
 {
   "result": {
@@ -17,8 +17,8 @@ exports['org use by not specifying a profile when one should use it with existen
 [debug] Checking for package updates
 [debug] Using profile 'orgProfile0'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
 [debug] Writing contents to file globalSetupPath
 Active organization: f71b0d5e60684b48b8265e7fa50302b9
 
@@ -28,8 +28,8 @@ exports['org use by not specifying a profile when one should use it with existen
 [debug] Checking for package updates
 [debug] Using profile 'orgProfile0'
 [debug] Using organization: My Team
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 [debug] Writing contents to file globalSetupPath
 Active organization: f71b0d5e60684b48b8265e7fa50302b9
 
@@ -39,8 +39,8 @@ exports['org use by not specifying a profile when one should use it with non-exi
 [debug] Checking for package updates
 [debug] Using profile 'orgProfile0'
 [debug] Using organization: noSuchName
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 [error] NotFound: Could not find organization with identifier 'noSuchName'.
 
 `
@@ -49,8 +49,8 @@ exports['org use by specifying a profile should use it and succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToBeUsed'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
 [debug] Writing contents to file globalSetupPath
 Active organization: f71b0d5e60684b48b8265e7fa50302b9
 
@@ -60,8 +60,8 @@ exports['org use by specifying a profile when active is set and no profile optio
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
 [debug] Writing contents to file globalSetupPath
 Active organization: f71b0d5e60684b48b8265e7fa50302b9
 
@@ -71,8 +71,8 @@ exports['org use by specifying a profile when active is set and profile specifie
 [debug] Checking for package updates
 [debug] Using profile 'profileToBeUsed'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
 [debug] Writing contents to file globalSetupPath
 Active organization: f71b0d5e60684b48b8265e7fa50302b9
 

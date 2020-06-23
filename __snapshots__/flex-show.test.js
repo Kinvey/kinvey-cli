@@ -1,12 +1,12 @@
 exports['flex show using active profile when valid project is set with service and svc env as options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/services/124/environments
-[debug] Response: GET http://localhost:3234/v3/services/124/environments 200
-[debug] Request:  GET http://localhost:3234/v3/services/124/environments
-[debug] Response: GET http://localhost:3234/v3/services/124/environments 200
-[debug] Request:  GET http://localhost:3234/v3/services/124
-[debug] Response: GET http://localhost:3234/v3/services/124 200
+[debug] Request:  GET http://localhost:3234/v4/services/124/environments
+[debug] Response: GET http://localhost:3234/v4/services/124/environments 200
+[debug] Request:  GET http://localhost:3234/v4/services/124/environments
+[debug] Response: GET http://localhost:3234/v4/services/124/environments 200
+[debug] Request:  GET http://localhost:3234/v4/services/124
+[debug] Response: GET http://localhost:3234/v4/services/124 200
 key                          value                           
 ---------------------------  --------------------------------
 svcEnvName                   stg4                            
@@ -22,10 +22,10 @@ environmentVariables.MY_ENV  stg4
 exports['flex show using active profile when valid project is set without service and svc env as options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2 200
 key                          value                           
 ---------------------------  --------------------------------
 svcEnvName                   dev                             

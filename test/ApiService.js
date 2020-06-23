@@ -168,7 +168,7 @@ function getIdPartFromId(id) {
 }
 
 function getSchemaVersion(isBaasRequest) {
-  return isBaasRequest ? '' : '/v3';
+  return isBaasRequest ? '' : '/v4';
 }
 
 function buildUrl(relativeUrl, id, isBaasRequest) {

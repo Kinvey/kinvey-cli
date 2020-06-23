@@ -2,12 +2,12 @@ exports['website create using active profile with a name and org ID should succe
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9
-[debug] Response: GET http://localhost:3234/v3/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
-[debug] Request:  POST http://localhost:3234/v3/sites
-[debug] Response: POST http://localhost:3234/v3/sites 201
-[debug] Request:  POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
-[debug] Response: POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 201
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  POST http://localhost:3234/v4/sites
+[debug] Response: POST http://localhost:3234/v4/sites 201
+[debug] Request:  POST http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments
+[debug] Response: POST http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments 201
 {
   "result": {
     "id": "9caf90c31c4449f195a1a40acc979cf0"
@@ -20,12 +20,12 @@ exports['website create using active profile with a name and org name should suc
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: My Team
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
-[debug] Request:  POST http://localhost:3234/v3/sites
-[debug] Response: POST http://localhost:3234/v3/sites 201
-[debug] Request:  POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
-[debug] Response: POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 201
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
+[debug] Request:  POST http://localhost:3234/v4/sites
+[debug] Response: POST http://localhost:3234/v4/sites 201
+[debug] Request:  POST http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments
+[debug] Response: POST http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments 201
 Created website: 9caf90c31c4449f195a1a40acc979cf0
 
 `
@@ -34,8 +34,8 @@ exports['website create using active profile with name and non-existent org name
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: noSuchOrg
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 [error] NotFound: Could not find organization with identifier 'noSuchOrg'.
 
 `
@@ -51,12 +51,12 @@ exports['website create using active profile with name, org id, historyApiRoutin
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
-[debug] Request:  POST http://localhost:3234/v3/sites
-[debug] Response: POST http://localhost:3234/v3/sites 201
-[debug] Request:  POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
-[debug] Response: POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 201
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  POST http://localhost:3234/v4/sites
+[debug] Response: POST http://localhost:3234/v4/sites 201
+[debug] Request:  POST http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments
+[debug] Response: POST http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments 201
 Created website: 9caf90c31c4449f195a1a40acc979cf0
 
 `
@@ -111,12 +111,12 @@ exports['website create using one-time session with a name and org ID should suc
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
-[debug] Request:  POST http://localhost:3234/v3/sites
-[debug] Response: POST http://localhost:3234/v3/sites 201
-[debug] Request:  POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
-[debug] Response: POST http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 201
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  POST http://localhost:3234/v4/sites
+[debug] Response: POST http://localhost:3234/v4/sites 201
+[debug] Request:  POST http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments
+[debug] Response: POST http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments 201
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

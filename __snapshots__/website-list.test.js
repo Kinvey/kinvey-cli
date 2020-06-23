@@ -1,8 +1,8 @@
 exports['website list using active profile when there are no sites should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
+[debug] Request:  GET http://localhost:3234/v4/sites
+[debug] Response: GET http://localhost:3234/v4/sites 200
 Count: 0
 
 
@@ -15,8 +15,8 @@ Count: 0
 exports['website list using active profile when there are sites should output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
+[debug] Request:  GET http://localhost:3234/v4/sites
+[debug] Response: GET http://localhost:3234/v4/sites 200
 {
   "result": [
     {
@@ -47,8 +47,8 @@ exports['website list using active profile when there are sites should output JS
 exports['website list using active profile when there are sites should output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
+[debug] Request:  GET http://localhost:3234/v4/sites
+[debug] Response: GET http://localhost:3234/v4/sites 200
 Count: 5
 
 id                                name
@@ -68,8 +68,8 @@ exports['website list using one-time session when there are sites should output 
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
+[debug] Request:  GET http://localhost:3234/v4/sites
+[debug] Response: GET http://localhost:3234/v4/sites 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

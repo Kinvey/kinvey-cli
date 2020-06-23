@@ -32,8 +32,12 @@ module.exports = () => {
 
   let appName;
 
-  afterEach('remove app', (done) => {
-    execCmdWoMocks(`app delete --app ${appName} --no-prompt`, null, done);
+  before('remove all services', (done) => {
+    ConfigManagementHelper.org.removeServicesByOrgName('CliOrg', done);
+  });
+
+  afterEach('remove all apps and services', (done) => {
+    ConfigManagementHelper.org.removeAppsAndServices('CliOrg', done);
   });
 
   describe('in org', () => {

@@ -25,11 +25,11 @@ const { execCmdWoMocks, randomStrings } = require('./../../TestsHelper');
 module.exports = () => {
   let appName;
 
-  afterEach('remove app', (done) => {
-    execCmdWoMocks(`app delete --app ${appName} --no-prompt`, null, done);
+  afterEach('remove all apps and services', (done) => {
+    ConfigManagementHelper.org.removeAppsAndServices('CliOrg', done);
   });
 
-  it('modifying settings, envs and services, and creating envs and services should succeed', (done) => {
+  it('modifying settings and envs, and creating envs should succeed', (done) => {
     const internalCollList = EnvHelper.buildValidInternalCollectionsList(2, false);
     const internalConfigColls = ConfigManagementHelper.common.buildConfigEntityFromList(internalCollList);
     const basicEnvWithInternalCollsOnly = {
@@ -57,14 +57,9 @@ module.exports = () => {
       environments: {
         Prod: cloneDeep(basicEnvWithInternalCollsOnly),
         Test: cloneDeep(basicEnvWithInternalCollsOnly)
-      },
-      services: {
-        [initialServiceName]: initialService
       }
     };
 
-    const additionalServiceName = randomStrings.plainString();
-    const additionalSvcEnvName = 'dev';
     const modifiedConfig = cloneDeep(initialConfig);
     modifiedConfig.settings = {
       sessionTimeoutInSeconds: 90
@@ -79,33 +74,18 @@ module.exports = () => {
       schemaVersion: '1.0.0',
       customEndpoints: {
         myEndpoint: {
-          type: 'external',
-          service: additionalServiceName,
-          serviceEnvironment: additionalSvcEnvName,
-          handlerName: 'someHandler'
-        }
-      }
-    };
-
-    modifiedConfig.services[initialServiceName].description = 'Updated service description';
-    modifiedConfig.services[additionalServiceName] = {
-      schemaVersion: '1.0.0',
-      type: 'flex-external',
-      description: 'Test service',
-      environments: {
-        [additionalSvcEnvName]: {
-          secret: '567',
-          host: 'https://swapi.co/api'
+          type: 'internal',
+          code: 'function onRequest(request, response, modules) {\nconsole.log("On request...");\n  response.continue();\n}'
         }
       }
     };
 
     appName = randomStrings.appName();
+    const orgIdentifier = 'CliOrg';
     let appId;
 
     async.series([
       (next) => {
-        const orgIdentifier = 'CliOrg';
         AppHelper.createFromConfig(appName, initialConfig, orgIdentifier, (err, id) => {
           if (err) {
             return next(err);
@@ -124,7 +104,8 @@ module.exports = () => {
           id: appId,
           expectedName: appName,
           collListPerEnv: { Prod: modifiedCollList, Test: internalCollList, newEnv: [] },
-          expectOrg: true
+          expectOrg: true,
+          orgIdentifier
         };
         AppHelper.assertApp(options, next);
       }

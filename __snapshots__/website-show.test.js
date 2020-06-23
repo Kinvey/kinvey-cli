@@ -1,10 +1,10 @@
 exports['website show using active profile with existent site ID (linked to org) should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc
-[debug] Response: GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc 200
-[debug] Request:  GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc/environments
-[debug] Response: GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc/environments 200
+[debug] Request:  GET http://localhost:3234/v4/sites/0205f37e08d545cb9c88ad48b4397acc
+[debug] Response: GET http://localhost:3234/v4/sites/0205f37e08d545cb9c88ad48b4397acc 200
+[debug] Request:  GET http://localhost:3234/v4/sites/0205f37e08d545cb9c88ad48b4397acc/environments
+[debug] Response: GET http://localhost:3234/v4/sites/0205f37e08d545cb9c88ad48b4397acc/environments 200
 key                value                                                                                                    
 -----------------  ---------------------------------------------------------------------------------------------------------
 name               b0                                                                                                       
@@ -24,10 +24,10 @@ org                f71b0d5e60684b48b8265e7fa50302b9
 exports['website show using active profile with existent site ID should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0
-[debug] Response: GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0 200
-[debug] Request:  GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
-[debug] Response: GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 200
+[debug] Request:  GET http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0
+[debug] Response: GET http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0 200
+[debug] Request:  GET http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments
+[debug] Response: GET http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments 200
 key                value                                                                                                    
 -----------------  ---------------------------------------------------------------------------------------------------------
 name               a0                                                                                                       
@@ -47,10 +47,10 @@ app                a555ac8b42ee40cbbaa19da1f2a3e493
 exports['website show using active profile with existent site name (linked to org) should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
-[debug] Request:  GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc/environments
-[debug] Response: GET http://localhost:3234/v3/sites/0205f37e08d545cb9c88ad48b4397acc/environments 200
+[debug] Request:  GET http://localhost:3234/v4/sites
+[debug] Response: GET http://localhost:3234/v4/sites 200
+[debug] Request:  GET http://localhost:3234/v4/sites/0205f37e08d545cb9c88ad48b4397acc/environments
+[debug] Response: GET http://localhost:3234/v4/sites/0205f37e08d545cb9c88ad48b4397acc/environments 200
 {
   "result": {
     "name": "b0",
@@ -70,8 +70,8 @@ exports['website show using active profile with existent site name (linked to or
 exports['website show using active profile with existent site name (that exists twice) should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
+[debug] Request:  GET http://localhost:3234/v4/sites
+[debug] Response: GET http://localhost:3234/v4/sites 200
 [error] TooManyFound: Found too many websites with identifier 'c0'.
 
 `
@@ -79,10 +79,10 @@ exports['website show using active profile with existent site name (that exists 
 exports['website show using active profile with existent site name should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
-[debug] Request:  GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
-[debug] Response: GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 200
+[debug] Request:  GET http://localhost:3234/v4/sites
+[debug] Response: GET http://localhost:3234/v4/sites 200
+[debug] Request:  GET http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments
+[debug] Response: GET http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments 200
 {
   "result": {
     "name": "a0",
@@ -103,10 +103,10 @@ exports['website show using active profile with existent site name should succee
 exports['website show using active profile with existent site name should succeed and output default format 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
-[debug] Request:  GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
-[debug] Response: GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 200
+[debug] Request:  GET http://localhost:3234/v4/sites
+[debug] Response: GET http://localhost:3234/v4/sites 200
+[debug] Request:  GET http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments
+[debug] Response: GET http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments 200
 key                value                                                                                                    
 -----------------  ---------------------------------------------------------------------------------------------------------
 name               a0                                                                                                       
@@ -126,8 +126,8 @@ app                a555ac8b42ee40cbbaa19da1f2a3e493
 exports['website show using active profile with non-existent site name should fail 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
+[debug] Request:  GET http://localhost:3234/v4/sites
+[debug] Response: GET http://localhost:3234/v4/sites 200
 [error] NotFound: Could not find website with identifier 'nope'.
 
 `
@@ -166,10 +166,10 @@ exports['website show using one-time session with existent site identifier shoul
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/sites
-[debug] Response: GET http://localhost:3234/v3/sites 200
-[debug] Request:  GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments
-[debug] Response: GET http://localhost:3234/v3/sites/9caf90c31c4449f195a1a40acc979cf0/environments 200
+[debug] Request:  GET http://localhost:3234/v4/sites
+[debug] Response: GET http://localhost:3234/v4/sites 200
+[debug] Request:  GET http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments
+[debug] Response: GET http://localhost:3234/v4/sites/9caf90c31c4449f195a1a40acc979cf0/environments 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

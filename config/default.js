@@ -18,6 +18,7 @@ const os = require('os');
 
 module.exports = {
   host: 'https://manage.kinvey.com/',
+  redirectServerPort: 6341,
   logFetchDefault: 100,
   logFetchLimit: 2000,
   defaultSchemaVersion: 4,

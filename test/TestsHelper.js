@@ -151,12 +151,13 @@ TestsHelper.assertions = {
 
     return user;
   },
-  buildExpectedProfile(profileName, host, email, token) {
+  buildExpectedProfile(profileName, host, email, token, identityProvider) {
     const profile = {
       [profileName]: {
         email: email || existentUser.email,
         token: token || fixtureUser.token,
-        host: host || testsConfig.host
+        host: host || testsConfig.host,
+        identityProvider: identityProvider || { id: 'Kinvey', name: 'Kinvey' }
       }
     };
 

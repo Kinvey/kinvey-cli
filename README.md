@@ -394,9 +394,6 @@ Kinvey CLI is distributed as an NPM package. After you install NPM, run the foll
         
         Specifies major Node.js version to run the project on. The minor and patch versions will vary depending on the [latest Flex Runtime updates](#flex-runtime-version-selection). Defaults to the [Kinvey-recommended Node.js version](https://devcenter.kinvey.com/guides/flexservice-runtime#environment).
     
-* `flex job [id]`
-
-   _Deprecated_ Shows the job status of a deploy/recycle command. If you don't specify an `id`, the command returns the status of the most recent `flex deploy` or `flex recycle` command. _Deprecation note: For backward compatibility, the server always returns COMPLETE when the command is executed for the most recent deploy/recycle. Use `flex status` to track the progress of deploy or recycle commands._
 
 * `flex status`
 
@@ -725,7 +722,7 @@ cd <node.js project dir>
 kinvey flex init
 ```
 
-Through a series of prompts, this command will ask you for a domain in which to operate (app or organization) and a Flex Service to deploy to.
+Through a series of prompts, this command will ask you for an organization in which to operate and a Flex Service to deploy to.
 
 Finally, you are ready to deploy your Node.js project as a Flex Service.
 
@@ -831,7 +828,7 @@ Kinvey CLI supports the usage of configuration files (JSON format) to enable con
 
 **Organizations** can be modified by applying an organization configuration file. The file can contain applications and org-level services.
 
-**Applications** can be created and modified by applying an application configuration file. The file can contain app environments and app-level services.
+**Applications** can be created and modified by applying an application configuration file. The file can contain app environments.
 
 **Environments** can be created and modified by applying an environment configuration file. The file can contain: environment-related settings, collections, business logic, roles, push settings.
 
@@ -1086,7 +1083,7 @@ The service configuration file can be used to create a brand new service or to m
 
 To create a service from a configuration file run:
  ```
-kinvey service create <serviceName> <file-path> [--app AppNameOrId|--org OrgNameOrId]
+kinvey service create <serviceName> <file-path> [--org OrgNameOrId]
 ```
 
 Either `--app` or `--org` option must be set. The service will be accessible only to the chosen application or organization respectively.

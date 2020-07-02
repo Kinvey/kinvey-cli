@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 6.0.0 (2020-07-02)
+* Modify commands to accept only `--org <org>` (`--app <app>` is no longer valid):
+    * `flex init`
+    * `flex create`
+    * `flex list`
+    * `service create`
+    * `website create`
+    * `app create`
+* Remove `flex job` command
+* Update API version to 4
+* Update min node version to 12.16.1
+
 ## 5.0.0 (2019-11-28)
 * Move `file` from positional argument to option
 * Rename `push` commands to `apply`
@@ -22,7 +34,7 @@
 ## 5.0.0-alpha.0 (2018-12-14)
 * Config management related logic uses v3 API
 * Support service environments in service config files
-* Support runtime and envrionment variables in flex service config files
+* Support runtime and environment variables in flex service config files
 * Fix 'app push' to update properly env metadata
 
 ## 4.5.2 (2019-09-19)

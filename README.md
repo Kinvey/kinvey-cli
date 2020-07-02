@@ -1086,7 +1086,7 @@ To create a service from a configuration file run:
 kinvey service create <serviceName> <file-path> [--org OrgNameOrId]
 ```
 
-Either `--app` or `--org` option must be set. The service will be accessible only to the chosen application or organization respectively.
+The service will be accessible only to the chosen organization and its apps.
 
 To apply a configuration file to an existent service run:
  ```

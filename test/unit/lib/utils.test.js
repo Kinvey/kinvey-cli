@@ -82,6 +82,18 @@ describe('Utils', () => {
       const actual = Utils.formatHost(instance);
       expect(actual).to.equal(`https://${instance}-manage.kinvey.com/`);
     });
+
+    it('should return correct host when instance is an empty string', () => {
+      const instance = '';
+      const actual = Utils.formatHost(instance);
+      expect(actual).to.equal('https://manage.kinvey.com/');
+    });
+
+    it('should return correct host when instance is undefined', () => {
+      let instance;
+      const actual = Utils.formatHost(instance);
+      expect(actual).to.equal('https://manage.kinvey.com/');
+    });
   });
 
   describe('isValidMFAToken', () => {

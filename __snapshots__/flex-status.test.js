@@ -2,10 +2,10 @@ exports['flex status by not specifying profile nor credentials when one profile 
 [debug] Checking for package updates
 [debug] Using profile 'flexStatusProfile'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
 key            value                                
 -------------  -------------------------------------
 status         ONLINE                               
@@ -53,8 +53,8 @@ exports['flex status by specifying a profile and non-existent serviceId should f
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServiceStatus'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v3/services/z793f26c8I_DONT_EXIST/environments
-[debug] Response: GET http://localhost:3234/v3/services/z793f26c8I_DONT_EXIST/environments 404
+[debug] Request:  GET http://localhost:3234/v4/services/z793f26c8I_DONT_EXIST/environments
+[debug] Response: GET http://localhost:3234/v4/services/z793f26c8I_DONT_EXIST/environments 404
 [error] ServiceNotFound: The specified service could not be found.
 
 `
@@ -63,10 +63,10 @@ exports['flex status by specifying a profile existent serviceId and existent svc
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServiceStatus'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status 200
 key            value                                
 -------------  -------------------------------------
 status         ONLINE                               
@@ -84,10 +84,10 @@ exports['flex status by specifying a profile existent serviceId and existent svc
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServiceStatus'
 [debug] Project configuration file not found: 'projectSetupPath'.
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
 {
   "result": {
     "status": "ONLINE",
@@ -108,10 +108,10 @@ exports['flex status by specifying a profile existent serviceId and existent svc
 exports['flex status by specifying a profile when invalid project is set with existent serviceId and svcEnv as options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServiceStatus'
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
 key            value                                
 -------------  -------------------------------------
 status         ONLINE                               
@@ -128,8 +128,8 @@ deployerName   Davy Jones
 exports['flex status by specifying a profile when valid project is set without serviceId and svcEnv as options should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToGetServiceStatus'
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments/642dd1efe3d92e0180317487b29c6e88/status 200
 key            value                                
 -------------  -------------------------------------
 status         ONLINE                               
@@ -158,10 +158,10 @@ exports['flex status by specifying credentials as options when valid and existen
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/1234567/status
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/1234567/status 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments/1234567/status
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments/1234567/status 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -186,10 +186,10 @@ exports['flex status by specifying credentials as options when valid and existen
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/123456/status
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/123456/status 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments/123456/status
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments/123456/status 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -215,10 +215,10 @@ exports['flex status by specifying credentials as options when valid and existen
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments/662dd1efe3d92e0180317487b29c6e66/status 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -240,8 +240,8 @@ exports['flex status by specifying credentials as options when valid and existen
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -254,10 +254,10 @@ exports['flex status by specifying credentials as options when valid and existen
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments 200
-[debug] Request:  GET http://localhost:3234/v3/services/12378kdl2/environments/2cdcc00e7c9047acbb9dbc56ec2e81a9/status
-[debug] Response: GET http://localhost:3234/v3/services/12378kdl2/environments/2cdcc00e7c9047acbb9dbc56ec2e81a9/status 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments 200
+[debug] Request:  GET http://localhost:3234/v4/services/12378kdl2/environments/2cdcc00e7c9047acbb9dbc56ec2e81a9/status
+[debug] Response: GET http://localhost:3234/v4/services/12378kdl2/environments/2cdcc00e7c9047acbb9dbc56ec2e81a9/status 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -279,8 +279,8 @@ exports['flex status by specifying credentials as options when valid and non-exi
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/services/z793f26c8I_DONT_EXIST/environments
-[debug] Response: GET http://localhost:3234/v3/services/z793f26c8I_DONT_EXIST/environments 404
+[debug] Request:  GET http://localhost:3234/v4/services/z793f26c8I_DONT_EXIST/environments
+[debug] Response: GET http://localhost:3234/v4/services/z793f26c8I_DONT_EXIST/environments 404
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

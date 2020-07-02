@@ -29,8 +29,9 @@ const baseCmd = 'website create';
 describe(baseCmd, () => {
   const jsonOptions = testers.getJsonOptions();
   const defaultFlags = testers.getDefaultFlags();
-  const defaultAppName = `"${fixtureApp.name}"`;
-  const defaultCliOptions = { app: defaultAppName };
+  const defaultOrgId = `"${fixtureOrg.id}"`;
+  const defaultOrgName = `"${fixtureOrg.name}"`;
+  const defaultCliOptions = { org: defaultOrgId };
   const siteName = fixtureSites[0].name;
 
   before((done) => {
@@ -60,28 +61,24 @@ describe(baseCmd, () => {
       testers.execCmdWithIdentifier(baseCmd, cliOptions, defaultFlags, siteName, null, done);
     });
 
-    it('with name and app name should succeed and output default format', (done) => {
-      testers.execCmdWithIdentifier(baseCmd, defaultCliOptions, defaultFlags, siteName, null, done);
+    it('with name and non-existent org name should fail', (done) => {
+      testers.execCmdWithIdentifier(baseCmd, { org: 'noSuchOrg' }, defaultFlags, siteName, null, done);
     });
 
-    it('with name and non-existent app name should fail', (done) => {
-      testers.execCmdWithIdentifier(baseCmd, { app: 'noSuchApp' }, defaultFlags, siteName, null, done);
-    });
-
-    it('with name, app name, historyApiRouting and errorPage should fail', (done) => {
+    it('with name, org name, historyApiRouting and errorPage should fail', (done) => {
       const cliOpts = {
         [SitesOptionsNames.ROUTING]: true,
         [SitesOptionsNames.ERROR_PAGE]: '404.html',
-        app: defaultAppName
+        org: defaultOrgName
       };
       testers.execCmdWithIdentifier(baseCmd, cliOpts, defaultFlags, siteName, null, done);
     });
 
-    it('with name, app id, historyApiRouting and indexPage should succeed and output default format', (done) => {
+    it('with name, org id, historyApiRouting and indexPage should succeed and output default format', (done) => {
       const flags = [SitesOptionsNames.ROUTING, CommonOptionsNames.VERBOSE];
       const cliOpts = {
         [SitesOptionsNames.INDEX_PAGE]: 'main.html',
-        app: fixtureApp.id
+        org: defaultOrgId
       };
       const cmd = buildCmd(baseCmd, [siteName], cliOpts, flags);
       const apiOpts = {
@@ -106,11 +103,6 @@ describe(baseCmd, () => {
       testers.execCmdWithIdentifier(baseCmd, options, defaultFlags, siteName, null, done);
     });
 
-    it('with a name and app id should succeed and output JSON', (done) => {
-      const cliOptions = Object.assign({ app: fixtureApp.id }, jsonOptions);
-      testers.execCmdWithIdentifier(baseCmd, cliOptions, defaultFlags, siteName, null, done);
-    });
-
     it('without a name should fail', (done) => {
       const noName = null;
       testers.execCmdWithIdentifier(baseCmd, defaultCliOptions, defaultFlags, noName, null, done);
@@ -122,11 +114,11 @@ describe(baseCmd, () => {
       setup.clearGlobalSetup(null, done);
     });
 
-    it('with a name and app name should succeed and output default format', (done) => {
+    it('with a name and org ID should succeed and output default format', (done) => {
       const cliOpts = {
         [AuthOptionsNames.EMAIL]: existentUserOne.email,
         [AuthOptionsNames.PASSWORD]: existentUserOne.password,
-        app: defaultAppName
+        org: defaultOrgId
       };
       const validUser = { token: fixtureUser.tokenOne, email: existentUserOne.email };
       testers.execCmdWithIdentifier(baseCmd, cliOpts, defaultFlags, siteName, validUser, done);

@@ -802,6 +802,7 @@ app.modifyFromConfig = function modifyFromConfig(appIdentifier, appConfig, done)
 
 app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, expectOrg, collListPerEnv }, done) {
   let actualApp;
+  let actualOrg;
   let assertEnvsDetails = true;
 
   async.series([
@@ -870,14 +871,25 @@ app.assertApp = function assertApp({ config, id, orgIdentifier, expectedName, ex
       );
     },
     (next) => {
-      ApiService.services.getAllByApp(actualApp, (err, data) => {
+      ApiService.orgs.get(null, (err, orgs) => {
+        if (err) {
+          return next(err);
+        }
+
+        actualOrg = orgs.find(x => x.id === orgIdentifier || x.name === orgIdentifier);
+        expect(actualOrg, `Could not find org with identifier ${orgIdentifier}.`).to.exist;
+        next();
+      });
+    },
+    (next) => {
+      ApiService.services.getAllByOrg(actualOrg.id, (err, data) => {
         if (err) {
           return next(err);
         }
 
         const actualServices = [];
         data.forEach((x) => {
-          if (x.access.writers.apps && x.access.writers.apps.find(appId => appId === actualApp.id)) {
+          if (x.access.writers.organizations && x.access.writers.organizations.find(orgId => orgId === actualOrg.id)) {
             actualServices.push(x);
           }
         });
@@ -1006,6 +1018,45 @@ org.removeAppsAndServices = function removeAppsAndServices(orgName, done) {
         next
       );
     },
+    (next) => {
+      ApiService.services.getAllByOrg(orgId, next);
+    },
+    (services, next) => {
+      async.each(
+        services,
+        (currService, cb) => {
+          ApiService.services.remove(currService.id, cb);
+        },
+        next
+      );
+    }
+  ], done);
+};
+
+org.removeServicesByOrgName = function removeServicesByOrgName(orgName, done) {
+  async.waterfall([
+    (next) => {
+      ApiService.orgs.get(null, (err, orgs) => {
+        if (err) {
+          return next(err);
+        }
+
+        const testOrg = orgs.find(x => x.name === orgName);
+        if (!testOrg) {
+          return next(new Error(`${orgName} not found.`));
+        }
+
+        next(null, testOrg.id);
+      });
+    },
+    (orgId, next) => {
+      org.removeServicesByOrgId(orgId, next);
+    }
+  ], done);
+};
+
+org.removeServicesByOrgId = function removeServicesByOrgId(orgId, done) {
+  async.waterfall([
     (next) => {
       ApiService.services.getAllByOrg(orgId, next);
     },

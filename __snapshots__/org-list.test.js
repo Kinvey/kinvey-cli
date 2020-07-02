@@ -1,8 +1,8 @@
 exports['org list by not specifying a profile when one should use it when there are orgs should succeed and output default 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'orgProfile0'
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 Count: 2
 
 id                                name   
@@ -17,8 +17,8 @@ f71b0d5e60684b48b8265e7fa50302b9  My Team
 exports['org list by not specifying a profile when one should use it when there are orgs should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'orgProfile0'
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 {
   "result": [
     {
@@ -57,8 +57,8 @@ exports['org list by not specifying a profile when one should use it when there 
 exports['org list by not specifying a profile when one should use it when no orgs should succeed and output default 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'orgProfile0'
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 Count: 0
 
 
@@ -71,8 +71,8 @@ Count: 0
 exports['org list by not specifying a profile when one should use it when no orgs should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'orgProfile0'
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 {
   "result": []
 }
@@ -82,8 +82,8 @@ exports['org list by not specifying a profile when one should use it when no org
 exports['org list by specifying a profile should use it and output default 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToBeUsed'
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 Count: 2
 
 id                                name   
@@ -98,8 +98,8 @@ f71b0d5e60684b48b8265e7fa50302b9  My Team
 exports['org list by specifying a profile when active is set and no profile option should use active and succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 Count: 2
 
 id                                name   
@@ -114,8 +114,8 @@ f71b0d5e60684b48b8265e7fa50302b9  My Team
 exports['org list by specifying a profile when active is set and profile specified should use specified and succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'profileToBeUsed'
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 Count: 2
 
 id                                name   
@@ -132,8 +132,8 @@ exports['org list by specifying credentials as options when valid should succeed
 [debug] Logging in user: janeyDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

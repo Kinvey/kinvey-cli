@@ -3,8 +3,8 @@ exports['app list when there are apps should output default format 1'] = `
 [debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/apps
-[debug] Response: GET http://localhost:3234/v3/apps 200
+[debug] Request:  GET http://localhost:3234/v4/apps
+[debug] Response: GET http://localhost:3234/v4/apps 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -24,8 +24,8 @@ exports['app list when there are apps should output JSON 1'] = `
 [debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/apps
-[debug] Response: GET http://localhost:3234/v3/apps 200
+[debug] Request:  GET http://localhost:3234/v4/apps
+[debug] Response: GET http://localhost:3234/v4/apps 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -94,8 +94,8 @@ exports['app list when no apps should succeed 1'] = `
 [debug] Logging in user: janeDoe@mail.com
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
-[debug] Request:  GET http://localhost:3234/v3/apps
-[debug] Response: GET http://localhost:3234/v3/apps 200
+[debug] Request:  GET http://localhost:3234/v4/apps
+[debug] Response: GET http://localhost:3234/v4/apps 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.

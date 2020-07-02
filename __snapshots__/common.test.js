@@ -172,10 +172,9 @@ Commands:
   kinvey flex create <name>  Create a Flex service
   kinvey flex deploy         Deploy the current project to the Kinvey
                              FlexService Runtime
-  kinvey flex job [id]       Get the job status of a deploy/recycle command
   kinvey flex status         Return the health of a Flex Service cluster
   kinvey flex show           Show info for a service environment
-  kinvey flex list           List Internal Flex Services for an app or org
+  kinvey flex list           List Internal Flex Services for an org
   kinvey flex logs           Retrieve and display Internal Flex Service logs
   kinvey flex update         Update environment variables and runtime. Causes
                              restart/rebuild of the service

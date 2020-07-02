@@ -4,8 +4,8 @@ exports['org show when active org with credentials as options and existent name 
 [debug] Request:  POST http://localhost:3234/session
 [debug] Response: POST http://localhost:3234/session 200
 [debug] Using organization: My Team
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 [debug] Request:  DELETE http://localhost:3234/session
 [debug] Response: DELETE http://localhost:3234/session 204
 [debug] Logged out current user.
@@ -25,8 +25,8 @@ exports['org show when active org with non-existent org name should disregard ac
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: noSuchName
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
 [error] NotFound: Could not find organization with identifier 'noSuchName'.
 
 `
@@ -35,8 +35,8 @@ exports['org show when active org without id should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
 key                       value                           
 ------------------------  --------------------------------
 id                        f71b0d5e60684b48b8265e7fa50302b9
@@ -53,8 +53,8 @@ exports['org show when no active org with existent org id as option should outpu
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
 {
   "result": {
     "name": "My Team",
@@ -78,8 +78,8 @@ exports['org show when no active org with existent org id as option should outpu
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
 key                       value                           
 ------------------------  --------------------------------
 id                        f71b0d5e60684b48b8265e7fa50302b9

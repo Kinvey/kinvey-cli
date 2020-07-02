@@ -1,32 +1,11 @@
-exports['app create with a name and existent org identifier (ID) should succeed 1'] = `
+exports['app create with a name and existent org identifier (ID) should succeed and output JSON 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
 [debug] Using organization: f71b0d5e60684b48b8265e7fa50302b9
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
-[debug] Request:  POST http://localhost:3234/v3/apps
-[debug] Response: POST http://localhost:3234/v3/apps 201
-Created application: 885f5d307afd4168bebca1a64f815c1e
-
-`
-
-exports['app create with a name and existent org identifier (name) should succeed 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'activeProfile'
-[debug] Using organization: My Team
-[debug] Request:  GET http://localhost:3234/v3/organizations
-[debug] Response: GET http://localhost:3234/v3/organizations 200
-[debug] Request:  POST http://localhost:3234/v3/apps
-[debug] Response: POST http://localhost:3234/v3/apps 201
-Created application: 885f5d307afd4168bebca1a64f815c1e
-
-`
-
-exports['app create with a name should succeed and output JSON 1'] = `
-[debug] Checking for package updates
-[debug] Using profile 'activeProfile'
-[debug] Request:  POST http://localhost:3234/v3/apps
-[debug] Response: POST http://localhost:3234/v3/apps 201
+[debug] Request:  GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9
+[debug] Response: GET http://localhost:3234/v4/organizations/f71b0d5e60684b48b8265e7fa50302b9 200
+[debug] Request:  POST http://localhost:3234/v4/apps
+[debug] Response: POST http://localhost:3234/v4/apps 201
 {
   "result": {
     "id": "885f5d307afd4168bebca1a64f815c1e"
@@ -35,12 +14,22 @@ exports['app create with a name should succeed and output JSON 1'] = `
 
 `
 
-exports['app create with a name should succeed and output default format 1'] = `
+exports['app create with a name and existent org identifier (name) should succeed 1'] = `
 [debug] Checking for package updates
 [debug] Using profile 'activeProfile'
-[debug] Request:  POST http://localhost:3234/v3/apps
-[debug] Response: POST http://localhost:3234/v3/apps 201
+[debug] Using organization: My Team
+[debug] Request:  GET http://localhost:3234/v4/organizations
+[debug] Response: GET http://localhost:3234/v4/organizations 200
+[debug] Request:  POST http://localhost:3234/v4/apps
+[debug] Response: POST http://localhost:3234/v4/apps 201
 Created application: 885f5d307afd4168bebca1a64f815c1e
+
+`
+
+exports['app create with a name without org should fail 1'] = `
+[debug] Checking for package updates
+[debug] Using profile 'activeProfile'
+[error] OrgRequired: Organization is required. Please set active org or use the --org option.
 
 `
 

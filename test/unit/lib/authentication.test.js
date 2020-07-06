@@ -55,8 +55,10 @@ describe('Authentication', () => {
         const openBrowserStub = sandbox.stub(Utils, 'openBrowser')
           .withArgs(expectedUrl)
           .callsFake(() => {
-            request({ url: `http://localhost:5000/?session=${sessionValue}` }, () => {
-              Promise.resolve();
+            return new Promise((resolve) => {
+              request({ url: `http://localhost:5000/?session=${sessionValue}` }, () => {
+                resolve();
+              });
             });
           });
 

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 6.1.0 (2020-09-14)
+* Support login with external identity providers
+
 ## 6.0.0 (2020-07-02)
 * Modify commands to accept only `--org <org>` (`--app <app>` is no longer valid):
     * `flex init`

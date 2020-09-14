@@ -118,7 +118,7 @@ function build(
   app.use(bodyParser.json());
 
   app.use((req, res, next) => {
-    const requiresAuth = !(req.method === HTTPMethod.POST && req.url === '/session');
+    const requiresAuth = (!(req.method === HTTPMethod.POST && req.url === '/session')) && !req.url.includes('identity-providers');
     if (requiresAuth) {
       const isAuth = isAuthenthicated(req.headers, token);
       if (!isAuth) {
@@ -173,6 +173,15 @@ function build(
   });
 
   app.delete('/session', (req, res) => res.sendStatus(204));
+
+  // IDP
+  app.get(`/${versionPart}/identity-providers`, (req, res) => {
+    return res.status(404).send({
+      code: 'FeatureFlagRequired',
+      description: 'Feature flag is required for this endpoint.',
+      debug: 'Required flag: identity-providers'
+    });
+  });
 
   // SERVICES
   app.get(`/${versionPart}/services/:id/environments/:envId/status`, (req, res) => {

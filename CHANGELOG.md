@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 6.1.1 (2020-10-30)
+* Do not update the appEnv when no settings are supplied on `kinvey appenv apply`
+* Fix appEnv ID check
+
 ## 6.1.0 (2020-09-14)
 * Support login with external identity providers
 

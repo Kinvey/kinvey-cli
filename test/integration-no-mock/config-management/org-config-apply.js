@@ -53,7 +53,9 @@ module.exports = () => {
           }
         },
         services: {},
-        settings: {}
+        settings: {
+          sessionTimeoutInSeconds: 1209600
+        }
       }
     },
     services: {

@@ -194,7 +194,7 @@ function getBaasAuthToken(envId, done) {
     }
 
     const envIdMasterSecretPair = `${env.id}:${env.masterSecret}`;
-    const encodedEnvIdMasterSecretPair = (new Buffer(envIdMasterSecretPair)).toString('base64');
+    const encodedEnvIdMasterSecretPair = (Buffer.from(envIdMasterSecretPair)).toString('base64');
     baasAuthTokens[envId] = encodedEnvIdMasterSecretPair;
     return done(null, baasAuthTokens[envId]);
   });

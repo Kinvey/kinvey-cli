@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 6.1.2 (2021-02-16)
+* Modify collection hooks sequentially
+* Add collection hooks: onPreInsert, onPreUpdate, onPostInsert, onPostUpdate
+
 ## 6.1.1 (2020-10-30)
 * Do not update the appEnv when no settings are supplied on `kinvey appenv apply`
 * Fix appEnv ID check

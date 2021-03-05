@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 6.1.3 (2021-03-05)
+* Improve error message for iOS push settings in config management
+
 ## 6.1.2 (2021-02-16)
 * Modify collection hooks sequentially
 * Add collection hooks: onPreInsert, onPreUpdate, onPostInsert, onPostUpdate

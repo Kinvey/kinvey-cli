@@ -1142,7 +1142,7 @@ service.assertService = function assertService(id, serviceConfig, serviceName, d
         actualService = actual;
         expect(serviceName).to.equal(actual.name);
         if (isNullOrUndefined(serviceConfig.description)) {
-          expect(actual.description).to.be.null;
+          expect(actual.description).to.not.exist;
         } else {
           expect(actual.description).to.equal(serviceConfig.description);
         }

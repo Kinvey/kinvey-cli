@@ -16,6 +16,9 @@ exports['schema validator env with invalid env should fail 1'] = `
 	commonCode.my-common-code: "value" must contain at least one of [code, codeFile]
 	commonCode.ext-common-code: "value" contains a conflict between exclusive peers [code, codeFile]
 	collectionHooks.colle2.onPreSaveD: "onPreSaveD" is not allowed
+	collectionHooks.colle2.onPreLogin: "onPreLogin" is not allowed
+	collectionHooks.colle2.onLoginSuccess: "onLoginSuccess" is not allowed
+	collectionHooks.colle2.onLoginFailure: "onLoginFailure" is not allowed
 	collectionHooks.colle0.onPreSave.serviceEnvironment: "serviceEnvironment" is required
 	collectionHooks.colle0.onPreFetch.serviceEnvironment: "serviceEnvironment" is required
 	customEndpoints.end0.schedule.interval: "interval" must be one of [weekly, daily, hourly, 30-minutes, 10-minutes, 5-minutes, 1-minute]

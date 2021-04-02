@@ -43,6 +43,18 @@
       "onPostSave": {
         "type": "internal",
         "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPreLogin": {
+        "type": "internal",
+        "code": "function onPreLogin(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onLoginSuccess": {
+        "type": "internal",
+        "code": "function onLoginSuccess(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onLoginFailure": {
+        "type": "internal",
+        "code": "function onLoginFailure(request, response, modules) {\n  response.continue();\n}"
       }
     },
     "colle0": {

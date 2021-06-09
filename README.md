@@ -1017,7 +1017,7 @@ To specify the built-in **All users** role, use *all-users*.
 
 `collectionHooks` Collection hooks. Optional. An object where each first-level property is the name of a collection.
 
-`collectionHooks.[collectionName].[hookName]` *onPreSave|onPreFetch|onPreDelete|onPreInsert|onPreUpdate|onPostSave|onPostFetch|onPostUpdate|onPostInsert|onPostDelete* Hook type.
+`collectionHooks.[collectionName].[hookName]` *onPreSave|onPreFetch|onPreDelete|onPreLogin|onPreInsert|onPreUpdate|onPostSave|onPostFetch|onPostUpdate|onPostInsert|onPostDelete|onLoginFailure|onLoginFailure* Hook type.
  
 `collectionHooks.[collectionName].[hookName].type` *internal|external* External if a service is involved. Required.  
 

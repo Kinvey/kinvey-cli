@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 6.2.0 (2021-06-09)
+* Add support for login hooks
+
 ## 6.1.3 (2021-03-05)
 * Improve error message for iOS push settings in config management
 

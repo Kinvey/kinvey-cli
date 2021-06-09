@@ -51,6 +51,60 @@
     }
   },
   "collectionHooks": {
+    "user": {
+      "onPreInsert": {
+        "type": "internal",
+        "code": "function onPreInsert(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPreUpdate": {
+        "type": "internal",
+        "code": "function onPreUpdate(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPreSave": {
+        "type": "internal",
+        "code": "function onPreSave(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPreFetch": {
+        "type": "internal",
+        "code": "function onPreFetch(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPreDelete": {
+        "type": "internal",
+        "code": "function onPreDelete(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPostInsert": {
+        "type": "internal",
+        "code": "function onPostInsert(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPostUpdate": {
+        "type": "internal",
+        "code": "function onPostUpdate(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPostSave": {
+        "type": "internal",
+        "code": "function onPostSave(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPostFetch": {
+        "type": "internal",
+        "code": "function onPostFetch(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPostDelete": {
+        "type": "internal",
+        "code": "function onPostDelete(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onPreLogin": {
+        "type": "internal",
+        "code": "function onPreLogin(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onLoginSuccess": {
+        "type": "internal",
+        "code": "function onLoginSuccess(request, response, modules) {\n  response.continue();\n}"
+      },
+      "onLoginFailure": {
+        "type": "internal",
+        "code": "function onLoginFailure(request, response, modules) {\n  response.continue();\n}"
+      }
+    },
     "colle2": {
       "onPreInsert": {
         "type": "internal",

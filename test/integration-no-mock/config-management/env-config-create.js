@@ -172,6 +172,20 @@ module.exports = () => {
           type: 'internal',
           code: 'function onPostFetch(request, response, modules) {\nconsole.log("Here");\n  response.continue();\n}'
         }
+      },
+      user: {
+        onPreLogin: {
+          type: 'internal',
+          code: 'function onPreLogin(request, response, modules) {\nconsole.log("Pre login");\n  response.continue();\n}'
+        },
+        onLoginSuccess: {
+          type: 'internal',
+          code: 'function onLoginSuccess(request, response, modules) {\nconsole.log("Login success");\n  response.continue();\n}'
+        },
+        onLoginFailure: {
+          type: 'internal',
+          code: 'function onLoginFailure(request, response, modules) {\nconsole.log("Login failure");\n  response.continue();\n}'
+        }
       }
     };
 
@@ -331,6 +345,26 @@ module.exports = () => {
           service: serviceName,
           serviceEnvironment: svcEnvName,
           handlerName: 'someHandler'
+        }
+      },
+      user: {
+        onPreLogin: {
+          type: 'external',
+          service: serviceName,
+          serviceEnvironment: svcEnvName,
+          handlerName: 'preLoginHandler'
+        },
+        onLoginSuccess: {
+          type: 'external',
+          service: serviceName,
+          serviceEnvironment: svcEnvName,
+          handlerName: 'loginSuccessHandler'
+        },
+        onLoginFailure: {
+          type: 'external',
+          service: serviceName,
+          serviceEnvironment: svcEnvName,
+          handlerName: 'loginFailureHandler'
         }
       }
     };

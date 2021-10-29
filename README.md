@@ -36,6 +36,7 @@ Contents:
 - [Output Format](#output-format)
 - [Flex Runtime Version Selection](#flex-runtime-version-selection)
 - [Proxy Settings](#proxy-settings)
+- [Configuration management](#configuration-management)
 - [Troubleshooting](#troubleshooting)
 - [Changelog](#changelog)
 - [License](#license)

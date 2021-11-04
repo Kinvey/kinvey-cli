@@ -970,6 +970,8 @@ If an error occurs, the CLI stops applying the file and outputs the error messag
 
 `settings.emailVerification.since` ISO-8601 date. If specified, any user created before this date will not need a verified email in order to access the environment. Optional.
 
+`settings.passwordReset` Password reset URL. Optional.
+
 `collections` Environment collections. Optional. Object. Each first-level property is the name of a collection and contains an object describing this collection.
 
 `collections.[collectionName].type` *internal|external* If external, then the collection is backed by a flex service. Required.

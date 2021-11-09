@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 6.2.1 (2021-11-09)
+* Add password reset URL support for appEnv config files
+
 ## 6.2.0 (2021-06-09)
 * Add support for login hooks
 

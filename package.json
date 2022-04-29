@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "./bin/kinvey",
-    "prepublish": "./node_modules/.bin/dos2unix ./bin/kinvey",
+    "prepublish": ".\\node_modules\\.bin\\dos2unix .\\bin\\kinvey",
     "pretest": "npm run lint",
     "lint": "./node_modules/.bin/eslint config lib test",
     "test": "npm run test-unit && npm run test-integration",

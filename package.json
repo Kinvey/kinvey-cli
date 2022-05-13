@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "./bin/kinvey",
-    "prepublish": "./node_modules/.bin/dos2unix ./bin/kinvey",
+    "prepublish": ".\\node_modules\\.bin\\dos2unix .\\bin\\kinvey",
     "pretest": "npm run lint",
     "lint": "./node_modules/.bin/eslint config lib test",
     "test": "npm run test-unit && npm run test-integration",
@@ -36,7 +36,7 @@
   "dependencies": {
     "aes-js": "3.1.1",
     "archiver": "1.0.1",
-    "async": "2.6.1",
+    "async": "2.6.4",
     "chalk": "2.1.0",
     "config": "1.16.0",
     "console.table": "0.10.0",
@@ -55,7 +55,7 @@
     "lodash.pick": "4.4.0",
     "lodash.pickby": "4.6.0",
     "lodash.sortby": "4.7.0",
-    "moment": "2.22.1",
+    "moment": "2.29.3",
     "open": "7.0.4",
     "request": "2.87.0",
     "semver": "5.5.0",
@@ -63,7 +63,7 @@
     "uuid": "2.0.3",
     "uuid-v4": "0.1.0",
     "valid-url": "1.0.9",
-    "winston": "2.4.3",
+    "winston": "2.4.6",
     "yargs": "10.0.3"
   },
   "devDependencies": {

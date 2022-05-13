@@ -52,7 +52,7 @@ module.exports = () => {
         configType: 'application',
         settings: {
           realtime: {
-            enabled: true
+            enabled: false
           },
           sessionTimeoutInSeconds: 200
         }

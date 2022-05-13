@@ -132,7 +132,7 @@ module.exports = () => {
           };
           modifiedOrgConfig.applications.app0.settings = {
             realtime: {
-              enabled: true
+              enabled: false
             }
           };
           ConfigManagementHelper.org.modifyFromConfig(orgNameToUse, modifiedOrgConfig, next);

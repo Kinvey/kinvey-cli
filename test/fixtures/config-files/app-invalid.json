@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "configType": "application",
   "settings": {
-    "realtime": true,
+    "realtime": false,
     "sessionTimeoutInSeconds": false
   },
   "environments": {

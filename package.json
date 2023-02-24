@@ -55,7 +55,7 @@
     "lodash.pick": "4.4.0",
     "lodash.pickby": "4.6.0",
     "lodash.sortby": "4.7.0",
-    "moment": "2.29.3",
+    "moment": "2.29.4",
     "open": "7.0.4",
     "request": "2.87.0",
     "semver": "5.5.0",

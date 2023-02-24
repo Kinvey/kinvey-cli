@@ -1,6 +1,7 @@
 # Changelog
 
-## Unreleased
+## 6.2.3 (2023-02-24)
+* Fix a security issue by updating `moment`
 
 ## 6.2.1 (2021-11-09)
 * Add password reset URL support for appEnv config files

@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.2.4 (2023-06-01)
+* Only bump version
+
 ## 6.2.3 (2023-02-24)
 * Fix a security issue by updating `moment`
 
